@@ -58,7 +58,7 @@ class ProjectGridServiceTest {
                 .isPresent()
                 .contains(projectGrid);
 
-        verify(projectGridRepository, times(1))
+        verify(projectGridRepository)
                 .findById(1L);
     }
 
@@ -76,7 +76,7 @@ class ProjectGridServiceTest {
                 .isPresent()
                 .contains(projectGrid);
 
-        verify(projectGridRepository, times(1))
+        verify(projectGridRepository)
                 .findByIdAndProjectToken(1L, "token");
     }
 
@@ -93,7 +93,7 @@ class ProjectGridServiceTest {
         assertThat(actual)
                 .isEqualTo(projectGrid);
 
-        verify(projectGridRepository, times(1))
+        verify(projectGridRepository)
                 .save(projectGrid);
     }
 
@@ -122,9 +122,9 @@ class ProjectGridServiceTest {
        assertThat(new ArrayList<>(project.getGrids()).get(0).getTime())
                .isEqualTo(10);
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .save(project);
-        verify(projectGridRepository, times(1))
+        verify(projectGridRepository)
                 .saveAll(Collections.singleton(projectGrid));
     }
 
@@ -158,17 +158,15 @@ class ProjectGridServiceTest {
                 .thenReturn(Optional.of(projectGrid));
         when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
                 .thenReturn(nashornRequestWidgetExecutionScheduler);
-        doNothing().when(nashornRequestWidgetExecutionScheduler)
-                .cancelWidgetsExecutionByGrid(any());
 
         projectGridService.deleteByProjectIdAndId(project, 1L);
 
-        verify(projectGridRepository, times(1))
+        verify(projectGridRepository)
                 .deleteByProjectIdAndId(1L, 1L);
-        verify(dashboardWebsocketService, times(1))
+        verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
                         event.getDate() != null));
-        verify(nashornRequestWidgetExecutionScheduler, times(1))
+        verify(nashornRequestWidgetExecutionScheduler)
                 .cancelWidgetsExecutionByGrid(projectGrid);
     }
 
@@ -186,9 +184,9 @@ class ProjectGridServiceTest {
 
         projectGridService.deleteByProjectIdAndId(project, 1L);
 
-        verify(projectGridRepository, times(1))
+        verify(projectGridRepository)
                 .deleteByProjectIdAndId(1L, 1L);
-        verify(dashboardWebsocketService, times(1))
+        verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
                         event.getDate() != null));
         verify(nashornRequestWidgetExecutionScheduler, times(0))

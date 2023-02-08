@@ -27,7 +27,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -222,8 +221,6 @@ class ProjectWidgetControllerTest {
                 .thenReturn(Optional.of(projectWidget));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
-        doNothing().when(projectWidgetService)
-                .updateProjectWidget(any(), any(), any());
         when(projectWidgetMapper.toProjectWidgetDTO(any()))
                 .thenReturn(projectWidgetResponseDto);
 
@@ -355,8 +352,6 @@ class ProjectWidgetControllerTest {
                 .thenReturn(true);
         when(projectWidgetMapper.toProjectWidgetEntity(any(), any()))
                 .thenReturn(projectWidget);
-        doNothing().when(projectWidgetService)
-                .createAndRefreshDashboards(any());
         when(projectWidgetMapper.toProjectWidgetDTO(any()))
                 .thenReturn(projectWidgetResponseDto);
 
@@ -452,8 +447,6 @@ class ProjectWidgetControllerTest {
                 .thenReturn(Optional.of(projectWidget));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
-        doNothing().when(projectWidgetService)
-                .removeWidgetFromDashboard(any());
 
         ResponseEntity<Void> actual = projectWidgetController.deleteById(localUser, 1L);
 

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
+import static org.apache.directory.api.util.StringConstants.EMPTY;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -53,7 +54,7 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("response");
 
-            verify(client, times(1))
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.GET.toString())));
         }
@@ -81,7 +82,7 @@ class NashornWidgetScriptTest {
                     .isInstanceOf(RemoteException.class)
                     .hasMessage("A server error occurred during the execution of the request /GET https://mocked.com/ (code 500).");
 
-            verify(client, times(1))
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.GET.toString())));
         }
@@ -109,7 +110,33 @@ class NashornWidgetScriptTest {
                     .isInstanceOf(RequestException.class)
                     .hasMessage("A request error occurred during the execution of the request /GET https://mocked.com/ (code 403). Error body details: response");
 
-            verify(client, times(1))
+            verify(client)
+                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
+                            request.method().equals(HttpMethod.GET.toString())));
+        }
+    }
+
+    @Test
+    void shouldGetRequestErrorEmptyBody() throws IOException {
+        try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
+            Response response = new Response.Builder()
+                    .code(HttpStatus.FORBIDDEN.value())
+                    .request(new Request.Builder()
+                            .url("https://mocked.com")
+                            .build())
+                    .protocol(Protocol.HTTP_2)
+                    .message(StringUtils.EMPTY)
+                    .build();
+
+            mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
+            when(client.newCall(any())).thenReturn(call);
+            when(call.execute()).thenReturn(response);
+
+            assertThatThrownBy(() -> NashornWidgetScript.get("https://mocked.com"))
+                    .isInstanceOf(RequestException.class)
+                    .hasMessage("A request error occurred during the execution of the request /GET https://mocked.com/ (code 403). Error body details: Empty body");
+
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.GET.toString())));
         }
@@ -137,7 +164,7 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("200");
 
-            verify(client, times(1))
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.GET.toString())));
         }
@@ -165,7 +192,7 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("response");
 
-            verify(client, times(1))
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.GET.toString()) &&
                             Objects.equals(request.header("header"), "headerValue")));
@@ -194,7 +221,7 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("200");
 
-            verify(client, times(1))
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.GET.toString()) &&
                             Objects.equals(request.header("header"), "headerValue")));
@@ -224,7 +251,7 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("valueToReturn");
 
-            verify(client, times(1))
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.GET.toString()) &&
                             Objects.equals(request.header("header"), "headerValue")));
@@ -253,7 +280,37 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("response");
 
-            verify(client, times(1))
+            verify(client)
+                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
+                            request.method().equals(HttpMethod.POST.toString()) &&
+                            request.body() != null &&
+                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8")));
+        }
+    }
+
+    @Test
+    void shouldPostEmptyBody() throws IOException, RemoteException, RequestException {
+        try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
+            Response response = new Response.Builder()
+                    .code(200)
+                    .request(new Request.Builder()
+                            .url("https://mocked.com")
+                            .build())
+                    .body(ResponseBody.create("response",
+                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                    .protocol(Protocol.HTTP_2)
+                    .message(StringUtils.EMPTY)
+                    .build();
+
+            mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
+            when(client.newCall(any())).thenReturn(call);
+            when(call.execute()).thenReturn(response);
+
+            String actual = NashornWidgetScript.post("https://mocked.com", EMPTY);
+
+            assertThat(actual).isEqualTo("response");
+
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.POST.toString()) &&
                             request.body() != null &&
@@ -283,7 +340,37 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("200");
 
-            verify(client, times(1))
+            verify(client)
+                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
+                            request.method().equals(HttpMethod.POST.toString()) &&
+                            request.body() != null &&
+                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8")));
+        }
+    }
+
+    @Test
+    void shouldPostEmptyBodyReturnCode() throws IOException, RemoteException, RequestException {
+        try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
+            Response response = new Response.Builder()
+                    .code(200)
+                    .request(new Request.Builder()
+                            .url("https://mocked.com")
+                            .build())
+                    .body(ResponseBody.create("response",
+                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                    .protocol(Protocol.HTTP_2)
+                    .message(StringUtils.EMPTY)
+                    .build();
+
+            mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
+            when(client.newCall(any())).thenReturn(call);
+            when(call.execute()).thenReturn(response);
+
+            String actual = NashornWidgetScript.post("https://mocked.com", EMPTY, true);
+
+            assertThat(actual).isEqualTo("200");
+
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.POST.toString()) &&
                             request.body() != null &&
@@ -313,7 +400,38 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("response");
 
-            verify(client, times(1))
+            verify(client)
+                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
+                            request.method().equals(HttpMethod.POST.toString()) &&
+                            request.body() != null &&
+                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8") &&
+                            Objects.equals(request.header("header"), "headerValue")));
+        }
+    }
+
+    @Test
+    void shouldPostEmptyBodyWithHeader() throws IOException, RemoteException, RequestException {
+        try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
+            Response response = new Response.Builder()
+                    .code(200)
+                    .request(new Request.Builder()
+                            .url("https://mocked.com")
+                            .build())
+                    .body(ResponseBody.create("response",
+                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                    .protocol(Protocol.HTTP_2)
+                    .message(StringUtils.EMPTY)
+                    .build();
+
+            mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
+            when(client.newCall(any())).thenReturn(call);
+            when(call.execute()).thenReturn(response);
+
+            String actual = NashornWidgetScript.post("https://mocked.com", EMPTY, "header", "headerValue");
+
+            assertThat(actual).isEqualTo("response");
+
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.POST.toString()) &&
                             request.body() != null &&
@@ -344,7 +462,38 @@ class NashornWidgetScriptTest {
 
             assertThat(actual).isEqualTo("200");
 
-            verify(client, times(1))
+            verify(client)
+                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
+                            request.method().equals(HttpMethod.POST.toString()) &&
+                            request.body() != null &&
+                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8") &&
+                            Objects.equals(request.header("header"), "headerValue")));
+        }
+    }
+
+    @Test
+    void shouldPostEmptyBodyReturnCodeWithHeader() throws IOException, RemoteException, RequestException {
+        try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
+            Response response = new Response.Builder()
+                    .code(200)
+                    .request(new Request.Builder()
+                            .url("https://mocked.com")
+                            .build())
+                    .body(ResponseBody.create("response",
+                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                    .protocol(Protocol.HTTP_2)
+                    .message(StringUtils.EMPTY)
+                    .build();
+
+            mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
+            when(client.newCall(any())).thenReturn(call);
+            when(call.execute()).thenReturn(response);
+
+            String actual = NashornWidgetScript.post("https://mocked.com", EMPTY, "header", "headerValue", true);
+
+            assertThat(actual).isEqualTo("200");
+
+            verify(client)
                     .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
                             request.method().equals(HttpMethod.POST.toString()) &&
                             request.body() != null &&

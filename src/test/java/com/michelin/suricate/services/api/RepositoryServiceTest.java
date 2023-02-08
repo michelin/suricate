@@ -49,7 +49,7 @@ class RepositoryServiceTest {
                 .isNotEmpty()
                 .contains(repository);
 
-        verify(repositoryRepository, times(1))
+        verify(repositoryRepository)
                 .findAll(Mockito.<RepositorySearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
                                 specification.getAttributes().contains(name.getName())),
                         Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
@@ -70,7 +70,7 @@ class RepositoryServiceTest {
                 .isNotEmpty()
                 .contains(repository);
 
-        verify(repositoryRepository, times(1))
+        verify(repositoryRepository)
                 .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
@@ -88,7 +88,7 @@ class RepositoryServiceTest {
                 .isPresent()
                 .contains(repository);
 
-        verify(repositoryRepository, times(1))
+        verify(repositoryRepository)
                 .findById(1L);
     }
 
@@ -106,7 +106,7 @@ class RepositoryServiceTest {
                 .isPresent()
                 .contains(repository);
 
-        verify(repositoryRepository, times(1))
+        verify(repositoryRepository)
                 .findByName("name");
     }
 
@@ -120,7 +120,7 @@ class RepositoryServiceTest {
         assertThat(actual)
                 .isTrue();
 
-        verify(repositoryRepository, times(1))
+        verify(repositoryRepository)
                 .existsById(1L);
     }
 
@@ -134,7 +134,7 @@ class RepositoryServiceTest {
 
         repositoryService.addOrUpdateRepository(repository);
 
-        verify(repositoryRepository, times(1))
+        verify(repositoryRepository)
                 .save(repository);
     }
 
@@ -149,7 +149,7 @@ class RepositoryServiceTest {
 
         repositoryService.addOrUpdateRepositories(Collections.singletonList(repository));
 
-        verify(repositoryRepository, times(1))
+        verify(repositoryRepository)
                 .saveAll(repositories);
     }
 }

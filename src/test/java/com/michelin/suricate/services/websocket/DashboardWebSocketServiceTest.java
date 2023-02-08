@@ -56,13 +56,12 @@ class DashboardWebSocketServiceTest {
         projectResponseDto.setName("name");
 
         when(projectMapper.toProjectDTO(any())).thenReturn(projectResponseDto);
-        doNothing().when(simpMessagingTemplate).convertAndSendToUser(any(), any(), any());
 
         dashboardWebSocketService.sendConnectProjectEventToScreenSubscriber(project, "screenCode");
 
-        verify(projectMapper, times(1))
+        verify(projectMapper)
                 .toProjectDTO(project);
-        verify(simpMessagingTemplate, times(1))
+        verify(simpMessagingTemplate)
                 .convertAndSendToUser(eq("screenCode"), eq("/queue/connect"),
                         argThat(updateEvent -> ((UpdateEvent) updateEvent).getType().equals(CONNECT_DASHBOARD) &&
                                 ((UpdateEvent) updateEvent).getContent().equals(projectResponseDto)));
@@ -75,11 +74,9 @@ class DashboardWebSocketServiceTest {
         updateEvent.setContent("test");
         updateEvent.setType(CONNECT_DASHBOARD);
 
-        doNothing().when(simpMessagingTemplate).convertAndSendToUser(any(), any(), any());
-
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers("token", 1L, updateEvent);
 
-        verify(simpMessagingTemplate, times(1))
+        verify(simpMessagingTemplate)
                 .convertAndSendToUser("token-projectWidget-1", "/queue/live", updateEvent);
     }
 
@@ -116,11 +113,9 @@ class DashboardWebSocketServiceTest {
         updateEvent.setContent("test");
         updateEvent.setType(CONNECT_DASHBOARD);
 
-        doNothing().when(simpMessagingTemplate).convertAndSendToUser(any(), any(), any());
-
         dashboardWebSocketService.sendEventToProjectSubscribers("token", updateEvent);
 
-        verify(simpMessagingTemplate, times(1))
+        verify(simpMessagingTemplate)
                 .convertAndSendToUser("token", "/queue/live", updateEvent);
     }
 
@@ -144,11 +139,9 @@ class DashboardWebSocketServiceTest {
         updateEvent.setContent("test");
         updateEvent.setType(CONNECT_DASHBOARD);
 
-        doNothing().when(simpMessagingTemplate).convertAndSendToUser(any(), any(), any());
-
         dashboardWebSocketService.sendEventToScreenProjectSubscriber("token", "screen", updateEvent);
 
-        verify(simpMessagingTemplate, times(1))
+        verify(simpMessagingTemplate)
                 .convertAndSendToUser("token-screen", "/queue/unique", updateEvent);
     }
 
@@ -166,7 +159,6 @@ class DashboardWebSocketServiceTest {
         List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
 
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
-        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         dashboardWebSocketService.addClientToProject(project, websocketClient);
@@ -174,9 +166,9 @@ class DashboardWebSocketServiceTest {
 
         assertThat(actual).contains(websocketClient);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler, times(1))
+        verify(nashornWidgetScheduler)
                 .scheduleNashornRequests(nashornRequests, true);
     }
 
@@ -195,16 +187,15 @@ class DashboardWebSocketServiceTest {
         List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
 
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
-        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         Optional<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsBySessionId("session");
 
         assertThat(actual).contains(websocketClient);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler, times(1))
+        verify(nashornWidgetScheduler)
                 .scheduleNashornRequests(nashornRequests, true);
     }
 
@@ -223,16 +214,15 @@ class DashboardWebSocketServiceTest {
         List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
 
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
-        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         int actual = dashboardWebSocketService.countWebsocketClients();
 
         assertThat(actual).isEqualTo(1);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler, times(1))
+        verify(nashornWidgetScheduler)
                 .scheduleNashornRequests(nashornRequests, true);
     }
 
@@ -252,7 +242,6 @@ class DashboardWebSocketServiceTest {
         List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
 
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
-        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         Optional<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId("session", "subscription");
@@ -276,7 +265,6 @@ class DashboardWebSocketServiceTest {
         List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
 
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
-        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         Optional<WebsocketClient> actual = dashboardWebSocketService
@@ -306,9 +294,7 @@ class DashboardWebSocketServiceTest {
         List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
 
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
-        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
         when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
-        doNothing().when(nashornWidgetScheduler).cancelWidgetsExecutionByProject(any());
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
@@ -319,13 +305,13 @@ class DashboardWebSocketServiceTest {
         actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
         assertThat(actual).isEmpty();
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler, times(1))
+        verify(nashornWidgetScheduler)
                 .scheduleNashornRequests(nashornRequests, true);
-        verify(projectService, times(1))
+        verify(projectService)
                 .getOneByToken("token");
-        verify(nashornWidgetScheduler, times(1))
+        verify(nashornWidgetScheduler)
                 .cancelWidgetsExecutionByProject(project);
     }
 
@@ -350,7 +336,6 @@ class DashboardWebSocketServiceTest {
         List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
 
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
-        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         dashboardWebSocketService.addClientToProject(project, websocketClient2);
@@ -365,9 +350,9 @@ class DashboardWebSocketServiceTest {
         actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
         assertThat(actual).contains(websocketClient2);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler, times(1))
+        verify(nashornWidgetScheduler)
                 .scheduleNashornRequests(nashornRequests, true);
         verify(projectService, times(0))
                 .getOneByToken(any());
@@ -377,11 +362,9 @@ class DashboardWebSocketServiceTest {
 
     @Test
     void shouldDisconnectClient() {
-        doNothing().when(simpMessagingTemplate).convertAndSendToUser(any(), any(), any());
-
         dashboardWebSocketService.disconnectClient("token", "screen");
 
-        verify(simpMessagingTemplate, times(1))
+        verify(simpMessagingTemplate)
                 .convertAndSendToUser(eq("token-screen"), eq("/queue/unique"), argThat(updateEvent ->
                         ((UpdateEvent) updateEvent).getType().equals(DISCONNECT)));
     }
@@ -405,18 +388,16 @@ class DashboardWebSocketServiceTest {
         nashornRequest.setProjectId(1L);
         List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
 
-        doNothing().when(simpMessagingTemplate).convertAndSendToUser(any(), any(), any());
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
-        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         dashboardWebSocketService.reloadAllConnectedClientsToAllProjects();
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler, times(1))
+        verify(nashornWidgetScheduler)
                 .scheduleNashornRequests(nashornRequests, true);
-        verify(simpMessagingTemplate, times(1))
+        verify(simpMessagingTemplate)
                 .convertAndSendToUser(eq("token"), eq("/queue/live"), argThat(updateEvent ->
                         ((UpdateEvent) updateEvent).getType().equals(RELOAD)));
     }

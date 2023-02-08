@@ -55,7 +55,7 @@ class CategoryServiceTest {
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
 
-        verify(categoryRepository, times(1))
+        verify(categoryRepository)
                 .findAll(Mockito.<CategorySearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
                                 specification.getAttributes().contains(name.getName())),
                         Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
@@ -77,7 +77,7 @@ class CategoryServiceTest {
                 .isNotNull()
                 .isEqualTo(category);
 
-        verify(categoryRepository, times(1))
+        verify(categoryRepository)
                 .findByTechnicalName("technicalName");
     }
 
@@ -114,14 +114,35 @@ class CategoryServiceTest {
 
         categoryService.addOrUpdateCategory(category);
 
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(asset);
-        verify(categoryRepository, times(1))
+        verify(categoryRepository)
                 .save(category);
         verify(categoryParametersService, times(0))
                 .deleteOneByKey("key");
-        verify(categoryParametersService, times(1))
+        verify(categoryParametersService)
                 .addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
+    }
+
+    @Test
+    void shouldAddCategoryNoAssetNoConfig() {
+        Category category = new Category();
+        category.setName("name");
+        category.setTechnicalName("technicalName");
+
+        when(categoryRepository.findByTechnicalName("technicalName"))
+                .thenReturn(null);
+
+        categoryService.addOrUpdateCategory(category);
+
+        verify(assetService, times(0))
+                .save(any());
+        verify(categoryRepository)
+                .save(category);
+        verify(categoryParametersService, times(0))
+                .deleteOneByKey(any());
+        verify(categoryParametersService, times(0))
+                .addOrUpdateCategoryConfiguration(any(), any());
     }
 
     @Test
@@ -160,13 +181,13 @@ class CategoryServiceTest {
         assertThat(category.getId()).isEqualTo(2L);
         assertThat(category.getImage().getId()).isEqualTo(1L);
 
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(asset);
-        verify(categoryRepository, times(1))
+        verify(categoryRepository)
                 .save(category);
-        verify(categoryParametersService, times(1))
+        verify(categoryParametersService)
                 .deleteOneByKey("oldKey");
-        verify(categoryParametersService, times(1))
+        verify(categoryParametersService)
                 .addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
     }
 

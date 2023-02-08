@@ -46,6 +46,11 @@ class SecurityUtilsTest {
     }
 
     @Test
+    void shouldHasRoleNullUser() {
+        assertThat(SecurityUtils.hasRole(null, UserRoleEnum.ROLE_USER.name())).isFalse();
+    }
+
+    @Test
     void shouldHasRoleUser() {
         Role role = new Role();
         role.setName(UserRoleEnum.ROLE_USER.name());

@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -118,10 +116,6 @@ class CategoryParametersControllerTest {
 
         when(categoryParametersService.getOneByKey(any()))
                 .thenReturn(Optional.of(categoryParameter));
-        doNothing().when(categoryParametersService)
-                .updateConfiguration(any(), any());
-        doNothing().when(cacheService)
-                .clearCache(anyString());
 
         ResponseEntity<Void> actual = categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto);
 
@@ -145,8 +139,6 @@ class CategoryParametersControllerTest {
 
         when(categoryParametersService.getOneByKey(any()))
                 .thenReturn(Optional.of(categoryParameter));
-        doNothing().when(categoryParametersService)
-                .deleteOneByKey(anyString());
 
         ResponseEntity<Void> actual = categoryParametersController.deleteOneByKey("key");
 

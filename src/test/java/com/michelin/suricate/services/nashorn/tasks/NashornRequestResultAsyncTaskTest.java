@@ -38,7 +38,6 @@ class NashornRequestResultAsyncTaskTest {
         NashornResponse nashornResponse = new NashornResponse();
         nashornResponse.setProjectId(1L);
 
-        doNothing().when(dashboardScheduleService).processNashornResponse(any(), any());
         when(scheduledFuture.get(anyLong(), any())).thenReturn(nashornResponse);
 
         NashornRequestResultAsyncTask task = new NashornRequestResultAsyncTask(scheduledFuture,
@@ -46,9 +45,9 @@ class NashornRequestResultAsyncTaskTest {
 
         task.call();
 
-        verify(dashboardScheduleService, times(1))
+        verify(dashboardScheduleService)
                 .processNashornResponse(nashornResponse, nashornRequestWidgetExecutionScheduler);
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(60, TimeUnit.SECONDS);
     }
 
@@ -77,7 +76,7 @@ class NashornRequestResultAsyncTaskTest {
 
         verify(dashboardScheduleService, times(2))
                 .processNashornResponse(nashornResponse, nashornRequestWidgetExecutionScheduler);
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(120, TimeUnit.SECONDS);
     }
 
@@ -105,9 +104,9 @@ class NashornRequestResultAsyncTaskTest {
 
         verify(dashboardScheduleService, times(10))
                 .processNashornResponse(nashornResponse, nashornRequestWidgetExecutionScheduler);
-        verify(nashornRequestWidgetExecutionScheduler, times(1))
+        verify(nashornRequestWidgetExecutionScheduler)
                 .schedule(nashornRequest, false);
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(60, TimeUnit.SECONDS);
     }
 
@@ -132,7 +131,7 @@ class NashornRequestResultAsyncTaskTest {
 
         assertThat(Thread.currentThread().isInterrupted()).isTrue();
 
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(60, TimeUnit.SECONDS);
     }
 
@@ -158,7 +157,7 @@ class NashornRequestResultAsyncTaskTest {
 
         task.call();
 
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(60, TimeUnit.SECONDS);
     }
 
@@ -186,7 +185,7 @@ class NashornRequestResultAsyncTaskTest {
 
         task.call();
 
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(60, TimeUnit.SECONDS);
     }
 
@@ -204,18 +203,17 @@ class NashornRequestResultAsyncTaskTest {
 
         when(scheduledFuture.get(anyLong(), any())).thenThrow(new TimeoutException("error"));
         when(scheduledFuture.cancel(anyBoolean())).thenReturn(true);
-        doNothing().when(dashboardScheduleService).updateWidgetInstanceNoNashornResponse(any(), any(), any());
 
         NashornRequestResultAsyncTask task = new NashornRequestResultAsyncTask(scheduledFuture,
                 nashornRequest, nashornRequestWidgetExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(60, TimeUnit.SECONDS);
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .cancel(true);
-        verify(dashboardScheduleService, times(1))
+        verify(dashboardScheduleService)
                 .updateWidgetInstanceNoNashornResponse("The Nashorn request exceeded the timeout defined by the widget", 1L, 1L);
     }
 
@@ -233,18 +231,17 @@ class NashornRequestResultAsyncTaskTest {
 
         when(scheduledFuture.get(anyLong(), any())).thenThrow(new RuntimeException("Error"));
         when(scheduledFuture.cancel(anyBoolean())).thenReturn(true);
-        doNothing().when(dashboardScheduleService).updateWidgetInstanceNoNashornResponse(any(), any(), any());
 
         NashornRequestResultAsyncTask task = new NashornRequestResultAsyncTask(scheduledFuture,
                 nashornRequest, nashornRequestWidgetExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(60, TimeUnit.SECONDS);
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .cancel(true);
-        verify(dashboardScheduleService, times(1))
+        verify(dashboardScheduleService)
                 .updateWidgetInstanceNoNashornResponse("java.lang.RuntimeException: Error", 1L, 1L);
     }
 
@@ -269,13 +266,13 @@ class NashornRequestResultAsyncTaskTest {
 
         task.call();
 
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .get(60, TimeUnit.SECONDS);
-        verify(scheduledFuture, times(1))
+        verify(scheduledFuture)
                 .cancel(true);
-        verify(dashboardScheduleService, times(1))
+        verify(dashboardScheduleService)
                 .updateWidgetInstanceNoNashornResponse("java.lang.RuntimeException: Error", 1L, 1L);
-        verify(nashornRequestWidgetExecutionScheduler, times(1))
+        verify(nashornRequestWidgetExecutionScheduler)
                 .schedule(nashornRequest, false);
     }
 }

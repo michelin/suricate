@@ -58,8 +58,6 @@ class UserSettingServiceTest {
                 .thenReturn(Optional.of(settings));
         when(userSettingRepository.saveAll(any()))
                 .thenReturn(Collections.singletonList(userSetting));
-        doNothing().when(userSettingRepository)
-                .flush();
 
         List<UserSetting> actual = userSettingService.createDefaultSettingsForUser(user);
 
@@ -72,16 +70,16 @@ class UserSettingServiceTest {
         assertThat(actual.get(0).getSettingValue())
                 .isEqualTo(allowedSettingValue);
 
-        verify(settingService, times(1))
+        verify(settingService)
                 .getAll();
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .saveAll(argThat(userSettings -> {
                     UserSetting createdUserSetting = userSettings.iterator().next();
                     return createdUserSetting.getUser().equals(user) &&
                             createdUserSetting.getSetting().equals(setting) &&
                             createdUserSetting.getSettingValue().equals(allowedSettingValue);
                 }));
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .flush();
     }
 
@@ -121,7 +119,7 @@ class UserSettingServiceTest {
                 .isPresent()
                 .contains(userSetting);
 
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .findByUserUsernameAndSettingId("username", 1L);
     }
 
@@ -141,7 +139,7 @@ class UserSettingServiceTest {
                 .isNotEmpty()
                 .contains(userSetting);
 
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .findAllByUserUsernameIgnoreCase("username");
     }
 
@@ -174,11 +172,11 @@ class UserSettingServiceTest {
         assertThat(userSetting.getSettingValue())
                 .isEqualTo(allowedSettingValue);
 
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .findByUserUsernameAndSettingId("username", 1L);
-        verify(allowedSettingValueService, times(1))
+        verify(allowedSettingValueService)
                 .findById(1L);
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .save(userSetting);
     }
 
@@ -209,9 +207,9 @@ class UserSettingServiceTest {
         assertThat(userSetting.getUnconstrainedValue())
                 .isEqualTo("value");
 
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .findByUserUsernameAndSettingId("username", 1L);
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .save(userSetting);
     }
 
@@ -228,7 +226,7 @@ class UserSettingServiceTest {
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("UserSetting 'user: username, settingId: 1' not found");
 
-        verify(userSettingRepository, times(1))
+        verify(userSettingRepository)
                 .findByUserUsernameAndSettingId("username", 1L);
     }
 }

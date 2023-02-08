@@ -52,7 +52,7 @@ class LibraryServiceTest {
                 .isNotEmpty()
                 .contains(library);
 
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findAll(Mockito.<LibrarySearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
                                 specification.getAttributes().contains(technicalName.getName())),
                         Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
@@ -96,7 +96,7 @@ class LibraryServiceTest {
                 .isNotEmpty()
                 .contains(library);
 
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
     }
 
@@ -131,7 +131,7 @@ class LibraryServiceTest {
                     .isNotEmpty()
                     .contains("token");
 
-            verify(libraryRepository, times(1))
+            verify(libraryRepository)
                     .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
         }
     }
@@ -176,13 +176,13 @@ class LibraryServiceTest {
                 .isNotEmpty()
                 .contains(library);
 
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findByTechnicalName("technicalName");
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(asset);
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .saveAll(Collections.singletonList(library));
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findAll();
     }
 
@@ -204,13 +204,13 @@ class LibraryServiceTest {
                 .isNotEmpty()
                 .contains(library);
 
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findByTechnicalName("technicalName");
         verify(assetService, times(0))
                 .save(any());
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .saveAll(Collections.singletonList(library));
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findAll();
     }
 
@@ -243,13 +243,13 @@ class LibraryServiceTest {
         assertThat(actual.get(0).getId()).isEqualTo(2L);
         assertThat(actual.get(0).getAsset().getId()).isEqualTo(2L);
 
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findByTechnicalName("technicalName");
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(argThat(createdAsset -> createdAsset.getId().equals(2L)));
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .saveAll(Collections.singletonList(library));
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findAll();
     }
 
@@ -278,13 +278,13 @@ class LibraryServiceTest {
         assertThat(actual.get(0).getId()).isEqualTo(2L);
         assertThat(actual.get(0).getAsset()).isNotNull();
 
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findByTechnicalName("technicalName");
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(argThat(createdAsset -> createdAsset.getId() == null));
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .saveAll(Collections.singletonList(library));
-        verify(libraryRepository, times(1))
+        verify(libraryRepository)
                 .findAll();
     }
 }

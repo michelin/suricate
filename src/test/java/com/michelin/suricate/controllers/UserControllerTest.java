@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -187,8 +186,6 @@ class UserControllerTest {
 
         when(userService.getOne(any()))
                 .thenReturn(Optional.of(user));
-        doNothing().when(userService)
-                .deleteUserByUserId(any());
 
         ResponseEntity<Void> actual = userController.deleteOne(1L);
 
@@ -326,8 +323,6 @@ class UserControllerTest {
                 .thenReturn(Optional.of(user));
         when(settingService.getOneById(any()))
                 .thenReturn(Optional.of(setting));
-        doNothing().when(userSettingService)
-                .updateUserSetting(any(), any(), any());
 
         ResponseEntity<UserResponseDto> actual = userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto);
 
@@ -510,8 +505,6 @@ class UserControllerTest {
 
         when(patService.findByNameAndUser(any(), any()))
                 .thenReturn(Optional.of(personalAccessToken));
-        doNothing().when(patService)
-                .deleteById(any());
 
         ResponseEntity<Void> actual = userController.deletePersonalAccessToken(localUser, "token");
 

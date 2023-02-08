@@ -17,7 +17,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,8 +47,6 @@ class ScreenControllerTest {
 
         when(projectService.getOneByToken(any()))
                 .thenReturn(Optional.of(project));
-        doNothing().when(dashboardWebSocketService)
-                .sendConnectProjectEventToScreenSubscriber(any(), any());
 
         ResponseEntity<Void> actual = screenController.connectProjectToScreen("token", "code");
 
@@ -59,9 +56,6 @@ class ScreenControllerTest {
 
     @Test
     void shouldDisconnectProjectFromScreen() {
-        doNothing().when(dashboardWebSocketService)
-                .disconnectClient(any(), any());
-
         ResponseEntity<Void> actual = screenController.disconnectProjectFromScreen("token", "code");
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -70,9 +64,6 @@ class ScreenControllerTest {
 
     @Test
     void shouldRefreshEveryConnectedScreensForProject() {
-        doNothing().when(dashboardWebSocketService)
-                .reloadAllConnectedClientsToAProject(any());
-
         ResponseEntity<Void> actual = screenController.refreshEveryConnectedScreensForProject("token");
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -96,8 +87,6 @@ class ScreenControllerTest {
 
         when(projectService.getOneByToken(any()))
                 .thenReturn(Optional.of(project));
-        doNothing().when(dashboardWebSocketService)
-                .sendEventToProjectSubscribers(any(), any());
 
         ResponseEntity<Void> actual = screenController.displayScreenCodeEveryConnectedScreensForProject("token");
 

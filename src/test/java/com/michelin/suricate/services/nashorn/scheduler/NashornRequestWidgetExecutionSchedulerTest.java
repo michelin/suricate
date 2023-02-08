@@ -57,10 +57,6 @@ class NashornRequestWidgetExecutionSchedulerTest {
     void shouldNotScheduleNotExecutableRequest() {
         when(nashornService.isNashornRequestExecutable(any()))
                 .thenReturn(false);
-        doNothing().when(projectWidgetService)
-                .resetProjectWidgetsState();
-        doNothing().when(projectWidgetService)
-                .updateState(any(), any(), any());
 
         NashornRequest nashornRequest = new NashornRequest();
         nashornRequest.setProjectWidgetId(1L);
@@ -68,9 +64,9 @@ class NashornRequestWidgetExecutionSchedulerTest {
         scheduler.init();
         scheduler.schedule(nashornRequest, true);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .isNashornRequestExecutable(nashornRequest);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateState(argThat(WidgetStateEnum.STOPPED::equals), argThat(projectWidgetId -> projectWidgetId.equals(1L)), any());
     }
 
@@ -88,10 +84,6 @@ class NashornRequestWidgetExecutionSchedulerTest {
 
         when(nashornService.isNashornRequestExecutable(any()))
                 .thenReturn(true);
-        doNothing().when(projectWidgetService)
-                .resetProjectWidgetsState();
-        doNothing().when(projectWidgetService)
-                .updateState(any(), any(), any());
         when(projectWidgetService.getOne(any()))
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
@@ -107,13 +99,13 @@ class NashornRequestWidgetExecutionSchedulerTest {
         scheduler.init();
         scheduler.schedule(nashornRequest, false);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .isNashornRequestExecutable(nashornRequest);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersForNashorn(widget);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateState(argThat(WidgetStateEnum.RUNNING::equals), argThat(projectWidgetId -> projectWidgetId.equals(1L)), any());
     }
 
@@ -131,8 +123,6 @@ class NashornRequestWidgetExecutionSchedulerTest {
 
         when(nashornService.isNashornRequestExecutable(any()))
                 .thenReturn(true);
-        doNothing().when(projectWidgetService)
-                .resetProjectWidgetsState();
         when(projectWidgetService.getOne(any()))
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
@@ -147,11 +137,11 @@ class NashornRequestWidgetExecutionSchedulerTest {
         scheduler.init();
         scheduler.schedule(nashornRequest, true);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .isNashornRequestExecutable(nashornRequest);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersForNashorn(widget);
         verify(projectWidgetService, times(0))
                 .updateState(any(), any(), any());
@@ -171,8 +161,6 @@ class NashornRequestWidgetExecutionSchedulerTest {
 
         when(nashornService.isNashornRequestExecutable(any()))
                 .thenReturn(true);
-        doNothing().when(projectWidgetService)
-                .resetProjectWidgetsState();
         when(projectWidgetService.getOne(any()))
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
@@ -187,11 +175,11 @@ class NashornRequestWidgetExecutionSchedulerTest {
         scheduler.init();
         scheduler.scheduleNashornRequests(Collections.singletonList(nashornRequest), true);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .isNashornRequestExecutable(nashornRequest);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersForNashorn(widget);
         verify(projectWidgetService, times(0))
                 .updateState(any(), any(), any());
@@ -242,10 +230,6 @@ class NashornRequestWidgetExecutionSchedulerTest {
 
         when(nashornService.isNashornRequestExecutable(any()))
                 .thenReturn(true);
-        doNothing().when(projectWidgetService)
-                .resetProjectWidgetsState();
-        doNothing().when(projectWidgetService)
-                .updateState(any(), any());
         when(projectWidgetService.getOne(any()))
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
@@ -269,7 +253,7 @@ class NashornRequestWidgetExecutionSchedulerTest {
                 .getWidgetParametersForNashorn(widget);
         verify(scheduler, times(2))
                 .cancelScheduledFutureTask(eq(1L), any());
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateState(WidgetStateEnum.STOPPED, 1L);
     }
 
@@ -287,10 +271,6 @@ class NashornRequestWidgetExecutionSchedulerTest {
 
         when(nashornService.isNashornRequestExecutable(any()))
                 .thenReturn(true);
-        doNothing().when(projectWidgetService)
-                .resetProjectWidgetsState();
-        doNothing().when(projectWidgetService)
-                .updateState(any(), any());
         when(projectWidgetService.getOne(any()))
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
@@ -305,15 +285,15 @@ class NashornRequestWidgetExecutionSchedulerTest {
         scheduler.init();
         scheduler.cancelAndScheduleNashornRequest(nashornRequest);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .isNashornRequestExecutable(nashornRequest);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersForNashorn(widget);
         verify(scheduler, times(0))
                 .cancelScheduledFutureTask(eq(1L), any());
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateState(WidgetStateEnum.STOPPED, 1L);
     }
 
@@ -333,7 +313,7 @@ class NashornRequestWidgetExecutionSchedulerTest {
         scheduler.init();
         scheduler.cancelWidgetsExecutionByProject(project);
 
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateState(WidgetStateEnum.STOPPED, 1L);
     }
 }

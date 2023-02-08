@@ -47,9 +47,9 @@ class AssetControllerTest {
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NOT_MODIFIED);
 
-        verify(assetService, times(1))
+        verify(assetService)
                 .getAssetById("token");
-        verify(webRequest, times(1))
+        verify(webRequest)
                 .checkNotModified(946688400000L);
     }
 
@@ -75,9 +75,9 @@ class AssetControllerTest {
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody()).isEqualTo(new byte[10]);
 
-        verify(assetService, times(1))
+        verify(assetService)
                 .getAssetById("token");
-        verify(webRequest, times(1))
+        verify(webRequest)
                 .checkNotModified(946688400000L);
     }
 }

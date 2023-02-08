@@ -88,10 +88,6 @@ class RepositoryControllerTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
         when(repositoryMapper.toRepositoryEntity(any(), any()))
                 .thenReturn(repository);
-        doNothing().when(repositoryService)
-                .addOrUpdateRepository(any());
-        doNothing().when(gitService)
-                .updateWidgetFromEnabledGitRepositories();
         when(repositoryMapper.toRepositoryDTONoWidgets(any()))
                 .thenReturn(repositoryResponseDto);
 
@@ -100,7 +96,7 @@ class RepositoryControllerTest {
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(actual.getBody()).isEqualTo(repositoryResponseDto);
 
-        verify(gitService, times(1))
+        verify(gitService)
                 .updateWidgetFromEnabledGitRepositories();
     }
 
@@ -119,8 +115,6 @@ class RepositoryControllerTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
         when(repositoryMapper.toRepositoryEntity(any(), any()))
                 .thenReturn(repository);
-        doNothing().when(repositoryService)
-                .addOrUpdateRepository(any());
         when(repositoryMapper.toRepositoryDTONoWidgets(any()))
                 .thenReturn(repositoryResponseDto);
 
@@ -193,8 +187,6 @@ class RepositoryControllerTest {
                 .thenReturn(true);
         when(repositoryMapper.toRepositoryEntity(any(), any()))
                 .thenReturn(repository);
-        doNothing().when(repositoryService)
-                .addOrUpdateRepository(any());
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, true);
 
@@ -214,8 +206,6 @@ class RepositoryControllerTest {
                 .thenReturn(true);
         when(repositoryMapper.toRepositoryEntity(any(), any()))
                 .thenReturn(repository);
-        doNothing().when(repositoryService)
-                .addOrUpdateRepository(any());
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, false);
 
@@ -235,10 +225,6 @@ class RepositoryControllerTest {
                 .thenReturn(true);
         when(repositoryMapper.toRepositoryEntity(any(), any()))
                 .thenReturn(repository);
-        doNothing().when(repositoryService)
-                .addOrUpdateRepository(any());
-        doNothing().when(gitService)
-                .updateWidgetFromEnabledGitRepositories();
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, false);
 
@@ -247,9 +233,6 @@ class RepositoryControllerTest {
 
     @Test
     void shouldSynchronize() throws GitAPIException, IOException {
-        doNothing().when(gitService)
-                .updateWidgetFromEnabledGitRepositories();
-
         ResponseEntity<Void> actual = repositoryController.synchronize();
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);

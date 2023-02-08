@@ -52,11 +52,11 @@ class AuthenticationControllerTest {
         assertThat(actual.getBody()).isNotNull();
         assertThat(actual.getBody().getAccessToken()).isEqualTo("token");
 
-        verify(authenticationManager, times(1))
+        verify(authenticationManager)
                 .authenticate(Mockito.<UsernamePasswordAuthenticationToken>argThat(auth ->
                         auth.getPrincipal().equals("username") &&
                         auth.getCredentials().equals("password")));
-        verify(jwtHelperService, times(1))
+        verify(jwtHelperService)
                 .createToken(authentication);
     }
 }

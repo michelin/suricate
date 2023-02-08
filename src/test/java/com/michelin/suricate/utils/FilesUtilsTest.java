@@ -1,13 +1,18 @@
 package com.michelin.suricate.utils;
 
 import com.michelin.suricate.model.entities.Asset;
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicException;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 
 class FilesUtilsTest {
 
@@ -49,5 +54,19 @@ class FilesUtilsTest {
         assertThat(actual.getContentType()).isEqualTo("application/javascript");
         assertThat(actual.getSize()).isEqualTo(9);
         assertThat(actual.getContent()).isEqualTo(new byte[]{108, 101, 116, 32, 116, 101, 115, 116, 59});
+    }
+
+    @Test
+    void shouldThrowExceptionWhenReadingJSAsset() throws IOException {
+        try (MockedStatic<Magic> mocked = mockStatic(Magic.class)) {
+            mocked.when(() -> Magic.getMagicMatch(any()))
+                    .thenThrow(new MagicException("error"));
+
+            Asset actual = FilesUtils.readAsset(new File("src/test/resources/repository/content/other/description.yml"));
+
+            assertThat(actual.getContentType()).isEqualTo("text/plain");
+            assertThat(actual.getSize()).isEqualTo(33);
+            assertThat(actual.getContent()).isNotEmpty();
+        }
     }
 }

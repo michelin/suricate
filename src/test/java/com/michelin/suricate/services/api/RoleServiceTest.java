@@ -47,7 +47,7 @@ class RoleServiceTest {
                 .isPresent()
                 .contains(role);
 
-        verify(roleRepository, times(1))
+        verify(roleRepository)
                 .findByName("name");
     }
 
@@ -66,7 +66,7 @@ class RoleServiceTest {
                 .isNotEmpty()
                 .contains(role);
 
-        verify(roleRepository, times(1))
+        verify(roleRepository)
                 .findAll(Mockito.<RoleSearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
                                 specification.getAttributes().contains(name.getName())),
                         Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
@@ -86,7 +86,7 @@ class RoleServiceTest {
                 .isNotEmpty()
                 .contains(role);
 
-        verify(roleRepository, times(1))
+        verify(roleRepository)
                 .findById(1L);
     }
 }

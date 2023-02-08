@@ -57,7 +57,7 @@ class CategoryParametersServiceTest {
         assertThat(actual.get()).hasSize(1);
         assertThat(actual.get().get(0)).isEqualTo(categoryParameter);
 
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .findCategoryParametersByCategoryId(1L);
     }
 
@@ -78,7 +78,7 @@ class CategoryParametersServiceTest {
                 .isNotEmpty()
                 .contains(categoryParameter);
 
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .findAll(Mockito.<CategoryParametersSearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
                                 specification.getAttributes().contains(description.getName())),
                         Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
@@ -100,7 +100,7 @@ class CategoryParametersServiceTest {
                 .isPresent()
                 .contains(categoryParameter);
 
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .findById("key");
     }
 
@@ -119,7 +119,7 @@ class CategoryParametersServiceTest {
         assertThat(categoryParameter.getValue())
                 .isEqualTo("newValue");
 
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .save(categoryParameter);
     }
 
@@ -140,7 +140,7 @@ class CategoryParametersServiceTest {
         assertThat(categoryParameter.getValue())
                 .isEqualTo("encrypted");
 
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .save(categoryParameter);
     }
 
@@ -151,12 +151,9 @@ class CategoryParametersServiceTest {
         categoryParameter.setValue("value");
         categoryParameter.setDataType(DataTypeEnum.TEXT);
 
-        doNothing().when(categoryParametersRepository)
-                .deleteById("key");
-
         categoryParametersService.deleteOneByKey("key");
 
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .deleteById("key");
     }
 
@@ -183,9 +180,9 @@ class CategoryParametersServiceTest {
         assertThat(categoryParameter.getValue()).isEqualTo("value");
         assertThat(categoryParameter.isExport()).isFalse();
 
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .findById("key");
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .save(categoryParameter);
     }
 
@@ -218,9 +215,9 @@ class CategoryParametersServiceTest {
         assertThat(categoryParameter.getValue()).isEqualTo("oldValue");
         assertThat(categoryParameter.isExport()).isTrue();
 
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .findById("key");
-        verify(categoryParametersRepository, times(1))
+        verify(categoryParametersRepository)
                 .save(categoryParameter);
     }
 

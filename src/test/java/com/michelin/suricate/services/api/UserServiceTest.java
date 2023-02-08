@@ -79,13 +79,13 @@ class UserServiceTest {
         assertThat(actual.getUserSettings())
                 .contains(userSetting);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .count();
-        verify(roleService, times(1))
+        verify(roleService)
                 .getRoleByName(UserRoleEnum.ROLE_ADMIN.name());
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(user);
-        verify(userSettingService, times(1))
+        verify(userSettingService)
                 .createDefaultSettingsForUser(user);
     }
 
@@ -116,13 +116,13 @@ class UserServiceTest {
         assertThat(actual.getUserSettings())
                 .contains(userSetting);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .count();
-        verify(roleService, times(1))
+        verify(roleService)
                 .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(user);
-        verify(userSettingService, times(1))
+        verify(userSettingService)
                 .createDefaultSettingsForUser(user);
     }
 
@@ -140,9 +140,9 @@ class UserServiceTest {
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Role 'ROLE_USER' not found");
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .count();
-        verify(roleService, times(1))
+        verify(roleService)
                 .getRoleByName(UserRoleEnum.ROLE_USER.name());
         verify(userRepository, times(0))
                 .save(any());
@@ -194,15 +194,15 @@ class UserServiceTest {
         assertThat(actual.getUserSettings())
                 .contains(userSetting);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findByEmailIgnoreCase("email");
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .existsByUsername("username");
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .count();
-        verify(roleService, times(1))
+        verify(roleService)
                 .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(argThat(createdUser ->
                         createdUser.getUsername().equals("username") &&
                         createdUser.getFirstname().equals("firstname") &&
@@ -210,7 +210,7 @@ class UserServiceTest {
                         createdUser.getEmail().equals("email") &&
                         createdUser.getAvatarUrl().equals("avatar") &&
                         createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
-        verify(userSettingService, times(1))
+        verify(userSettingService)
                 .createDefaultSettingsForUser(any(User.class));
     }
 
@@ -261,21 +261,21 @@ class UserServiceTest {
         assertThat(actual.getUserSettings())
                 .contains(userSetting);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findByEmailIgnoreCase("email");
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .existsByUsername("username");
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .existsByUsername("username1");
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .existsByUsername("username2");
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .existsByUsername("username3");
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .count();
-        verify(roleService, times(1))
+        verify(roleService)
                 .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(argThat(createdUser ->
                         createdUser.getUsername().equals("username3") &&
                         createdUser.getFirstname().equals("firstname") &&
@@ -283,7 +283,7 @@ class UserServiceTest {
                         createdUser.getEmail().equals("email") &&
                         createdUser.getAvatarUrl().equals("avatar") &&
                         createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
-        verify(userSettingService, times(1))
+        verify(userSettingService)
                 .createDefaultSettingsForUser(any(User.class));
     }
 
@@ -334,9 +334,9 @@ class UserServiceTest {
         assertThat(actual.getProjects())
                 .contains(project);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findByEmailIgnoreCase("email");
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(argThat(createdUser ->
                         createdUser.getUsername().equals("existingUsername") &&
                         createdUser.getFirstname().equals("firstname") &&
@@ -391,7 +391,7 @@ class UserServiceTest {
         assertThat(actual.getProjects())
                 .contains(project);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(argThat(createdUser ->
                         createdUser.getId().equals(1L) &&
                         createdUser.getUsername().equals("existingUsername") &&
@@ -416,7 +416,7 @@ class UserServiceTest {
                 .isPresent()
                 .contains(user);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findById(1L);
     }
 
@@ -434,7 +434,7 @@ class UserServiceTest {
                 .isPresent()
                 .contains(user);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findByUsernameIgnoreCase("username");
     }
 
@@ -452,7 +452,7 @@ class UserServiceTest {
                 .isPresent()
                 .contains(user);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findByEmailIgnoreCase("email");
     }
 
@@ -469,7 +469,7 @@ class UserServiceTest {
         assertThat(actual)
                 .isTrue();
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .existsByUsername("username");
     }
 
@@ -487,7 +487,7 @@ class UserServiceTest {
                 .isNotEmpty()
                 .contains(user);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findAll(Mockito.<UserSearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
                                 specification.getAttributes().isEmpty()),
                         Mockito.argThat(pageable -> pageable.equals(Pageable.unpaged())));
@@ -503,16 +503,11 @@ class UserServiceTest {
         user.setId(1L);
         user.setProjects(projects);
 
-        doNothing().when(projectService)
-                .deleteUserFromProject(any(), any());
-        doNothing().when(userRepository)
-                .delete(any());
-
         userService.deleteUserByUserId(user);
 
-        verify(projectService, times(1))
+        verify(projectService)
                 .deleteUserFromProject(user, project);
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .delete(user);
     }
 
@@ -546,11 +541,11 @@ class UserServiceTest {
         assertThat(actual.get().getRoles())
                 .contains(role);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findById(1L);
-        verify(roleService, times(1))
+        verify(roleService)
                 .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(user);
     }
 
@@ -584,11 +579,11 @@ class UserServiceTest {
         assertThat(actual.get().getRoles())
                 .contains((Role) null);
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findById(1L);
-        verify(roleService, times(1))
+        verify(roleService)
                 .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(user);
     }
 
@@ -619,9 +614,9 @@ class UserServiceTest {
         assertThat(actual.get().getRoles())
                 .isEmpty();
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findById(1L);
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .save(user);
     }
 
@@ -639,7 +634,7 @@ class UserServiceTest {
         assertThat(actual)
                 .isNotPresent();
 
-        verify(userRepository, times(1))
+        verify(userRepository)
                 .findById(1L);
         verify(roleService, times(0))
                 .getRoleByName(UserRoleEnum.ROLE_USER.name());

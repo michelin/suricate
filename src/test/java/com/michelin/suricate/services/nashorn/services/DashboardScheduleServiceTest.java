@@ -73,33 +73,27 @@ class DashboardScheduleServiceTest {
         nashornResponse.setLog("log");
         nashornResponse.setLaunchDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
 
-        doNothing().when(projectWidgetService)
-                .updateWidgetInstanceAfterSucceededExecution(any(), any(), any(), any(), any());
         when(nashornService.getNashornRequestByProjectWidgetId(any())).thenReturn(nashornRequest);
-        doNothing().when(nashornWidgetScheduler)
-                .schedule(any(), anyBoolean());
         when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(projectWidgetMapper.toProjectWidgetDTO(any())).thenReturn(projectWidgetResponseDto);
         when(projectService.getTokenByProjectId(any())).thenReturn("token");
-        doNothing().when(dashboardWebSocketService)
-                .sendEventToWidgetInstanceSubscribers(any(), any(), any());
 
         dashboardScheduleService.processNashornResponse(nashornResponse, nashornWidgetScheduler);
 
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateWidgetInstanceAfterSucceededExecution(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
                         "log", "{}", 1L, WidgetStateEnum.RUNNING);
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .getNashornRequestByProjectWidgetId(1L);
-        verify(nashornWidgetScheduler, times(1))
+        verify(nashornWidgetScheduler)
                 .schedule(nashornRequest, false);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(projectWidgetMapper, times(1))
+        verify(projectWidgetMapper)
                 .toProjectWidgetDTO(projectWidget);
-        verify(projectService, times(1))
+        verify(projectService)
                 .getTokenByProjectId(1L);
-        verify(dashboardWebSocketService, times(1))
+        verify(dashboardWebSocketService)
                 .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
                         event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
     }
@@ -123,26 +117,22 @@ class DashboardScheduleServiceTest {
         nashornResponse.setError(NashornErrorTypeEnum.ERROR);
         nashornResponse.setLaunchDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
 
-        doNothing().when(projectWidgetService)
-                .updateWidgetInstanceAfterFailedExecution(any(), any(), any(), any());
         when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(projectWidgetMapper.toProjectWidgetDTO(any())).thenReturn(projectWidgetResponseDto);
         when(projectService.getTokenByProjectId(any())).thenReturn("token");
-        doNothing().when(dashboardWebSocketService)
-                .sendEventToWidgetInstanceSubscribers(any(), any(), any());
 
         dashboardScheduleService.processNashornResponse(nashornResponse, nashornWidgetScheduler);
 
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateWidgetInstanceAfterFailedExecution(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
                         "log", 1L, WidgetStateEnum.WARNING);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(projectWidgetMapper, times(1))
+        verify(projectWidgetMapper)
                 .toProjectWidgetDTO(projectWidget);
-        verify(projectService, times(1))
+        verify(projectService)
                 .getTokenByProjectId(1L);
-        verify(dashboardWebSocketService, times(1))
+        verify(dashboardWebSocketService)
                 .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
                         event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
     }
@@ -166,26 +156,22 @@ class DashboardScheduleServiceTest {
         nashornResponse.setError(NashornErrorTypeEnum.FATAL);
         nashornResponse.setLaunchDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
 
-        doNothing().when(projectWidgetService)
-                .updateWidgetInstanceAfterFailedExecution(any(), any(), any(), any());
         when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(projectWidgetMapper.toProjectWidgetDTO(any())).thenReturn(projectWidgetResponseDto);
         when(projectService.getTokenByProjectId(any())).thenReturn("token");
-        doNothing().when(dashboardWebSocketService)
-                .sendEventToWidgetInstanceSubscribers(any(), any(), any());
 
         dashboardScheduleService.processNashornResponse(nashornResponse, nashornWidgetScheduler);
 
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateWidgetInstanceAfterFailedExecution(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
                         "log", 1L, WidgetStateEnum.STOPPED);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(projectWidgetMapper, times(1))
+        verify(projectWidgetMapper)
                 .toProjectWidgetDTO(projectWidget);
-        verify(projectService, times(1))
+        verify(projectService)
                 .getTokenByProjectId(1L);
-        verify(dashboardWebSocketService, times(1))
+        verify(dashboardWebSocketService)
                 .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
                         event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
     }
@@ -198,26 +184,22 @@ class DashboardScheduleServiceTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        doNothing().when(projectWidgetService)
-                .updateWidgetInstanceAfterFailedExecution(any(), any(), any(), any());
         when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(projectWidgetMapper.toProjectWidgetDTO(any())).thenReturn(projectWidgetResponseDto);
         when(projectService.getTokenByProjectId(any())).thenReturn("token");
-        doNothing().when(dashboardWebSocketService)
-                .sendEventToWidgetInstanceSubscribers(any(), any(), any());
 
         dashboardScheduleService.updateWidgetInstanceNoNashornResponse("logs", 1L, 1L);
 
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .updateWidgetInstanceAfterFailedExecution(any(),
                         eq("logs"), eq(1L), eq(WidgetStateEnum.STOPPED));
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(projectWidgetMapper, times(1))
+        verify(projectWidgetMapper)
                 .toProjectWidgetDTO(projectWidget);
-        verify(projectService, times(1))
+        verify(projectService)
                 .getTokenByProjectId(1L);
-        verify(dashboardWebSocketService, times(1))
+        verify(dashboardWebSocketService)
                 .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
                         event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
     }
@@ -233,18 +215,16 @@ class DashboardScheduleServiceTest {
         when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(projectWidgetMapper.toProjectWidgetDTO(any())).thenReturn(projectWidgetResponseDto);
         when(projectService.getTokenByProjectId(any())).thenReturn("token");
-        doNothing().when(dashboardWebSocketService)
-                .sendEventToWidgetInstanceSubscribers(any(), any(), any());
 
         dashboardScheduleService.sendWidgetUpdateNotification(1L, 1L);
 
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .getOne(1L);
-        verify(projectWidgetMapper, times(1))
+        verify(projectWidgetMapper)
                 .toProjectWidgetDTO(projectWidget);
-        verify(projectService, times(1))
+        verify(projectService)
                 .getTokenByProjectId(1L);
-        verify(dashboardWebSocketService, times(1))
+        verify(dashboardWebSocketService)
                 .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
                         event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
     }
@@ -257,14 +237,12 @@ class DashboardScheduleServiceTest {
         when(nashornService.getNashornRequestByProjectWidgetId(any())).thenReturn(nashornRequest);
         when(applicationContext.getBean(NashornRequestWidgetExecutionScheduler.class))
                 .thenReturn(nashornRequestWidgetExecutionScheduler);
-        doNothing().when(nashornRequestWidgetExecutionScheduler)
-                .cancelAndScheduleNashornRequest(any());
 
         dashboardScheduleService.scheduleWidget(1L);
 
-        verify(nashornService, times(1))
+        verify(nashornService)
                 .getNashornRequestByProjectWidgetId(1L);
-        verify(nashornRequestWidgetExecutionScheduler, times(1))
+        verify(nashornRequestWidgetExecutionScheduler)
                 .cancelAndScheduleNashornRequest(nashornRequest);
     }
 }

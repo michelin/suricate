@@ -71,7 +71,7 @@ class ProjectWidgetServiceTest {
                 .isNotEmpty()
                 .contains(projectWidget);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .findAll();
     }
 
@@ -89,7 +89,7 @@ class ProjectWidgetServiceTest {
                 .isNotEmpty()
                 .contains(projectWidget);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .findById(1L);
     }
 
@@ -107,7 +107,7 @@ class ProjectWidgetServiceTest {
                 .isNotEmpty()
                 .contains(projectWidget);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .findByIdAndProjectGridId(1L, 1L);
     }
 
@@ -136,9 +136,9 @@ class ProjectWidgetServiceTest {
         assertThat(actual)
                 .isEqualTo(projectWidget);
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .save(projectWidget);
     }
 
@@ -163,26 +163,21 @@ class ProjectWidgetServiceTest {
 
         when(projectWidgetRepository.saveAndFlush(any()))
                 .thenAnswer(answer -> answer.getArgument(0));
-        doNothing().when(dashboardWebsocketService)
-                .sendEventToProjectSubscribers(any(), any());
 
         projectWidgetService.createAndRefreshDashboards(projectWidget);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .saveAndFlush(projectWidget);
-        verify(dashboardWebsocketService, times(1))
+        verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
                         event.getDate() != null));
     }
 
     @Test
     void shouldUpdateWidgetPositionByProjectWidgetId() {
-        doNothing().when(projectWidgetRepository)
-                .updateRowAndColAndWidthAndHeightById(1, 1, 1, 1, 1L);
-
         projectWidgetService.updateWidgetPositionByProjectWidgetId(1L, 1, 1, 1, 1);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .updateRowAndColAndWidthAndHeightById(1, 1, 1, 1, 1L);
     }
 
@@ -199,16 +194,11 @@ class ProjectWidgetServiceTest {
         projectWidgetPositionRequestDto.setGridColumn(1);
         projectWidgetPositionRequestDto.setGridRow(1);
 
-        doNothing().when(projectWidgetRepository)
-                .flush();
-        doNothing().when(dashboardWebsocketService)
-                .sendEventToProjectSubscribers(any(), any());
-
         projectWidgetService.updateWidgetPositionByProject(project, Collections.singletonList(projectWidgetPositionRequestDto));
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .flush();
-        verify(dashboardWebsocketService, times(1))
+        verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)));
     }
 
@@ -233,28 +223,20 @@ class ProjectWidgetServiceTest {
 
         when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
                 .thenReturn(nashornRequestWidgetExecutionScheduler);
-        doNothing().when(nashornRequestWidgetExecutionScheduler)
-                .cancelWidgetExecution(any());
-        doNothing().when(projectWidgetRepository)
-                .deleteById(any());
-        doNothing().when(projectWidgetRepository)
-                .flush();
-        doNothing().when(dashboardWebsocketService)
-                .sendEventToProjectSubscribers(any(), any());
         when(projectWidgetRepository.findById(any()))
                 .thenReturn(Optional.of(projectWidget));
 
         projectWidgetService.removeWidgetFromDashboard(1L);
 
-        verify(nashornRequestWidgetExecutionScheduler, times(1))
+        verify(nashornRequestWidgetExecutionScheduler)
                 .cancelWidgetExecution(1L);
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .deleteById(1L);
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .flush();
-        verify(dashboardWebsocketService, times(1))
+        verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)));
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .findById(1L);
     }
 
@@ -273,18 +255,15 @@ class ProjectWidgetServiceTest {
                 .flush();
         verify(dashboardWebsocketService, times(0))
                 .sendEventToProjectSubscribers(any(), any());
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .findById(1L);
     }
 
     @Test
     void shouldResetProjectWidgetsState() {
-        doNothing().when(projectWidgetRepository)
-                .resetProjectWidgetsState();
-
         projectWidgetService.resetProjectWidgetsState();
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .resetProjectWidgetsState();
     }
 
@@ -304,9 +283,9 @@ class ProjectWidgetServiceTest {
         Assertions.assertThat(projectWidget.getState())
                 .isEqualTo(WidgetStateEnum.STOPPED);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .findById(1L);
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .saveAndFlush(projectWidget);
     }
 
@@ -321,7 +300,7 @@ class ProjectWidgetServiceTest {
 
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, 1L);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .findById(1L);
         verify(projectWidgetRepository, times(0))
                 .saveAndFlush(any());
@@ -344,9 +323,9 @@ class ProjectWidgetServiceTest {
         assertThat(projectWidget.getLastExecutionDate())
                 .isEqualTo(now);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .findById(1L);
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .saveAndFlush(projectWidget);
     }
 
@@ -417,7 +396,7 @@ class ProjectWidgetServiceTest {
         assertThat(actual)
                 .isEqualTo("<h1>titre</h1>");
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
     }
 
@@ -449,7 +428,7 @@ class ProjectWidgetServiceTest {
         assertThat(actual)
                 .isEmpty();
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
     }
 
@@ -489,10 +468,6 @@ class ProjectWidgetServiceTest {
 
         when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
                 .thenReturn(nashornRequestWidgetExecutionScheduler);
-        doNothing().when(nashornRequestWidgetExecutionScheduler)
-                .cancelWidgetExecution(any());
-        doNothing().when(dashboardScheduleService)
-                .scheduleWidget(any());
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
                 .thenReturn(Collections.singletonList(widgetParam));
         when(projectWidgetRepository.save(any()))
@@ -505,11 +480,11 @@ class ProjectWidgetServiceTest {
         assertThat(projectWidget.getBackendConfig())
                 .isEqualTo("param=value");
 
-        verify(nashornRequestWidgetExecutionScheduler, times(1))
+        verify(nashornRequestWidgetExecutionScheduler)
                 .cancelWidgetExecution(1L);
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .save(projectWidget);
-        verify(dashboardScheduleService, times(1))
+        verify(dashboardScheduleService)
                 .scheduleWidget(1L);
     }
 
@@ -524,10 +499,6 @@ class ProjectWidgetServiceTest {
 
         when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
                 .thenReturn(nashornRequestWidgetExecutionScheduler);
-        doNothing().when(nashornRequestWidgetExecutionScheduler)
-                .cancelWidgetExecution(any());
-        doNothing().when(dashboardScheduleService)
-                .scheduleWidget(any());
         when(projectWidgetRepository.save(any()))
                 .thenAnswer(answer -> answer.getArgument(0));
 
@@ -538,35 +509,29 @@ class ProjectWidgetServiceTest {
         assertThat(projectWidget.getBackendConfig())
                 .isNull();
 
-        verify(nashornRequestWidgetExecutionScheduler, times(1))
+        verify(nashornRequestWidgetExecutionScheduler)
                 .cancelWidgetExecution(1L);
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .save(projectWidget);
-        verify(dashboardScheduleService, times(1))
+        verify(dashboardScheduleService)
                 .scheduleWidget(1L);
     }
 
     @Test
     void shouldUpdateWidgetInstanceAfterFailedExecution() {
-        doNothing().when(projectWidgetRepository)
-                .updateLastExecutionDateAndStateAndLog(any(), any(), any(), any());
-
         Date now = new Date();
         projectWidgetService.updateWidgetInstanceAfterFailedExecution(now, "log", 1L, WidgetStateEnum.STOPPED);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .updateLastExecutionDateAndStateAndLog(now, "log", 1L, WidgetStateEnum.STOPPED);
     }
 
     @Test
     void shouldUpdateWidgetInstanceAfterSucceededExecution() {
-        doNothing().when(projectWidgetRepository)
-                .updateSuccessExecution(any(), any(), any(), any(), any());
-
         Date now = new Date();
         projectWidgetService.updateWidgetInstanceAfterSucceededExecution(now, "log", "data", 1L, WidgetStateEnum.STOPPED);
 
-        verify(projectWidgetRepository, times(1))
+        verify(projectWidgetRepository)
                 .updateSuccessExecution(now, "log", "data", 1L, WidgetStateEnum.STOPPED);
     }
 
@@ -587,7 +552,7 @@ class ProjectWidgetServiceTest {
         assertThat(actual)
                 .isEqualTo("param=value");
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
     }
 
@@ -611,9 +576,9 @@ class ProjectWidgetServiceTest {
         assertThat(actual)
                 .isEqualTo("param=decrypted");
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
-        verify(stringEncryptor, times(1))
+        verify(stringEncryptor)
                 .decrypt("value");
     }
 
@@ -634,7 +599,7 @@ class ProjectWidgetServiceTest {
 
         assertThat(actual).isEmpty();
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
         verify(stringEncryptor, times(0))
                 .decrypt(any());
@@ -657,7 +622,7 @@ class ProjectWidgetServiceTest {
         assertThat(actual)
                 .isEqualTo("param=value");
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
     }
 
@@ -681,9 +646,9 @@ class ProjectWidgetServiceTest {
         assertThat(actual)
                 .isEqualTo("param=encrypted");
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
-        verify(stringEncryptor, times(1))
+        verify(stringEncryptor)
                 .encrypt("value");
     }
 
@@ -705,7 +670,7 @@ class ProjectWidgetServiceTest {
         assertThat(actual)
                 .isEqualTo("otherParam=value");
 
-        verify(widgetService, times(1))
+        verify(widgetService)
                 .getWidgetParametersWithCategoryParameters(widget);
         verify(stringEncryptor, times(0))
                 .encrypt(any());

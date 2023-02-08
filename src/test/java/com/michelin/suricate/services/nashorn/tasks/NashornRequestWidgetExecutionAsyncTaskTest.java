@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -247,6 +248,7 @@ class NashornRequestWidgetExecutionAsyncTaskTest {
         assertThat(task.isFatalError(new Exception("timeoutException"), new FatalException(""))).isFalse();
         assertThat(task.isFatalError(new Exception("timeout:"), new IllegalArgumentException(""))).isFalse();
         assertThat(task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server"))).isFalse();
+        assertThat(task.isFatalError(new Exception("Error on server"), new UnknownHostException("Error on server"))).isFalse();
 
         nashornRequest.setAlreadySuccess(true);
 

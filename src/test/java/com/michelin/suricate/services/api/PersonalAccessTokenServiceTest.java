@@ -44,7 +44,7 @@ class PersonalAccessTokenServiceTest {
                 .hasSize(1)
                 .contains(personalAccessToken);
 
-        verify(personalAccessTokenRepository, times(1))
+        verify(personalAccessTokenRepository)
                 .findAllByUser(user);
     }
 
@@ -65,7 +65,7 @@ class PersonalAccessTokenServiceTest {
                 .isPresent()
                 .contains(personalAccessToken);
 
-        verify(personalAccessTokenRepository, times(1))
+        verify(personalAccessTokenRepository)
                 .findByNameAndUser("name", user);
     }
 
@@ -83,7 +83,7 @@ class PersonalAccessTokenServiceTest {
                 .isPresent()
                 .contains(personalAccessToken);
 
-        verify(personalAccessTokenRepository, times(1))
+        verify(personalAccessTokenRepository)
                 .findByChecksum(1L);
     }
 
@@ -110,7 +110,7 @@ class PersonalAccessTokenServiceTest {
         assertThat(actual.getChecksum()).isEqualTo(1L);
         assertThat(actual.getUser()).isEqualTo(localUser.getUser());
 
-        verify(personalAccessTokenRepository, times(1))
+        verify(personalAccessTokenRepository)
                 .save(argThat(createdPersonalAccessToken -> createdPersonalAccessToken.getName().equals("token") &&
                         createdPersonalAccessToken.getChecksum().equals(1L) &&
                         createdPersonalAccessToken.getUser().equals(localUser.getUser())));
@@ -118,12 +118,9 @@ class PersonalAccessTokenServiceTest {
 
     @Test
     void shouldDeleteById() {
-        doNothing().when(personalAccessTokenRepository)
-                .deleteById(any());
-
         personalAccessTokenService.deleteById(1L);
 
-        verify(personalAccessTokenRepository, times(1))
+        verify(personalAccessTokenRepository)
                 .deleteById(1L);
     }
 }

@@ -73,7 +73,7 @@ public final class WidgetUtils {
      * @return the list of category to parse
      */
     public static List<Category> parseCategoriesFolder(File rootFolder) {
-        List<Category> categories = null;
+        List<Category> categories = new ArrayList<>();
 
         try {
             List<File> list = FilesUtils.getFolders(rootFolder);
@@ -81,8 +81,6 @@ public final class WidgetUtils {
             if (list.isEmpty()) {
                 return Collections.emptyList();
             }
-
-            categories = new ArrayList<>();
 
             for (File folderCategory : list) {
                 Category category = WidgetUtils.getCategory(folderCategory);

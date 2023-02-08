@@ -27,7 +27,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -263,8 +262,6 @@ class ProjectGridControllerTest {
                 .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
-        doNothing().when(projectGridService)
-                .updateAll(any(), any());
 
         ResponseEntity<Void> actual = projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto);
 
@@ -377,8 +374,6 @@ class ProjectGridControllerTest {
                 .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
-        doNothing().when(projectGridService)
-                .deleteByProjectIdAndId(any(), any());
 
         ResponseEntity<Void> actual = projectGridController.deleteGridById(localUser, "token", 1L);
 

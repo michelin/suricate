@@ -117,10 +117,6 @@ class ImportExportControllerTest {
                 .thenReturn(repository);
         when(repositoryService.findByName(any()))
                 .thenReturn(Optional.of(repository));
-        doNothing().when(repositoryService)
-                .addOrUpdateRepositories(any());
-        doNothing().when(gitService)
-                .updateWidgetFromEnabledGitRepositories();
         when(projectMapper.toProjectEntity(any(ImportExportProjectDto.class)))
                 .thenReturn(project);
         when(projectService.createUpdateProjects(any(), any()))
@@ -132,15 +128,15 @@ class ImportExportControllerTest {
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody()).isNull();
 
-        verify(repositoryMapper, times(1))
+        verify(repositoryMapper)
                 .toRepositoryEntity(importExportRepositoryDto);
-        verify(repositoryService, times(1))
+        verify(repositoryService)
                 .findByName("name");
-        verify(repositoryService, times(1))
+        verify(repositoryService)
                 .addOrUpdateRepositories(argThat(repositories -> repositories.contains(repository)));
-        verify(projectMapper, times(1))
+        verify(projectMapper)
                 .toProjectEntity(importExportProjectDto);
-        verify(projectService, times(1))
+        verify(projectService)
                 .createUpdateProjects(argThat(projects -> projects.contains(project)),
                         eq(user));
     }

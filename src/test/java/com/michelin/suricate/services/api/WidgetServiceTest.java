@@ -54,7 +54,7 @@ class WidgetServiceTest {
                 .isPresent()
                 .contains(widget);
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findById(1L);
     }
 
@@ -73,7 +73,7 @@ class WidgetServiceTest {
                 .isPresent()
                 .contains(widget);
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findByTechnicalName("technicalName");
     }
 
@@ -91,7 +91,7 @@ class WidgetServiceTest {
                 .isNotEmpty()
                 .contains(widget);
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findAll(Mockito.<WidgetSearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
                                 specification.getAttributes().isEmpty()),
                         Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
@@ -114,7 +114,7 @@ class WidgetServiceTest {
                 .isNotEmpty()
                 .contains(widget);
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findAllByCategoryIdOrderByNameAsc(1L);
     }
 
@@ -128,7 +128,7 @@ class WidgetServiceTest {
         assertThat(actual)
                 .isEmpty();
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findAllByCategoryIdOrderByNameAsc(1L);
     }
 
@@ -142,7 +142,7 @@ class WidgetServiceTest {
         assertThat(actual)
                 .isEmpty();
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findAllByCategoryIdOrderByNameAsc(1L);
     }
 
@@ -168,7 +168,7 @@ class WidgetServiceTest {
                 .hasSize(2)
                 .containsExactlyInAnyOrder(widgetParam, widgetParamTwo);
 
-        verify(categoryService, times(1))
+        verify(categoryService)
                 .getCategoryParametersByWidget(widget);
     }
 
@@ -218,7 +218,7 @@ class WidgetServiceTest {
         assertThat(actual)
                 .hasSize(4);
 
-        verify(categoryService, times(1))
+        verify(categoryService)
                 .getCategoryParametersByWidget(widget);
     }
 
@@ -241,9 +241,9 @@ class WidgetServiceTest {
                 .isPresent()
                 .contains(widget);
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findById(1L);
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .save(widget);
     }
 
@@ -260,7 +260,7 @@ class WidgetServiceTest {
         assertThat(actual)
                 .isEmpty();
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findById(1L);
     }
 
@@ -371,13 +371,13 @@ class WidgetServiceTest {
         assertThat(new ArrayList<>(new ArrayList<>(widget.getWidgetParams()).get(0).getPossibleValuesMap()).get(0).getId())
                 .isEqualTo(12L);
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findByTechnicalName("widgetTechnicalName");
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(widgetImage);
-        verify(widgetParamRepository, times(1))
+        verify(widgetParamRepository)
                 .deleteById(13L);
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .save(widget);
     }
 
@@ -463,13 +463,13 @@ class WidgetServiceTest {
         assertThat(new ArrayList<>(new ArrayList<>(widget.getWidgetParams()).get(0).getPossibleValuesMap()).get(0).getId())
                 .isEqualTo(12L);
 
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .findByTechnicalName("widgetTechnicalName");
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(widgetImage);
-        verify(widgetParamRepository, times(1))
+        verify(widgetParamRepository)
                 .deleteById(13L);
-        verify(widgetRepository, times(1))
+        verify(widgetRepository)
                 .save(widget);
     }
 

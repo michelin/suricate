@@ -36,9 +36,21 @@ class WidgetUtilsTest {
     }
 
     @Test
+    void shouldParseCategoriesEmptyFolder() {
+        assertThat(WidgetUtils.parseCategoriesFolder(new File("src/test/resources/specific-repository/content/no-name")))
+                .isEmpty();
+    }
+
+    @Test
+    void shouldParseCategoriesUnknownFolder() {
+        assertThat(WidgetUtils.parseCategoriesFolder(new File("src/test/resources/specific-repository/content/does-not-exist")))
+                .isEmpty();
+    }
+
+    @Test
     void shouldParseCategoriesFolderAndGetGitHub() {
         List<Category> actual = WidgetUtils.parseCategoriesFolder(new File("src/test/resources/repository/content"));
-        assertThat(actual).hasSize(2);
+        assertThat(actual).hasSize(3);
         assertThat(actual.get(0).getId()).isNull();
         assertThat(actual.get(0).getName()).isEqualTo("GitHub");
         assertThat(actual.get(0).getTechnicalName()).isEqualTo("github");
@@ -71,7 +83,7 @@ class WidgetUtilsTest {
     @Test
     void shouldParseCategoriesFolderAndGetGitLab() {
         List<Category> actual = WidgetUtils.parseCategoriesFolder(new File("src/test/resources/repository/content"));
-        assertThat(actual).hasSize(2);
+        assertThat(actual).hasSize(3);
         assertThat(actual.get(1).getId()).isNull();
         assertThat(actual.get(1).getName()).isEqualTo("GitLab");
         assertThat(actual.get(1).getTechnicalName()).isEqualTo("gitlab");
@@ -111,6 +123,18 @@ class WidgetUtilsTest {
     @Test
     void shouldGetCategoryWithNoName() throws IOException {
         assertThat(WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-name"))).isNull();
+    }
+
+    @Test
+    void shouldGetCategoryWithNoWidgets() throws IOException {
+        Category actual = WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-widgets"));
+
+        assertThat(actual.getId()).isNull();
+        assertThat(actual.getName()).isEqualTo("noWidgets");
+        assertThat(actual.getTechnicalName()).isEqualTo("noWidgets");
+        assertThat(actual.getImage()).isNotNull();
+        assertThat(actual.getImage().getContentType()).isEqualTo("image/png");
+        assertThat(actual.getWidgets()).isEmpty();
     }
 
     @Test
@@ -183,5 +207,21 @@ class WidgetUtilsTest {
         assertThat(actual.getBackendJs()).isNotNull();
         assertThat(actual.getImage()).isNotNull();
         assertThat(actual.getWidgetParams()).hasSize(3);
+    }
+
+    @Test
+    void shouldGetWidgetClockWithNoParams() throws IOException {
+        Widget actual = WidgetUtils.getWidget(new File("src/test/resources/repository/content/other/widgets/clock"));
+
+        assertThat(actual.getId()).isNull();
+        assertThat(actual.getName()).isEqualTo("Clock");
+        assertThat(actual.getDescription()).isEqualTo("Display the current date and time with a clock");
+        assertThat(actual.getTechnicalName()).isEqualTo("clock");
+        assertThat(actual.getDelay()).isEqualTo(-1L);
+        assertThat(actual.getHtmlContent()).isNotNull();
+        assertThat(actual.getCssContent()).isNotNull();
+        assertThat(actual.getBackendJs()).isNull();
+        assertThat(actual.getImage()).isNotNull();
+        assertThat(actual.getWidgetParams()).isEmpty();
     }
 }

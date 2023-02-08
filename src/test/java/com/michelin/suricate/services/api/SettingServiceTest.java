@@ -38,7 +38,7 @@ class SettingServiceTest {
                 .isPresent()
                 .contains(setting);
 
-        verify(settingRepository, times(1))
+        verify(settingRepository)
                 .findById(1L);
     }
 
@@ -58,7 +58,7 @@ class SettingServiceTest {
                 .isNotEmpty()
                 .contains(setting);
 
-        verify(settingRepository, times(1))
+        verify(settingRepository)
                 .findAllByOrderByDescription();
     }
 }

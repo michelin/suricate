@@ -62,7 +62,7 @@ class ProjectServiceTest {
                 .isNotEmpty()
                 .contains(project);
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .findAll(Mockito.<ProjectSearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
                                 specification.getAttributes().isEmpty()),
                         Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
@@ -85,7 +85,7 @@ class ProjectServiceTest {
                 .isNotEmpty()
                 .contains(project);
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .findByUsersIdOrderByName(1L);
     }
 
@@ -103,7 +103,7 @@ class ProjectServiceTest {
                 .isPresent()
                 .contains(project);
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .findById(1L);
     }
 
@@ -121,7 +121,7 @@ class ProjectServiceTest {
                 .isPresent()
                 .contains(project);
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .findProjectByToken("token");
     }
 
@@ -137,7 +137,7 @@ class ProjectServiceTest {
 
         assertThat(actual).isEqualTo("token");
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .getToken(1L);
     }
 
@@ -156,9 +156,9 @@ class ProjectServiceTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getToken()).isEqualTo("encrypted");
 
-        verify(stringEncryptor, times(1))
+        verify(stringEncryptor)
                 .encrypt(any(String.class));
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .save(project);
     }
 
@@ -178,7 +178,7 @@ class ProjectServiceTest {
 
         verify(stringEncryptor, times(0))
                 .encrypt(any(String.class));
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .save(project);
     }
 
@@ -203,7 +203,7 @@ class ProjectServiceTest {
 
         verify(stringEncryptor, times(0))
                 .encrypt(any(String.class));
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .save(project);
     }
 
@@ -243,15 +243,15 @@ class ProjectServiceTest {
                 .hasSize(1)
                 .contains(project);
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .findProjectByToken("token");
-        verify(projectGridService, times(1))
+        verify(projectGridService)
                 .findByIdAndProjectToken(1L, "token");
-        verify(projectGridService, times(1))
+        verify(projectGridService)
                 .create(projectGrid);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .findByIdAndProjectGridId(1L, null);
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .findAll(Mockito.<ProjectSearchSpecification>argThat(specification -> specification.getSearch().equals(StringUtils.EMPTY) &&
                                 specification.getAttributes().isEmpty()));
     }
@@ -318,15 +318,15 @@ class ProjectServiceTest {
         assertThat(new ArrayList<>(new ArrayList<>(actual.get(0).getGrids()).get(0).getWidgets()).get(0).getId())
                 .isEqualTo(1L);
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .findProjectByToken("token");
-        verify(projectGridService, times(1))
+        verify(projectGridService)
                 .findByIdAndProjectToken(1L, "token");
-        verify(projectGridService, times(1))
+        verify(projectGridService)
                 .create(projectGrid);
-        verify(projectWidgetService, times(1))
+        verify(projectWidgetService)
                 .findByIdAndProjectGridId(1L, 1L);
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .findAll(Mockito.<ProjectSearchSpecification>argThat(specification -> specification.getSearch().equals(StringUtils.EMPTY) &&
                         specification.getAttributes().isEmpty()));
     }
@@ -339,8 +339,6 @@ class ProjectServiceTest {
 
         when(projectRepository.save(any()))
                 .thenAnswer(answer -> answer.getArgument(0));
-        doNothing().when(dashboardWebsocketService)
-                .sendEventToProjectSubscribers(any(), any());
 
         projectService.updateProject(project, "newName", 1, 1, "css");
         assertThat(project.getName()).isEqualTo("newName");
@@ -348,9 +346,9 @@ class ProjectServiceTest {
         assertThat(project.getMaxColumn()).isEqualTo(1);
         assertThat(project.getCssStyle()).isEqualTo("css");
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .save(project);
-        verify(dashboardWebsocketService, times(1))
+        verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"),
                         argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) && event.getDate() != null));
     }
@@ -362,8 +360,6 @@ class ProjectServiceTest {
 
         when(projectRepository.save(any()))
                 .thenAnswer(answer -> answer.getArgument(0));
-        doNothing().when(dashboardWebsocketService)
-                .sendEventToProjectSubscribers(any(), any());
 
         projectService.updateProject(project, null, 0, 0, null);
 
@@ -372,9 +368,9 @@ class ProjectServiceTest {
         assertThat(project.getMaxColumn()).isNull();
         assertThat(project.getCssStyle()).isNull();
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .save(project);
-        verify(dashboardWebsocketService, times(1))
+        verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"),
                         argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) && event.getDate() != null));
     }
@@ -395,7 +391,7 @@ class ProjectServiceTest {
         projectService.deleteUserFromProject(user, project);
         assertThat(project.getUsers()).isEmpty();
 
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .save(project);
     }
 
@@ -477,10 +473,10 @@ class ProjectServiceTest {
 
         projectService.deleteProject(project);
 
-        verify(dashboardWebsocketService, times(1))
+        verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"), argThat(event ->
                         event.getType().equals(UpdateType.DISCONNECT) && event.getDate() != null));
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .delete(project);
     }
 
@@ -497,11 +493,11 @@ class ProjectServiceTest {
 
         projectService.addOrUpdateScreenshot(project, new byte[10], "contentType", 10L);
 
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(argThat(asset -> asset.getSize() == 10L &&
                         asset.getContentType().equals("contentType") &&
                         Arrays.equals(asset.getContent(), new byte[10])));
-        verify(projectRepository, times(1))
+        verify(projectRepository)
                 .save(argThat(createdProject -> createdProject.getId().equals(1L) &&
                         createdProject.getToken().equals("token") &&
                         Arrays.equals(createdProject.getScreenshot().getContent(), new byte[10]) &&
@@ -521,7 +517,7 @@ class ProjectServiceTest {
 
         projectService.addOrUpdateScreenshot(project, new byte[10], "contentType", 10L);
 
-        verify(assetService, times(1))
+        verify(assetService)
                 .save(argThat(asset -> asset.getSize() == 10L &&
                         asset.getContentType().equals("contentType") &&
                         Arrays.equals(asset.getContent(), new byte[10])));

@@ -37,7 +37,7 @@ class AllowedSettingValueServiceTest {
                 .isPresent()
                 .contains(allowedSettingValue);
 
-        verify(allowedSettingValueRepository, times(1))
+        verify(allowedSettingValueRepository)
                 .findById(1L);
     }
 }

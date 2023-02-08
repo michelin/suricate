@@ -45,7 +45,7 @@ class AssetServiceTest {
                     .isNotNull()
                     .isEqualTo(asset);
 
-            verify(assetRepository, times(1))
+            verify(assetRepository)
                     .findById(1L);
         }
     }
@@ -86,7 +86,7 @@ class AssetServiceTest {
                 .isNotNull()
                 .isEqualTo(asset);
 
-        verify(assetRepository, times(1))
+        verify(assetRepository)
                 .save(asset);
     }
 }

@@ -276,8 +276,6 @@ class ProjectControllerTest {
                 .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
-        doNothing().when(projectService)
-                .updateProject(any(), anyString(), anyInt(), anyInt(), anyString());
 
         ResponseEntity<Void> actual = projectController.updateProject(localUser, "token", projectRequestDto);
 
@@ -394,8 +392,6 @@ class ProjectControllerTest {
                 .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
-        doNothing().when(projectService)
-                .addOrUpdateScreenshot(any(), any(), anyString(), anyLong());
 
         ResponseEntity<Void> actual = projectController.updateProjectScreenshot(localUser, "token", file);
 
@@ -476,8 +472,6 @@ class ProjectControllerTest {
                 .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
-        doNothing().when(projectService)
-                .deleteProject(any());
 
         ResponseEntity<Void> actual = projectController.deleteProjectById(localUser, "token");
 
@@ -567,8 +561,6 @@ class ProjectControllerTest {
                 .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
-        doNothing().when(projectWidgetService)
-                .updateWidgetPositionByProject(any(), any());
 
         ResponseEntity<Void> actual = projectController.updateProjectWidgetsPositionForProject(localUser, "token", projectWidgetPositionRequestDtos);
 
@@ -824,8 +816,6 @@ class ProjectControllerTest {
                 .thenReturn(true);
         when(userService.getOne(any()))
                 .thenReturn(Optional.of(user));
-        doNothing().when(projectService)
-                .deleteUserFromProject(any(), any());
 
         ResponseEntity<Void> actual = projectController.deleteUserFromProject(localUser, "token", 1L);
 
