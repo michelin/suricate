@@ -251,4 +251,54 @@ class OAuth2UserServiceTest {
         verify(userService)
                 .registerUser("myUsername", "myFirstName", "MYLASTNAME", "myEmail", "myPicture", AuthenticationProvider.GITLAB);
     }
+
+    @Test
+    void shouldRegisterUserNoNameNoAvatar() {
+        ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
+
+        OAuth2AccessToken token = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
+
+        OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("username", "myUsername");
+        attributes.put("login", "myUsername");
+        attributes.put("email", "myEmail");
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User createdUser = new User();
+        createdUser.setId(1L);
+        createdUser.setUsername("username");
+        createdUser.setPassword("password");
+        createdUser.setRoles(Collections.singleton(role));
+
+        when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
+                .thenReturn(ResponseEntity.ok(attributes));
+        when(userService.registerUser(any(), any(), any(), any(), any(), any()))
+                .thenReturn(createdUser);
+
+        LocalUser actual = (LocalUser) oAuth2UserService.loadUser(request);
+
+        assertThat(actual.getUsername()).isEqualTo("username");
+        assertThat(actual.getPassword()).isEqualTo("password");
+        assertThat(actual.getAttributes()).containsEntry("username", "myUsername");
+        assertThat(actual.getAttributes()).containsEntry("login", "myUsername");
+        assertThat(actual.getAttributes()).containsEntry("email", "myEmail");
+        assertThat(actual.getUser()).isEqualTo(createdUser);
+        verify(userService)
+                .registerUser("myUsername", null, null, "myEmail", null, AuthenticationProvider.GITLAB);
+    }
 }

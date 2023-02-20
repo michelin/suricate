@@ -43,4 +43,18 @@ class ConfigurationControllerTest {
                 .contains(AuthenticationProvider.LDAP)
                 .contains(AuthenticationProvider.GITHUB);
     }
+
+    @Test
+    void shouldGetAuthenticationProvidersEmpty() {
+        ApplicationProperties.Authentication authProperties = new ApplicationProperties.Authentication();
+
+        when(applicationProperties.getAuthentication()).thenReturn(authProperties);
+
+        ResponseEntity<List<AuthenticationProvider>> actual = configurationController.getAuthenticationProviders();
+
+        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getBody()).isNotNull();
+        assertThat(actual.getBody()).isEmpty();
+    }
 }
