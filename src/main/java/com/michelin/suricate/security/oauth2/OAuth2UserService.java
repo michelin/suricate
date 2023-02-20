@@ -25,15 +25,9 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 @Slf4j
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
-    /**
-     * The user service
-     */
     @Autowired
     private UserService userService;
 
-    /**
-     * The application properties
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 

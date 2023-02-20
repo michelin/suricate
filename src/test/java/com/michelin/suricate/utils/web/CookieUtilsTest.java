@@ -74,7 +74,7 @@ class CookieUtilsTest {
         assertThat(actual.getName()).isEqualTo("myCookie");
         assertThat(actual.getValue()).isEmpty();
         assertThat(actual.getPath()).isEqualTo("/");
-        assertThat(actual.getMaxAge()).isEqualTo(0);
+        assertThat(actual.getMaxAge()).isZero();
     }
 
     @Test
