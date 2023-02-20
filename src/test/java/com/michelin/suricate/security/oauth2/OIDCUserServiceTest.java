@@ -207,7 +207,7 @@ class OIDCUserServiceTest {
                 claims);
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
-        
+
         Role role = new Role();
         role.setId(1L);
         role.setName("ROLE_ADMIN");
@@ -246,5 +246,77 @@ class OIDCUserServiceTest {
         assertThat(actual.getUser()).isEqualTo(createdUser);
         verify(userService)
                 .registerUser("myUsername", "myFirstName", "myLastName", "myEmail", "myAvatar", AuthenticationProvider.GITLAB);
+    }
+
+    @Test
+    void shouldRegisterUserParsingNameByCaseAndPicture() {
+        ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
+
+        OAuth2AccessToken token = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("sub", "mySubject");
+        claims.put("username", "myUsername");
+        claims.put("nickname", "myUsername");
+        claims.put("email", "myEmail");
+        claims.put("name", "MYLASTNAME myFirstName");
+        claims.put("picture", "myPicture");
+
+        OidcIdToken oidcToken = new OidcIdToken("oidcToken", Instant.parse("2000-01-01T01:00:00.00Z"), Instant.parse("2000-01-02T01:00:00.00Z"),
+                claims);
+
+        OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User createdUser = new User();
+        createdUser.setId(1L);
+        createdUser.setUsername("username");
+        createdUser.setPassword("password");
+        createdUser.setRoles(Collections.singleton(role));
+
+        ApplicationProperties.Authentication authProperties = new ApplicationProperties.Authentication();
+        authProperties.setSocialProviders(Collections.singletonList("gitlab"));
+        ApplicationProperties.SocialProvidersConfig config = new ApplicationProperties.SocialProvidersConfig();
+        config.setNameCaseParse(true);
+        authProperties.setSocialProvidersConfig(Collections.singletonMap("gitlab", config));
+        
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, claims);
+        when(applicationProperties.getAuthentication())
+                .thenReturn(authProperties);
+        when(oAuth2UserService.loadUser(any()))
+                .thenReturn(localUser);
+        when(userService.registerUser(any(), any(), any(), any(), any(), any()))
+                .thenReturn(createdUser);
+
+        LocalUser actual = (LocalUser) oidcUserService.loadUser(request);
+
+        assertThat(actual.getUsername()).isEqualTo("username");
+        assertThat(actual.getPassword()).isEqualTo("password");
+        assertThat(actual.getAttributes()).containsEntry("username", "myUsername");
+        assertThat(actual.getAttributes()).containsEntry("email", "myEmail");
+        assertThat(actual.getAttributes()).containsEntry("name", "MYLASTNAME myFirstName");
+        assertThat(actual.getAttributes()).containsEntry("picture", "myPicture");
+        assertThat(actual.getUser()).isEqualTo(createdUser);
+        verify(userService)
+                .registerUser("myUsername", "myFirstName", "MYLASTNAME", "myEmail", "myPicture", AuthenticationProvider.GITLAB);
     }
 }
