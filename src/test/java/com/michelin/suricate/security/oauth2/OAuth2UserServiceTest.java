@@ -191,7 +191,7 @@ class OAuth2UserServiceTest {
     }
 
     @Test
-    void shouldRegisterUserParsingNameByCaseAndPicture() {
+    void shouldRegisterUserByLoginParsingNameByCaseAndPicture() {
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .clientId("clientId")
@@ -210,6 +210,7 @@ class OAuth2UserServiceTest {
 
         Map<String, String> attributes = new HashMap<>();
         attributes.put("username", "myUsername");
+        attributes.put("login", "myUsername");
         attributes.put("email", "myEmail");
         attributes.put("name", "MYLASTNAME myFirstName");
         attributes.put("picture", "myPicture");
@@ -242,6 +243,7 @@ class OAuth2UserServiceTest {
         assertThat(actual.getUsername()).isEqualTo("username");
         assertThat(actual.getPassword()).isEqualTo("password");
         assertThat(actual.getAttributes()).containsEntry("username", "myUsername");
+        assertThat(actual.getAttributes()).containsEntry("login", "myUsername");
         assertThat(actual.getAttributes()).containsEntry("email", "myEmail");
         assertThat(actual.getAttributes()).containsEntry("name", "MYLASTNAME myFirstName");
         assertThat(actual.getAttributes()).containsEntry("picture", "myPicture");

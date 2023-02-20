@@ -292,7 +292,7 @@ class OIDCUserServiceTest {
         ApplicationProperties.SocialProvidersConfig config = new ApplicationProperties.SocialProvidersConfig();
         config.setNameCaseParse(true);
         authProperties.setSocialProvidersConfig(Collections.singletonMap("gitlab", config));
-        
+
         User user = new User();
         user.setId(1L);
         user.setUsername("username");
@@ -316,6 +316,7 @@ class OIDCUserServiceTest {
         assertThat(actual.getAttributes()).containsEntry("name", "MYLASTNAME myFirstName");
         assertThat(actual.getAttributes()).containsEntry("picture", "myPicture");
         assertThat(actual.getUser()).isEqualTo(createdUser);
+        assertThat(actual.getIdToken()).isEqualTo(oidcToken);
         verify(userService)
                 .registerUser("myUsername", "myFirstName", "MYLASTNAME", "myEmail", "myPicture", AuthenticationProvider.GITLAB);
     }
