@@ -1,0 +1,7 @@
+name: GitHub
+technicalName: github
+configurations:
+  -
+    key: 'WIDGET_CONFIG_GITHUB_TOKEN'
+    description: 'Token for the GitHub API'
+    dataType: PASSWORD

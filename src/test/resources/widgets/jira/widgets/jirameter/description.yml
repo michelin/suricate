@@ -1,6 +1,0 @@
-name: Jira Progression
-description: Widget used to display JIRA release progression
-technicalName: jirameter
-delay: 500
-libraries:
-  - knob.js

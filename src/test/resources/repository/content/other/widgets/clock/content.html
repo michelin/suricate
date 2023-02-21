@@ -1,0 +1,15 @@
+<div class="grid-stack-item-content-inner">
+   <h1 class="date"></h1>
+   <h2 class="time"></h2>
+</div>
+<i class="fa fa-clock-o icon-background"></i>
+<script>
+   $(function() {
+     function updateDate() {
+       $(".clock.widget-{{SURI_INSTANCE_ID}} .date").html(moment().locale(navigator.language || navigator.userLanguage).format('DD MMMM YYYY'));
+       $(".clock.widget-{{SURI_INSTANCE_ID}} .time").html(moment().format('HH:mm:ss'));
+       setTimeout(updateDate, 500);
+     }
+     updateDate();
+   });
+</script>

@@ -1,1 +1,0 @@
-// SURI_IMG::Choose your image::FILE::

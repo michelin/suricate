@@ -1,0 +1,6 @@
+name: Clock
+description: Display the current date and time with a clock
+technicalName: clock
+delay: -1
+libraries:
+  - moment-with-locales.js
