@@ -26,10 +26,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.retry.backoff.UniformRandomBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
 
 @Slf4j
+@Component
 @Scope(value="prototype")
 public class NashornRequestResultAsyncTask implements Callable<Void>{
     private static final int TIMEOUT = 60;
