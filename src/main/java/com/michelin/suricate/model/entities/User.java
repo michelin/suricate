@@ -72,9 +72,22 @@ public class User extends AbstractEntity<Long> {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<UserSetting> userSettings = new LinkedHashSet<>();
 
+    /**
+     * Hashcode method
+     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * then call the self-defined child Hashcode method
+     * @return The hash code
+     */
     @Override
     public int hashCode() { return super.hashCode(); }
 
+    /**
+     * Equals method
+     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * then call the self-defined child Equals method
+     * @param other The other object to compare
+     * @return true if equals, false otherwise
+     */
     @Override
     public boolean equals(Object other) { return super.equals(other); }
 }

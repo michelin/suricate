@@ -401,4 +401,12 @@ class DashboardWebSocketServiceTest {
                 .convertAndSendToUser(eq("token"), eq("/queue/live"), argThat(updateEvent ->
                         ((UpdateEvent) updateEvent).getType().equals(RELOAD)));
     }
+
+    @Test
+    void shouldNotReloadAllConnectedClientsToAProjectWhenEmpty() {
+        dashboardWebSocketService.reloadAllConnectedClientsToAProject("token");
+
+        verify(simpMessagingTemplate, times(0))
+                .convertAndSendToUser(any(), any(), any());
+    }
 }
