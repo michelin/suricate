@@ -48,9 +48,9 @@ jobs:
 
       - name: Update next version
         run: |
-          mvn versions:set -DnextSnapshot=true
-          git add pom.xml
           npm --no-git-tag-version version $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)-next
           git add package.json
+          mvn versions:set -DnextSnapshot=true
+          git add pom.xml
           git commit -s -m "Prepare next snapshot version [skip ci]"
           git push
