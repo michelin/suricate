@@ -29,6 +29,8 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -41,7 +43,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @ActiveProfiles("integration-test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = { PostgreSQLIntegrationTest.Initializer.class })
 class PostgreSQLIntegrationTest {
 
     @Autowired
@@ -53,16 +54,13 @@ class PostgreSQLIntegrationTest {
             .withUsername("sa")
             .withPassword("sa");
 
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues
-                    .of("spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-                            "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                            "spring.datasource.password=" + postgreSQLContainer.getPassword(),
-                            "spring.datasource.driverClassName=org.postgresql.Driver",
-                            "spring.flyway.locations=classpath:flyway/postgresql")
-                    .applyTo(configurableApplicationContext.getEnvironment());
-        }
+    @DynamicPropertySource
+    static void registerProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.driverClassName", () -> "org.postgresql.Driver");
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        registry.add("spring.flyway.locations", () -> "classpath:flyway/postgresql");
     }
 
     @Test
