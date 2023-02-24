@@ -1,0 +1,4 @@
+name: Number of merge requests
+description: Display the number of merge requests of a GitLab project
+technicalName: gitlabOpenedMR
+delay: 500

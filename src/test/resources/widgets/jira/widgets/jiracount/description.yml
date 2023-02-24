@@ -1,5 +1,0 @@
-name: Jira count
-description: Widget user to count the number of jira from the specified JQL query
-info: test
-technicalName: jiracount
-delay: 500

@@ -1,0 +1,22 @@
+widgetParams:
+  - name: SURI_PROJECT
+    description: 'Project ID'
+    type: TEXT
+    usageExample: '1234'
+    required: true
+  - name: 'SURI_MR_STATE'
+    description: 'Filter on the state of the merge requests'
+    type: COMBO
+    defaultValue: 'all'
+    possibleValuesMap:
+      - jsKey: all
+        value: All
+      - jsKey: opened
+        value: Opened
+      - jsKey: closed
+        value: Closed
+      - jsKey: locked
+        value: Locked
+      - jsKey: merged
+        value: Merged
+    required: true

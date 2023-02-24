@@ -1,0 +1,10 @@
+<div class="grid-stack-item-content-inner">
+  <h1 class="title">{{project}}</h1>
+  <h2 class="value">{{numberOfMRs}}</h2>
+  <h2 class="issues-label">{{#mrsState}} {{mrsState}} {{/mrsState}} merge requests</h2>
+
+  {{#evolution}}
+  <p class="change-rate"><i class="fa fa-arrow-{{arrow}}"></i><span>{{evolution}}% since the last execution</span></p>
+  {{/evolution}}
+</div>
+<div class="gitlab"></div>

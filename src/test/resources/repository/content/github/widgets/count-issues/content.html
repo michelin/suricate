@@ -1,0 +1,10 @@
+<div class="grid-stack-item-content-inner">
+  <h1 class="title">{{SURI_GITHUB_PROJECT}}</h1>
+  <h2 class="value">{{numberOfIssues}}</h2>
+  <h2 class="issues-label">{{#issuesState}} {{issuesState}} {{/issuesState}} issues</h2>
+
+  {{#evolution}}
+  <p class="change-rate"><i class="fa fa-arrow-{{arrow}}"></i><span>{{evolution}}% since the last execution</span></p>
+  {{/evolution}}
+</div>
+<div class="github"></div>

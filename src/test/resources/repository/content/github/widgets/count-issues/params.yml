@@ -1,0 +1,21 @@
+widgetParams:
+  - name: 'SURI_GITHUB_ORG'
+    description: 'GitHub organization'
+    type: TEXT
+    required: true
+  - name: 'SURI_GITHUB_PROJECT'
+    description: 'GitHub project'
+    type: TEXT
+    required: true
+  - name: 'SURI_ISSUES_STATE'
+    description: 'Filter on the state of the issues'
+    type: COMBO
+    defaultValue: 'all'
+    possibleValuesMap:
+      - jsKey: all
+        value: All
+      - jsKey: open
+        value: Open
+      - jsKey: closed
+        value: Closed
+    required: true

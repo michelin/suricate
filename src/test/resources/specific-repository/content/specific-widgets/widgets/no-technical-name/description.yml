@@ -1,0 +1,4 @@
+name: No delay
+description: No delay
+technicalName: nodelay
+delay: 60

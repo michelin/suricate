@@ -1,0 +1,4 @@
+name: Number of issues
+description: Display the number of issues of a GitHub project
+technicalName: githubOpenedIssues
+delay: 600

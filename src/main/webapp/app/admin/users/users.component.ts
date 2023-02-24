@@ -17,7 +17,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { User } from '../../shared/models/backend/user/user';
-import { HttpUserService } from '../../shared/services/backend/http-user/http-user.service';
 import { Role } from '../../shared/models/backend/role/role';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { TitleCasePipe } from '@angular/common';
