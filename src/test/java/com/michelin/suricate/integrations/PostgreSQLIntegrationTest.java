@@ -59,6 +59,7 @@ class PostgreSQLIntegrationTest {
                     .of("spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
                             "spring.datasource.username=" + postgreSQLContainer.getUsername(),
                             "spring.datasource.password=" + postgreSQLContainer.getPassword(),
+                            "spring.datasource.driverClassName=org.postgresql.Driver",
                             "spring.flyway.locations=classpath:flyway/postgresql")
                     .applyTo(configurableApplicationContext.getEnvironment());
         }
