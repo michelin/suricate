@@ -1,7 +1,7 @@
 CREATE TABLE allowed_setting_value (
     id              bigserial               NOT NULL,
     title           character varying(255)  NOT NULL,
-    `value`   character varying(255)  NOT NULL,
+    value           character varying(255)  NOT NULL,
     is_default      character(1)            NOT NULL,
     setting_id      bigint                  NOT NULL,
     CONSTRAINT pk_allowed_setting_value_id  PRIMARY KEY (id)
@@ -240,7 +240,7 @@ CREATE TABLE widget_param (
 CREATE TABLE widget_param_value (
     id                  bigserial                   NOT NULL,
     js_key              character varying(255)      NOT NULL,
-    `value`             character varying(255)      NOT NULL,
+    value               character varying(255)      NOT NULL,
     widget_param_id     bigint,
     created_by          character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
     created_date        timestamp without time zone DEFAULT now() NOT NULL,
