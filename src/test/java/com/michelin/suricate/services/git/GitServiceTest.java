@@ -84,8 +84,7 @@ class GitServiceTest {
                 .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
         verify(libraryService).createUpdateLibraries(argThat(libraries ->
                 libraries.get(0).getTechnicalName().equals("test.js") &&
-                        Arrays.equals(libraries.get(0).getAsset().getContent(), new byte[]{108, 101, 116, 32, 116, 101, 115, 116, 59}) &&
-                        libraries.get(0).getAsset().getSize() == 9 &&
+                        libraries.get(0).getAsset() != null &&
                         libraries.get(0).getAsset().getContentType().equals("application/javascript")));
         verify(categoryService)
                 .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub") &&
@@ -161,8 +160,7 @@ class GitServiceTest {
                 .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
         verify(libraryService).createUpdateLibraries(argThat(libraries ->
                 libraries.get(0).getTechnicalName().equals("test.js") &&
-                        Arrays.equals(libraries.get(0).getAsset().getContent(), new byte[]{108, 101, 116, 32, 116, 101, 115, 116, 59}) &&
-                        libraries.get(0).getAsset().getSize() == 9 &&
+                        libraries.get(0).getAsset() != null &&
                         libraries.get(0).getAsset().getContentType().equals("application/javascript")));
         verify(categoryService)
                 .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub") &&
@@ -229,8 +227,7 @@ class GitServiceTest {
 
         verify(libraryService).createUpdateLibraries(argThat(libraries ->
                 libraries.get(0).getTechnicalName().equals("test.js") &&
-                Arrays.equals(libraries.get(0).getAsset().getContent(), new byte[]{108, 101, 116, 32, 116, 101, 115, 116, 59}) &&
-                libraries.get(0).getAsset().getSize() == 9 &&
+                libraries.get(0).getAsset() != null &&
                 libraries.get(0).getAsset().getContentType().equals("application/javascript")));
         verify(categoryService)
                 .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub") &&

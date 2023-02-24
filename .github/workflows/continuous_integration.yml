@@ -1,10 +1,8 @@
-name: Continuous Integration
+name: Continuous integration
 
 on:
   push:
-    branches:
-      - dev
-      - master
+    branches: [master]
 
 jobs:
   back-end:
@@ -85,7 +83,7 @@ jobs:
           fetch-depth: 0
 
       - name: Docker
-        run: mvn package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
+        run: mvn package -P production -DskipTests jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
