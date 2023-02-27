@@ -20,15 +20,10 @@ package com.michelin.suricate.integrations;
 
 import com.michelin.suricate.model.entities.Setting;
 import com.michelin.suricate.repositories.SettingRepository;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -41,7 +36,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
-@ActiveProfiles("integration-test")
+@ActiveProfiles("integration-test-postgresql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PostgreSQLIntegrationTest {
 
@@ -50,17 +45,15 @@ class PostgreSQLIntegrationTest {
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres")
-            .withDatabaseName("integration-tests-db")
+            .withDatabaseName("suricate")
             .withUsername("sa")
             .withPassword("sa");
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.driverClassName", () -> "org.postgresql.Driver");
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-        registry.add("spring.flyway.locations", () -> "classpath:flyway/postgresql");
     }
 
     @Test
