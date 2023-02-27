@@ -76,13 +76,13 @@ class PostgreSQLIntegrationTest {
         assertThat(actual.get()).hasSize(2);
         assertThat(actual.get().get(0).isConstrained()).isTrue();
         assertThat(actual.get().get(0).getDataType()).isEqualTo(DataTypeEnum.COMBO);
-        assertThat(actual.get().get(0).getType()).isEqualTo(SettingType.THEME);
-        assertThat(actual.get().get(0).getDescription()).isEqualTo("Theme");
+        assertThat(actual.get().get(0).getType()).isEqualTo(SettingType.LANGUAGE);
+        assertThat(actual.get().get(0).getDescription()).isEqualTo("Language");
 
         assertThat(actual.get().get(1).isConstrained()).isTrue();
         assertThat(actual.get().get(1).getDataType()).isEqualTo(DataTypeEnum.COMBO);
-        assertThat(actual.get().get(1).getType()).isEqualTo(SettingType.LANGUAGE);
-        assertThat(actual.get().get(1).getDescription()).isEqualTo("Language");
+        assertThat(actual.get().get(1).getType()).isEqualTo(SettingType.THEME);
+        assertThat(actual.get().get(1).getDescription()).isEqualTo("Theme");
     }
 
     @Test
@@ -124,7 +124,7 @@ class PostgreSQLIntegrationTest {
         assertThat(actual).hasSize(2);
         assertThat(actual.get(0).getDescription()).isEqualTo("Administrator Role");
         assertThat(actual.get(0).getName()).isEqualTo("ROLE_ADMIN");
-        
+
         assertThat(actual.get(1).getDescription()).isEqualTo("User role");
         assertThat(actual.get(1).getName()).isEqualTo("ROLE_USER");
     }
