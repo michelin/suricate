@@ -98,22 +98,22 @@ class PostgreSQLIntegrationTest {
         assertThat(actualAllowedSettingValues.get(0).getTitle()).isEqualTo("Default");
         assertThat(actualAllowedSettingValues.get(0).getValue()).isEqualTo("default-theme");
         assertThat(actualAllowedSettingValues.get(0).isDefault()).isTrue();
-        assertThat(actualAllowedSettingValues.get(0).getSetting()).isEqualTo(actual.get().get(0));
+        assertThat(actualAllowedSettingValues.get(0).getSetting()).isEqualTo(actual.get().get(1));
 
         assertThat(actualAllowedSettingValues.get(1).getTitle()).isEqualTo("Dark");
         assertThat(actualAllowedSettingValues.get(1).getValue()).isEqualTo("dark-theme");
         assertThat(actualAllowedSettingValues.get(1).isDefault()).isFalse();
-        assertThat(actualAllowedSettingValues.get(1).getSetting()).isEqualTo(actual.get().get(0));
+        assertThat(actualAllowedSettingValues.get(1).getSetting()).isEqualTo(actual.get().get(1));
 
         assertThat(actualAllowedSettingValues.get(2).getTitle()).isEqualTo("English");
         assertThat(actualAllowedSettingValues.get(2).getValue()).isEqualTo("en");
         assertThat(actualAllowedSettingValues.get(2).isDefault()).isTrue();
-        assertThat(actualAllowedSettingValues.get(2).getSetting()).isEqualTo(actual.get().get(1));
+        assertThat(actualAllowedSettingValues.get(2).getSetting()).isEqualTo(actual.get().get(0));
 
         assertThat(actualAllowedSettingValues.get(3).getTitle()).isEqualTo("Français");
         assertThat(actualAllowedSettingValues.get(3).getValue()).isEqualTo("fr");
         assertThat(actualAllowedSettingValues.get(3).isDefault()).isFalse();
-        assertThat(actualAllowedSettingValues.get(3).getSetting()).isEqualTo(actual.get().get(1));
+        assertThat(actualAllowedSettingValues.get(3).getSetting()).isEqualTo(actual.get().get(0));
     }
 
     @Test
