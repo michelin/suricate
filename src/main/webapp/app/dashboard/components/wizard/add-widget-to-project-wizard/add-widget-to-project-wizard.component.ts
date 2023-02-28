@@ -88,7 +88,9 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
           while (
             widgetsByGrid.filter(widget => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column).length > 0
           ) {
-            column++;
+            column += widgetsByGrid.filter(
+              widget => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column
+            )[0].widgetPosition.width;
             if (column > project.gridProperties.maxColumn) {
               column = 1;
               row++;
