@@ -181,7 +181,7 @@ export class RepositoryFormFieldsService {
         type: DataTypeEnum.NUMBER,
         value: repository ? repository?.priority : null,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0],
-        asyncValidators: [this.customAsyncValidatorService.validateRepositoryUniquePriority.bind(this.customAsyncValidatorService)]
+        asyncValidators: [this.customAsyncValidatorService.validateRepositoryUniquePriority(repository)]
       }
     ];
   }
