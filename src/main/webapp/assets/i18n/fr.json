@@ -54,7 +54,7 @@
   "field.error.password.mismatch": "Le mot de passe et sa confirmation doivent correspondre",
   "field.error.pattern": "Le champ ne correspond pas au bon format",
   "field.error.required": "Ce champ est obligatoire",
-  "field.error.repository.unique.priority": "Un dépôt possède déjà cette priorité",
+  "field.error.repository.unique.priority": "Un autre dépôt possède déjà cette priorité",
   "field.readonly": "Ce champ est en lecture seule",
   "file.upload": "Choisissez un fichier",
   "firstname": "Prénom",
