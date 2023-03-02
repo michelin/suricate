@@ -20,7 +20,7 @@ Instructions for setting up and self-hosted the application are located in [the 
 
 ## :beers: Contribution
 
-Everyone is welcome to contribute. Here's how:
+Everyone is welcome to contribute. Here is how:
 
 - Report a [bug](https://github.com/michelin/suricate/issues/new?assignees=&labels=bug&template=bug_report.md&title=) 🐛
 - Suggest a [feature](https://github.com/michelin/suricate/issues/new?assignees=&labels=enhancement%2C+new+feature&template=feature_request.md&title=) 💡
