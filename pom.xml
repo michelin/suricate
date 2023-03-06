@@ -324,18 +324,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Used when tag a release -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <arguments>-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Ddependency-check.skip=true -DskipTests -Dmaven.javadoc.skip=true</arguments>
-                </configuration>
-            </plugin>
-
             <!-- Create Unit test reports -->
             <plugin>
                 <groupId>org.jacoco</groupId>
