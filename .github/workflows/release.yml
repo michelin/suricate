@@ -19,7 +19,6 @@ jobs:
           distribution: 'temurin'
 
       - name: Docker
-        id: package-application
         run: mvn clean package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
