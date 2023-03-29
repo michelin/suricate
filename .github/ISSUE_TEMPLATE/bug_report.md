@@ -31,7 +31,6 @@ If applicable, add screenshots to help explain your problem.
 ## Steps taken to try and solve the problem
 Describe the steps you've already taken to try and solve the problem, including any error messages you received or troubleshooting steps you attempted.
 
-
 ## Additional context
 Add any other context about the problem here.
 
