@@ -2,7 +2,7 @@
 
 We want our project to be a welcoming and inclusive community for everyone. This code of conduct outlines our expectations for all contributors, as well as the consequences for unacceptable behavior.
 
-# Our Standards
+## Our Standards
 
 We expect all contributors to:
 
