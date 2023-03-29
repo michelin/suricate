@@ -1,103 +1,49 @@
-## How to contribute to Suricate
+# Contributing to Suricate
 
-[How Can I Contribute?](#how-to-contribute)
+Welcome to our contribution guide! We're thrilled that you're interested in contributing to our project. This guide will help you understand the process and expectations for contributing, so that we can work together effectively and efficiently.
 
-- [Reporting Bugs](#reporting-bugs)
-- [Pull Requests](#pull-requests)
-- [Suggesting Enhancements](#suggesting-enhancements)
-- [Your First Code Contribution](#your-first-code-contribution)
+## Getting Started
 
-[Styleguides](#styleguides)
+### Issues
 
-- [Git Commit Messages](#git-commit-messages)
-- [Quick Coding Guide](#quick-coding-guide)
+Issues should be used to report problems, request a new feature, or to discuss potential changes before a PR is created. When you create a new Issue, a template will be loaded that will guide you through collecting and providing the information we need to investigate.
 
-### How to contribute
+If you find an existing issue that addresses the problem you're having, please add your own reproduction information to the existing issue instead of creating a new one. Adding a [reaction](https://github.blog/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/) can also indicate to our maintainers that a particular problem is affecting more than just the reporter.
 
-#### Suggest an improvement
+If you're unable to find an open issue addressing the problem, open a new one. Be sure to include a title and a clear description, relevant information, and a code sample or executable test case demonstrating the expected behavior that is not occurring.
 
-To suggest a new feature on suricate, [open a ticket](https://github.com/michelin/suricate/issues/new?template=improvement.md) and fill required information
+### Pull Requests
 
-#### Reporting bugs
+PRs are always welcome and can be a quick way to get your fix or improvement slated for the next release. In general, PRs should:
 
-- **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/michelin/suricate/issues).
+- Only fix/add the functionality in question OR address wide-spread style issues, not both.
+- Add unit or integration tests for fixed or changed functionality (if a test suite already exists).
+- Address a single concern in the least number of changed lines as possible.
+- Be accompanied by a complete Pull Request template (loaded automatically when a PR is created).
 
-- Perform basic troubleshooting steps:
+Be sure to use the past tense ("Added new feature...", "Fixed bug on...") and add tags to the PR ("documentation" for documentation updates, "bug" for bug fixing, etc.).
 
-  - Make sure you’re on the **latest version**. If you’re not on the most recent version, your problem may have been solved already! Upgrading is always the best first step.
-  - **Try older versions**. If you’re already on the latest release, try rolling back a few minor versions (e.g. if on 1.7, try 1.5 or 1.6) and see if the problem goes away. This will help the devs narrow down when the problem first arose in the commit log.
-  - (optionally) Try **switching dependency versions**. If the software in question has dependencies (other libraries, etc) try upgrading/downgrading those as well.
+For changes that address core functionality or would require breaking changes (e.g. a major release), it's best to open an Issue to discuss your proposal first. This is not required but can save time creating and reviewing changes.
 
-- If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/michelin/suricate/issues/new?template=bug.md). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
+In general, we follow the ["fork-and-pull" Git workflow](https://github.com/susam/gitpr)
 
-- If possible, use the relevant bug report templates to create the issue.
+- Fork the repository to your own Github account
+- Clone the project to your machine
+- Create a branch locally from master with a succinct but descriptive name
+- Commit changes to the branch
+- Following any formatting and testing guidelines specific to this repo
+- Push changes to your fork
+- Open a PR in our repository targeting master and follow the PR template so that we can efficiently review the changes.
 
-#### Pull requests
+## Styleguides
 
-- Open a new GitHub pull request with the patch. Pull requests are displayed in the release notes, be sure to:
-  - Use the past tense ("Added new feature...", "Fixed bug on...")
-  - Add tags to the PR ("documentation" for documentation updates, "bug" for bug fixing, ...)
+### Git Commit Messages
 
-### Styleguides
+When contributing to the project, it's important to follow a consistent style for Git commit messages. Here are some guidelines to keep in mind:
 
-#### Git commit messages
-
-- Use the present tense ("Add feature" not "Added feature")
-- Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
-- Limit the first line to 72 characters or less
-- Reference issues and pull requests liberally after the first line
-- When only changing documentation, include `[ci skip]` in the commit title
-- Consider starting the commit message with an applicable emoji:
-  - :art: `:art:` when improving the format/structure of the code
-  - :racehorse: `:racehorse:` when improving performance
-  - :memo: `:memo:` when writing docs
-  - :bug: `:bug:` when fixing a bug
-  - :fire: `:fire:` when removing code or files
-  - :green_heart: `:green_heart:` when fixing the CI build
-  - :white_check_mark: `:white_check_mark:` when adding tests
-  - :lock: `:lock:` when dealing with security
-  - :arrow_up: `:arrow_up:` when upgrading dependencies
-  - :arrow_down: `:arrow_down:` when downgrading dependencies
-  - :shirt: `:shirt:` when removing linter warnings
-
-#### Quick Coding Guide
-
-##### Code formatting
-
-Follow the style you see used in the primary repository! Consistency with the rest of the project always trumps other considerations. It doesn’t matter if you have your own style or if the rest of the code breaks with the greater community - just follow along.
-
-Don't forget to include licence header in **all** files
-
-```
- /*
- * Copyright 2012-2021 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-```
-
-##### Documentation isn’t optional
-
-It’s not! Patches without documentation will be returned to sender. By “documentation” we mean:
-
-Don’t forget to include versionadded/versionchanged ReST directives at the bottom of any new or changed Python docstrings!
-
-New features should ideally include updates to prose documentation, including useful example code snippets.
-
-All submissions should have a changelog entry crediting the contributor and/or any individuals instrumental in identifying the problem.
-
-##### Tests aren’t optional
-
-Any bugfix that doesn’t include a test proving the existence of the bug being fixed, may be suspect. Ditto for new features that can’t prove they actually work.
-
-We’ve found that test-first development really helps make features better architected and identifies potential edge cases earlier instead of later. Writing tests before the implementation is strongly encouraged.
+- Use the present tense, such as "Add feature," rather than the past tense, such as "Added feature."
+- Use the imperative mood, such as "Move cursor to..." rather than "Moves cursor to..."
+- Limit the first line of the commit message to 72 characters or less.
+- Use references to issues and pull requests after the first line as needed.
+- If your commit only changes documentation, include `[ci skip]` in the commit title.
+- Consider using an applicable [emoji](https://gitmoji.dev/) at the beginning of the commit message.
