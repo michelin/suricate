@@ -14,7 +14,7 @@ This repository contains the source code of the Suricate application.
 
 ![Suricate dashboard developer environment](src/main/webapp/assets/images/dashboard.png)
 
-# Table of Contents
+## Table of Contents
 
 * [Download](#download)
 * [Install](#install)
@@ -32,13 +32,13 @@ This repository contains the source code of the Suricate application.
   * [Repositories](#repositories)
 * [Contribution](#contribution)
 
-# Download
+## Download
 
 You can download Suricate as a fat jar from the project's releases page on GitHub at https://github.com/michelin/suricate/releases. Please note that Java 8 is required.
 
 Additionally, a Docker image of the solution is available at https://hub.docker.com/repository/docker/michelin/suricate.
 
-# Install
+## Install
 
 Suricate is built on the [Spring Boot framework](https://spring.io/) and can be configured using a Spring Boot configuration file, which includes a sample file located at `src/main/resources/application.properties`.
 
@@ -54,15 +54,15 @@ Alternatively, you can use the provided docker-compose file to run the applicati
 docker-compose up -d
 ```
 
-# Configuration
+## Configuration
 
-## Default Configuration
+### Default Configuration
 
 By default, Suricate:
 - runs on a H2 file database
 - provides a sign-in/sign-up authentication mode based on the database
 
-## Database
+### Database
 
 Suricate supports running on different DBMS. Currently, the following DBMS are supported:
 
@@ -87,11 +87,11 @@ spring.datasource.password:
 
 Please note that the `application-DBMS.properties` files activate Flyway to automatically set up the database structure (tables, constraints, etc.) and the minimum required functional data.
 
-## Authentication
+### Authentication
 
 Suricate provides multiple types of authentication that can be activated or deactivated based on your requirements.
 
-### LDAP vs Database
+#### LDAP vs Database
 
 You can log in to Suricate using either LDAP or a database after the sign-up step. You can specify these authentication modes using the following YAML property:
 
@@ -113,17 +113,17 @@ application.authentication.ldap.userSearchBase=
 application.authentication.ldap.userDnPatterns=
 ```
 
-### Social Login
+#### Social Login
 
 Suricate supports authentication with GitHub and GitLab. You can configure social login using the `application-social-login.properties` file, which you can activate by running the application with the `social-login` profile.
 
 When you activate social login, you can activate or deactivate a social login mode by adding or removing it from the property:
 
-```properties
+```yaml
 application.authentication.socialProviders=gitlab,github
 ```
 
-#### GitHub
+##### GitHub
 
 To log in using GitHub, you must specify the following properties:
 
@@ -132,7 +132,7 @@ spring.security.oauth2.client.registration.github.client-id=<github_client_id>
 spring.security.oauth2.client.registration.github.client-secret=<github_client_id>
 ```
 
-#### GitLab
+##### GitLab
 
 To log in using GitLab with OIDC, you must specify the following properties:
 
@@ -158,7 +158,7 @@ spring.security.oauth2.client.provider.gitlab.user-info-uri=https://gitlab.com/a
 spring.security.oauth2.client.provider.gitlab.user-name-attribute=username
 ```
 
-#### Redirection to Front-End
+##### Redirection to Front-End
 
 The social login is based on OAuth2/OIDC and is handled by the Back-End. After a successful or failed authentication with a social network, the Back-End redirects to the Front-End.
 
@@ -177,7 +177,7 @@ application.authentication.oauth2.defaultTargetUrl=http://localhost:4200/login
 application.authentication.oauth2.useReferer=false
 ```
 
-#### Name Parsing Strategy
+##### Name Parsing Strategy
 
 By default, Suricate parses the user's first name and last name from the ID provider using the format "Firstname Lastname". However, you can also configure Suricate to parse the first name and last name based on the case (upper/lower) using the following property:
 
@@ -187,7 +187,7 @@ application.authentication.socialProvidersConfig.<provider>.nameCaseParse=true
 
 Simply replace `<provider>` with the appropriate social provider, such as `github` or `gitlab`.
 
-### Personal Access Token
+#### Personal Access Token
 
 The application allows for the generation of personal access tokens, which can be used for authentication. The following properties are used for token generation and verification:
 
@@ -200,7 +200,7 @@ It is recommended to update the _checksumSecret_ with a different secret for eac
 
 The _prefix_ is used by the application to identify the token type and parse it.
 
-## Repositories
+### Repositories
 
 The first time you start the application, you'll need to configure a repository of widgets. To do this, navigate to the repositories tab and add a new repository. You can choose to add either a local or remote repository (such as GitLab or GitHub).
 
@@ -216,6 +216,6 @@ login: [Your GitHub login]
 password: [Your GitHub password]
 ```
 
-# Contribution
+## Contribution
 
 We welcome contributions from the community! Before you get started, please take a look at our [contribution guide](https://github.com/michelin/suricate/blob/master/CONTRIBUTING.md) to learn about our guidelines and best practices. We appreciate your help in making Suricate a better tool for everyone.
