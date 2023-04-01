@@ -147,7 +147,7 @@
   "widget.add.success": "Widget ajouté avec succès",
   "widget.configuration": "Configurer le widget",
   "widget.configuration.list": "Configurations des widgets",
-  "widget.connection.server.error": "Erreur avec le serveur distant ...",
+  "widget.connection.server.error": "Erreur avec le serveur distant",
   "widget.delete": "Supprimer un widget",
   "widget.delete.confirm": "Voulez-vous vraiment supprimer le widget",
   "widget.description.title": "Description",

@@ -147,7 +147,7 @@
   "widget.add.success": "Widget added successfully",
   "widget.configuration": "Widget configuration",
   "widget.configuration.list": "Widget configurations",
-  "widget.connection.server.error": "Issue with remote server. Retrying ...",
+  "widget.connection.server.error": "Issue with the remote server",
   "widget.delete": "Delete widget",
   "widget.delete.confirm": "Do you want to delete the widget",
   "widget.description.title": "Description",
