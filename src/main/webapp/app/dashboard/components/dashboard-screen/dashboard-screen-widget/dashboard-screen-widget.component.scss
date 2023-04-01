@@ -58,7 +58,6 @@
 
     .material-icons {
       font-size: 21px;
-      color: #cfd2da !important;
     }
   }
 
@@ -82,10 +81,10 @@
 
     &.execution-warning {
       background-color: #e8af00db;
+      color: rgba(0, 0, 0, 0.87);
     }
 
     .text {
-      color: #cfd2da;
       margin-left: 10px;
     }
   }

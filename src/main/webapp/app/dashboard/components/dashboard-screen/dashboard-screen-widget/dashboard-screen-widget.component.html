@@ -30,8 +30,8 @@
     <div *ngIf="widget.delay > 0 && projectWidget.log">
       <!-- Stopped -->
       <div *ngIf="projectWidget.state === widgetStateEnum.STOPPED" class="issue execution-error">
-        <mat-icon class="material-icons" style="color: #cfd2da !important;">
-          {{ materialIconRecords[iconEnum.WARNING] }}
+        <mat-icon class="material-icons">
+          {{ materialIconRecords[iconEnum.ERROR] }}
         </mat-icon>
         <span class="text"> {{ 'widget.execution.error' | translate }} </span>
       </div>
@@ -39,7 +39,7 @@
       <!-- warning -->
       <div *ngIf="projectWidget.state === widgetStateEnum.WARNING" class="issue execution-warning">
         <span>
-          <mat-icon class="material-icons" style="color: #cfd2da !important;">
+          <mat-icon class="material-icons">
             {{ materialIconRecords[iconEnum.WARNING] }}
           </mat-icon>
         </span>
