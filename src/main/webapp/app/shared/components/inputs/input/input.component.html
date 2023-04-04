@@ -31,7 +31,7 @@
         [id]="field.key"
         [placeholder]="field.placeholder"
         [type]="field.type.toString().toLowerCase()"
-        [formControlName]="field.key"
+        [formControl]="$any(getFormControl())"
         [required]="isRequired()"
         [readonly]="field.readOnly"
         [matAutocomplete]="autocomplete"
@@ -52,7 +52,7 @@
         matInput
         [id]="field.key"
         [placeholder]="field.placeholder"
-        [formControlName]="field.key"
+        [formControl]="$any(getFormControl())"
         [required]="isRequired()"
         [readonly]="field.readOnly"
         (input)="emitValueChange('inputChange')"></textarea>
@@ -62,7 +62,7 @@
     <mat-select
       *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
       [id]="field.key"
-      [formControlName]="field.key"
+      [formControl]="$any(getFormControl())"
       [multiple]="field.type === dataType.MULTIPLE"
       [required]="isRequired()"
       (selectionChange)="emitValueChange('optionSelected')"
@@ -118,7 +118,7 @@
   </div>
 </div>
 
-<suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="field" [formArrayName]="field.key"> </suricate-fields>
+<suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="field" [formArray]="$any(getFormControl())"> </suricate-fields>
 
 <suricate-mosaic
   *ngIf="field.type === dataType.MOSAIC"
