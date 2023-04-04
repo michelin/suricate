@@ -21,9 +21,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Slf4j
 public final class PropertiesUtils {
@@ -31,7 +34,6 @@ public final class PropertiesUtils {
 
     /**
      * Convert widget parameters values from string to map
-     *
      * @param widgetProperties the string containing the widget parameters values (key1=value1)
      * @return The widget parameters values as map
      */
@@ -51,6 +53,25 @@ public final class PropertiesUtils {
     }
 
     /**
+     * Convert widget parameters values from string to map
+     * @param widgetProperties the string containing the widget parameters values (key1=value1)
+     * @return The widget parameters values as map
+     */
+    public static Map<String, String> convertAndDecodeStringWidgetPropertiesToMap(String widgetProperties) {
+        return convertStringWidgetPropertiesToMap(widgetProperties)
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> {
+                    try {
+                        return URLDecoder.decode(e.getValue(), "UTF-8");
+                    } catch (UnsupportedEncodingException ex) {
+                        log.error("An error has occurred decoding widget parameter {}", e, ex);
+                    }
+                    return e.getValue();
+                }));
+    }
+
+    /**
      * Convert widget parameters values from string to Properties
      *
      * @param widgetProperties the string containing the widget parameters values
@@ -64,7 +85,7 @@ public final class PropertiesUtils {
                 properties = new Properties();
                 properties.load(reader);
             } catch (IOException e) {
-                log.error("An error has occurred converting widget parameters values from string to Properties: {}", widgetProperties, e);
+                log.error("An error has occurred converting widget parameters values from string to properties: {}", widgetProperties, e);
             }
         }
 

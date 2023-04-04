@@ -21,6 +21,7 @@ import com.google.common.collect.Sets;
 import com.michelin.suricate.model.dto.api.widget.WidgetRequestDto;
 import com.michelin.suricate.model.dto.nashorn.WidgetVariableResponse;
 import com.michelin.suricate.model.entities.*;
+import com.michelin.suricate.model.enums.RepositoryTypeEnum;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import com.michelin.suricate.repositories.WidgetParamRepository;
 import com.michelin.suricate.repositories.WidgetRepository;
@@ -262,8 +263,13 @@ public class WidgetService {
 
             widgetRepository.save(widget);
 
-            log.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
-                    widget.getRepository().getBranch(), widget.getRepository().getName());
+            if (widget.getRepository().getType().equals(RepositoryTypeEnum.REMOTE)) {
+                log.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
+                        widget.getRepository().getBranch(), widget.getRepository().getName());
+            } else {
+                log.info("Widget {} updated from the local repository {}", widget.getTechnicalName(),
+                        widget.getRepository().getName());
+            }
         }
     }
 

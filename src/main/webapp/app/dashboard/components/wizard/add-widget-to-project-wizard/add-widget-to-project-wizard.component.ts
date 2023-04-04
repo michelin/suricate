@@ -106,7 +106,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
                 formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
                 String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).trim() !== ''
             )
-            .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
+            .map((key: string) => `${key}=${encodeURIComponent(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key])}`)
             .join('\n'),
           gridColumn: column,
           gridRow: row

@@ -4,7 +4,7 @@
   <!------------------------------------------------------------------------------------------------------->
   <mat-form-field
     appearance="outline"
-    *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+    *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.TEXTAREA, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
     [floatLabel]="field.placeholder ? 'always' : 'auto'"
     [ngClass]="{ 'mat-form-field-readonly': field.readOnly }"
   >
@@ -31,7 +31,7 @@
         [id]="field.key"
         [placeholder]="field.placeholder"
         [type]="field.type.toString().toLowerCase()"
-        [formControl]="$any(getFormControl())"
+        [formControlName]="field.key"
         [required]="isRequired()"
         [readonly]="field.readOnly"
         [matAutocomplete]="autocomplete"
@@ -46,11 +46,23 @@
       </mat-autocomplete>
     </ng-container>
 
+    <!-- TEXT AREA INPUT -->
+    <ng-container *ngIf="[dataType.TEXTAREA].includes(field.type)">
+      <textarea
+        matInput
+        [id]="field.key"
+        [placeholder]="field.placeholder"
+        [formControlName]="field.key"
+        [required]="isRequired()"
+        [readonly]="field.readOnly"
+        (input)="emitValueChange('inputChange')"></textarea>
+    </ng-container>
+
     <!-- SELECT INPUT -->
     <mat-select
       *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
       [id]="field.key"
-      [formControl]="$any(getFormControl())"
+      [formControlName]="field.key"
       [multiple]="field.type === dataType.MULTIPLE"
       [required]="isRequired()"
       (selectionChange)="emitValueChange('optionSelected')"
@@ -106,7 +118,7 @@
   </div>
 </div>
 
-<suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="field" [formArray]="$any(getFormControl())"> </suricate-fields>
+<suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="field" [formArrayName]="field.key"> </suricate-fields>
 
 <suricate-mosaic
   *ngIf="field.type === dataType.MOSAIC"

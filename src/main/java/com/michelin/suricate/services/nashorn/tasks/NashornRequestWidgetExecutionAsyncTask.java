@@ -87,7 +87,7 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
             ScriptEngine scriptEngine = nashornScriptEngineFactory.getScriptEngine(new JavaClassFilter());
 
             // Get widget parameters values set by the user
-            Map<String, String> widgetProperties = PropertiesUtils.convertStringWidgetPropertiesToMap(nashornRequest.getProperties());
+            Map<String, String> widgetProperties = PropertiesUtils.convertAndDecodeStringWidgetPropertiesToMap(nashornRequest.getProperties());
 
             // Decrypt widget secret properties
             decryptWidgetProperties(widgetProperties);

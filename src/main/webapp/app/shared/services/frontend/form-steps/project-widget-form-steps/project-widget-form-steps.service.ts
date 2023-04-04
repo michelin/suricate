@@ -283,7 +283,7 @@ export class ProjectWidgetFormStepsService {
     const parameter = widgetConfig.split('\n').find(keyValue => keyValue.split('=')[0] === key);
 
     if (parameter) {
-      return parameter.replace(key, '').replace('=', '');
+      return decodeURIComponent(parameter).replace(key, '').replace('=', '');
     }
 
     return null;

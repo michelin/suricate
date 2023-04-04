@@ -48,7 +48,7 @@ public class ProjectWidgetRequestDto extends AbstractDto {
     @Schema(description = "The css for this instance of widget")
     private String customStyle;
 
-    @Schema(description = "The configuration of this widget")
+    @Schema(description = "The encoded configuration of this widget", example = "key1=value1\nkey2=value\nkey3=value3")
     private String backendConfig;
 
     @Schema(description = "The widgetId related to this project widget", example = "1")

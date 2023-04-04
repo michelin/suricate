@@ -262,7 +262,7 @@ public class ProjectWidgetService {
             try {
                 map = objectMapper.readValue(projectWidget.getData(), new TypeReference<Map<String, Object>>() {});
                 // Add backend config
-                map.putAll(PropertiesUtils.convertStringWidgetPropertiesToMap(projectWidget.getBackendConfig()));
+                map.putAll(PropertiesUtils.convertAndDecodeStringWidgetPropertiesToMap(projectWidget.getBackendConfig()));
                 map.put(JavaScriptUtils.WIDGET_INSTANCE_ID_VARIABLE, projectWidget.getId());
 
                 // Add global variables if needed
