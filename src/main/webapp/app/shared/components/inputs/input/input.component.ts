@@ -209,7 +209,7 @@ export class InputComponent implements OnInit {
 
     if (this.field && this.field.validators && this.field.validators && !this.field.readOnly) {
       isRequired = Array.isArray(this.field.validators)
-        ? (this.field.validators).includes(Validators.required)
+        ? this.field.validators.includes(Validators.required)
         : this.field.validators === Validators.required;
     }
 

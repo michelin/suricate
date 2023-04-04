@@ -2,11 +2,16 @@ package com.michelin.suricate.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 
 class PropertiesUtilsTest {
     @Test
@@ -45,6 +50,20 @@ class PropertiesUtilsTest {
                 .containsEntry("key", "test")
                 .containsEntry("key2", "word\nword2\nword3")
                 .containsEntry("key3", "test");
+    }
+
+    @Test
+    void shouldHandleExceptionWhenConvertAndDecodeStringWidgetPropertiesToMap() {
+        try (MockedStatic<URLDecoder> mocked = mockStatic(URLDecoder.class)) {
+            mocked.when(() -> URLDecoder.decode(any(), any()))
+                    .thenThrow(new UnsupportedEncodingException("error"));
+
+            Map<String, String> actual = PropertiesUtils.convertAndDecodeStringWidgetPropertiesToMap("key=test\nkey2=word%0Aword2%0Aword3\nkey3=test");
+            assertThat(actual)
+                    .containsEntry("key", "test")
+                    .containsEntry("key2", "word%0Aword2%0Aword3")
+                    .containsEntry("key3", "test");
+        }
     }
 
     @Test

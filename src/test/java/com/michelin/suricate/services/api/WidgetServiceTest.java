@@ -298,7 +298,7 @@ class WidgetServiceTest {
         repository.setId(1L);
         repository.setName("repository");
         repository.setBranch("master");
-        repository.setType(REMOTE);
+        repository.setType(LOCAL);
 
         Asset asset = new Asset();
         asset.setId(1L);

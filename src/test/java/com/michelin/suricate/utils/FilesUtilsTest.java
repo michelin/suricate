@@ -15,7 +15,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
 class FilesUtilsTest {
-
     @Test
     void shouldGetFolders() throws IOException {
         List<File> actual = FilesUtils.getFolders(new File("src/test/resources/repository"));
