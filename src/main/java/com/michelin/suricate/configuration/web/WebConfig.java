@@ -111,6 +111,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/api/*/auth/signin").permitAll()
                 .antMatchers("/api/*/users/signup").permitAll()
                 .antMatchers("/api/*/configurations/authentication-providers").permitAll()

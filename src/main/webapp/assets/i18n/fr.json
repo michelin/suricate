@@ -64,6 +64,7 @@
   "grid.add": "Ajouter une grille",
   "home": "Accueil",
   "home.menu.title": "Accueil",
+  "internal.server.error": "Le serveur a rencontré une erreur interne",
   "key": "Clé",
   "lastname": "Nom de famille",
   "login": "Login",
