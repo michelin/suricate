@@ -33,7 +33,8 @@ public final class PropertiesUtils {
     private PropertiesUtils() { }
 
     /**
-     * Convert widget parameters values from string to map
+     * Convert widget parameters values from string to map.
+     * It does not decode the encoded parameters that as been encoded as URL
      * @param widgetProperties the string containing the widget parameters values (key1=value1)
      * @return The widget parameters values as map
      */
@@ -53,7 +54,27 @@ public final class PropertiesUtils {
     }
 
     /**
+     * Decode the widget properties
+     * @param widgetProperties The widget properties
+     * @return The decoded widget properties
+     */
+    public static Map<String, String> decodeWidgetProperties(Map<String, String> widgetProperties) {
+        return widgetProperties
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> {
+                    try {
+                        return URLDecoder.decode(e.getValue(), "UTF-8");
+                    } catch (UnsupportedEncodingException ex) {
+                        log.error("An error has occurred decoding widget parameter {}", e, ex);
+                    }
+                    return e.getValue();
+                }));
+    }
+
+    /**
      * Convert widget parameters values from string to map
+     * and decode each parameter that has been encoded as URL
      * @param widgetProperties the string containing the widget parameters values (key1=value1)
      * @return The widget parameters values as map
      */

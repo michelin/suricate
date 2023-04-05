@@ -35,6 +35,8 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
    * Constructor
    * @param injector Angular Service used to manage the injection of services
    * @param projectWidgetFormStepsService Frontend service used to build steps for project widget object
+   * @param httpProjectWidgetsService The http project widget service
+   * @param httpProjectService The http project service
    * @param toastService Frontend service used to display message
    */
   constructor(
@@ -106,7 +108,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
                 formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
                 String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).trim() !== ''
             )
-            .map((key: string) => `${key}=${encodeURIComponent(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key])}`)
+            .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key].replace('/\n/g', '\\n')}`)
             .join('\n'),
           gridColumn: column,
           gridRow: row

@@ -92,6 +92,9 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
             // Decrypt widget secret properties
             decryptWidgetProperties(widgetProperties);
 
+            // Decode widget properties that has been encoded for URL transfer
+            widgetProperties = PropertiesUtils.decodeWidgetProperties(widgetProperties);
+
             // Set default value to widget properties
             setDefaultValueToWidgetProperties(widgetProperties);
 
