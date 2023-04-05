@@ -64,6 +64,7 @@
   "grid.add": "Add a grid",
   "home": "Home",
   "home.menu.title": "Home",
+  "internal.server.error": "The server encountered an internal error",
   "key": "Key",
   "lastname": "Lastname",
   "login": "Login",
