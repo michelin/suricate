@@ -346,7 +346,7 @@ public class ProjectWidgetService {
      * @return The list of param decrypted
      */
     public String decryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
-        Map<String, String> backendConfigAsMap = PropertiesUtils.convertStringWidgetPropertiesToMap(backendConfig);
+        Map<String, String> backendConfigAsMap = PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap(backendConfig);
 
         List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {
@@ -375,7 +375,7 @@ public class ProjectWidgetService {
      * @return The backend config with the secret params encrypted
      */
     public String encryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
-        Map<String, String> backendConfigAsMap = PropertiesUtils.convertStringWidgetPropertiesToMap(backendConfig);
+        Map<String, String> backendConfigAsMap = PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap(backendConfig);
 
         List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {

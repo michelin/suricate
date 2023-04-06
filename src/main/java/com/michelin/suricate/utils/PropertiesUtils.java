@@ -51,6 +51,28 @@ public final class PropertiesUtils {
     }
 
     /**
+     * Convert widget parameters values from string to map
+     * Preserve break lines "\n" escapes that have been unescaped when converted to properties
+     *
+     * @param widgetProperties the string containing the widget parameters values (key1=value1)
+     * @return The widget parameters values as map
+     */
+    public static Map<String, String> convertAndEscapeStringWidgetPropertiesToMap(String widgetProperties) {
+        Map<String, String> mappedWidgetProperties = new TreeMap<>();
+        Properties properties = convertStringWidgetPropertiesToProperties(widgetProperties);
+
+        if (properties != null) {
+            for (String propertyName : properties.stringPropertyNames()) {
+                if (!properties.getProperty(propertyName).trim().isEmpty()) {
+                    mappedWidgetProperties.put(propertyName, properties.getProperty(propertyName).replace("\n", "\\n"));
+                }
+            }
+        }
+
+        return mappedWidgetProperties;
+    }
+
+    /**
      * Convert widget parameters values from string to Properties
      *
      * @param widgetProperties the string containing the widget parameters values

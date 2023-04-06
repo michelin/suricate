@@ -95,24 +95,28 @@ export class FileInputComponent extends InputComponent implements OnInit {
    *
    * @param event The change event
    */
-  public convertFileBase64(event): void {
-    if (event.target.files && event.target.files.length > 0) {
-      const file: File = event.target.files[0];
-
-      FileUtils.convertFileToBase64(file).subscribe(base64Url => {
-        this.setBase64File(base64Url as string, file.name);
-        super.getFormControl().setValue(base64Url);
-        super.getFormControl().markAsDirty();
-
-        this.emitValueChange('fileChanged');
-      });
+  public convertFileBase64(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (!inputElement.files || inputElement.files.length === 0) {
+      return;
     }
 
-    super.getFormControl().markAsTouched();
+    const file: File = inputElement.files[0];
+    FileUtils.convertFileToBase64(file).subscribe((base64Url: string | ArrayBuffer) => {
+      const base64String = base64Url as string;
+      const fileName = file.name;
+
+      this.setBase64File(base64String, fileName);
+      super.getFormControl().setValue(base64String);
+      super.getFormControl().markAsDirty();
+      super.getFormControl().markAsTouched();
+
+      this.emitValueChange('fileChanged');
+    });
   }
 
   /**
-   * Take a screen shot of the dashboard
+   * Take a screenshot of the dashboard
    */
   public takeScreenshot(): void {
     html2canvas(this.belongingComponent['nativeElement'], {

@@ -30,6 +30,44 @@ class PropertiesUtilsTest {
     }
 
     @Test
+    void shouldConvertStringWidgetPropertiesToMapWithoutEscaping() {
+        Map<String, String> actual = PropertiesUtils.convertStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
+        assertThat(actual)
+                .containsEntry("key", "test")
+                .containsEntry("key2", "test2\ntest")
+                .containsEntry("key3", "test3");
+    }
+
+    @Test
+    void shouldConvertAndEscapeStringWidgetPropertiesToMapNull() {
+        Map<String, String> actual = PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap(null);
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void shouldConvertAndEscapeStringWidgetPropertiesToMapEmpty() {
+        Map<String, String> actual = PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap(StringUtils.EMPTY);
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void shouldConvertAndEscapeStringWidgetPropertiesToMap() {
+        Map<String, String> actual = PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2");
+        assertThat(actual)
+                .containsEntry("key", "test")
+                .containsEntry("key2", "test2");
+    }
+
+    @Test
+    void shouldConvertAndPreserveEscapeStringWidgetPropertiesToMap() {
+        Map<String, String> actual = PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
+        assertThat(actual)
+                .containsEntry("key", "test")
+                .containsEntry("key2", "test2\\ntest")
+                .containsEntry("key3", "test3");
+    }
+
+    @Test
     void shouldConvertStringWidgetPropertiesToPropertiesNull() {
         Properties actual = PropertiesUtils.convertStringWidgetPropertiesToProperties(null);
         assertThat(actual).isNull();
