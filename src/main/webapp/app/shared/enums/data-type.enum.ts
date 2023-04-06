@@ -22,6 +22,7 @@
 export enum DataTypeEnum {
   NUMBER = 'NUMBER',
   TEXT = 'TEXT',
+  TEXTAREA = 'TEXTAREA',
   PASSWORD = 'PASSWORD',
   HIDDEN = 'HIDDEN',
 

@@ -4,7 +4,7 @@
   <!------------------------------------------------------------------------------------------------------->
   <mat-form-field
     appearance="outline"
-    *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+    *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.TEXTAREA, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
     [floatLabel]="field.placeholder ? 'always' : 'auto'"
     [ngClass]="{ 'mat-form-field-readonly': field.readOnly }"
   >
@@ -44,6 +44,18 @@
           {{ option.label }}
         </mat-option>
       </mat-autocomplete>
+    </ng-container>
+
+    <!-- TEXT AREA INPUT -->
+    <ng-container *ngIf="field.type == dataType.TEXTAREA">
+      <textarea
+        matInput
+        [id]="field.key"
+        [placeholder]="field.placeholder"
+        [formControl]="$any(getFormControl())"
+        [required]="isRequired()"
+        [readonly]="field.readOnly"
+        (input)="emitValueChange('inputChange')"></textarea>
     </ng-container>
 
     <!-- SELECT INPUT -->
