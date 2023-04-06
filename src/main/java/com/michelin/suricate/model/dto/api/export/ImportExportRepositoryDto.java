@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -35,4 +37,10 @@ public class ImportExportRepositoryDto extends AbstractDto {
 
     @Schema(description = "True if the repository is enabled for update", requiredMode = Schema.RequiredMode.REQUIRED)
     private boolean enabled;
+
+    @Schema(description = "The priority order")
+    private int priority;
+
+    @Schema(description = "The repository creation date")
+    private Date createdDate;
 }
