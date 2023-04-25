@@ -32,6 +32,7 @@ jobs:
         uses: crazy-max/ghaction-import-gpg@v5
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
           git_user_signingkey: true
           git_commit_gpgsign: true
 
@@ -41,9 +42,9 @@ jobs:
           git add package.json
           mvn versions:set -DnewVersion=${{ github.event.inputs.release_version }}
           git add pom.xml
-          git commit -s -m "Prepare release v${{ github.event.inputs.release_version }}"
+          git commit -s -m "Prepare release v${{ github.event.inputs.release_version }} [skip ci]"
           git push
-          git tag v${{ github.event.inputs.release_version }} -s -m ''
+          git tag v${{ github.event.inputs.release_version }} -s -m "Create tag v${{ github.event.inputs.release_version }}"
           git push origin v${{ github.event.inputs.release_version }}
 
       - name: Update next version
