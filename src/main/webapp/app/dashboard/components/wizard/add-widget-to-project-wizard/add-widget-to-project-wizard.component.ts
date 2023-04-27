@@ -106,7 +106,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
                 formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
                 String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).trim() !== ''
             )
-            .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key].replace(/\n/g, '\\n')}`)
+            .map((key: string) => `${key}=${String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).replace(/\n/g, '\\n')}`)
             .join('\n'),
           gridColumn: column,
           gridRow: row
