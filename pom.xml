@@ -3,7 +3,7 @@
 
     <groupId>com.michelin.suricate</groupId>
     <artifactId>suricate</artifactId>
-    <version>2.7.6-SNAPSHOT</version>
+    <version>2.7.6</version>
     <packaging>${packaging.type}</packaging>
     <name>suricate</name>
 
