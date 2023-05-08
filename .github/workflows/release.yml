@@ -25,7 +25,7 @@ jobs:
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Generate release changelog
-        uses: mikepenz/release-changelog-builder-action@v3.7.1
+        uses: mikepenz/release-changelog-builder-action@v3.7.2
         id: build_changelog
         with:
           configuration: 'changelog-builder.json'
