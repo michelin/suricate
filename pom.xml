@@ -26,7 +26,7 @@
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <apacheds.version>2.0.0.AM26</apacheds.version>
         <mockito.version>4.11.0</mockito.version>
-        <testcontainers.version>1.18.0</testcontainers.version>
+        <testcontainers.version>1.18.1</testcontainers.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>michelin</sonar.organization>
         <sonar.projectKey>michelin_suricate</sonar.projectKey>
