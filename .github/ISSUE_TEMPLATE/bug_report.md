@@ -33,5 +33,3 @@ Describe the steps you've already taken to try and solve the problem, including 
 
 ## Additional context
 Add any other context about the problem here.
-
-**NB:** Specify label(s) in the right panel to ease the requests organization
