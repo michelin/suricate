@@ -1,0 +1,29 @@
+name: Build Docker base image
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_version:
+        description: 'Image version'
+        required: true
+
+jobs:
+  build-base-image:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event.inputs.image_version != ''
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build the Docker image
+        run: |
+          docker build . -f .docker/Dockerfile -t docker.io/michelin/suricate-base:${{ github.event.inputs.image_version }}
+          docker push docker.io/michelin/suricate-base:${{ github.event.inputs.image_version }}

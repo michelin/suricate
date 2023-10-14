@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.michelin.suricate</groupId>
@@ -21,7 +22,7 @@
     </parent>
 
     <properties>
-	    <packaging.type>jar</packaging.type>
+        <packaging.type>jar</packaging.type>
         <java.version>17</java.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <apacheds.version>2.0.0.AM26</apacheds.version>
@@ -341,7 +342,7 @@
                 <version>3.4.0</version>
                 <configuration>
                     <from>
-                        <image>adoptopenjdk:8-jre-hotspot</image>
+                        <image>michelin/suricate-base:1.0.0</image>
                     </from>
                     <to>
                         <image>docker.io/michelin/${project.artifactId}:${project.version}</image>
