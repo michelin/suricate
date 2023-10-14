@@ -1,5 +1,9 @@
 package com.michelin.suricate.services.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.export.ImportExportProjectDto;
 import com.michelin.suricate.model.dto.api.projectwidget.ProjectWidgetPositionResponseDto;
 import com.michelin.suricate.model.dto.api.projectwidget.ProjectWidgetRequestDto;
@@ -12,21 +16,16 @@ import com.michelin.suricate.model.enums.WidgetStateEnum;
 import com.michelin.suricate.services.api.ProjectGridService;
 import com.michelin.suricate.services.api.ProjectWidgetService;
 import com.michelin.suricate.services.api.WidgetService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectWidgetMapperTest {
@@ -43,7 +42,7 @@ class ProjectWidgetMapperTest {
     private ProjectWidgetMapperImpl projectWidgetMapper;
 
     @Test
-    void shouldToProjectWidgetDTO() {
+    void shouldToProjectWidgetDto() {
         Project project = new Project();
         project.setToken("token");
 
@@ -71,11 +70,11 @@ class ProjectWidgetMapperTest {
         projectWidget.setLog("log");
 
         when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any()))
-                .thenReturn("backendConfig");
+            .thenReturn("backendConfig");
         when(projectWidgetService.instantiateProjectWidgetHtml(any()))
-                .thenReturn("html");
+            .thenReturn("html");
 
-        ProjectWidgetResponseDto actual = projectWidgetMapper.toProjectWidgetDTO(projectWidget);
+        ProjectWidgetResponseDto actual = projectWidgetMapper.toProjectWidgetDto(projectWidget);
 
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.getWidgetId()).isEqualTo(1L);
@@ -96,7 +95,7 @@ class ProjectWidgetMapperTest {
     }
 
     @Test
-    void shouldToProjectWidgetsDTOs() {
+    void shouldToProjectWidgetsDtos() {
         Project project = new Project();
         project.setToken("token");
 
@@ -124,11 +123,12 @@ class ProjectWidgetMapperTest {
         projectWidget.setLog("log");
 
         when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any()))
-                .thenReturn("backendConfig");
+            .thenReturn("backendConfig");
         when(projectWidgetService.instantiateProjectWidgetHtml(any()))
-                .thenReturn("html");
+            .thenReturn("html");
 
-        List<ProjectWidgetResponseDto> actual = projectWidgetMapper.toProjectWidgetsDTOs(Collections.singleton(projectWidget));
+        List<ProjectWidgetResponseDto> actual =
+            projectWidgetMapper.toProjectWidgetsDtos(Collections.singleton(projectWidget));
 
         assertThat(actual.get(0).getId()).isEqualTo(1L);
         assertThat(actual.get(0).getWidgetId()).isEqualTo(1L);
@@ -167,9 +167,9 @@ class ProjectWidgetMapperTest {
         widget.setId(1L);
 
         when(projectGridService.getOneById(any()))
-                .thenReturn(Optional.of(projectGrid));
+            .thenReturn(Optional.of(projectGrid));
         when(widgetService.findOne(any()))
-                .thenReturn(Optional.of(widget));
+            .thenReturn(Optional.of(widget));
 
         ProjectWidget actual = projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, 1L);
 
@@ -193,7 +193,8 @@ class ProjectWidgetMapperTest {
         projectWidgetPositionResponseDto.setWidth(1);
         projectWidgetPositionResponseDto.setHeight(1);
 
-        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto = new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
+        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto =
+            new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
         importExportProjectWidgetDto.setId(1L);
         importExportProjectWidgetDto.setBackendConfig("backendConfig");
         importExportProjectWidgetDto.setWidgetPosition(projectWidgetPositionResponseDto);
@@ -202,7 +203,7 @@ class ProjectWidgetMapperTest {
         widget.setId(1L);
 
         when(widgetService.findOneByTechnicalName(any()))
-                .thenReturn(Optional.of(widget));
+            .thenReturn(Optional.of(widget));
 
         ProjectWidget actual = projectWidgetMapper.toProjectWidgetEntity(importExportProjectWidgetDto);
 
@@ -219,7 +220,7 @@ class ProjectWidgetMapperTest {
     }
 
     @Test
-    void shouldToImportExportProjectWidgetDTO() {
+    void shouldToImportExportProjectWidgetDto() {
         Widget widget = new Widget();
         widget.setId(1L);
         widget.setTechnicalName("technicalName");
@@ -240,9 +241,10 @@ class ProjectWidgetMapperTest {
         projectWidget.setLog("log");
 
         when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any()))
-                .thenReturn("backendConfig");
+            .thenReturn("backendConfig");
 
-        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto actual = projectWidgetMapper.toImportExportProjectWidgetDTO(projectWidget);
+        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto actual =
+            projectWidgetMapper.toImportExportProjectWidgetDto(projectWidget);
 
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.getBackendConfig()).isEqualTo("backendConfig");

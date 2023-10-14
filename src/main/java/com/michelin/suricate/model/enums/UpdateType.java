@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.enums;
 
 /**
- * Update type (Websocket)
+ * Update type for websocket events.
  */
 public enum UpdateType {
     REFRESH_DASHBOARD,

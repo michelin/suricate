@@ -5,12 +5,14 @@ import com.michelin.suricate.model.dto.api.asset.AssetResponseDto;
 import com.michelin.suricate.model.dto.api.category.CategoryResponseDto;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
+/**
+ * Widget response DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

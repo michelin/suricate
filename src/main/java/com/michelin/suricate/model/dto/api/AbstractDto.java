@@ -18,10 +18,12 @@ package com.michelin.suricate.model.dto.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import java.io.Serializable;
-
+/**
+ * Abstract DTO.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class AbstractDto implements Serializable {

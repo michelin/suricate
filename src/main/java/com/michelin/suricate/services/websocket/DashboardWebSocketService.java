@@ -19,15 +19,18 @@ package com.michelin.suricate.services.websocket;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import com.michelin.suricate.model.entities.Project;
-import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
 import com.michelin.suricate.model.dto.websocket.UpdateEvent;
 import com.michelin.suricate.model.dto.websocket.WebsocketClient;
+import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.model.enums.UpdateType;
 import com.michelin.suricate.services.api.ProjectService;
-import com.michelin.suricate.services.mapper.ProjectMapper;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
 import com.michelin.suricate.services.js.services.JsExecutionService;
+import com.michelin.suricate.services.mapper.ProjectMapper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -35,14 +38,16 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Dashboard websocket service.
+ */
 @Slf4j
 @Lazy(false)
 @Service
 public class DashboardWebSocketService {
+    private final Multimap<String, WebsocketClient> websocketClientByProjectToken =
+        Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+
     @Autowired
     private JsExecutionScheduler jsExecutionScheduler;
 
@@ -60,31 +65,29 @@ public class DashboardWebSocketService {
     @Autowired
     private JsExecutionService jsExecutionService;
 
-    private final Multimap<String, WebsocketClient> websocketClientByProjectToken = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-
     /**
      * Send a connect project event through the associated websocket to the unique subscriber.
      * The path of the websocket contains a screen code so it is unique for each
      * screen (so each subscriber).
-     *
      * Used to connect a screen to a dashboard just after the subscriber waits on the screen code
      * waiting screen.
      *
-     * @param project The project
+     * @param project    The project
      * @param screenCode The unique screen code
      */
     public void sendConnectProjectEventToScreenSubscriber(final Project project, final String screenCode) {
         UpdateEvent updateEvent = UpdateEvent.builder()
-                .type(UpdateType.CONNECT_DASHBOARD)
-                .content(projectMapper.toProjectDTO(project))
-                .build();
+            .type(UpdateType.CONNECT_DASHBOARD)
+            .content(projectMapper.toProjectDto(project))
+            .build();
 
-        log.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode.replaceAll("[\n\r\t]", "_"));
+        log.debug("Sending the event {} to the screen {}", updateEvent.getType(),
+            screenCode.replaceAll("[\n\r\t]", "_"));
 
         simpMessagingTemplate.convertAndSendToUser(
-                screenCode,
-                "/queue/connect",
-                updateEvent
+            screenCode,
+            "/queue/connect",
+            updateEvent
         );
     }
 
@@ -99,8 +102,10 @@ public class DashboardWebSocketService {
      * @param payload         The payload content
      */
     @Async
-    public void sendEventToWidgetInstanceSubscribers(final String projectToken, final Long projectWidgetId, final UpdateEvent payload) {
-        log.debug("Sending the event {} for the widget instance {} of the project {}", payload.getType(), projectWidgetId, projectToken);
+    public void sendEventToWidgetInstanceSubscribers(final String projectToken, final Long projectWidgetId,
+                                                     final UpdateEvent payload) {
+        log.debug("Sending the event {} for the widget instance {} of the project {}", payload.getType(),
+            projectWidgetId, projectToken);
 
         if (projectToken == null) {
             log.error("Project token null for payload: {}", payload);
@@ -113,9 +118,9 @@ public class DashboardWebSocketService {
         }
 
         simpMessagingTemplate.convertAndSendToUser(
-                projectToken.trim() + "-projectWidget-" + projectWidgetId,
-                "/queue/live",
-                payload
+            projectToken.trim() + "-projectWidget-" + projectWidgetId,
+            "/queue/live",
+            payload
         );
     }
 
@@ -123,14 +128,13 @@ public class DashboardWebSocketService {
      * Send an event through the associated websocket to all subscribers.
      * The path of the websocket contains a project token so it is unique for each
      * project.
-     *
      * Used to reload a project,
      * display the screen code number of a project,
      * disconnect all screens from a project
      * or reposition a widget of a project.
      *
-     * @param projectToken    The project token
-     * @param payload         The payload content
+     * @param projectToken The project token
+     * @param payload      The payload content
      */
     @Async
     public void sendEventToProjectSubscribers(String projectToken, UpdateEvent payload) {
@@ -142,9 +146,9 @@ public class DashboardWebSocketService {
         }
 
         simpMessagingTemplate.convertAndSendToUser(
-                projectToken.trim(),
-                "/queue/live",
-                payload
+            projectToken.trim(),
+            "/queue/live",
+            payload
         );
     }
 
@@ -152,21 +156,20 @@ public class DashboardWebSocketService {
      * Send an event through the associated websocket to the unique subscriber.
      * The path of the websocket contains a project token and a screen code so it is unique for each
      * screen (so each subscriber).
-     *
      * Used to disconnect a given single screen from a dashboard.
      *
      * @param projectToken The project
-     * @param screenCode The unique screen code
+     * @param screenCode   The unique screen code
      */
     @Async
     public void sendEventToScreenProjectSubscriber(String projectToken, String screenCode, UpdateEvent payload) {
         log.debug("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken,
-                screenCode.replaceAll("[\n\r\t]", "_"));
+            screenCode.replaceAll("[\n\r\t]", "_"));
 
         simpMessagingTemplate.convertAndSendToUser(
-                projectToken.trim() + "-" + screenCode,
-                "/queue/unique",
-                payload
+            projectToken.trim() + "-" + screenCode,
+            "/queue/unique",
+            payload
         );
     }
 
@@ -174,7 +177,6 @@ public class DashboardWebSocketService {
      * Add a new link between a project (dashboard) materialized by its projectToken
      * and a client materialized by its WebsocketClient.
      * Triggered when a new subscription to a dashboard is done.
-     *
      * If no client is connected to the dashboard already,
      * initialize a Js execution for each widget of the project to refresh them.
      *
@@ -192,7 +194,7 @@ public class DashboardWebSocketService {
     }
 
     /**
-     * Get the list of every connected dashboard
+     * Get the list of every connected dashboard.
      *
      * @param projectToken The project token used for find every websocket clients
      * @return The list of related websocket clients
@@ -202,42 +204,45 @@ public class DashboardWebSocketService {
     }
 
     /**
-     * Get a websocket by session ID
+     * Get a websocket by session ID.
      *
      * @param sessionId The session ID
      * @return The websocket
      */
     public Optional<WebsocketClient> getWebsocketClientsBySessionId(final String sessionId) {
         return websocketClientByProjectToken.values()
-                .stream()
-                .filter(websocketClient -> websocketClient.getSessionId().equals(sessionId))
-                .findFirst();
+            .stream()
+            .filter(websocketClient -> websocketClient.getSessionId().equals(sessionId))
+            .findFirst();
     }
 
     /**
-     * Count the number of connected clients
+     * Count the number of connected clients.
+     *
      * @return The websocket
      */
     public int countWebsocketClients() {
         return websocketClientByProjectToken.values().size();
     }
 
-   /**
-     * Get a websocket by session ID and subscription ID
-     * @param sessionId The session ID
+    /**
+     * Get a websocket by session ID and subscription ID.
+     *
+     * @param sessionId      The session ID
      * @param subscriptionId The subscription ID
      * @return The websocket
      */
-    public Optional<WebsocketClient> getWebsocketClientsBySessionIdAndSubscriptionId(final String sessionId, final String subscriptionId) {
+    public Optional<WebsocketClient> getWebsocketClientsBySessionIdAndSubscriptionId(final String sessionId,
+                                                                                     final String subscriptionId) {
         return websocketClientByProjectToken.values()
-                .stream()
-                .filter(websocketClient -> websocketClient.getSessionId().equals(sessionId) &&
-                        websocketClient.getSubscriptionId().equals(subscriptionId))
-                .findFirst();
+            .stream()
+            .filter(websocketClient -> websocketClient.getSessionId().equals(sessionId)
+                && websocketClient.getSubscriptionId().equals(subscriptionId))
+            .findFirst();
     }
 
     /**
-     * Remove a given websocket from the project/connection map
+     * Remove a given websocket from the project/connection map.
      *
      * @param websocketClient The websocket to remove
      */
@@ -246,32 +251,34 @@ public class DashboardWebSocketService {
 
         if (!websocketClientByProjectToken.containsKey(websocketClient.getProjectToken())) {
             projectService.getOneByToken(websocketClient.getProjectToken())
-                    .ifPresent(jsExecutionScheduler::cancelWidgetsExecutionByProject);
+                .ifPresent(jsExecutionScheduler::cancelWidgetsExecutionByProject);
         }
     }
 
     /**
-     * Disconnect screen from project
+     * Disconnect screen from project.
      *
      * @param projectToken The project token
      * @param screenCode   The screen code
      */
     public void disconnectClient(final String projectToken, final String screenCode) {
-        sendEventToScreenProjectSubscriber(projectToken, screenCode, UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
+        sendEventToScreenProjectSubscriber(projectToken, screenCode,
+            UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
     }
 
     /**
-     * Reload all the connected clients to all the projects
+     * Reload all the connected clients to all the projects.
      */
     public void reloadAllConnectedClientsToAllProjects() {
-        websocketClientByProjectToken.forEach((key, value) -> reloadAllConnectedClientsToAProject(key));
+        websocketClientByProjectToken.forEach((key, value) -> reloadAllConnectedClientsToProject(key));
     }
 
     /**
-     * Method that force the reloading of every connected clients for a project
+     * Method that force the reloading of every connected clients for a project.
+     *
      * @param projectToken The project token
      */
-    public void reloadAllConnectedClientsToAProject(final String projectToken) {
+    public void reloadAllConnectedClientsToProject(final String projectToken) {
         if (!websocketClientByProjectToken.get(projectToken).isEmpty()) {
             sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.RELOAD).build());
         }

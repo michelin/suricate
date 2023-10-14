@@ -17,21 +17,21 @@
 package com.michelin.suricate.repositories;
 
 import com.michelin.suricate.model.entities.CategoryParameter;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
- * Repository used for request Configurations in database
+ * Category parameters repository.
  */
 @Repository
-public interface CategoryParametersRepository extends JpaRepository<CategoryParameter, String>, JpaSpecificationExecutor<CategoryParameter> {
+public interface CategoryParametersRepository
+    extends JpaRepository<CategoryParameter, String>, JpaSpecificationExecutor<CategoryParameter> {
 
     /**
-     * Get the list of category parameters for a category ID
+     * Get the list of category parameters for a category ID.
      *
      * @param categoryId The category ID
      * @return The list of category parameters

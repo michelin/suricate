@@ -1,10 +1,29 @@
 package com.michelin.suricate.services.js.script;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.utils.exceptions.js.FatalException;
 import com.michelin.suricate.utils.exceptions.js.RemoteException;
 import com.michelin.suricate.utils.exceptions.js.RequestException;
 import com.michelin.suricate.utils.http.OkHttpClientUtils;
-import okhttp3.*;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.TimeoutException;
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -12,15 +31,6 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-
-import java.io.IOException;
-import java.util.Objects;
-import java.util.concurrent.TimeoutException;
-
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class JsEndpointsTest {
@@ -34,15 +44,15 @@ class JsEndpointsTest {
     void shouldGetSuccessful() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(HttpStatus.OK.value())
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(HttpStatus.OK.value())
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -53,8 +63,8 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("response");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.GET.toString())));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.GET.toString())));
         }
     }
 
@@ -62,27 +72,28 @@ class JsEndpointsTest {
     void shouldGetServerError() throws IOException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
             when(call.execute()).thenReturn(response);
 
             assertThatThrownBy(() -> JsEndpoints.get("https://mocked.com"))
-                    .isInstanceOf(RemoteException.class)
-                    .hasMessage("A server error occurred during the execution of the request /GET https://mocked.com/ (code 500).");
+                .isInstanceOf(RemoteException.class)
+                .hasMessage(
+                    "A server error occurred during the execution of the request /GET https://mocked.com/ (code 500).");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.GET.toString())));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.GET.toString())));
         }
     }
 
@@ -90,27 +101,28 @@ class JsEndpointsTest {
     void shouldGetRequestError() throws IOException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(HttpStatus.FORBIDDEN.value())
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(HttpStatus.FORBIDDEN.value())
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
             when(call.execute()).thenReturn(response);
 
             assertThatThrownBy(() -> JsEndpoints.get("https://mocked.com"))
-                    .isInstanceOf(RequestException.class)
-                    .hasMessage("A request error occurred during the execution of the request /GET https://mocked.com/ (code 403). Error body details: response");
+                .isInstanceOf(RequestException.class)
+                .hasMessage(
+                    "A request error occurred during the execution of the request /GET https://mocked.com/ (code 403). Error body details: response");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.GET.toString())));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.GET.toString())));
         }
     }
 
@@ -118,25 +130,26 @@ class JsEndpointsTest {
     void shouldGetRequestErrorEmptyBody() throws IOException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(HttpStatus.FORBIDDEN.value())
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(HttpStatus.FORBIDDEN.value())
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
             when(call.execute()).thenReturn(response);
 
             assertThatThrownBy(() -> JsEndpoints.get("https://mocked.com"))
-                    .isInstanceOf(RequestException.class)
-                    .hasMessage("A request error occurred during the execution of the request /GET https://mocked.com/ (code 403). Error body details: Empty body");
+                .isInstanceOf(RequestException.class)
+                .hasMessage(
+                    "A request error occurred during the execution of the request /GET https://mocked.com/ (code 403). Error body details: Empty body");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.GET.toString())));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.GET.toString())));
         }
     }
 
@@ -144,15 +157,15 @@ class JsEndpointsTest {
     void shouldGetReturnCode() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -163,8 +176,8 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("200");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.GET.toString())));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.GET.toString())));
         }
     }
 
@@ -172,15 +185,15 @@ class JsEndpointsTest {
     void shouldGetWithHeader() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -191,9 +204,9 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("response");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.GET.toString()) &&
-                            Objects.equals(request.header("header"), "headerValue")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.GET.toString())
+                    && Objects.equals(request.header("header"), "headerValue")));
         }
     }
 
@@ -201,15 +214,15 @@ class JsEndpointsTest {
     void shouldGetReturnCodeWithHeader() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -220,9 +233,9 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("200");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.GET.toString()) &&
-                            Objects.equals(request.header("header"), "headerValue")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.GET.toString())
+                    && Objects.equals(request.header("header"), "headerValue")));
         }
     }
 
@@ -230,16 +243,16 @@ class JsEndpointsTest {
     void shouldGetWithHeaderAndHeaderToReturn() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .header("headerToReturn", "valueToReturn")
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .header("headerToReturn", "valueToReturn")
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -250,9 +263,9 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("valueToReturn");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.GET.toString()) &&
-                            Objects.equals(request.header("header"), "headerValue")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.GET.toString())
+                    && Objects.equals(request.header("header"), "headerValue")));
         }
     }
 
@@ -260,15 +273,15 @@ class JsEndpointsTest {
     void shouldPost() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -279,10 +292,11 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("response");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.POST.toString()) &&
-                            request.body() != null &&
-                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.POST.toString())
+                    && request.body() != null
+                    && Objects.requireNonNull(request.body().contentType()).toString()
+                    .equals("application/json; charset=utf-8")));
         }
     }
 
@@ -290,15 +304,15 @@ class JsEndpointsTest {
     void shouldPostEmptyBody() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -309,10 +323,11 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("response");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.POST.toString()) &&
-                            request.body() != null &&
-                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.POST.toString())
+                    && request.body() != null
+                    && Objects.requireNonNull(request.body().contentType()).toString()
+                    .equals("application/json; charset=utf-8")));
         }
     }
 
@@ -320,15 +335,15 @@ class JsEndpointsTest {
     void shouldPostReturnCode() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -339,10 +354,11 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("200");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.POST.toString()) &&
-                            request.body() != null &&
-                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.POST.toString())
+                    && request.body() != null
+                    && Objects.requireNonNull(request.body().contentType()).toString()
+                    .equals("application/json; charset=utf-8")));
         }
     }
 
@@ -350,15 +366,15 @@ class JsEndpointsTest {
     void shouldPostEmptyBodyReturnCode() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -369,10 +385,11 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("200");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.POST.toString()) &&
-                            request.body() != null &&
-                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.POST.toString())
+                    && request.body() != null
+                    && Objects.requireNonNull(request.body().contentType()).toString()
+                    .equals("application/json; charset=utf-8")));
         }
     }
 
@@ -380,15 +397,15 @@ class JsEndpointsTest {
     void shouldPostWithHeader() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -399,11 +416,12 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("response");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.POST.toString()) &&
-                            request.body() != null &&
-                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8") &&
-                            Objects.equals(request.header("header"), "headerValue")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.POST.toString())
+                    && request.body() != null
+                    && Objects.requireNonNull(request.body().contentType()).toString()
+                    .equals("application/json; charset=utf-8")
+                    && Objects.equals(request.header("header"), "headerValue")));
         }
     }
 
@@ -411,15 +429,15 @@ class JsEndpointsTest {
     void shouldPostEmptyBodyWithHeader() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -430,11 +448,12 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("response");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.POST.toString()) &&
-                            request.body() != null &&
-                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8") &&
-                            Objects.equals(request.header("header"), "headerValue")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.POST.toString())
+                    && request.body() != null
+                    && Objects.requireNonNull(request.body().contentType()).toString()
+                    .equals("application/json; charset=utf-8")
+                    && Objects.equals(request.header("header"), "headerValue")));
         }
     }
 
@@ -442,30 +461,32 @@ class JsEndpointsTest {
     void shouldPostReturnCodeWithHeader() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
             when(call.execute()).thenReturn(response);
 
-            String actual = JsEndpoints.post("https://mocked.com", "{\"key\": \"value\"}", "header", "headerValue", true);
+            String actual =
+                JsEndpoints.post("https://mocked.com", "{\"key\": \"value\"}", "header", "headerValue", true);
 
             assertThat(actual).isEqualTo("200");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.POST.toString()) &&
-                            request.body() != null &&
-                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8") &&
-                            Objects.equals(request.header("header"), "headerValue")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.POST.toString())
+                    && request.body() != null
+                    && Objects.requireNonNull(request.body().contentType()).toString()
+                    .equals("application/json; charset=utf-8")
+                    && Objects.equals(request.header("header"), "headerValue")));
         }
     }
 
@@ -473,15 +494,15 @@ class JsEndpointsTest {
     void shouldPostEmptyBodyReturnCodeWithHeader() throws IOException, RemoteException, RequestException {
         try (MockedStatic<OkHttpClientUtils> mocked = mockStatic(OkHttpClientUtils.class)) {
             Response response = new Response.Builder()
-                    .code(200)
-                    .request(new Request.Builder()
-                            .url("https://mocked.com")
-                            .build())
-                    .body(ResponseBody.create("response",
-                            MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
-                    .protocol(Protocol.HTTP_2)
-                    .message(EMPTY)
-                    .build();
+                .code(200)
+                .request(new Request.Builder()
+                    .url("https://mocked.com")
+                    .build())
+                .body(ResponseBody.create("response",
+                    MediaType.get(String.valueOf(org.springframework.http.MediaType.APPLICATION_JSON))))
+                .protocol(Protocol.HTTP_2)
+                .message(EMPTY)
+                .build();
 
             mocked.when(OkHttpClientUtils::getUnsafeOkHttpClient).thenReturn(client);
             when(client.newCall(any())).thenReturn(call);
@@ -492,11 +513,12 @@ class JsEndpointsTest {
             assertThat(actual).isEqualTo("200");
 
             verify(client)
-                    .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/") &&
-                            request.method().equals(HttpMethod.POST.toString()) &&
-                            request.body() != null &&
-                            Objects.requireNonNull(request.body().contentType()).toString().equals("application/json; charset=utf-8") &&
-                            Objects.equals(request.header("header"), "headerValue")));
+                .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
+                    && request.method().equals(HttpMethod.POST.toString())
+                    && request.body() != null
+                    && Objects.requireNonNull(request.body().contentType()).toString()
+                    .equals("application/json; charset=utf-8")
+                    && Objects.equals(request.header("header"), "headerValue")));
         }
     }
 
@@ -504,8 +526,8 @@ class JsEndpointsTest {
     void shouldCheckInterrupted() {
         Thread.currentThread().interrupt();
         assertThatThrownBy(JsEndpoints::checkInterrupted)
-                .isInstanceOf(InterruptedException.class)
-                .hasMessage("Script Interrupted");
+            .isInstanceOf(InterruptedException.class)
+            .hasMessage("Script Interrupted");
     }
 
     @Test
@@ -534,21 +556,21 @@ class JsEndpointsTest {
     @Test
     void shouldThrowError() {
         assertThatThrownBy(JsEndpoints::throwError)
-                .isInstanceOf(RemoteException.class)
-                .hasMessage("Error");
+            .isInstanceOf(RemoteException.class)
+            .hasMessage("Error");
     }
 
     @Test
     void shouldThrowFatalError() {
         assertThatThrownBy(() -> JsEndpoints.throwFatalError("Error"))
-                .isInstanceOf(FatalException.class)
-                .hasMessage("Error");
+            .isInstanceOf(FatalException.class)
+            .hasMessage("Error");
     }
 
     @Test
     void shouldThrowTimeout() {
         assertThatThrownBy(JsEndpoints::throwTimeout)
-                .isInstanceOf(TimeoutException.class)
-                .hasMessage("Timeout");
+            .isInstanceOf(TimeoutException.class)
+            .hasMessage("Timeout");
     }
 }

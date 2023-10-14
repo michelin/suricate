@@ -21,6 +21,8 @@ import com.michelin.suricate.model.dto.api.user.UserRequestDto;
 import com.michelin.suricate.model.dto.api.user.UserResponseDto;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.enums.AuthenticationProvider;
+import java.util.Collection;
+import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -29,11 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
- * Manage the generation DTO/Model objects for User class
+ * User mapper.
  */
 @Component
 @Mapper(
@@ -47,45 +46,51 @@ public abstract class UserMapper {
     protected PasswordEncoder passwordEncoder;
 
     /**
-     * Map a user into a DTO for admins
+     * Map a user into a DTO for admins.
+     *
      * @param user The user to map
      * @return The user as DTO
      */
-    @Named("toAdminUserDTO")
-    @Mapping(target = "roles", qualifiedByName = "toRoleDTO")
-    public abstract AdminUserResponseDto toAdminUserDTO(User user);
+    @Named("toAdminUserDto")
+    @Mapping(target = "roles", qualifiedByName = "toRoleDto")
+    public abstract AdminUserResponseDto toAdminUserDto(User user);
 
     /**
-     * Map a user into a DTO
+     * Map a user into a DTO.
+     *
      * @param user The user to map
      * @return The user as DTO
      */
-    @Named("toUserDTO")
-    public abstract UserResponseDto toUserDTO(User user);
+    @Named("toUserDto")
+    public abstract UserResponseDto toUserDto(User user);
 
     /**
-     * Map a list of users into a list of users as DTOs
+     * Map a list of users into a list of users as DTOs.
+     *
      * @param users The list of user to map
      * @return The users as DTO
      */
-    @Named("toUsersDTOs")
-    @IterableMapping(qualifiedByName = "toUserDTO")
-    public abstract List<UserResponseDto> toUsersDTOs(Collection<User> users);
+    @Named("toUsersDtos")
+    @IterableMapping(qualifiedByName = "toUserDto")
+    public abstract List<UserResponseDto> toUsersDtos(Collection<User> users);
 
     /**
-     * Map a connected user to user entity
-     * @param username The username
-     * @param firstname The user firstname
-     * @param lastname The user lastname
-     * @param email The user email
+     * Map a connected user to user entity.
+     *
+     * @param username             The username
+     * @param firstname            The user firstname
+     * @param lastname             The user lastname
+     * @param email                The user email
      * @param authenticationMethod The ID provider used
      * @return The user entity
      */
     @Named("connectedUserToUserEntity")
-    public abstract User connectedUserToUserEntity(String username, String firstname, String lastname, String email, String avatarUrl, AuthenticationProvider authenticationMethod);
+    public abstract User connectedUserToUserEntity(String username, String firstname, String lastname, String email,
+                                                   String avatarUrl, AuthenticationProvider authenticationMethod);
 
     /**
-     * Map a user DTO into a user as entity
+     * Map a user DTO into a user as entity.
+     *
      * @param userRequestDto       The userRequestDto to map
      * @param authenticationMethod The authentication method of the user
      * @return The user entity

@@ -22,22 +22,22 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
- * Configuration for websocket
+ * Websocket configuration.
  */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
     /**
-     * Websocket endpoints
+     * Websocket endpoints.
      *
      * @param registry The endpoint registry
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
-                .addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
+            .addEndpoint("/ws")
+            .setAllowedOriginPatterns("*")
+            .withSockJS();
     }
 }

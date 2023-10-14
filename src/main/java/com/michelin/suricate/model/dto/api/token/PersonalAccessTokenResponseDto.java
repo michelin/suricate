@@ -2,12 +2,14 @@ package com.michelin.suricate.model.dto.api.token;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
+/**
+ * Personal access token request DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

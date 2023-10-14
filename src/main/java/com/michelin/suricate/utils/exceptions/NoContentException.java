@@ -1,20 +1,16 @@
 package com.michelin.suricate.utils.exceptions;
 
 import com.michelin.suricate.model.enums.ApiErrorEnum;
-
 import java.text.MessageFormat;
 
 /**
- * Manage the no content on fetching list
+ * No content exception.
  */
 public class NoContentException extends ApiException {
-    /**
-     * Message for no content
-     */
     private static final String MSG_LIST_NO_CONTENT = "No resource for the class ''{0}''";
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param entity The entity to find
      */

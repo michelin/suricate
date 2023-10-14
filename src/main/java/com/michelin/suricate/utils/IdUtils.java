@@ -17,21 +17,26 @@
 package com.michelin.suricate.utils;
 
 import com.michelin.suricate.utils.exceptions.ProjectTokenInvalidException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 
+/**
+ * Id utils.
+ */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class IdUtils {
-    private IdUtils() { }
-
     /**
-     * Method used to decode id without salt
+     * Method used to decode id without salt.
      *
      * @param token token to decode
      * @return the decoded id or null
      */
     public static Long decrypt(String token) {
-        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
+        StringEncryptor stringEncryptor =
+            (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
         long id;
         try {
             id = Long.parseLong(stringEncryptor.decrypt(token));
@@ -43,13 +48,14 @@ public final class IdUtils {
     }
 
     /**
-     * Method used to encrypt id without salt
+     * Method used to encrypt id without salt.
      *
      * @param id to encrypt
      * @return the encrypted id
      */
     public static String encrypt(Long id) {
-        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
+        StringEncryptor stringEncryptor =
+            (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
         String token = null;
         if (id != null) {
             try {

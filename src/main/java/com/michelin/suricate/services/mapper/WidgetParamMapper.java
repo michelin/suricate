@@ -23,7 +23,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 /**
- * Manage the generation DTO/Model objects for Widget params class
+ * Widget param mapper.
  */
 @Mapper(
     componentModel = "spring",
@@ -33,12 +33,13 @@ import org.mapstruct.Named;
 )
 public abstract class WidgetParamMapper {
     /**
-     * Map a widget parameter into a widget parameter DTO
+     * Map a widget parameter into a widget parameter DTO.
      *
      * @param widgetParam The widget parameter to map
      * @return The widget parameter as DTO
      */
-    @Named("toWidgetParameterDTO")
-    @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toWidgetParameterValuesDTOs")
-    public abstract WidgetParamResponseDto toWidgetParameterDTO(WidgetParam widgetParam);
+    @Named("toWidgetParameterDto")
+    @Mapping(target = "values", source = "widgetParam.possibleValuesMap",
+        qualifiedByName = "toWidgetParameterValuesDtos")
+    public abstract WidgetParamResponseDto toWidgetParameterDto(WidgetParam widgetParam);
 }

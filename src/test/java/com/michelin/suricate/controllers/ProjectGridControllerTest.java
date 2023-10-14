@@ -1,5 +1,10 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridRequestDto;
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridResponseDto;
 import com.michelin.suricate.model.entities.Project;
@@ -13,6 +18,8 @@ import com.michelin.suricate.services.mapper.ProjectGridMapper;
 import com.michelin.suricate.utils.exceptions.ApiException;
 import com.michelin.suricate.utils.exceptions.GridNotFoundException;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,14 +27,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectGridControllerTest {
@@ -61,11 +60,11 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> projectGridController.create(localUser, "token", gridRequestDto))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Project 'token' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Project 'token' not found");
     }
 
     @Test
@@ -89,13 +88,13 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-                .thenReturn(false);
+            .thenReturn(false);
 
         assertThatThrownBy(() -> projectGridController.create(localUser, "token", gridRequestDto))
-                .isInstanceOf(ApiException.class)
-                .hasMessage("The user is not allowed to modify this project");
+            .isInstanceOf(ApiException.class)
+            .hasMessage("The user is not allowed to modify this project");
     }
 
     @Test
@@ -125,17 +124,18 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-                .thenReturn(true);
+            .thenReturn(true);
         when(projectGridMapper.toProjectGridEntity(any(), any()))
-                .thenReturn(projectGrid);
+            .thenReturn(projectGrid);
         when(projectGridService.create(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
-        when(projectGridMapper.toProjectGridDTO(any()))
-                .thenReturn(projectGridResponseDto);
+            .thenAnswer(answer -> answer.getArgument(0));
+        when(projectGridMapper.toProjectGridDto(any()))
+            .thenReturn(projectGridResponseDto);
 
-        ResponseEntity<ProjectGridResponseDto> actual = projectGridController.create(localUser, "token", gridRequestDto);
+        ResponseEntity<ProjectGridResponseDto> actual =
+            projectGridController.create(localUser, "token", gridRequestDto);
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody()).isEqualTo(projectGridResponseDto);
@@ -143,8 +143,6 @@ class ProjectGridControllerTest {
 
     @Test
     void shouldUpdateProjectGridsNotFound() {
-        ProjectGridRequestDto projectGridRequestDto = new ProjectGridRequestDto();
-
         Role role = new Role();
         role.setId(1L);
         role.setName("ROLE_ADMIN");
@@ -158,17 +156,17 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
+
+        ProjectGridRequestDto projectGridRequestDto = new ProjectGridRequestDto();
 
         assertThatThrownBy(() -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Project 'token' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Project 'token' not found");
     }
 
     @Test
     void shouldUpdateProjectGridsNotAuthorized() {
-        ProjectGridRequestDto projectGridRequestDto = new ProjectGridRequestDto();
-
         Project project = new Project();
         project.setId(1L);
 
@@ -185,13 +183,15 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-                .thenReturn(false);
+            .thenReturn(false);
+
+        ProjectGridRequestDto projectGridRequestDto = new ProjectGridRequestDto();
 
         assertThatThrownBy(() -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto))
-                .isInstanceOf(ApiException.class)
-                .hasMessage("The user is not allowed to modify this project");
+            .isInstanceOf(ApiException.class)
+            .hasMessage("The user is not allowed to modify this project");
     }
 
     @Test
@@ -222,13 +222,13 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-                .thenReturn(true);
+            .thenReturn(true);
 
         assertThatThrownBy(() -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto))
-                .isInstanceOf(GridNotFoundException.class)
-                .hasMessage("Grid '2' not found for project token");
+            .isInstanceOf(GridNotFoundException.class)
+            .hasMessage("Grid '2' not found for project token");
     }
 
     @Test
@@ -259,11 +259,12 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-                .thenReturn(true);
+            .thenReturn(true);
 
-        ResponseEntity<Void> actual = projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto);
+        ResponseEntity<Void> actual =
+            projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto);
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(actual.getBody()).isNull();
@@ -284,11 +285,11 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> projectGridController.deleteGridById(localUser, "token", 1L))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Project 'token' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Project 'token' not found");
     }
 
     @Test
@@ -309,13 +310,13 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-                .thenReturn(false);
+            .thenReturn(false);
 
         assertThatThrownBy(() -> projectGridController.deleteGridById(localUser, "token", 1L))
-                .isInstanceOf(ApiException.class)
-                .hasMessage("The user is not allowed to modify this project");
+            .isInstanceOf(ApiException.class)
+            .hasMessage("The user is not allowed to modify this project");
     }
 
     @Test
@@ -340,13 +341,13 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-                .thenReturn(true);
+            .thenReturn(true);
 
         assertThatThrownBy(() -> projectGridController.deleteGridById(localUser, "token", 1L))
-                .isInstanceOf(GridNotFoundException.class)
-                .hasMessage("Grid '1' not found for project token");
+            .isInstanceOf(GridNotFoundException.class)
+            .hasMessage("Grid '1' not found for project token");
     }
 
     @Test
@@ -371,9 +372,9 @@ class ProjectGridControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-                .thenReturn(true);
+            .thenReturn(true);
 
         ResponseEntity<Void> actual = projectGridController.deleteGridById(localUser, "token", 1L);
 

@@ -1,5 +1,12 @@
 package com.michelin.suricate.services.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.user.UserSettingRequestDto;
 import com.michelin.suricate.model.entities.AllowedSettingValue;
 import com.michelin.suricate.model.entities.Setting;
@@ -7,20 +14,14 @@ import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.entities.UserSetting;
 import com.michelin.suricate.repositories.UserSettingRepository;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserSettingServiceTest {
@@ -55,32 +56,32 @@ class UserSettingServiceTest {
         user.setId(1L);
 
         when(settingService.getAll())
-                .thenReturn(Optional.of(settings));
+            .thenReturn(Optional.of(settings));
         when(userSettingRepository.saveAll(any()))
-                .thenReturn(Collections.singletonList(userSetting));
+            .thenReturn(Collections.singletonList(userSetting));
 
         List<UserSetting> actual = userSettingService.createDefaultSettingsForUser(user);
 
         assertThat(actual)
-                .isNotEmpty();
+            .isNotEmpty();
         assertThat(actual.get(0).getUser())
-                .isEqualTo(user);
+            .isEqualTo(user);
         assertThat(actual.get(0).getSetting())
-                .isEqualTo(setting);
+            .isEqualTo(setting);
         assertThat(actual.get(0).getSettingValue())
-                .isEqualTo(allowedSettingValue);
+            .isEqualTo(allowedSettingValue);
 
         verify(settingService)
-                .getAll();
+            .getAll();
         verify(userSettingRepository)
-                .saveAll(argThat(userSettings -> {
-                    UserSetting createdUserSetting = userSettings.iterator().next();
-                    return createdUserSetting.getUser().equals(user) &&
-                            createdUserSetting.getSetting().equals(setting) &&
-                            createdUserSetting.getSettingValue().equals(allowedSettingValue);
-                }));
+            .saveAll(argThat(userSettings -> {
+                UserSetting createdUserSetting = userSettings.iterator().next();
+                return createdUserSetting.getUser().equals(user)
+                    && createdUserSetting.getSetting().equals(setting)
+                    && createdUserSetting.getSettingValue().equals(allowedSettingValue);
+            }));
         verify(userSettingRepository)
-                .flush();
+            .flush();
     }
 
     @Test
@@ -98,29 +99,29 @@ class UserSettingServiceTest {
         UserSetting actual = userSettingService.createUserSettingFromAllowedSettingValue(allowedSettingValue, user);
 
         assertThat(actual.getUser())
-                .isEqualTo(user);
+            .isEqualTo(user);
         assertThat(actual.getSetting())
-                .isEqualTo(setting);
+            .isEqualTo(setting);
         assertThat(actual.getSettingValue())
-                .isEqualTo(allowedSettingValue);
+            .isEqualTo(allowedSettingValue);
     }
 
     @Test
     void shouldGetUserSetting() {
-       UserSetting userSetting = new UserSetting();
-       userSetting.setId(1L);
+        UserSetting userSetting = new UserSetting();
+        userSetting.setId(1L);
 
         when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
-                .thenReturn(Optional.of(userSetting));
+            .thenReturn(Optional.of(userSetting));
 
         Optional<UserSetting> actual = userSettingService.getUserSetting("username", 1L);
 
         assertThat(actual)
-                .isPresent()
-                .contains(userSetting);
+            .isPresent()
+            .contains(userSetting);
 
         verify(userSettingRepository)
-                .findByUserUsernameAndSettingId("username", 1L);
+            .findByUserUsernameAndSettingId("username", 1L);
     }
 
     @Test
@@ -130,17 +131,17 @@ class UserSettingServiceTest {
         List<UserSetting> userSettings = Collections.singletonList(userSetting);
 
         when(userSettingRepository.findAllByUserUsernameIgnoreCase(any()))
-                .thenReturn(Optional.of(userSettings));
+            .thenReturn(Optional.of(userSettings));
 
         Optional<List<UserSetting>> actual = userSettingService.getUserSettingsByUsername("username");
 
         assertThat(actual).isPresent();
         assertThat(actual.get())
-                .isNotEmpty()
-                .contains(userSetting);
+            .isNotEmpty()
+            .contains(userSetting);
 
         verify(userSettingRepository)
-                .findAllByUserUsernameIgnoreCase("username");
+            .findAllByUserUsernameIgnoreCase("username");
     }
 
     @Test
@@ -161,23 +162,23 @@ class UserSettingServiceTest {
         userSettingRequestDto.setUnconstrainedValue("value");
 
         when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
-                .thenReturn(Optional.of(userSetting));
+            .thenReturn(Optional.of(userSetting));
         when(allowedSettingValueService.findById(any()))
-                .thenReturn(Optional.of(allowedSettingValue));
+            .thenReturn(Optional.of(allowedSettingValue));
         when(userSettingRepository.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         userSettingService.updateUserSetting("username", 1L, userSettingRequestDto);
 
         assertThat(userSetting.getSettingValue())
-                .isEqualTo(allowedSettingValue);
+            .isEqualTo(allowedSettingValue);
 
         verify(userSettingRepository)
-                .findByUserUsernameAndSettingId("username", 1L);
+            .findByUserUsernameAndSettingId("username", 1L);
         verify(allowedSettingValueService)
-                .findById(1L);
+            .findById(1L);
         verify(userSettingRepository)
-                .save(userSetting);
+            .save(userSetting);
     }
 
     @Test
@@ -198,19 +199,19 @@ class UserSettingServiceTest {
         userSettingRequestDto.setUnconstrainedValue("value");
 
         when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
-                .thenReturn(Optional.of(userSetting));
+            .thenReturn(Optional.of(userSetting));
         when(userSettingRepository.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         userSettingService.updateUserSetting("username", 1L, userSettingRequestDto);
 
         assertThat(userSetting.getUnconstrainedValue())
-                .isEqualTo("value");
+            .isEqualTo("value");
 
         verify(userSettingRepository)
-                .findByUserUsernameAndSettingId("username", 1L);
+            .findByUserUsernameAndSettingId("username", 1L);
         verify(userSettingRepository)
-                .save(userSetting);
+            .save(userSetting);
     }
 
     @Test
@@ -220,13 +221,13 @@ class UserSettingServiceTest {
         userSettingRequestDto.setUnconstrainedValue("value");
 
         when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userSettingService.updateUserSetting("username", 1L, userSettingRequestDto))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("UserSetting 'user: username, settingId: 1' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("UserSetting 'user: username, settingId: 1' not found");
 
         verify(userSettingRepository)
-                .findByUserUsernameAndSettingId("username", 1L);
+            .findByUserUsernameAndSettingId("username", 1L);
     }
 }

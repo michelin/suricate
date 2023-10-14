@@ -1,33 +1,33 @@
 package com.michelin.suricate.services.js.tasks;
 
-import com.michelin.suricate.utils.exceptions.js.FatalException;
-import com.michelin.suricate.utils.exceptions.js.RemoteException;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
 import com.michelin.suricate.model.dto.js.JsResultDto;
 import com.michelin.suricate.model.dto.js.WidgetVariableResponseDto;
 import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.JsExecutionErrorTypeEnum;
-import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
-import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
+import com.michelin.suricate.utils.exceptions.js.FatalException;
+import com.michelin.suricate.utils.exceptions.js.RemoteException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class JsExecutionAsyncTaskTest {
     @ParameterizedTest
     @CsvSource({"badScript,ReferenceError: badScript is not defined",
-            "function test() {},No run function defined",
-            "function run() {},The JSON response is not valid - null",
-            "function run () { var file = Java.type('java.io.File'); file.listRoots(); return '{}'},"
-                    + "TypeError: Access to host class java.io.File is not allowed or does not exist."})
+        "function test() {},No run function defined",
+        "function run() {},The JSON response is not valid - null",
+        "function run () { var file = Java.type('java.io.File'); file.listRoots(); return '{}'},"
+            + "TypeError: Access to host class java.io.File is not allowed or does not exist."})
     void shouldFail(String script, String expectedLogs) {
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectId(1L);
@@ -45,8 +45,8 @@ class JsExecutionAsyncTaskTest {
 
     @ParameterizedTest
     @CsvSource({"function run() {},The JSON response is not valid - null",
-            "function run () { Packages.throwError(); return '{}'},Error",
-            "function run () { Packages.throwTimeout(); return '{}'},Timeout"})
+        "function run () { Packages.throwError(); return '{}'},Error",
+        "function run () { Packages.throwTimeout(); return '{}'},Timeout"})
     void shouldFailWithErrorBecauseBadReturn(String script, String expectedLogs) {
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectId(1L);
@@ -106,7 +106,9 @@ class JsExecutionAsyncTaskTest {
         jsExecutionDto.setProjectWidgetId(1L);
         jsExecutionDto.setDelay(0L);
         jsExecutionDto.setPreviousData(null);
-        jsExecutionDto.setScript("function run () { print('title='+SURI_TITLE); print('notRequiredTitle='+NOT_REQUIRED_SURI_TITLE); return '{}' }");
+        jsExecutionDto.setScript(
+            "function run () { print('title='+SURI_TITLE); "
+                + "print('notRequiredTitle='+NOT_REQUIRED_SURI_TITLE); return '{}' }");
 
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, null, widgetParameters);
         JsResultDto actual = task.call();
@@ -162,17 +164,6 @@ class JsExecutionAsyncTaskTest {
 
     @Test
     void shouldSuccessWithEncryptedVars() {
-        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
-        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword("password");
-        config.setAlgorithm("PBEWithMD5AndDES");
-        config.setKeyObtentionIterations("1000");
-        config.setPoolSize("1");
-        config.setProviderName("SunJCE");
-        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
-        config.setStringOutputType("base64");
-        encryptor.setConfig(config);
-
         WidgetVariableResponseDto widgetParameter = new WidgetVariableResponseDto();
         widgetParameter.setName("SURI_SECRET");
         widgetParameter.setDescription("title");
@@ -187,6 +178,8 @@ class JsExecutionAsyncTaskTest {
         jsExecutionDto.setProjectWidgetId(1L);
         jsExecutionDto.setDelay(0L);
         jsExecutionDto.setPreviousData(null);
+
+        PooledPBEStringEncryptor encryptor = getPooledPbeStringEncryptor();
         jsExecutionDto.setProperties("SURI_SECRET=" + encryptor.encrypt("encrypted string"));
         jsExecutionDto.setScript("function run () { print(SURI_SECRET); return '{}'}");
 
@@ -203,17 +196,6 @@ class JsExecutionAsyncTaskTest {
 
     @Test
     void shouldFailWithEncryptedVars() {
-        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
-        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword("password");
-        config.setAlgorithm("PBEWithMD5AndDES");
-        config.setKeyObtentionIterations("1000");
-        config.setPoolSize("1");
-        config.setProviderName("SunJCE");
-        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
-        config.setStringOutputType("base64");
-        encryptor.setConfig(config);
-
         WidgetVariableResponseDto widgetParameter = new WidgetVariableResponseDto();
         widgetParameter.setName("SURI_SECRET");
         widgetParameter.setDescription("title");
@@ -231,6 +213,7 @@ class JsExecutionAsyncTaskTest {
         jsExecutionDto.setProperties("SURI_SECRET=test");
         jsExecutionDto.setScript("function run () { print(SURI_SECRET); return '{}'}");
 
+        PooledPBEStringEncryptor encryptor = getPooledPbeStringEncryptor();
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, encryptor, widgetParameters);
         JsResultDto actual = task.call();
 
@@ -248,16 +231,35 @@ class JsExecutionAsyncTaskTest {
         assertThat(task.isFatalError(new Exception("timeoutException"), new Exception(""))).isFalse();
         assertThat(task.isFatalError(new Exception("timeoutException"), new FatalException(""))).isFalse();
         assertThat(task.isFatalError(new Exception("timeout:"), new IllegalArgumentException(""))).isFalse();
-        assertThat(task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server"))).isFalse();
-        assertThat(task.isFatalError(new Exception("Error on server"), new UnknownHostException("Error on server"))).isFalse();
+        assertThat(
+            task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server"))).isFalse();
+        assertThat(
+            task.isFatalError(new Exception("Error on server"), new UnknownHostException("Error on server"))).isFalse();
 
         jsExecutionDto.setAlreadySuccess(true);
 
         assertThat(task.isFatalError(new Exception(""), new Exception(""))).isFalse();
         assertThat(task.isFatalError(new Exception("timeoutException"), new Exception(""))).isFalse();
         assertThat(task.isFatalError(new Exception("timeoutException"), new FatalException(""))).isFalse();
-        assertThat(task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server"))).isFalse();
+        assertThat(
+            task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server"))).isFalse();
         assertThat(task.isFatalError(new Exception("Error on server"), new Exception("Error on server"))).isFalse();
-        assertThat(task.isFatalError(new ConnectException("Connection error"), new IllegalArgumentException())).isFalse();
+        assertThat(
+            task.isFatalError(new ConnectException("Connection error"), new IllegalArgumentException())).isFalse();
+    }
+
+    @NotNull
+    private static PooledPBEStringEncryptor getPooledPbeStringEncryptor() {
+        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+        config.setPassword("password");
+        config.setAlgorithm("PBEWithMD5AndDES");
+        config.setKeyObtentionIterations("1000");
+        config.setPoolSize("1");
+        config.setProviderName("SunJCE");
+        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
+        config.setStringOutputType("base64");
+        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
+        encryptor.setConfig(config);
+        return encryptor;
     }
 }

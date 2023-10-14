@@ -20,13 +20,15 @@ import com.michelin.suricate.model.dto.api.AbstractDto;
 import com.michelin.suricate.model.dto.api.asset.AssetResponseDto;
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Project response DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -50,7 +52,8 @@ public class ProjectResponseDto extends AbstractDto {
     @Schema(description = "Image of the dashboard")
     private AssetResponseDto image;
 
-    @Schema(description = "The list of the related JS libraries used for the execution of the widgets", type = "java.util.List")
+    @Schema(description = "The list of the related JS libraries used for the execution of the widgets",
+        type = "java.util.List")
     private List<String> librariesToken = new ArrayList<>();
 
     @Schema(description = "The grids", type = "java.util.List")

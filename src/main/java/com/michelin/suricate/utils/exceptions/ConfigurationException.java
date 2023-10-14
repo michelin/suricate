@@ -3,18 +3,14 @@ package com.michelin.suricate.utils.exceptions;
 import lombok.Getter;
 
 /**
- * Fatal exception throw when something went wrong in the configuration
+ * Configuration exception.
  */
 @Getter
 public class ConfigurationException extends RuntimeException {
-
-    /**
-     * Configuration property field name
-     */
     private final String propertyName;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param message      Error Message
      * @param propertyName property name

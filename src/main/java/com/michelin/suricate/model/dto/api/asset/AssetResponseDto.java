@@ -22,6 +22,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Asset response dto.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

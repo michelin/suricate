@@ -20,20 +20,27 @@ package com.michelin.suricate.utils.http;
 
 import com.michelin.suricate.properties.ProxyProperties;
 import com.michelin.suricate.utils.SpringContextUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
-import java.net.*;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.SocketAddress;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Widget proxy selector.
+ */
 @Slf4j
 public class WidgetProxySelector extends ProxySelector {
     /**
-     * Set the proxy for the URI that will be called by the widget HTTP client
+     * Set the proxy for the URI that will be called by the widget HTTP client.
+     *
      * @param uri The URI
      * @return A proxy
      */
@@ -45,8 +52,10 @@ public class WidgetProxySelector extends ProxySelector {
         if (StringUtils.isNotBlank(proxyProperties.getNonProxyHosts())) {
             try (Stream<String> domains = Arrays.stream(proxyProperties.getNonProxyHosts().split("\\|"))) {
                 // Check if the URI is defined in the "no proxy domains" config before setting the proxy
-                if (domains.noneMatch(domain -> StringUtils.containsIgnoreCase(uri.getHost(), domain.replace("*", StringUtils.EMPTY)))) {
-                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyProperties.getHttpHost(), Integer.parseInt(proxyProperties.getHttpPort())));
+                if (domains.noneMatch(
+                    domain -> StringUtils.containsIgnoreCase(uri.getHost(), domain.replace("*", StringUtils.EMPTY)))) {
+                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyProperties.getHttpHost(),
+                        Integer.parseInt(proxyProperties.getHttpPort())));
                 }
             }
         }
@@ -55,14 +64,16 @@ public class WidgetProxySelector extends ProxySelector {
     }
 
     /**
-     * Handle the connection fails to the given proxy
+     * Handle the connection fails to the given proxy.
      *
-     * @param uri The URI to call behind the proxy
+     * @param uri           The URI to call behind the proxy
      * @param socketAddress The socket address
-     * @param e The exception
+     * @param e             The exception
      */
     @Override
     public void connectFailed(URI uri, SocketAddress socketAddress, IOException e) {
-        log.error("An error occurred trying to connect to the configured proxy for the URI {} during the widget execution", uri, e);
+        log.error(
+            "An error occurred trying to connect to the configured proxy for the URI {} during the widget execution",
+            uri, e);
     }
 }

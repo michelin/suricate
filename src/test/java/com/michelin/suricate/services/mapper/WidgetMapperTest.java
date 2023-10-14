@@ -1,11 +1,22 @@
 package com.michelin.suricate.services.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.category.CategoryResponseDto;
 import com.michelin.suricate.model.dto.api.widget.WidgetParamResponseDto;
 import com.michelin.suricate.model.dto.api.widget.WidgetResponseDto;
-import com.michelin.suricate.model.entities.*;
+import com.michelin.suricate.model.entities.Asset;
+import com.michelin.suricate.model.entities.Category;
+import com.michelin.suricate.model.entities.Repository;
+import com.michelin.suricate.model.entities.Widget;
+import com.michelin.suricate.model.entities.WidgetParam;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import com.michelin.suricate.utils.IdUtils;
+import java.util.Collections;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,14 +24,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class WidgetMapperTest {
@@ -34,7 +37,7 @@ class WidgetMapperTest {
     private WidgetMapperImpl widgetMapper;
 
     @Test
-    void shouldToWidgetDTO() {
+    void shouldtoWidgetDto() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             Asset asset = new Asset();
             asset.setId(1L);
@@ -70,13 +73,13 @@ class WidgetMapperTest {
             widgetParamResponseDto.setName("name");
 
             mocked.when(() -> IdUtils.encrypt(1L))
-                    .thenReturn("encrypted");
-            when(categoryMapper.toCategoryWithHiddenValueParametersDTO(any()))
-                    .thenReturn(categoryResponseDto);
-            when(widgetParamMapper.toWidgetParameterDTO(any()))
-                    .thenReturn(widgetParamResponseDto);
+                .thenReturn("encrypted");
+            when(categoryMapper.toCategoryWithHiddenValueParametersDto(any()))
+                .thenReturn(categoryResponseDto);
+            when(widgetParamMapper.toWidgetParameterDto(any()))
+                .thenReturn(widgetParamResponseDto);
 
-            WidgetResponseDto actual = widgetMapper.toWidgetDTO(widget);
+            WidgetResponseDto actual = widgetMapper.toWidgetDto(widget);
 
             assertThat(actual.getId()).isEqualTo(1L);
             assertThat(actual.getName()).isEqualTo("name");
@@ -97,7 +100,7 @@ class WidgetMapperTest {
     }
 
     @Test
-    void shouldToWidgetWithoutCategoryParametersDTO() {
+    void shouldtoWidgetWithoutCategoryParametersDto() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             Asset asset = new Asset();
             asset.setId(1L);
@@ -133,13 +136,13 @@ class WidgetMapperTest {
             widgetParamResponseDto.setName("name");
 
             mocked.when(() -> IdUtils.encrypt(1L))
-                    .thenReturn("encrypted");
-            when(categoryMapper.toCategoryWithoutParametersDTO(any()))
-                    .thenReturn(categoryResponseDto);
-            when(widgetParamMapper.toWidgetParameterDTO(any()))
-                    .thenReturn(widgetParamResponseDto);
+                .thenReturn("encrypted");
+            when(categoryMapper.toCategoryWithoutParametersDto(any()))
+                .thenReturn(categoryResponseDto);
+            when(widgetParamMapper.toWidgetParameterDto(any()))
+                .thenReturn(widgetParamResponseDto);
 
-            WidgetResponseDto actual = widgetMapper.toWidgetWithoutCategoryParametersDTO(widget);
+            WidgetResponseDto actual = widgetMapper.toWidgetWithoutCategoryParametersDto(widget);
 
             assertThat(actual.getId()).isEqualTo(1L);
             assertThat(actual.getName()).isEqualTo("name");
@@ -160,7 +163,7 @@ class WidgetMapperTest {
     }
 
     @Test
-    void shouldToWidgetsDTOs() {
+    void shouldtoWidgetsDtos() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             Asset asset = new Asset();
             asset.setId(1L);
@@ -196,13 +199,13 @@ class WidgetMapperTest {
             widgetParamResponseDto.setName("name");
 
             mocked.when(() -> IdUtils.encrypt(1L))
-                    .thenReturn("encrypted");
-            when(categoryMapper.toCategoryWithHiddenValueParametersDTO(any()))
-                    .thenReturn(categoryResponseDto);
-            when(widgetParamMapper.toWidgetParameterDTO(any()))
-                    .thenReturn(widgetParamResponseDto);
+                .thenReturn("encrypted");
+            when(categoryMapper.toCategoryWithHiddenValueParametersDto(any()))
+                .thenReturn(categoryResponseDto);
+            when(widgetParamMapper.toWidgetParameterDto(any()))
+                .thenReturn(widgetParamResponseDto);
 
-            List<WidgetResponseDto> actual = widgetMapper.toWidgetsDTOs(Collections.singletonList(widget));
+            List<WidgetResponseDto> actual = widgetMapper.toWidgetsDtos(Collections.singletonList(widget));
 
             assertThat(actual.get(0).getId()).isEqualTo(1L);
             assertThat(actual.get(0).getName()).isEqualTo("name");

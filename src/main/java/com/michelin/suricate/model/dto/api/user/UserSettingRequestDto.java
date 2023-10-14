@@ -23,6 +23,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
+/**
+ * User setting request DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

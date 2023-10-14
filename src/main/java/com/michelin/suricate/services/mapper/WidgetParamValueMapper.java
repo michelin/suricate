@@ -18,34 +18,34 @@ package com.michelin.suricate.services.mapper;
 
 import com.michelin.suricate.model.dto.api.widget.WidgetParamValueResponseDto;
 import com.michelin.suricate.model.entities.WidgetParamValue;
+import java.util.Collection;
+import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
- * Manage the generation DTO/Model objects for widgetParamValue class
+ * Widget param value mapper.
  */
 @Mapper(componentModel = "spring")
 public abstract class WidgetParamValueMapper {
     /**
-     * Map a widget parameter value into a widget parameter value DTO
+     * Map a widget parameter value into a widget parameter value DTO.
      *
      * @param widgetParamValue The widget parameter value to map
      * @return The widget parameter value as DTO
      */
-    @Named("toWidgetParameterValueDTO")
-    public abstract WidgetParamValueResponseDto toWidgetParameterValueDTO(WidgetParamValue widgetParamValue);
+    @Named("toWidgetParameterValueDto")
+    public abstract WidgetParamValueResponseDto toWidgetParameterValueDto(WidgetParamValue widgetParamValue);
 
     /**
-     * Map a list of widget parameter values into a list of widget parameter values DTOs
+     * Map a list of widget parameter values into a list of widget parameter values DTOs.
      *
      * @param widgetParamValues The list of widget parameter value to map
      * @return The widget parameter values DTOs
      */
-    @Named("toWidgetParameterValuesDTOs")
-    @IterableMapping(qualifiedByName = "toWidgetParameterValueDTO")
-    public abstract List<WidgetParamValueResponseDto> toWidgetParameterValuesDTOs(Collection<WidgetParamValue> widgetParamValues);
+    @Named("toWidgetParameterValuesDtos")
+    @IterableMapping(qualifiedByName = "toWidgetParameterValueDto")
+    public abstract List<WidgetParamValueResponseDto> toWidgetParameterValuesDtos(
+        Collection<WidgetParamValue> widgetParamValues);
 }

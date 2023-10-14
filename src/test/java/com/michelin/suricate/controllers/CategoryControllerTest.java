@@ -1,5 +1,10 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.category.CategoryResponseDto;
 import com.michelin.suricate.model.dto.api.widget.WidgetResponseDto;
 import com.michelin.suricate.model.entities.Category;
@@ -9,6 +14,9 @@ import com.michelin.suricate.services.api.WidgetService;
 import com.michelin.suricate.services.mapper.CategoryMapper;
 import com.michelin.suricate.services.mapper.WidgetMapper;
 import com.michelin.suricate.utils.exceptions.NoContentException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,16 +28,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryControllerTest {
@@ -58,25 +56,25 @@ class CategoryControllerTest {
         categoryResponseDto.setId(1L);
 
         when(categoryService.getAll(any(), any()))
-                .thenReturn(new PageImpl<>(Collections.singletonList(category)));
-        when(categoryMapper.toCategoryWithoutParametersDTO(any()))
-                .thenReturn(categoryResponseDto);
+            .thenReturn(new PageImpl<>(Collections.singletonList(category)));
+        when(categoryMapper.toCategoryWithoutParametersDto(any()))
+            .thenReturn(categoryResponseDto);
 
         Page<CategoryResponseDto> actual = categoryController.getCategories("search", Pageable.unpaged());
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(categoryResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(categoryResponseDto);
     }
 
     @Test
     void shouldGetWidgetByCategoryNoContent() {
         when(widgetService.getWidgetsByCategory(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> categoryController.getWidgetByCategory(1L))
-                .isInstanceOf(NoContentException.class)
-                .hasMessage("No resource for the class 'Widget'");
+            .isInstanceOf(NoContentException.class)
+            .hasMessage("No resource for the class 'Widget'");
     }
 
     @Test
@@ -88,9 +86,9 @@ class CategoryControllerTest {
         widgetResponseDto.setId(1L);
 
         when(widgetService.getWidgetsByCategory(any()))
-                .thenReturn(Optional.of(Collections.singletonList(widget)));
-        when(widgetMapper.toWidgetsDTOs(any()))
-                .thenReturn(Collections.singletonList(widgetResponseDto));
+            .thenReturn(Optional.of(Collections.singletonList(widget)));
+        when(widgetMapper.toWidgetsDtos(any()))
+            .thenReturn(Collections.singletonList(widgetResponseDto));
 
         ResponseEntity<List<WidgetResponseDto>> actual = categoryController.getWidgetByCategory(1L);
 

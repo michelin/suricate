@@ -28,69 +28,75 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
- * Manage the generation DTO/Model objects for Category class
+ * Category mapper.
  */
 @Mapper(componentModel = "spring",
-        uses = {
-                AssetMapper.class,
-                WidgetMapper.class
-        })
+    uses = {
+        AssetMapper.class,
+        WidgetMapper.class
+    })
 public abstract class CategoryMapper {
     /**
-     * String encryptor
+     * String encryptor.
      */
     @Autowired
     @Qualifier("jasyptStringEncryptor")
     StringEncryptor stringEncryptor;
 
     /**
-     * Map a category into a DTO. Ignore the category parameters
+     * Map a category into a DTO. Ignore the category parameters.
      *
      * @param category The category to map
      * @return The category as DTO
      */
-    @Named("toCategoryWithoutParametersDTO")
+    @Named("toCategoryWithoutParametersDto")
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "widgets", ignore = true)
     @Mapping(target = "categoryParameters", ignore = true)
-    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? com.michelin.suricate.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
-    public abstract CategoryResponseDto toCategoryWithoutParametersDTO(Category category);
+    @Mapping(target = "assetToken", expression = "java(category.getImage() != null "
+        + "? com.michelin.suricate.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    public abstract CategoryResponseDto toCategoryWithoutParametersDto(Category category);
 
     /**
-     * Map a category into a DTO. Hide the category parameter values
+     * Map a category into a DTO. Hide the category parameter values.
      *
      * @param category The category to map
      * @return The category as DTO
      */
-    @Named("toCategoryWithHiddenValueParametersDTO")
+    @Named("toCategoryWithHiddenValueParametersDto")
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "widgets", ignore = true)
-    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? com.michelin.suricate.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
-    @Mapping(target = "categoryParameters", source = "category.configurations", qualifiedByName = "toCategoryParameterWithHiddenValuesDTO")
-    public abstract CategoryResponseDto toCategoryWithHiddenValueParametersDTO(Category category);
+    @Mapping(target = "assetToken", expression = "java(category.getImage() != null "
+        + "? com.michelin.suricate.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(target = "categoryParameters", source = "category.configurations",
+        qualifiedByName = "toCategoryParameterWithHiddenValuesDTO")
+    public abstract CategoryResponseDto toCategoryWithHiddenValueParametersDto(Category category);
 
     /**
-     * Map a category parameter into a DTO
+     * Map a category parameter into a DTO.
      *
      * @param categoryParameter The category parameter to map
      * @return The category parameter as DTO
      */
-    @Named("toCategoryParameterDTO")
-    @Mapping(target = "category", qualifiedByName = "toCategoryWithoutParametersDTO")
-    @Mapping(target = "value", expression = "java(" +
-            "categoryParameter.getDataType() == com.michelin.suricate.model.enums.DataTypeEnum.PASSWORD ? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())")
-    public abstract CategoryParameterResponseDto toCategoryParameterDTO(CategoryParameter categoryParameter);
+    @Named("toCategoryParameterDto")
+    @Mapping(target = "category", qualifiedByName = "toCategoryWithoutParametersDto")
+    @Mapping(target = "value", expression = "java("
+        + "categoryParameter.getDataType() == com.michelin.suricate.model.enums.DataTypeEnum.PASSWORD "
+        + "? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())")
+    public abstract CategoryParameterResponseDto toCategoryParameterDto(CategoryParameter categoryParameter);
 
     /**
-     * Map a category parameter into a DTO. Hide the value
+     * Map a category parameter into a DTO. Hide the value.
      *
      * @param categoryParameter The category parameter to map
      * @return The category parameter as DTO
      */
     @Named("toCategoryParameterWithHiddenValuesDTO")
     @Mapping(target = "category", ignore = true)
-    @Mapping(target = "value", expression = "java(" +
-            "categoryParameter.getDataType() == com.michelin.suricate.model.enums.DataTypeEnum.PASSWORD ? org.apache.commons.lang3.StringUtils.EMPTY : categoryParameter.getValue())")
-    public abstract CategoryParameterResponseDto toCategoryParameterWithHiddenValuesDTO(CategoryParameter categoryParameter);
+    @Mapping(target = "value", expression = "java("
+        + "categoryParameter.getDataType() == com.michelin.suricate.model.enums.DataTypeEnum.PASSWORD"
+        + " ? org.apache.commons.lang3.StringUtils.EMPTY : categoryParameter.getValue())")
+    public abstract CategoryParameterResponseDto toCategoryParameterWithHiddenValuesDto(
+        CategoryParameter categoryParameter);
 }
 

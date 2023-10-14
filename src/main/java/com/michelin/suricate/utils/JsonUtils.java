@@ -17,17 +17,21 @@
 package com.michelin.suricate.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
-
+/**
+ * Json utils.
+ */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JsonUtils {
-    private JsonUtils() { }
-
     /**
-     * Validate the JSON parameter
+     * Validate the JSON parameter.
+     *
      * @param jsonInString the json string to test
      * @return true if the json is isValid false otherwise
      */

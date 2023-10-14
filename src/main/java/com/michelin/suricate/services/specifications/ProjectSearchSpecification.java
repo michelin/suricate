@@ -3,16 +3,15 @@ package com.michelin.suricate.services.specifications;
 
 import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.model.entities.Project_;
-import org.apache.commons.lang3.StringUtils;
-
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
- * Class used to filter JPA queries
+ * Project search specification.
  */
 public class ProjectSearchSpecification extends AbstractSearchSpecification<Project> {
     public ProjectSearchSpecification(final String search) {
@@ -20,7 +19,7 @@ public class ProjectSearchSpecification extends AbstractSearchSpecification<Proj
     }
 
     /**
-     * Used to add search predicates
+     * Used to add search predicates.
      *
      * @param root            The root entity
      * @param criteriaBuilder Used to build new predicate
@@ -28,11 +27,14 @@ public class ProjectSearchSpecification extends AbstractSearchSpecification<Proj
      */
     @Override
     protected void addSearchPredicate(Root<Project> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
-        // Add a predicate for each word in the research string. Allow the user to retrieve projects with multiple consecutive whitespaces in the title even by typing a single whitespace
+        // Add a predicate for each word in the research string.
+        // Allow the user to retrieve projects with multiple consecutive whitespaces
+        // in the title even by typing a single whitespace
         if (StringUtils.isNotBlank(search)) {
             for (String keyWord : search.split("\\s+")) {
                 predicates.add(criteriaBuilder.like(
-                        criteriaBuilder.lower(root.get(Project_.name)), String.format(LIKE_OPERATOR_FORMATTER, keyWord.toLowerCase())));
+                    criteriaBuilder.lower(root.get(Project_.name)),
+                    String.format(LIKE_OPERATOR_FORMATTER, keyWord.toLowerCase())));
             }
         }
     }

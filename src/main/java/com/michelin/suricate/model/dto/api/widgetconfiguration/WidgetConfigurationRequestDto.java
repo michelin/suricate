@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Widget configuration request DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

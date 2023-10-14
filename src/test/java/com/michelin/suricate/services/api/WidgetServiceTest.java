@@ -1,13 +1,31 @@
 package com.michelin.suricate.services.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.widget.WidgetRequestDto;
 import com.michelin.suricate.model.dto.js.WidgetVariableResponseDto;
-import com.michelin.suricate.model.entities.*;
+import com.michelin.suricate.model.entities.Asset;
+import com.michelin.suricate.model.entities.Category;
+import com.michelin.suricate.model.entities.Library;
+import com.michelin.suricate.model.entities.Repository;
+import com.michelin.suricate.model.entities.Widget;
+import com.michelin.suricate.model.entities.WidgetParam;
+import com.michelin.suricate.model.entities.WidgetParamValue;
 import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import com.michelin.suricate.repositories.WidgetParamRepository;
 import com.michelin.suricate.repositories.WidgetRepository;
 import com.michelin.suricate.services.specifications.WidgetSearchSpecification;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,12 +35,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class WidgetServiceTest {
@@ -47,15 +59,15 @@ class WidgetServiceTest {
         widget.setId(1L);
 
         when(widgetRepository.findById(any()))
-                .thenReturn(Optional.of(widget));
+            .thenReturn(Optional.of(widget));
 
         Optional<Widget> actual = widgetService.findOne(1L);
         assertThat(actual)
-                .isPresent()
-                .contains(widget);
+            .isPresent()
+            .contains(widget);
 
         verify(widgetRepository)
-                .findById(1L);
+            .findById(1L);
     }
 
 
@@ -65,16 +77,16 @@ class WidgetServiceTest {
         widget.setId(1L);
 
         when(widgetRepository.findByTechnicalName(any()))
-                .thenReturn(Optional.of(widget));
+            .thenReturn(Optional.of(widget));
 
         Optional<Widget> actual = widgetService.findOneByTechnicalName("technicalName");
 
         assertThat(actual)
-                .isPresent()
-                .contains(widget);
+            .isPresent()
+            .contains(widget);
 
         verify(widgetRepository)
-                .findByTechnicalName("technicalName");
+            .findByTechnicalName("technicalName");
     }
 
     @Test
@@ -83,18 +95,19 @@ class WidgetServiceTest {
         widget.setId(1L);
 
         when(widgetRepository.findAll(any(WidgetSearchSpecification.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Collections.singletonList(widget)));
+            .thenReturn(new PageImpl<>(Collections.singletonList(widget)));
 
         Page<Widget> actual = widgetService.getAll("search", Pageable.unpaged());
 
         assertThat(actual)
-                .isNotEmpty()
-                .contains(widget);
+            .isNotEmpty()
+            .contains(widget);
 
         verify(widgetRepository)
-                .findAll(Mockito.<WidgetSearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
-                                specification.getAttributes().isEmpty()),
-                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
+            .findAll(Mockito.<WidgetSearchSpecification>argThat(
+                    specification -> specification.getSearch().equals("search")
+                        && specification.getAttributes().isEmpty()),
+                Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -104,53 +117,52 @@ class WidgetServiceTest {
         List<Widget> widgets = Collections.singletonList(widget);
 
         when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any()))
-                .thenReturn(widgets);
+            .thenReturn(widgets);
 
         Optional<List<Widget>> actual = widgetService.getWidgetsByCategory(1L);
 
         assertThat(actual)
-                .isPresent();
+            .isPresent();
         assertThat(actual.get())
-                .isNotEmpty()
-                .contains(widget);
+            .isNotEmpty()
+            .contains(widget);
 
         verify(widgetRepository)
-                .findAllByCategoryIdOrderByNameAsc(1L);
+            .findAllByCategoryIdOrderByNameAsc(1L);
     }
 
     @Test
     void shouldGetWidgetsByCategoryEmptyList() {
         when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any()))
-                .thenReturn(Collections.emptyList());
+            .thenReturn(Collections.emptyList());
 
         Optional<List<Widget>> actual = widgetService.getWidgetsByCategory(1L);
 
         assertThat(actual)
-                .isEmpty();
+            .isEmpty();
 
         verify(widgetRepository)
-                .findAllByCategoryIdOrderByNameAsc(1L);
+            .findAllByCategoryIdOrderByNameAsc(1L);
     }
 
     @Test
     void shouldGetWidgetsByCategoryNull() {
         when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any()))
-                .thenReturn(null);
+            .thenReturn(null);
 
         Optional<List<Widget>> actual = widgetService.getWidgetsByCategory(1L);
 
         assertThat(actual)
-                .isEmpty();
+            .isEmpty();
 
         verify(widgetRepository)
-                .findAllByCategoryIdOrderByNameAsc(1L);
+            .findAllByCategoryIdOrderByNameAsc(1L);
     }
 
     @Test
     void shouldGetWidgetParametersWithCategoryParameters() {
         WidgetParam widgetParam = new WidgetParam();
         widgetParam.setId(1L);
-        List<WidgetParam> widgetParams = Collections.singletonList(widgetParam);
 
         WidgetParam widgetParamTwo = new WidgetParam();
         widgetParam.setId(2L);
@@ -159,17 +171,19 @@ class WidgetServiceTest {
         widget.setId(1L);
         widget.setWidgetParams(Collections.singletonList(widgetParamTwo));
 
+        List<WidgetParam> widgetParams = Collections.singletonList(widgetParam);
+
         when(categoryService.getCategoryParametersByWidget(any()))
-                .thenReturn(widgetParams);
+            .thenReturn(widgetParams);
 
         List<WidgetParam> actual = widgetService.getWidgetParametersWithCategoryParameters(widget);
 
         assertThat(actual)
-                .hasSize(2)
-                .containsExactlyInAnyOrder(widgetParam, widgetParamTwo);
+            .hasSize(2)
+            .containsExactlyInAnyOrder(widgetParam, widgetParamTwo);
 
         verify(categoryService)
-                .getCategoryParametersByWidget(widget);
+            .getCategoryParametersByWidget(widget);
     }
 
     @Test
@@ -211,15 +225,15 @@ class WidgetServiceTest {
         widget.setId(1L);
 
         when(categoryService.getCategoryParametersByWidget(any()))
-                .thenReturn(Arrays.asList(widgetParam, widgetParamTwo, widgetParamThree, widgetParamFour));
+            .thenReturn(Arrays.asList(widgetParam, widgetParamTwo, widgetParamThree, widgetParamFour));
 
         List<WidgetVariableResponseDto> actual = widgetService.getWidgetParametersForJsExecution(widget);
 
         assertThat(actual)
-                .hasSize(4);
+            .hasSize(4);
 
         verify(categoryService)
-                .getCategoryParametersByWidget(widget);
+            .getCategoryParametersByWidget(widget);
     }
 
     @Test
@@ -231,20 +245,20 @@ class WidgetServiceTest {
         widgetRequestDto.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
 
         when(widgetRepository.findById(any()))
-                .thenReturn(Optional.of(widget));
+            .thenReturn(Optional.of(widget));
         when(widgetRepository.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         Optional<Widget> actual = widgetService.updateWidget(1L, widgetRequestDto);
 
         assertThat(actual)
-                .isPresent()
-                .contains(widget);
+            .isPresent()
+            .contains(widget);
 
         verify(widgetRepository)
-                .findById(1L);
+            .findById(1L);
         verify(widgetRepository)
-                .save(widget);
+            .save(widget);
     }
 
     @Test
@@ -253,15 +267,15 @@ class WidgetServiceTest {
         widgetRequestDto.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
 
         when(widgetRepository.findById(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         Optional<Widget> actual = widgetService.updateWidget(1L, widgetRequestDto);
 
         assertThat(actual)
-                .isEmpty();
+            .isEmpty();
 
         verify(widgetRepository)
-                .findById(1L);
+            .findById(1L);
     }
 
     @Test
@@ -280,13 +294,13 @@ class WidgetServiceTest {
         widgetService.addOrUpdateWidgets(category, Collections.singletonList(library), repository);
 
         verify(widgetRepository, times(0))
-                .findByTechnicalName(any());
+            .findByTechnicalName(any());
         verify(assetService, times(0))
-                .save(any());
+            .save(any());
         verify(widgetParamRepository, times(0))
-                .deleteById(any());
+            .deleteById(any());
         verify(widgetRepository, times(0))
-                .save(any());
+            .save(any());
     }
 
     @Test
@@ -349,36 +363,37 @@ class WidgetServiceTest {
         category.setWidgets(Collections.singleton(widget));
 
         when(widgetRepository.findByTechnicalName(any()))
-                .thenReturn(Optional.of(currentWidget));
+            .thenReturn(Optional.of(currentWidget));
         when(assetService.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         widgetService.addOrUpdateWidgets(category, Collections.singletonList(library), repository);
 
         assertThat(widget.getId()).isEqualTo(1L);
         assertThat(widget.getWidgetAvailability())
-                .isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
+            .isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
         assertThat(widget.getCategory())
-                .isEqualTo(category);
+            .isEqualTo(category);
         assertThat(widget.getRepository())
-                .isEqualTo(repository);
+            .isEqualTo(repository);
         assertThat(widget.getLibraries())
-                .contains(library);
+            .contains(library);
         assertThat(widget.getImage().getId())
-                .isEqualTo(10L);
+            .isEqualTo(10L);
         assertThat(new ArrayList<>(widget.getWidgetParams()).get(0).getId())
-                .isEqualTo(11L);
-        assertThat(new ArrayList<>(new ArrayList<>(widget.getWidgetParams()).get(0).getPossibleValuesMap()).get(0).getId())
-                .isEqualTo(12L);
+            .isEqualTo(11L);
+        assertThat(
+            new ArrayList<>(new ArrayList<>(widget.getWidgetParams()).get(0).getPossibleValuesMap()).get(0).getId())
+            .isEqualTo(12L);
 
         verify(widgetRepository)
-                .findByTechnicalName("widgetTechnicalName");
+            .findByTechnicalName("widgetTechnicalName");
         verify(assetService)
-                .save(widgetImage);
+            .save(widgetImage);
         verify(widgetParamRepository)
-                .deleteById(13L);
+            .deleteById(13L);
         verify(widgetRepository)
-                .save(widget);
+            .save(widget);
     }
 
     @Test
@@ -387,7 +402,7 @@ class WidgetServiceTest {
         repository.setId(1L);
         repository.setName("repository");
         repository.setBranch("master");
-        
+
         Asset asset = new Asset();
         asset.setId(1L);
         asset.setContent(new byte[1]);
@@ -440,37 +455,38 @@ class WidgetServiceTest {
         category.setWidgets(Collections.singleton(widget));
 
         when(widgetRepository.findByTechnicalName(any()))
-                .thenReturn(Optional.of(currentWidget));
+            .thenReturn(Optional.of(currentWidget));
         when(assetService.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         widgetService.addOrUpdateWidgets(category, Collections.singletonList(library), repository);
 
         assertThat(widget.getId())
-                .isEqualTo(1L);
+            .isEqualTo(1L);
         assertThat(widget.getWidgetAvailability())
-                .isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
+            .isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
         assertThat(widget.getCategory())
-                .isEqualTo(category);
+            .isEqualTo(category);
         assertThat(widget.getRepository())
-                .isEqualTo(repository);
+            .isEqualTo(repository);
         assertThat(widget.getLibraries())
-                .contains(library);
+            .contains(library);
         assertThat(widget.getImage().getId())
-                .isEqualTo(10L);
+            .isEqualTo(10L);
         assertThat(new ArrayList<>(widget.getWidgetParams()).get(0).getId())
-                .isEqualTo(11L);
-        assertThat(new ArrayList<>(new ArrayList<>(widget.getWidgetParams()).get(0).getPossibleValuesMap()).get(0).getId())
-                .isEqualTo(12L);
+            .isEqualTo(11L);
+        assertThat(
+            new ArrayList<>(new ArrayList<>(widget.getWidgetParams()).get(0).getPossibleValuesMap()).get(0).getId())
+            .isEqualTo(12L);
 
         verify(widgetRepository)
-                .findByTechnicalName("widgetTechnicalName");
+            .findByTechnicalName("widgetTechnicalName");
         verify(assetService)
-                .save(widgetImage);
+            .save(widgetImage);
         verify(widgetParamRepository)
-                .deleteById(13L);
+            .deleteById(13L);
         verify(widgetRepository)
-                .save(widget);
+            .save(widget);
     }
 
     @Test
@@ -483,6 +499,6 @@ class WidgetServiceTest {
         Map<String, String> actual = widgetService.getWidgetParamValuesAsMap(Collections.singleton(widgetParamValue));
 
         assertThat(actual)
-                .containsEntry("key", "value");
+            .containsEntry("key", "value");
     }
 }

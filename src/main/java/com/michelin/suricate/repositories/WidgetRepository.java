@@ -17,6 +17,8 @@
 package com.michelin.suricate.repositories;
 
 import com.michelin.suricate.model.entities.Widget;
+import java.util.List;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,26 +27,23 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
- * Repository used for request Widget repository in database
+ * Widget repository.
  */
 @Repository
 public interface WidgetRepository extends JpaRepository<Widget, Long> {
     /**
-     * Find all paginated widgets
+     * Find all paginated widgets.
      *
      * @param specification The specification to apply
-     * @param pageable The pageable to apply
+     * @param pageable      The pageable to apply
      * @return The paginated widgets
      */
     @EntityGraph(attributePaths = {"category", "widgetParams.possibleValuesMap"})
     Page<Widget> findAll(Specification<Widget> specification, Pageable pageable);
 
     /**
-     * Find a widget by id
+     * Find a widget by id.
      *
      * @param id The id
      * @return The widget
@@ -54,7 +53,7 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
     Optional<Widget> findById(@NotNull Long id);
 
     /**
-     * Find a widget by technical name
+     * Find a widget by technical name.
      *
      * @param technicalName The technical name
      * @return The widget
@@ -63,7 +62,7 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
     Optional<Widget> findByTechnicalName(String technicalName);
 
     /**
-     * Find every widgets by category id
+     * Find every widgets by category id.
      *
      * @param categoryId The category id
      * @return The list of related widgets ordered by name

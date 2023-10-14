@@ -18,35 +18,34 @@ package com.michelin.suricate.services.mapper;
 
 import com.michelin.suricate.model.dto.api.setting.AllowedSettingValueResponseDto;
 import com.michelin.suricate.model.entities.AllowedSettingValue;
+import java.util.Collection;
+import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
- * Manage the generation DTO/Model objects for AllowedSettingValue class
+ * Allowed setting value mapper.
  */
 @Mapper(componentModel = "spring")
 public abstract class AllowedSettingValueMapper {
-
     /**
-     * Map an allowed setting value into a DTO
+     * Map an allowed setting value into a DTO.
      *
      * @param allowedSettingValue The allowed setting value to map
      * @return The allowed setting value as DTO
      */
-    @Named("toAllowedSettingValueDTO")
-    public abstract AllowedSettingValueResponseDto toAllowedSettingValueDTO(AllowedSettingValue allowedSettingValue);
+    @Named("toAllowedSettingValueDto")
+    public abstract AllowedSettingValueResponseDto toAllowedSettingValueDto(AllowedSettingValue allowedSettingValue);
 
     /**
-     * Map a list of allowed setting values into a list of DTO
+     * Map a list of allowed setting values into a list of DTO.
      *
      * @param allowedSettingValues The list of allowed setting values to map
      * @return The allowed setting values as DTO
      */
-    @Named("toAllowedSettingValuesDTOs")
-    @IterableMapping(qualifiedByName = "toAllowedSettingValueDTO")
-    public abstract List<AllowedSettingValueResponseDto> toAllowedSettingValuesDTOs(Collection<AllowedSettingValue> allowedSettingValues);
+    @Named("toAllowedSettingValuesDtos")
+    @IterableMapping(qualifiedByName = "toAllowedSettingValueDto")
+    public abstract List<AllowedSettingValueResponseDto> toAllowedSettingValuesDtos(
+        Collection<AllowedSettingValue> allowedSettingValues);
 }

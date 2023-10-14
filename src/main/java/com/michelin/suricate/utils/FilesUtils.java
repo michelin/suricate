@@ -17,10 +17,6 @@
 package com.michelin.suricate.utils;
 
 import com.michelin.suricate.model.entities.Asset;
-import lombok.extern.slf4j.Slf4j;
-import net.sf.jmimemagic.*;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,13 +25,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicException;
+import net.sf.jmimemagic.MagicMatch;
+import net.sf.jmimemagic.MagicMatchNotFoundException;
+import net.sf.jmimemagic.MagicParseException;
+import org.apache.commons.io.FileUtils;
 
+/**
+ * Files utils.
+ */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FilesUtils {
-    private FilesUtils() { }
-
     /**
-     * Method used to list all folder inside a root folder
+     * Method used to list all folder inside a root folder.
+     *
      * @param rootFolder the root folder used to find folder
      * @return the list of folder
      * @throws IOException exception with file
@@ -54,7 +62,7 @@ public final class FilesUtils {
     }
 
     /**
-     * Get all the files inside a given folder
+     * Get all the files inside a given folder.
      *
      * @param folder The folder containing the files
      * @return The list of files
@@ -73,7 +81,7 @@ public final class FilesUtils {
     }
 
     /**
-     * Method used to read File asset
+     * Method used to read File asset.
      *
      * @param file the file asset to read
      * @return the asset corresponding to the file content

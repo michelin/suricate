@@ -22,6 +22,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Allowed setting value response DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -33,7 +36,8 @@ public class AllowedSettingValueResponseDto extends AbstractDto {
     @Schema(description = "The title displayed to the user", requiredMode = Schema.RequiredMode.REQUIRED)
     private String title;
 
-    @Schema(description = "The value that will be used on the code for this setting", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "The value that will be used on the code for this setting",
+        requiredMode = Schema.RequiredMode.REQUIRED)
     private String value;
 
     @Schema(description = "True if this value should be used as default", requiredMode = Schema.RequiredMode.REQUIRED)

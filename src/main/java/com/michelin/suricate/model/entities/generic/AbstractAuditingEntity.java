@@ -18,6 +18,10 @@
 
 package com.michelin.suricate.model.entities.generic;
 
+import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,11 +31,11 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import java.util.Date;
-
+/**
+ * Abstract audit entity.
+ *
+ * @param <T> The type of the entity
+ */
 @Getter
 @Setter
 @ToString
@@ -55,8 +59,12 @@ public abstract class AbstractAuditingEntity<T> extends AbstractEntity<T> {
     private Date lastModifiedDate = new Date();
 
     @Override
-    public int hashCode() { return super.hashCode(); }
+    public int hashCode() {
+        return super.hashCode();
+    }
 
     @Override
-    public boolean equals(Object other) { return super.equals(other); }
+    public boolean equals(Object other) {
+        return super.equals(other);
+    }
 }

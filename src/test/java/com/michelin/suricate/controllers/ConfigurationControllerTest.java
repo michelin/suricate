@@ -1,7 +1,12 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.enums.AuthenticationProvider;
 import com.michelin.suricate.properties.ApplicationProperties;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,12 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ConfigurationControllerTest {
@@ -40,8 +39,8 @@ class ConfigurationControllerTest {
         assertThat(actual.getBody()).isNotNull();
         assertThat(actual.getBody()).hasSize(2);
         assertThat(actual.getBody())
-                .contains(AuthenticationProvider.LDAP)
-                .contains(AuthenticationProvider.GITHUB);
+            .contains(AuthenticationProvider.LDAP)
+            .contains(AuthenticationProvider.GITHUB);
     }
 
     @Test

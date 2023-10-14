@@ -24,7 +24,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository used for request widget params in database
+ * Widget param repository.
  */
 @Repository
 public interface WidgetParamRepository extends CrudRepository<WidgetParam, Long> {

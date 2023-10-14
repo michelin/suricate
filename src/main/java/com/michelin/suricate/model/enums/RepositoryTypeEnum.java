@@ -20,7 +20,7 @@
 package com.michelin.suricate.model.enums;
 
 /**
- * Hold the list of every repository types
+ * Hold the list of every repository types.
  */
 public enum RepositoryTypeEnum {
     REMOTE,

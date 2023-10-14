@@ -2,7 +2,7 @@ name: Pull request
 
 on:
   pull_request:
-    branches: [master]
+    branches: [ master ]
 
 jobs:
   back-end:
@@ -19,6 +19,9 @@ jobs:
           distribution: 'graalvm'
           java-version: '17.0.8'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Style
+        run: mvn checkstyle:check
 
       - name: Build
         run: mvn clean package -P production -DskipTests

@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.enums;
 
 /**
- * User role enum
+ * User role enum.
  */
 public enum UserRoleEnum {
     ROLE_USER,

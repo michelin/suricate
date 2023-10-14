@@ -16,17 +16,22 @@
 
 package com.michelin.suricate.utils;
 
-import com.michelin.suricate.security.LocalUser;
 import com.michelin.suricate.model.enums.UserRoleEnum;
+import com.michelin.suricate.security.LocalUser;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Security utils.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SecurityUtils {
     /**
-     * Method used to isValid if the connected user is admin
+     * Method used to isValid if the connected user is admin.
      *
      * @return true if the connected user is admin, false otherwise
      */
@@ -35,7 +40,7 @@ public final class SecurityUtils {
     }
 
     /**
-     * Method used to isValid if the connected user as all role in list
+     * Method used to isValid if the connected user as all role in list.
      *
      * @param roles list of roles
      * @return true if the connected user have all roles, false otherwise
@@ -53,6 +58,4 @@ public final class SecurityUtils {
 
         return ret;
     }
-
-    private SecurityUtils() { }
 }

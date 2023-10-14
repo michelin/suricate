@@ -18,10 +18,16 @@ package com.michelin.suricate.model.dto.websocket;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
- * Representation of websocket client
+ * Websocket client.
  */
 @Builder
 @Getter

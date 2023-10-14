@@ -18,76 +18,47 @@ package com.michelin.suricate.model.dto.js;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import com.michelin.suricate.model.enums.WidgetStateEnum;
-import lombok.*;
-
 import java.util.Date;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+/**
+ * Js execution DTO.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
 public class JsExecutionDto extends AbstractDto {
-
-    /**
-     * Js properties
-     */
     private String properties;
-
-    /**
-     * javascript script
-     */
     private String script;
-
-    /**
-     * Previous json data
-     */
     private String previousData;
-
-    /**
-     * project id
-     */
     private Long projectId;
-
-    /**
-     * Project widget ID
-     */
     private Long projectWidgetId;
-
-    /**
-     * The delay to launch the script
-     */
     private Long delay;
-
-    /**
-     * Widget State
-     */
     private WidgetStateEnum widgetState;
-
-    /**
-     * Boolean to indicate if the
-     */
     private boolean alreadySuccess;
-
-    /**
-     * The override timeout
-     */
     private Long timeout;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param properties The project widget backend config
-     * @param script The widget js script
+     * @param properties   The project widget backend config
+     * @param script       The widget js script
      * @param previousData The data of the last execution
-     * @param projectId The project id
-     * @param technicalId The project widget id
-     * @param delay The delay before the next run
-     * @param timeout The timeout before interruption of the run
-     * @param state The project widget state
-     * @param lastSuccess The last success date
+     * @param projectId    The project id
+     * @param technicalId  The project widget id
+     * @param delay        The delay before the next run
+     * @param timeout      The timeout before interruption of the run
+     * @param state        The project widget state
+     * @param lastSuccess  The last success date
      */
-    public JsExecutionDto(String properties, String script, String previousData, Long projectId, Long technicalId, Long delay, Long timeout,
+    public JsExecutionDto(String properties, String script, String previousData, Long projectId, Long technicalId,
+                          Long delay, Long timeout,
                           WidgetStateEnum state, Date lastSuccess) {
         this.properties = properties;
         this.script = script;

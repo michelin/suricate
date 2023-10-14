@@ -1,24 +1,30 @@
 package com.michelin.suricate.utils.web;
 
-import org.springframework.util.SerializationUtils;
-
+import java.util.Base64;
+import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Base64;
-import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.springframework.util.SerializationUtils;
 
+/**
+ * Utility class for cookies.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CookieUtils {
     /**
-     * Get cookie by name
+     * Get cookie by name.
+     *
      * @param request The request where the cookie is attached
-     * @param name The name of the cookie
+     * @param name    The name of the cookie
      * @return The cookie if it exists
      */
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 
-        if (cookies != null && cookies.length > 0) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
                     return Optional.of(cookie);
@@ -30,11 +36,12 @@ public class CookieUtils {
     }
 
     /**
-     * Add an HTTP cookie to the given HTTP response
+     * Add an HTTP cookie to the given HTTP response.
+     *
      * @param response The HTTP response
-     * @param name The name of the cookie
-     * @param value The value of the cookie
-     * @param maxAge The age of the cookie
+     * @param name     The name of the cookie
+     * @param value    The value of the cookie
+     * @param maxAge   The age of the cookie
      */
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
@@ -46,14 +53,15 @@ public class CookieUtils {
     }
 
     /**
-     * Delete cookie from the response by adding a new empty cookie with no max age
-     * @param request The request that currently contains the cookie
+     * Delete cookie from the response by adding a new empty cookie with no max age.
+     *
+     * @param request  The request that currently contains the cookie
      * @param response The response of the request, that won't contain the cookie anymore
-     * @param name The name of the cookie to delete
+     * @param name     The name of the cookie to delete
      */
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length > 0) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
                     cookie.setValue("");
@@ -66,7 +74,8 @@ public class CookieUtils {
     }
 
     /**
-     * Serialize a given object to base64
+     * Serialize a given object to base64.
+     *
      * @param object The object to serialize
      * @return The encoded object as base64
      */
@@ -75,18 +84,14 @@ public class CookieUtils {
     }
 
     /**
-     * Deserialize the value of a given cookie into the given class
+     * Deserialize the value of a given cookie into the given class.
+     *
      * @param cookie The cookie from which to deserialize the value
-     * @param cls The target class into deserialize
-     * @param <T> The class type
+     * @param cls    The target class into deserialize
+     * @param <T>    The class type
      * @return The deserialized cookie value
      */
     public static <T> T deserialize(Cookie cookie, Class<T> cls) {
         return cls.cast(SerializationUtils.deserialize(Base64.getUrlDecoder().decode(cookie.getValue())));
     }
-
-    /**
-     * Constructor
-     */
-    private CookieUtils() { }
 }

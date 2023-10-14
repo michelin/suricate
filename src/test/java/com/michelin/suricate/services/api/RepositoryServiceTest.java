@@ -1,9 +1,18 @@
 package com.michelin.suricate.services.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.entities.Repository;
 import com.michelin.suricate.model.entities.Repository_;
 import com.michelin.suricate.repositories.RepositoryRepository;
 import com.michelin.suricate.services.specifications.RepositorySearchSpecification;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.metamodel.SingularAttribute;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,15 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import javax.persistence.metamodel.SingularAttribute;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RepositoryServiceTest {
@@ -41,18 +41,19 @@ class RepositoryServiceTest {
 
         Repository_.name = name;
         when(repositoryRepository.findAll(any(RepositorySearchSpecification.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Collections.singletonList(repository)));
+            .thenReturn(new PageImpl<>(Collections.singletonList(repository)));
 
         Page<Repository> actual = repositoryService.getAll("search", Pageable.unpaged());
 
         assertThat(actual)
-                .isNotEmpty()
-                .contains(repository);
+            .isNotEmpty()
+            .contains(repository);
 
         verify(repositoryRepository)
-                .findAll(Mockito.<RepositorySearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
-                                specification.getAttributes().contains(name.getName())),
-                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
+            .findAll(Mockito.<RepositorySearchSpecification>argThat(
+                    specification -> specification.getSearch().equals("search")
+                        && specification.getAttributes().contains(name.getName())),
+                Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -61,17 +62,17 @@ class RepositoryServiceTest {
         repository.setId(1L);
 
         when(repositoryRepository.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-                .thenReturn(Optional.of(Collections.singletonList(repository)));
+            .thenReturn(Optional.of(Collections.singletonList(repository)));
 
         Optional<List<Repository>> actual = repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
 
         assertThat(actual).isPresent();
         assertThat(actual.get())
-                .isNotEmpty()
-                .contains(repository);
+            .isNotEmpty()
+            .contains(repository);
 
         verify(repositoryRepository)
-                .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
     @Test
@@ -80,16 +81,16 @@ class RepositoryServiceTest {
         repository.setId(1L);
 
         when(repositoryRepository.findById(any()))
-                .thenReturn(Optional.of(repository));
+            .thenReturn(Optional.of(repository));
 
         Optional<Repository> actual = repositoryService.getOneById(1L);
 
         assertThat(actual)
-                .isPresent()
-                .contains(repository);
+            .isPresent()
+            .contains(repository);
 
         verify(repositoryRepository)
-                .findById(1L);
+            .findById(1L);
     }
 
     @Test
@@ -98,30 +99,30 @@ class RepositoryServiceTest {
         repository.setId(1L);
 
         when(repositoryRepository.findByName(any()))
-                .thenReturn(Optional.of(repository));
+            .thenReturn(Optional.of(repository));
 
         Optional<Repository> actual = repositoryService.findByName("name");
 
         assertThat(actual)
-                .isPresent()
-                .contains(repository);
+            .isPresent()
+            .contains(repository);
 
         verify(repositoryRepository)
-                .findByName("name");
+            .findByName("name");
     }
 
     @Test
     void shouldExistsById() {
         when(repositoryRepository.existsById(any()))
-                .thenReturn(true);
+            .thenReturn(true);
 
         boolean actual = repositoryService.existsById(1L);
 
         assertThat(actual)
-                .isTrue();
+            .isTrue();
 
         verify(repositoryRepository)
-                .existsById(1L);
+            .existsById(1L);
     }
 
     @Test
@@ -130,12 +131,12 @@ class RepositoryServiceTest {
         repository.setId(1L);
 
         when(repositoryRepository.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         repositoryService.addOrUpdateRepository(repository);
 
         verify(repositoryRepository)
-                .save(repository);
+            .save(repository);
     }
 
     @Test
@@ -145,11 +146,11 @@ class RepositoryServiceTest {
         List<Repository> repositories = Collections.singletonList(repository);
 
         when(repositoryRepository.saveAll(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         repositoryService.addOrUpdateRepositories(Collections.singletonList(repository));
 
         verify(repositoryRepository)
-                .saveAll(repositories);
+            .saveAll(repositories);
     }
 }

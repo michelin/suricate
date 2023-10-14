@@ -20,12 +20,29 @@ package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractEntity;
 import com.michelin.suricate.model.enums.AuthenticationProvider;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+/**
+ * User entity.
+ */
 @Entity
 @Table(name = "users")
 @Getter
@@ -61,7 +78,8 @@ public class User extends AbstractEntity<Long> {
 
     @ToString.Exclude
     @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "role_id")})
     private Set<Role> roles = new LinkedHashSet<>();
 
     @ToString.Exclude
@@ -73,21 +91,27 @@ public class User extends AbstractEntity<Long> {
     private Set<UserSetting> userSettings = new LinkedHashSet<>();
 
     /**
-     * Hashcode method
-     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * Hashcode method.
+     * Do not use lombok @EqualsAndHashCode method as it calls super method
      * then call the self-defined child Hashcode method
+     *
      * @return The hash code
      */
     @Override
-    public int hashCode() { return super.hashCode(); }
+    public int hashCode() {
+        return super.hashCode();
+    }
 
     /**
-     * Equals method
-     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * Equals method.
+     * Do not use lombok @EqualsAndHashCode method as it calls super method
      * then call the self-defined child Equals method
+     *
      * @param other The other object to compare
      * @return true if equals, false otherwise
      */
     @Override
-    public boolean equals(Object other) { return super.equals(other); }
+    public boolean equals(Object other) {
+        return super.equals(other);
+    }
 }

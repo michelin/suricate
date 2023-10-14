@@ -1,22 +1,29 @@
 package com.michelin.suricate.services.js.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.google.common.collect.Sets;
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
-import com.michelin.suricate.model.entities.*;
+import com.michelin.suricate.model.entities.Category;
+import com.michelin.suricate.model.entities.CategoryParameter;
+import com.michelin.suricate.model.entities.Project;
+import com.michelin.suricate.model.entities.ProjectGrid;
+import com.michelin.suricate.model.entities.ProjectWidget;
+import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.model.enums.WidgetStateEnum;
 import com.michelin.suricate.services.api.ProjectWidgetService;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.Instant;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class JsExecutionServiceTest {

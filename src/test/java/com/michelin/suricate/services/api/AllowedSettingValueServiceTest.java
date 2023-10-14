@@ -1,17 +1,17 @@
 package com.michelin.suricate.services.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.entities.AllowedSettingValue;
 import com.michelin.suricate.repositories.AllowedSettingValueRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AllowedSettingValueServiceTest {
@@ -29,15 +29,15 @@ class AllowedSettingValueServiceTest {
         allowedSettingValue.setValue("value");
 
         when(allowedSettingValueRepository.findById(1L))
-                .thenReturn(Optional.of(allowedSettingValue));
+            .thenReturn(Optional.of(allowedSettingValue));
 
         Optional<AllowedSettingValue> actual = allowedSettingValueService.findById(1L);
 
         assertThat(actual)
-                .isPresent()
-                .contains(allowedSettingValue);
+            .isPresent()
+            .contains(allowedSettingValue);
 
         verify(allowedSettingValueRepository)
-                .findById(1L);
+            .findById(1L);
     }
 }

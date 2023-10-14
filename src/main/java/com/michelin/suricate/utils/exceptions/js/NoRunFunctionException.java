@@ -1,8 +1,11 @@
 package com.michelin.suricate.utils.exceptions.js;
 
+/**
+ * No run function exception.
+ */
 public class NoRunFunctionException extends RuntimeException {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param message The message of the exception
      */

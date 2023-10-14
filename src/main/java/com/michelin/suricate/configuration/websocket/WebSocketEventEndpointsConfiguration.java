@@ -20,6 +20,9 @@ import com.michelin.suricate.model.dto.websocket.WebsocketClient;
 import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.services.api.ProjectService;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -29,10 +32,9 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+/**
+ * Websocket event endpoints configuration.
+ */
 @Slf4j
 @Configuration
 public class WebSocketEventEndpointsConfiguration {
@@ -63,22 +65,22 @@ public class WebSocketEventEndpointsConfiguration {
 
             if (matcher.find()) {
                 WebsocketClient.WebsocketClientBuilder websocketClientBuilder = WebsocketClient.builder()
-                        .sessionId(stompHeaderAccessor.getSessionId())
-                        .subscriptionId(stompHeaderAccessor.getSubscriptionId())
-                        .screenCode(matcher.group(SCREEN_CODE_REGEX_GROUP));
+                    .sessionId(stompHeaderAccessor.getSessionId())
+                    .subscriptionId(stompHeaderAccessor.getSubscriptionId())
+                    .screenCode(matcher.group(SCREEN_CODE_REGEX_GROUP));
 
                 Optional<Project> project = this.projectService.getOneByToken(matcher.group(PROJECT_TOKEN_REGEX_GROUP));
                 if (project.isPresent()) {
                     websocketClientBuilder
-                            .projectToken(matcher.group(PROJECT_TOKEN_REGEX_GROUP));
+                        .projectToken(matcher.group(PROJECT_TOKEN_REGEX_GROUP));
 
                     log.debug("A new client (session ID: {}, sub ID: {}, screen code: {}) subscribes to the project {}",
-                            websocketClientBuilder.build().getSessionId(),
-                            websocketClientBuilder.build().getSubscriptionId(),
-                            websocketClientBuilder.build().getScreenCode(),
-                            websocketClientBuilder.build().getProjectToken());
+                        websocketClientBuilder.build().getSessionId(),
+                        websocketClientBuilder.build().getSubscriptionId(),
+                        websocketClientBuilder.build().getScreenCode(),
+                        websocketClientBuilder.build().getProjectToken());
 
-                    this.dashboardWebSocketService.addClientToProject(project.get(), websocketClientBuilder.build());
+                    dashboardWebSocketService.addClientToProject(project.get(), websocketClientBuilder.build());
                 }
             }
         }
@@ -86,7 +88,6 @@ public class WebSocketEventEndpointsConfiguration {
 
     /**
      * Entry point when a client unsubscribes from a websocket.
-     *
      * If the received unsubscribed event is an unsubscription from the project websocket connection,
      * then we remove it from the project/connection map to close the connection.
      *
@@ -96,21 +97,23 @@ public class WebSocketEventEndpointsConfiguration {
     public void onSessionUnsubscribe(SessionUnsubscribeEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        Optional<WebsocketClient> websocketClient = this.dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId(stompHeaderAccessor.getSessionId(),
+        Optional<WebsocketClient> websocketClient =
+            dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId(
+                stompHeaderAccessor.getSessionId(),
                 stompHeaderAccessor.getSubscriptionId());
 
         if (websocketClient.isPresent()) {
             log.debug("Unsubscribe client {} subscription {} with id {} for project {}",
-                    websocketClient.get().getSessionId(), websocketClient.get().getSubscriptionId(), websocketClient.get().getScreenCode(),
-                    websocketClient.get().getProjectToken());
+                websocketClient.get().getSessionId(), websocketClient.get().getSubscriptionId(),
+                websocketClient.get().getScreenCode(),
+                websocketClient.get().getProjectToken());
 
-            this.dashboardWebSocketService.removeClientFromProject(websocketClient.get());
+            dashboardWebSocketService.removeClientFromProject(websocketClient.get());
         }
     }
 
     /**
      * Entry point when a client definitely closes a websocket.
-     *
      * In this case, remove the closed websocket from the project/connection map
      * unconditionally
      *
@@ -120,13 +123,15 @@ public class WebSocketEventEndpointsConfiguration {
     public void onSessionDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        Optional<WebsocketClient> websocketClient = this.dashboardWebSocketService.getWebsocketClientsBySessionId(stompHeaderAccessor.getSessionId());
+        Optional<WebsocketClient> websocketClient =
+            dashboardWebSocketService.getWebsocketClientsBySessionId(stompHeaderAccessor.getSessionId());
 
         if (websocketClient.isPresent()) {
             log.debug("Disconnect client {} with id {} from project {}",
-                    websocketClient.get().getSessionId(), websocketClient.get().getScreenCode(), websocketClient.get().getProjectToken());
+                websocketClient.get().getSessionId(), websocketClient.get().getScreenCode(),
+                websocketClient.get().getProjectToken());
 
-            this.dashboardWebSocketService.removeClientFromProject(websocketClient.get());
+            dashboardWebSocketService.removeClientFromProject(websocketClient.get());
         }
     }
 }

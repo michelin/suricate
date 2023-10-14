@@ -18,18 +18,21 @@ package com.michelin.suricate.services.api;
 
 import com.michelin.suricate.model.entities.AllowedSettingValue;
 import com.michelin.suricate.repositories.AllowedSettingValueRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
+/**
+ * Allowed setting value service.
+ */
 @Service
 public class AllowedSettingValueService {
     @Autowired
     private AllowedSettingValueRepository allowedSettingValueRepository;
 
     /**
-     * Get an allowed setting value by ID
+     * Get an allowed setting value by ID.
+     *
      * @param id The ID
      * @return The allowed setting value
      */

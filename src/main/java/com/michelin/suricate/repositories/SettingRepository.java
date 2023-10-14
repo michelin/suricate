@@ -17,23 +17,21 @@
 package com.michelin.suricate.repositories;
 
 import com.michelin.suricate.model.entities.Setting;
+import java.util.List;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
- * Repository used for request Settings in database
+ * Setting repository.
  */
 @Repository
 public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpecificationExecutor<Setting> {
-
     /**
-     * Find setting by id
+     * Find setting by id.
      *
      * @param id The setting id
      * @return The setting
@@ -42,7 +40,7 @@ public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpe
     Optional<Setting> findById(@NotNull final Long id);
 
     /**
-     * Find settings by description
+     * Find settings by description.
      *
      * @return The list of the settings
      */

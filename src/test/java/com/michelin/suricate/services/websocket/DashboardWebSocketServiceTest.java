@@ -1,31 +1,36 @@
 package com.michelin.suricate.services.websocket;
 
+import static com.michelin.suricate.model.enums.UpdateType.CONNECT_DASHBOARD;
+import static com.michelin.suricate.model.enums.UpdateType.DISCONNECT;
+import static com.michelin.suricate.model.enums.UpdateType.RELOAD;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.project.ProjectResponseDto;
-import com.michelin.suricate.model.entities.Project;
-import com.michelin.suricate.services.api.ProjectService;
-import com.michelin.suricate.services.mapper.ProjectMapper;
-import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
-import com.michelin.suricate.services.js.services.JsExecutionService;
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
 import com.michelin.suricate.model.dto.websocket.UpdateEvent;
 import com.michelin.suricate.model.dto.websocket.WebsocketClient;
+import com.michelin.suricate.model.entities.Project;
+import com.michelin.suricate.services.api.ProjectService;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
+import com.michelin.suricate.services.js.services.JsExecutionService;
+import com.michelin.suricate.services.mapper.ProjectMapper;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static com.michelin.suricate.model.enums.UpdateType.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DashboardWebSocketServiceTest {
@@ -55,16 +60,16 @@ class DashboardWebSocketServiceTest {
         ProjectResponseDto projectResponseDto = new ProjectResponseDto();
         projectResponseDto.setName("name");
 
-        when(projectMapper.toProjectDTO(any())).thenReturn(projectResponseDto);
+        when(projectMapper.toProjectDto(any())).thenReturn(projectResponseDto);
 
         dashboardWebSocketService.sendConnectProjectEventToScreenSubscriber(project, "screenCode");
 
         verify(projectMapper)
-                .toProjectDTO(project);
+            .toProjectDto(project);
         verify(simpMessagingTemplate)
-                .convertAndSendToUser(eq("screenCode"), eq("/queue/connect"),
-                        argThat(updateEvent -> ((UpdateEvent) updateEvent).getType().equals(CONNECT_DASHBOARD) &&
-                                ((UpdateEvent) updateEvent).getContent().equals(projectResponseDto)));
+            .convertAndSendToUser(eq("screenCode"), eq("/queue/connect"),
+                argThat(updateEvent -> ((UpdateEvent) updateEvent).getType().equals(CONNECT_DASHBOARD)
+                    && ((UpdateEvent) updateEvent).getContent().equals(projectResponseDto)));
     }
 
     @Test
@@ -77,7 +82,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers("token", 1L, updateEvent);
 
         verify(simpMessagingTemplate)
-                .convertAndSendToUser("token-projectWidget-1", "/queue/live", updateEvent);
+            .convertAndSendToUser("token-projectWidget-1", "/queue/live", updateEvent);
     }
 
     @Test
@@ -90,7 +95,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(null, 1L, updateEvent);
 
         verify(simpMessagingTemplate, times(0))
-                .convertAndSendToUser(any(), any(), any());
+            .convertAndSendToUser(any(), any(), any());
     }
 
     @Test
@@ -103,7 +108,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers("token", null, updateEvent);
 
         verify(simpMessagingTemplate, times(0))
-                .convertAndSendToUser(any(), any(), any());
+            .convertAndSendToUser(any(), any(), any());
     }
 
     @Test
@@ -116,7 +121,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToProjectSubscribers("token", updateEvent);
 
         verify(simpMessagingTemplate)
-                .convertAndSendToUser("token", "/queue/live", updateEvent);
+            .convertAndSendToUser("token", "/queue/live", updateEvent);
     }
 
     @Test
@@ -129,7 +134,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToProjectSubscribers(null, updateEvent);
 
         verify(simpMessagingTemplate, times(0))
-                .convertAndSendToUser(any(), any(), any());
+            .convertAndSendToUser(any(), any(), any());
     }
 
     @Test
@@ -142,7 +147,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToScreenProjectSubscriber("token", "screen", updateEvent);
 
         verify(simpMessagingTemplate)
-                .convertAndSendToUser("token-screen", "/queue/unique", updateEvent);
+            .convertAndSendToUser("token-screen", "/queue/unique", updateEvent);
     }
 
     @Test
@@ -167,9 +172,9 @@ class DashboardWebSocketServiceTest {
         assertThat(actual).contains(websocketClient);
 
         verify(jsExecutionService)
-                .getJsExecutionsByProject(project);
+            .getJsExecutionsByProject(project);
         verify(jsExecutionScheduler)
-                .scheduleJsRequests(jsExecutionDtos, true);
+            .scheduleJsRequests(jsExecutionDtos, true);
     }
 
     @Test
@@ -194,9 +199,9 @@ class DashboardWebSocketServiceTest {
         assertThat(actual).contains(websocketClient);
 
         verify(jsExecutionService)
-                .getJsExecutionsByProject(project);
+            .getJsExecutionsByProject(project);
         verify(jsExecutionScheduler)
-                .scheduleJsRequests(jsExecutionDtos, true);
+            .scheduleJsRequests(jsExecutionDtos, true);
     }
 
     @Test
@@ -221,9 +226,9 @@ class DashboardWebSocketServiceTest {
         assertThat(actual).isEqualTo(1);
 
         verify(jsExecutionService)
-                .getJsExecutionsByProject(project);
+            .getJsExecutionsByProject(project);
         verify(jsExecutionScheduler)
-                .scheduleJsRequests(jsExecutionDtos, true);
+            .scheduleJsRequests(jsExecutionDtos, true);
     }
 
     @Test
@@ -244,7 +249,8 @@ class DashboardWebSocketServiceTest {
         when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
-        Optional<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId("session", "subscription");
+        Optional<WebsocketClient> actual =
+            dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId("session", "subscription");
 
         assertThat(actual).contains(websocketClient);
     }
@@ -268,12 +274,12 @@ class DashboardWebSocketServiceTest {
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         Optional<WebsocketClient> actual = dashboardWebSocketService
-                .getWebsocketClientsBySessionIdAndSubscriptionId("unknownSession", "unknownSubscription");
+            .getWebsocketClientsBySessionIdAndSubscriptionId("unknownSession", "unknownSubscription");
 
         assertThat(actual).isEmpty();
 
         actual = dashboardWebSocketService
-                .getWebsocketClientsBySessionIdAndSubscriptionId("session", "unknownSubscription");
+            .getWebsocketClientsBySessionIdAndSubscriptionId("session", "unknownSubscription");
 
         assertThat(actual).isEmpty();
     }
@@ -306,13 +312,13 @@ class DashboardWebSocketServiceTest {
         assertThat(actual).isEmpty();
 
         verify(jsExecutionService)
-                .getJsExecutionsByProject(project);
+            .getJsExecutionsByProject(project);
         verify(jsExecutionScheduler)
-                .scheduleJsRequests(jsExecutionDtos, true);
+            .scheduleJsRequests(jsExecutionDtos, true);
         verify(projectService)
-                .getOneByToken("token");
+            .getOneByToken("token");
         verify(jsExecutionScheduler)
-                .cancelWidgetsExecutionByProject(project);
+            .cancelWidgetsExecutionByProject(project);
     }
 
     @Test
@@ -342,8 +348,8 @@ class DashboardWebSocketServiceTest {
         List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
 
         assertThat(actual)
-                .contains(websocketClient)
-                .contains(websocketClient2);
+            .contains(websocketClient)
+            .contains(websocketClient2);
 
         dashboardWebSocketService.removeClientFromProject(websocketClient);
 
@@ -351,13 +357,13 @@ class DashboardWebSocketServiceTest {
         assertThat(actual).contains(websocketClient2);
 
         verify(jsExecutionService)
-                .getJsExecutionsByProject(project);
+            .getJsExecutionsByProject(project);
         verify(jsExecutionScheduler)
-                .scheduleJsRequests(jsExecutionDtos, true);
+            .scheduleJsRequests(jsExecutionDtos, true);
         verify(projectService, times(0))
-                .getOneByToken(any());
+            .getOneByToken(any());
         verify(jsExecutionScheduler, times(0))
-                .cancelWidgetsExecutionByProject(any());
+            .cancelWidgetsExecutionByProject(any());
     }
 
     @Test
@@ -365,8 +371,8 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.disconnectClient("token", "screen");
 
         verify(simpMessagingTemplate)
-                .convertAndSendToUser(eq("token-screen"), eq("/queue/unique"), argThat(updateEvent ->
-                        ((UpdateEvent) updateEvent).getType().equals(DISCONNECT)));
+            .convertAndSendToUser(eq("token-screen"), eq("/queue/unique"), argThat(updateEvent ->
+                ((UpdateEvent) updateEvent).getType().equals(DISCONNECT)));
     }
 
     @Test
@@ -394,19 +400,19 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.reloadAllConnectedClientsToAllProjects();
 
         verify(jsExecutionService)
-                .getJsExecutionsByProject(project);
+            .getJsExecutionsByProject(project);
         verify(jsExecutionScheduler)
-                .scheduleJsRequests(jsExecutionDtos, true);
+            .scheduleJsRequests(jsExecutionDtos, true);
         verify(simpMessagingTemplate)
-                .convertAndSendToUser(eq("token"), eq("/queue/live"), argThat(updateEvent ->
-                        ((UpdateEvent) updateEvent).getType().equals(RELOAD)));
+            .convertAndSendToUser(eq("token"), eq("/queue/live"), argThat(updateEvent ->
+                ((UpdateEvent) updateEvent).getType().equals(RELOAD)));
     }
 
     @Test
-    void shouldNotReloadAllConnectedClientsToAProjectWhenEmpty() {
-        dashboardWebSocketService.reloadAllConnectedClientsToAProject("token");
+    void shouldNotReloadAllConnectedClientsToProjectWhenEmpty() {
+        dashboardWebSocketService.reloadAllConnectedClientsToProject("token");
 
         verify(simpMessagingTemplate, times(0))
-                .convertAndSendToUser(any(), any(), any());
+            .convertAndSendToUser(any(), any(), any());
     }
 }

@@ -1,10 +1,10 @@
 package com.michelin.suricate.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.michelin.suricate.services.js.script.JsEndpoints;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class JavaScriptUtilsTest {
     @Test
@@ -37,6 +37,8 @@ class JavaScriptUtilsTest {
         assertThat(actual).isEqualTo("function(){Packages." + JsEndpoints.class.getName() + ".checkInterrupted();};");
 
         String actualTwo = JavaScriptUtils.injectInterrupt("function()\n{\nwhile(true)\n{\n}\n};");
-        assertThat(actualTwo).isEqualTo("function(){Packages." + JsEndpoints.class.getName() + ".checkInterrupted();\nwhile(true){Packages." + JsEndpoints.class.getName() + ".checkInterrupted();\n}\n};");
+        assertThat(actualTwo).isEqualTo(
+            "function(){Packages." + JsEndpoints.class.getName() + ".checkInterrupted();\nwhile(true){Packages."
+                + JsEndpoints.class.getName() + ".checkInterrupted();\n}\n};");
     }
 }

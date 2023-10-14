@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.enums;
 
 /**
- * Authentication provider
+ * Authentication provider.
  */
 public enum AuthenticationProvider {
     DATABASE,

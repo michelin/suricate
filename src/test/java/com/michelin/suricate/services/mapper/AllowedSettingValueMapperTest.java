@@ -1,16 +1,15 @@
 package com.michelin.suricate.services.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.michelin.suricate.model.dto.api.setting.AllowedSettingValueResponseDto;
 import com.michelin.suricate.model.entities.AllowedSettingValue;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class AllowedSettingValueMapperTest {
@@ -18,14 +17,14 @@ class AllowedSettingValueMapperTest {
     private AllowedSettingValueMapperImpl allowedSettingValueMapper;
 
     @Test
-    void shouldToAllowedSettingValueDTO() {
+    void shouldToAllowedSettingValueDto() {
         AllowedSettingValue allowedSettingValue = new AllowedSettingValue();
         allowedSettingValue.setId(1L);
         allowedSettingValue.setDefault(true);
         allowedSettingValue.setTitle("title");
         allowedSettingValue.setValue("value");
 
-        AllowedSettingValueResponseDto actual = allowedSettingValueMapper.toAllowedSettingValueDTO(allowedSettingValue);
+        AllowedSettingValueResponseDto actual = allowedSettingValueMapper.toAllowedSettingValueDto(allowedSettingValue);
 
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.isDefault()).isTrue();
@@ -34,14 +33,15 @@ class AllowedSettingValueMapperTest {
     }
 
     @Test
-    void shouldToAllowedSettingValuesDTOs() {
+    void shouldToAllowedSettingValuesDtos() {
         AllowedSettingValue allowedSettingValue = new AllowedSettingValue();
         allowedSettingValue.setId(1L);
         allowedSettingValue.setDefault(true);
         allowedSettingValue.setTitle("title");
         allowedSettingValue.setValue("value");
 
-        List<AllowedSettingValueResponseDto> actual = allowedSettingValueMapper.toAllowedSettingValuesDTOs(Collections.singletonList(allowedSettingValue));
+        List<AllowedSettingValueResponseDto> actual =
+            allowedSettingValueMapper.toAllowedSettingValuesDtos(Collections.singletonList(allowedSettingValue));
 
         assertThat(actual.get(0).getId()).isEqualTo(1L);
         assertThat(actual.get(0).isDefault()).isTrue();

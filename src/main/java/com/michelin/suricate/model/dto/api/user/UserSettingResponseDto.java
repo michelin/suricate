@@ -16,14 +16,17 @@
 
 package com.michelin.suricate.model.dto.api.user;
 
-import com.michelin.suricate.model.dto.api.setting.SettingResponseDto;
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import com.michelin.suricate.model.dto.api.setting.AllowedSettingValueResponseDto;
+import com.michelin.suricate.model.dto.api.setting.SettingResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * User setting response DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

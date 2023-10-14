@@ -18,10 +18,12 @@
 
 package com.michelin.suricate.utils.exceptions.js;
 
+/**
+ * Exception thrown when a fatal error occurs during the execution of a widget script.
+ */
 public class FatalException extends Exception {
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param message The message of the exception
      */

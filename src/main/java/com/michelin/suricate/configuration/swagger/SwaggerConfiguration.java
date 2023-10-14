@@ -27,30 +27,39 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Swagger configuration.
+ */
 @Configuration
 public class SwaggerConfiguration {
     private static final String BEARER_AUTH = "bearerAuth";
 
+    /**
+     * Create the OpenAPI object.
+     *
+     * @param applicationProperties The application properties
+     * @return The OpenAPI object
+     */
     @Bean
-    public OpenAPI openAPI(ApplicationProperties applicationProperties) {
+    public OpenAPI openApi(ApplicationProperties applicationProperties) {
         return new OpenAPI()
-                .info(new Info()
-                        .title(applicationProperties.getSwagger().getTitle())
-                        .description(applicationProperties.getSwagger().getDescription())
-                        .version(applicationProperties.getSwagger().getVersion())
-                        .contact(new Contact()
-                                .name(applicationProperties.getSwagger().getContactName())
-                                .email(applicationProperties.getSwagger().getContactEmail())
-                                .url(applicationProperties.getSwagger().getContactUrl()))
-                        .license(new License()
-                                .name(applicationProperties.getSwagger().getLicense())
-                                .url(applicationProperties.getSwagger().getLicenseUrl())))
-                .components(new Components()
-                        .addSecuritySchemes(BEARER_AUTH, new SecurityScheme()
-                                .name(BEARER_AUTH)
-                                .type(SecurityScheme.Type.HTTP)
-                                .bearerFormat("JWT")
-                                .scheme("bearer")))
-                .addSecurityItem(new SecurityRequirement().addList(BEARER_AUTH));
+            .info(new Info()
+                .title(applicationProperties.getSwagger().getTitle())
+                .description(applicationProperties.getSwagger().getDescription())
+                .version(applicationProperties.getSwagger().getVersion())
+                .contact(new Contact()
+                    .name(applicationProperties.getSwagger().getContactName())
+                    .email(applicationProperties.getSwagger().getContactEmail())
+                    .url(applicationProperties.getSwagger().getContactUrl()))
+                .license(new License()
+                    .name(applicationProperties.getSwagger().getLicense())
+                    .url(applicationProperties.getSwagger().getLicenseUrl())))
+            .components(new Components()
+                .addSecuritySchemes(BEARER_AUTH, new SecurityScheme()
+                    .name(BEARER_AUTH)
+                    .type(SecurityScheme.Type.HTTP)
+                    .bearerFormat("JWT")
+                    .scheme("bearer")))
+            .addSecurityItem(new SecurityRequirement().addList(BEARER_AUTH));
     }
 }

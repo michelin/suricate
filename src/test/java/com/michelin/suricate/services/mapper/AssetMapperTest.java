@@ -1,5 +1,7 @@
 package com.michelin.suricate.services.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.michelin.suricate.model.dto.api.asset.AssetResponseDto;
 import com.michelin.suricate.model.dto.api.export.ImportExportAssetDto;
 import com.michelin.suricate.model.entities.Asset;
@@ -8,22 +10,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(MockitoExtension.class)
 class AssetMapperTest {
     @InjectMocks
     private AssetMapperImpl assetMapper;
 
     @Test
-    void shouldToAssetDTO() {
+    void shouldToAssetDto() {
         Asset asset = new Asset();
         asset.setId(1L);
         asset.setSize(10);
         asset.setContentType("contentType");
         asset.setContent(new byte[10]);
 
-        AssetResponseDto actual = assetMapper.toAssetDTO(asset);
+        AssetResponseDto actual = assetMapper.toAssetDto(asset);
 
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.getSize()).isEqualTo(10);
@@ -32,14 +32,14 @@ class AssetMapperTest {
     }
 
     @Test
-    void shouldToImportExportAssetDTO() {
+    void shouldToImportExportAssetDto() {
         Asset asset = new Asset();
         asset.setId(1L);
         asset.setSize(10);
         asset.setContentType("contentType");
         asset.setContent(new byte[10]);
 
-        ImportExportAssetDto actual = assetMapper.toImportExportAssetDTO(asset);
+        ImportExportAssetDto actual = assetMapper.toImportExportAssetDto(asset);
 
         assertThat(actual.getSize()).isEqualTo(10);
         assertThat(actual.getContent()).isEqualTo(new byte[10]);

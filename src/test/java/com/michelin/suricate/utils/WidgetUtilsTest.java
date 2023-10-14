@@ -1,19 +1,18 @@
 package com.michelin.suricate.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.michelin.suricate.model.entities.Category;
 import com.michelin.suricate.model.entities.CategoryParameter;
 import com.michelin.suricate.model.entities.Library;
 import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.model.enums.DataTypeEnum;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class WidgetUtilsTest {
     @Test
@@ -37,14 +36,16 @@ class WidgetUtilsTest {
 
     @Test
     void shouldParseCategoriesEmptyFolder() {
-        assertThat(WidgetUtils.parseCategoriesFolder(new File("src/test/resources/specific-repository/content/no-name")))
-                .isEmpty();
+        assertThat(
+            WidgetUtils.parseCategoriesFolder(new File("src/test/resources/specific-repository/content/no-name")))
+            .isEmpty();
     }
 
     @Test
     void shouldParseCategoriesUnknownFolder() {
-        assertThat(WidgetUtils.parseCategoriesFolder(new File("src/test/resources/specific-repository/content/does-not-exist")))
-                .isEmpty();
+        assertThat(WidgetUtils.parseCategoriesFolder(
+            new File("src/test/resources/specific-repository/content/does-not-exist")))
+            .isEmpty();
     }
 
     @Test
@@ -96,7 +97,8 @@ class WidgetUtilsTest {
         assertThat(gitLabWidgets.get(0).getId()).isNull();
         assertThat(gitLabWidgets.get(0).getName()).isEqualTo("Number of merge requests");
         assertThat(gitLabWidgets.get(0).getTechnicalName()).isEqualTo("gitlabOpenedMR");
-        assertThat(gitLabWidgets.get(0).getDescription()).isEqualTo("Display the number of merge requests of a GitLab project");
+        assertThat(gitLabWidgets.get(0).getDescription()).isEqualTo(
+            "Display the number of merge requests of a GitLab project");
         assertThat(gitLabWidgets.get(0).getDelay()).isEqualTo(500L);
         assertThat(gitLabWidgets.get(0).getHtmlContent()).isNotNull();
         assertThat(gitLabWidgets.get(0).getCssContent()).isNotNull();
@@ -108,11 +110,11 @@ class WidgetUtilsTest {
 
         assertThat(gitLabConfig).hasSize(2);
         assertThat(gitLabConfig.stream().map(CategoryParameter::getId))
-                .contains("WIDGET_CONFIG_GITLAB_URL")
-                .contains("WIDGET_CONFIG_GITLAB_TOKEN");
+            .contains("WIDGET_CONFIG_GITLAB_URL")
+            .contains("WIDGET_CONFIG_GITLAB_TOKEN");
         assertThat(gitLabConfig.stream().map(CategoryParameter::getDescription))
-                .contains("URL of the GitLab environment")
-                .contains("Token for the GitLab API");
+            .contains("URL of the GitLab environment")
+            .contains("Token for the GitLab API");
     }
 
     @Test
@@ -122,12 +124,14 @@ class WidgetUtilsTest {
 
     @Test
     void shouldGetCategoryWithNoName() throws IOException {
-        assertThat(WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-name"))).isNull();
+        assertThat(
+            WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-name"))).isNull();
     }
 
     @Test
     void shouldGetCategoryWithNoWidgets() throws IOException {
-        Category actual = WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-widgets"));
+        Category actual =
+            WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-widgets"));
 
         assertThat(actual.getId()).isNull();
         assertThat(actual.getName()).isEqualTo("noWidgets");
@@ -177,25 +181,30 @@ class WidgetUtilsTest {
 
     @Test
     void shouldGetWidgetNoDelay() throws IOException {
-        Assertions.assertThat(WidgetUtils.getWidget(new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-delay")))
-                .isNull();
+        Assertions.assertThat(WidgetUtils.getWidget(
+                new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-delay")))
+            .isNull();
     }
 
     @Test
     void shouldGetWidgetDelayButNoScript() throws IOException {
-        Assertions.assertThat(WidgetUtils.getWidget(new File("src/test/resources/specific-repository/content/specific-widgets/widgets/delay-but-no-script")))
-                .isNull();
+        Assertions.assertThat(WidgetUtils.getWidget(
+                new File("src/test/resources/specific-repository/content/"
+                    + "specific-widgets/widgets/delay-but-no-script")))
+            .isNull();
     }
 
     @Test
     void shouldGetWidgetNoTechnicalName() throws IOException {
-        Assertions.assertThat(WidgetUtils.getWidget(new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-technical-name")))
-                .isNull();
+        Assertions.assertThat(WidgetUtils.getWidget(
+                new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-technical-name")))
+            .isNull();
     }
 
     @Test
     void shouldGetWidgetGitHubCountIssues() throws IOException {
-        Widget actual = WidgetUtils.getWidget(new File("src/test/resources/repository/content/github/widgets/count-issues"));
+        Widget actual =
+            WidgetUtils.getWidget(new File("src/test/resources/repository/content/github/widgets/count-issues"));
 
         assertThat(actual.getId()).isNull();
         assertThat(actual.getName()).isEqualTo("Number of issues");

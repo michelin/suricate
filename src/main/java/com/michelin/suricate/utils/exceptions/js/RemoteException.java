@@ -18,9 +18,12 @@
 
 package com.michelin.suricate.utils.exceptions.js;
 
+/**
+ * Remote exception.
+ */
 public class RemoteException extends Exception {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param message The message of the exception
      */

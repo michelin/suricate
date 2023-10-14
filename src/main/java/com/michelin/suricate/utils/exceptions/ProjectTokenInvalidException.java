@@ -1,20 +1,16 @@
 package com.michelin.suricate.utils.exceptions;
 
 import com.michelin.suricate.model.enums.ApiErrorEnum;
-
 import java.text.MessageFormat;
 
 /**
- * Throw when the project token cannot be decrypt
+ * Project token invalid exception.
  */
 public class ProjectTokenInvalidException extends ApiException {
-    /**
-     * Message for Project Token invalid
-     */
     private static final String MSG_PROJECT_TOKEN_INVALID = "Cannot decrypt token : {0}";
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param projectToken The token
      */

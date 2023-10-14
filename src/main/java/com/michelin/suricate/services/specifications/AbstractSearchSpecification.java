@@ -1,32 +1,35 @@
 package com.michelin.suricate.services.specifications;
 
-import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jpa.domain.Specification;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.domain.Specification;
 
+/**
+ * Abstract search specification.
+ *
+ * @param <T> The type of the specification
+ */
+@Getter
 public abstract class AbstractSearchSpecification<T> implements Specification<T> {
     protected static final String LIKE_OPERATOR_FORMATTER = "%%%s%%";
-
-    @Getter
+    protected final String search;
     private final List<String> attributes;
 
-    @Getter
-    protected final String search;
-
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param search           The search query
      * @param filterAttributes The attribute used to filter on search attribute
      */
@@ -36,7 +39,8 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
     }
 
     /**
-     * Used to add search predicates
+     * Used to add search predicates.
+     *
      * @param root            The root entity
      * @param criteriaBuilder Used to build new predicate
      * @param predicates      The list of predicates to add for this entity
@@ -47,18 +51,21 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
             Optional
                 .ofNullable(attributes)
                 .orElseGet(ArrayList::new)
-                .forEach((String attribute) -> predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(attribute)), likeSearchString)));
+                .forEach((String attribute) -> predicates.add(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get(attribute)), likeSearchString)));
         }
     }
 
     /**
-     * Used to add predicates to the search query
+     * Used to add predicates to the search query.
+     *
      * @param root            The root entity
      * @param criteriaQuery   Used to build queries
      * @param criteriaBuilder Used to build new predicate
      */
     @Override
-    public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(@NotNull Root<T> root, @NotNull CriteriaQuery<?> criteriaQuery,
+                                 @NotNull CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
         addSearchPredicate(root, criteriaBuilder, predicates);

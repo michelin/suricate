@@ -17,21 +17,19 @@
 package com.michelin.suricate.repositories;
 
 import com.michelin.suricate.model.entities.UserSetting;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
- * Repository used for request UserSettings in database
+ * User setting repository.
  */
 @Repository
 public interface UserSettingRepository extends JpaRepository<UserSetting, Long> {
-
     /**
-     * Get user settings by username
+     * Get user settings by username.
      *
      * @param username The username
      * @return The user settings
@@ -40,10 +38,10 @@ public interface UserSettingRepository extends JpaRepository<UserSetting, Long> 
     Optional<List<UserSetting>> findAllByUserUsernameIgnoreCase(String username);
 
     /**
-     * Get a setting by userName and setting Id
+     * Get a setting by userName and setting id.
      *
      * @param userName  The userName
-     * @param settingId The setting Id
+     * @param settingId The setting id
      * @return The user setting associated
      */
     Optional<UserSetting> findByUserUsernameAndSettingId(String userName, Long settingId);

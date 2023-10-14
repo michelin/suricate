@@ -23,11 +23,21 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+/**
+ * Aspect for logging execution time of methods.
+ */
 @Slf4j
 @Aspect
 @Profile("prod")
 @Component
 public class LoggingAspect {
+    /**
+     * Log execution time of methods.
+     *
+     * @param joinPoint The join point
+     * @return The object
+     * @throws Throwable Exception thrown
+     */
     @Around("@annotation(com.michelin.suricate.utils.logging.LogExecutionTime)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
@@ -36,9 +46,7 @@ public class LoggingAspect {
 
         long executionTime = System.currentTimeMillis() - start;
 
-        log.debug("{} executed in {} ms",joinPoint.getSignature(), executionTime);
+        log.debug("{} executed in {} ms", joinPoint.getSignature(), executionTime);
         return proceed;
     }
-
-
 }

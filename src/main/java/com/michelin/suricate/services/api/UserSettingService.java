@@ -18,19 +18,20 @@ package com.michelin.suricate.services.api;
 
 import com.michelin.suricate.model.dto.api.user.UserSettingRequestDto;
 import com.michelin.suricate.model.entities.AllowedSettingValue;
-import com.michelin.suricate.repositories.UserSettingRepository;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.entities.UserSetting;
+import com.michelin.suricate.repositories.UserSettingRepository;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+/**
+ * User setting service.
+ */
 @Service
 public class UserSettingService {
     @Autowired
@@ -43,7 +44,8 @@ public class UserSettingService {
     private AllowedSettingValueService allowedSettingValueService;
 
     /**
-     * Create the default list of user settings (in case of new user for example)
+     * Create the default list of user settings (in case of new user for example).
+     *
      * @param user The user that we have to create settings for
      */
     @Transactional
@@ -56,7 +58,7 @@ public class UserSettingService {
                 .flatMap(setting -> setting.getAllowedSettingValues().stream())
                 .filter(AllowedSettingValue::isDefault)
                 .map(allowedSettingValue -> createUserSettingFromAllowedSettingValue(allowedSettingValue, user))
-                .collect(Collectors.toList())
+                .toList()
         ));
 
         userSettingRepository.saveAll(userSettings);
@@ -66,11 +68,13 @@ public class UserSettingService {
     }
 
     /**
-     * Create a user setting from AllowedSettingValue (constrained value)
+     * Create a user setting from AllowedSettingValue (constrained value).
+     *
      * @param allowedSettingValue The allowed setting value
      * @return The related user setting
      */
-    public UserSetting createUserSettingFromAllowedSettingValue(final AllowedSettingValue allowedSettingValue, final User user) {
+    public UserSetting createUserSettingFromAllowedSettingValue(final AllowedSettingValue allowedSettingValue,
+                                                                final User user) {
         UserSetting userSetting = new UserSetting();
 
         userSetting.setUser(user);
@@ -81,8 +85,9 @@ public class UserSettingService {
     }
 
     /**
-     * Get a user setting
-     * @param userName The username
+     * Get a user setting.
+     *
+     * @param userName  The username
      * @param settingId The setting ID
      * @return The user setting
      */
@@ -91,7 +96,8 @@ public class UserSettingService {
     }
 
     /**
-     * Get user settings
+     * Get user settings.
+     *
      * @param username The username
      * @return The user settings
      */
@@ -100,15 +106,17 @@ public class UserSettingService {
     }
 
     /**
-     * Update the settings for a user
+     * Update the settings for a user.
+     *
      * @param userName              The username
      * @param settingId             The setting id
      * @param userSettingRequestDto The new user setting value
      */
-    public void updateUserSetting(final String userName, final Long settingId, final UserSettingRequestDto userSettingRequestDto) {
+    public void updateUserSetting(final String userName, final Long settingId,
+                                  final UserSettingRequestDto userSettingRequestDto) {
         Optional<UserSetting> userSettingOptional = getUserSetting(userName, settingId);
 
-        if (!userSettingOptional.isPresent()) {
+        if (userSettingOptional.isEmpty()) {
             throw new ObjectNotFoundException(UserSetting.class, "user: " + userName + ", settingId: " + settingId);
         }
 

@@ -1,5 +1,9 @@
 package com.michelin.suricate.services.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.export.ImportExportProjectDto;
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridRequestDto;
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridResponseDto;
@@ -8,21 +12,16 @@ import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.model.entities.ProjectGrid;
 import com.michelin.suricate.model.entities.ProjectWidget;
 import com.michelin.suricate.model.entities.Widget;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectGridMapperTest {
@@ -33,12 +32,12 @@ class ProjectGridMapperTest {
     private ProjectGridMapperImpl projectGridMapper;
 
     @Test
-    void shouldToProjectGridDTO() {
+    void shouldToProjectGridDto() {
         ProjectGrid projectGrid = new ProjectGrid();
         projectGrid.setId(1L);
         projectGrid.setTime(10);
 
-        ProjectGridResponseDto actual = projectGridMapper.toProjectGridDTO(projectGrid);
+        ProjectGridResponseDto actual = projectGridMapper.toProjectGridDto(projectGrid);
 
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.getTime()).isEqualTo(10);
@@ -60,11 +59,12 @@ class ProjectGridMapperTest {
         Assertions.assertThat(actual.getCreatedBy()).isEqualTo("createdBy");
         Assertions.assertThat(actual.getCreatedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
         Assertions.assertThat(actual.getLastModifiedBy()).isEqualTo("lastModifiedBy");
-        Assertions.assertThat(actual.getLastModifiedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
+        Assertions.assertThat(actual.getLastModifiedDate())
+            .isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
     }
 
     @Test
-    void shouldToImportExportProjectGridDTO() {
+    void shouldToImportExportProjectGridDto() {
         Widget widget = new Widget();
         widget.setId(1L);
         widget.setTechnicalName("technicalName");
@@ -84,15 +84,17 @@ class ProjectGridMapperTest {
         projectWidgetPositionResponseDto.setHeight(1);
         projectWidgetPositionResponseDto.setWidth(1);
 
-        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto = new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
+        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto =
+            new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
         importExportProjectWidgetDto.setWidgetPosition(projectWidgetPositionResponseDto);
         importExportProjectWidgetDto.setWidgetTechnicalName("technicalName");
         importExportProjectWidgetDto.setBackendConfig("key=value");
 
-        when(projectWidgetMapper.toImportExportProjectWidgetDTO(any()))
-                .thenReturn(importExportProjectWidgetDto);
+        when(projectWidgetMapper.toImportExportProjectWidgetDto(any()))
+            .thenReturn(importExportProjectWidgetDto);
 
-        ImportExportProjectDto.ImportExportProjectGridDto actual = projectGridMapper.toImportExportProjectGridDTO(projectGrid);
+        ImportExportProjectDto.ImportExportProjectGridDto actual =
+            projectGridMapper.toImportExportProjectGridDto(projectGrid);
 
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.getTime()).isEqualTo(10);
@@ -128,12 +130,14 @@ class ProjectGridMapperTest {
         projectWidgetPositionResponseDto.setHeight(1);
         projectWidgetPositionResponseDto.setWidth(1);
 
-        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto = new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
+        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto =
+            new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
         importExportProjectWidgetDto.setWidgetPosition(projectWidgetPositionResponseDto);
         importExportProjectWidgetDto.setWidgetTechnicalName("technicalName");
         importExportProjectWidgetDto.setBackendConfig("key=value");
 
-        ImportExportProjectDto.ImportExportProjectGridDto importExportProjectGridDto = new ImportExportProjectDto.ImportExportProjectGridDto();
+        ImportExportProjectDto.ImportExportProjectGridDto importExportProjectGridDto =
+            new ImportExportProjectDto.ImportExportProjectGridDto();
         importExportProjectGridDto.setId(1L);
         importExportProjectGridDto.setTime(10);
         importExportProjectGridDto.setWidgets(Collections.singletonList(importExportProjectWidgetDto));
@@ -142,7 +146,7 @@ class ProjectGridMapperTest {
         projectWidget.setId(1L);
 
         when(projectWidgetMapper.toProjectWidgetEntity(any()))
-                .thenReturn(projectWidget);
+            .thenReturn(projectWidget);
 
         ProjectGrid actual = projectGridMapper.toProjectGridEntity(importExportProjectGridDto);
 

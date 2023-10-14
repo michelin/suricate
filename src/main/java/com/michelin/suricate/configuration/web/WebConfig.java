@@ -20,7 +20,14 @@ import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.security.AuthenticationFailureEntryPoint;
 import com.michelin.suricate.security.filter.JwtTokenFilter;
 import com.michelin.suricate.security.filter.PersonalAccessTokenFilter;
-import com.michelin.suricate.security.oauth2.*;
+import com.michelin.suricate.security.oauth2.HttpCookieOauth2AuthorizationRequestRepository;
+import com.michelin.suricate.security.oauth2.Oauth2AuthenticationFailureHandler;
+import com.michelin.suricate.security.oauth2.Oauth2AuthenticationSuccessHandler;
+import com.michelin.suricate.security.oauth2.Oauth2UserService;
+import com.michelin.suricate.security.oauth2.OidcUserService;
+import java.io.IOException;
+import java.util.Locale;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,9 +50,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
-import java.io.IOException;
-import java.util.Locale;
-
+/**
+ * Web configuration.
+ */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebConfig implements WebMvcConfigurer {
@@ -53,24 +60,26 @@ public class WebConfig implements WebMvcConfigurer {
     private ApplicationProperties applicationProperties;
 
     /**
-     * CORS configuration
+     * CORS configuration.
+     *
      * @param registry The CORS registry
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry
-                .addMapping("/api/**")
-                .combine(applicationProperties.getCors());
+            .addMapping("/api/**")
+            .combine(applicationProperties.getCors());
     }
 
     /**
-     * The view resolver
+     * The view resolver.
+     *
      * @param registry Store the configurations
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/favicon.ico")
-                .addResourceLocations("classpath:/");
+            .addResourceLocations("classpath:/");
 
         registry.addResourceHandler("swagger-ui.html")
             .addResourceLocations("classpath:/META-INF/resources/");
@@ -80,70 +89,89 @@ public class WebConfig implements WebMvcConfigurer {
             .resourceChain(true)
             .addResolver(new PathResourceResolver() {
                 @Override
-                protected Resource getResource(String resourcePath, Resource location) throws IOException {
+                protected Resource getResource(@NotNull String resourcePath, @NotNull Resource location)
+                    throws IOException {
                     Resource requestedResource = location.createRelative(resourcePath);
-                    return requestedResource.exists() && requestedResource.isReadable() ? requestedResource : new ClassPathResource("/public/index.html");
+                    return requestedResource.exists() && requestedResource.isReadable() ? requestedResource :
+                        new ClassPathResource("/public/index.html");
                 }
             });
     }
 
+    /**
+     * Define the security filter chain.
+     *
+     * @param http                               The http security
+     * @param authenticationFailureEntryPoint    The authentication failure entry point
+     * @param authRequestRepository              The auth request repository
+     * @param userService                        The user service
+     * @param oidcUserService                    The oidc user service
+     * @param oauth2AuthenticationSuccessHandler The oauth2 authentication success handler
+     * @param oauth2AuthenticationFailureHandler The oauth2 authentication failure handler
+     * @return The security filter chain
+     * @throws Exception When an error occurred
+     */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationFailureEntryPoint authenticationFailureEntryPoint,
-                                           HttpCookieOAuth2AuthorizationRequestRepository authRequestRepository, OAuth2UserService userService,
-                                           OIDCUserService oidcUserService, @Autowired(required = false) OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
-                                           OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           AuthenticationFailureEntryPoint authenticationFailureEntryPoint,
+                                           HttpCookieOauth2AuthorizationRequestRepository authRequestRepository,
+                                           Oauth2UserService userService,
+                                           OidcUserService oidcUserService, @Autowired(required = false)
+                                           Oauth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler,
+                                           Oauth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler)
+        throws Exception {
         http
-                .cors()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationFailureEntryPoint)
-                .accessDeniedHandler(authenticationFailureEntryPoint)
-                .and()
-                .headers()
-                .frameOptions().disable()
-                .and()
-                .anonymous()
-                .and()
-                .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/actuator/**").permitAll()
-                .antMatchers("/api/*/auth/signin").permitAll()
-                .antMatchers("/api/*/users/signup").permitAll()
-                .antMatchers("/api/*/configurations/authentication-providers").permitAll()
-                .antMatchers("/api/*/projects/{projectToken}").permitAll()
-                .antMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
-                .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
-                .antMatchers("/api/*/widgets/{widgetId}").permitAll()
-                .antMatchers("/api/*/settings").permitAll()
-                .antMatchers("/api/*/assets/**").permitAll()
-                .antMatchers("/ws/**").permitAll()
-                .antMatchers("/api/oauth2/authorization/**").permitAll()
-                .antMatchers("/api/**").authenticated()
-                .and()
-                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+            .cors()
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .csrf().disable()
+            .exceptionHandling()
+            .authenticationEntryPoint(authenticationFailureEntryPoint)
+            .accessDeniedHandler(authenticationFailureEntryPoint)
+            .and()
+            .headers()
+            .frameOptions().disable()
+            .and()
+            .anonymous()
+            .and()
+            .authorizeRequests()
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+            .antMatchers(HttpMethod.OPTIONS).permitAll()
+            .antMatchers("/h2-console/**").permitAll()
+            .antMatchers("/actuator/**").permitAll()
+            .antMatchers("/api/*/auth/signin").permitAll()
+            .antMatchers("/api/*/users/signup").permitAll()
+            .antMatchers("/api/*/configurations/authentication-providers").permitAll()
+            .antMatchers("/api/*/projects/{projectToken}").permitAll()
+            .antMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
+            .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
+            .antMatchers("/api/*/widgets/{widgetId}").permitAll()
+            .antMatchers("/api/*/settings").permitAll()
+            .antMatchers("/api/*/assets/**").permitAll()
+            .antMatchers("/ws/**").permitAll()
+            .antMatchers("/api/oauth2/authorization/**").permitAll()
+            .antMatchers("/api/**").authenticated()
+            .and()
+            .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        if (oAuth2AuthenticationSuccessHandler.getOAuth2AuthorizedClientRepository() != null) {
+        if (oauth2AuthenticationSuccessHandler.getAuthorizedClientRepository() != null) {
             http.oauth2Login()
-                    .authorizationEndpoint()
-                    // Store auth request in a http cookie on the IDP response
-                    .authorizationRequestRepository(authRequestRepository)
-                    // Override default "oauth2/authorization/" endpoint by adding "/api"
-                    // Endpoint that triggers the OAuth2 auth to given IDP
-                    .baseUri("/api/oauth2/authorization")
-                    .and()
-                    .userInfoEndpoint()
-                    .userService(userService)
-                    .userService(userService)
-                    .oidcUserService(oidcUserService)
-                    .and()
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
-                    .failureHandler(oAuth2AuthenticationFailureHandler);
+                .authorizationEndpoint()
+                // Store auth request in a http cookie on the IDP response
+                .authorizationRequestRepository(authRequestRepository)
+                // Override default "oauth2/authorization/" endpoint by adding "/api"
+                // Endpoint that triggers the OAuth2 auth to given IDP
+                .baseUri("/api/oauth2/authorization")
+                .and()
+                .userInfoEndpoint()
+                .userService(userService)
+                .userService(userService)
+                .oidcUserService(oidcUserService)
+                .and()
+                .successHandler(oauth2AuthenticationSuccessHandler)
+                .failureHandler(oauth2AuthenticationFailureHandler);
         }
 
         return http.build();
@@ -155,7 +183,8 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * HTTP filter processing the given jwt token in header
+     * HTTP filter processing the given jwt token in header.
+     *
      * @return The token authentication filter bean
      */
     @Bean
@@ -164,7 +193,8 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * HTTP filter processing the given personal access token in header
+     * HTTP filter processing the given personal access token in header.
+     *
      * @return The token authentication filter bean
      */
     @Bean
@@ -173,7 +203,8 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Define a role hierarchy
+     * Define a role hierarchy.
+     *
      * @return The role hierarchy bean
      */
     @Bean
@@ -186,6 +217,7 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * Define local language
      * Used in "javax.validation" messages
+     *
      * @return The local language
      */
     @Bean

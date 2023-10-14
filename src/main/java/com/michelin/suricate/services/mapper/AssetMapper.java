@@ -26,30 +26,32 @@ import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 /**
- * Manage the generation DTO/Model objects for asset class
+ * Asset mapper.
  */
 @Component
 @Mapper(componentModel = "spring")
 public abstract class AssetMapper {
     /**
-     * Map an asset into an asset DTO
+     * Map an asset into an asset DTO.
      *
      * @param asset The asset to map
      * @return The asset as DTO
      */
-    @Named("toAssetDTO")
-    public abstract AssetResponseDto toAssetDTO(Asset asset);
+    @Named("toAssetDto")
+    public abstract AssetResponseDto toAssetDto(Asset asset);
 
     /**
-     * Map an asset into an import export asset DTO
+     * Map an asset into an import export asset DTO.
+     *
      * @param asset The asset to map
      * @return The import export asset as DTO
      */
-    @Named("toImportExportAssetDTO")
-    public abstract ImportExportAssetDto toImportExportAssetDTO(Asset asset);
+    @Named("toImportExportAssetDto")
+    public abstract ImportExportAssetDto toImportExportAssetDto(Asset asset);
 
     /**
-     * Map an import export asset DTO as entity
+     * Map an import export asset DTO as entity.
+     *
      * @param importExportAssetDto The asset DTO to map
      * @return The asset as entity
      */

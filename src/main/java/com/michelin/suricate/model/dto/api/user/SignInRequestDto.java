@@ -2,12 +2,14 @@ package com.michelin.suricate.model.dto.api.user;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-
+/**
+ * Sign in request DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

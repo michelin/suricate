@@ -8,6 +8,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/michelin/suricate?label=Pulls&logo=docker&style=for-the-badge)](https://hub.docker.com/r/michelin/suricate/tags)
 [![Docker Stars](https://img.shields.io/docker/stars/michelin/suricate?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/michelin/suricate)
 [![SonarCloud Coverage](https://img.shields.io/sonar/coverage/michelin_suricate?logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/component_measures?id=michelin_suricate&metric=coverage&view=list)
+[![SonarCloud Tests](https://img.shields.io/sonar/tests/michelin_suricate/master?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge&logo=sonarcloud)](https://sonarcloud.io/component_measures?metric=tests&view=list&id=michelin_kstreamplify)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache&style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)
 
 This repository contains the source code of the Suricate application.
@@ -19,43 +20,51 @@ This repository contains the source code of the Suricate application.
 * [Download](#download)
 * [Install](#install)
 * [Configuration](#configuration)
-  * [Default Configuration](#default-configuration)
-  * [Database](#database)
-  * [Authentication](#authentication)
-    * [LDAP vs Database](#ldap-vs-database)
-    * [Social Login](#social-login)
-      * [GitHub](#github)
-      * [GitLab](#gitlab)
-      * [Redirection to Front-End](#redirection-to-front-end)
-      * [Name Parsing Strategy](#name-parsing-strategy)
-    * [Personal Access Token](#personal-access-token)
-  * [Repositories](#repositories)
+    * [Default Configuration](#default-configuration)
+    * [Database](#database)
+    * [Authentication](#authentication)
+        * [LDAP vs Database](#ldap-vs-database)
+        * [Social Login](#social-login)
+            * [GitHub](#github)
+            * [GitLab](#gitlab)
+            * [Redirection to Front-End](#redirection-to-front-end)
+            * [Name Parsing Strategy](#name-parsing-strategy)
+        * [Personal Access Token](#personal-access-token)
+    * [Repositories](#repositories)
 * [Contribution](#contribution)
 
 ## Download
 
-You can download Suricate as a fat jar from the project's releases page on GitHub at https://github.com/michelin/suricate/releases.
+You can download Suricate as a fat jar from the project's releases page on GitHub
+at https://github.com/michelin/suricate/releases.
 
 Additionally, a Docker image of the solution is available at https://hub.docker.com/repository/docker/michelin/suricate.
 
-## Requirements 
+## Requirements
 
-Suricate runs JavaScript widgets from the Back-End side. To enable this functionality, ensure your system meets these requirements:
+Suricate runs JavaScript widgets from the Back-End side. To enable this functionality, ensure your system meets these
+requirements:
 
-- **Suricate v2.8.0 and Later:** Requires [GraalVM 17](https://www.graalvm.org/) with the [JavaScript module installed](https://www.graalvm.org/22.3/docs/getting-started/#run-javascript-and-nodejs). 
+- **Suricate v2.8.0 and Later:** Requires [GraalVM 17](https://www.graalvm.org/) with
+  the [JavaScript module installed](https://www.graalvm.org/22.3/docs/getting-started/#run-javascript-and-nodejs).
 - **Suricate Versions Prior to v2.8.0:** Requires Java 8.
 
 ## Install
 
-Suricate is built on the [Spring Boot framework](https://spring.io/) and can be configured using a Spring Boot configuration file, which includes a sample file located at `src/main/resources/application.properties`.
+Suricate is built on the [Spring Boot framework](https://spring.io/) and can be configured using a Spring Boot
+configuration file, which includes a sample file located at `src/main/resources/application.properties`.
 
-If necessary, you can override the properties from the default `application.properties` file by following the [Spring Boot externalized configuration guide](https://docs.spring.io/spring-boot/docs/1.4.1.RELEASE/reference/html/boot-features-external-config.html). For example, you can create a custom  `/config/application.properties` or set the `--spring.config.location` system property when running the fat jar file:
+If necessary, you can override the properties from the default `application.properties` file by following
+the [Spring Boot externalized configuration guide](https://docs.spring.io/spring-boot/docs/1.4.1.RELEASE/reference/html/boot-features-external-config.html).
+For example, you can create a custom  `/config/application.properties` or set the `--spring.config.location` system
+property when running the fat jar file:
 
 ```console
 java -jar suricate.jar --spring.config.location=classpath:\,file:C:\myCustomLocation\
 ```
 
-Alternatively, you can use the provided docker-compose file to run the application and use a volume to override the default properties:
+Alternatively, you can use the provided docker-compose file to run the application and use a volume to override the
+default properties:
 
 ```console
 docker-compose up -d
@@ -66,6 +75,7 @@ docker-compose up -d
 ### Default Configuration
 
 By default, Suricate:
+
 - runs on a H2 file database
 - provides a sign-in/sign-up authentication mode based on the database
 
@@ -76,7 +86,8 @@ Suricate supports running on different DBMS. Currently, the following DBMS are s
 - H2
 - PostgreSQL
 
-You can define the DBMS you want to use in the `application.properties` file with the `spring.profiles.active` parameter:
+You can define the DBMS you want to use in the `application.properties` file with the `spring.profiles.active`
+parameter:
 
 ```yaml
 spring.profiles.active: ### Provider should be 'h2' or 'postgresql'
@@ -84,7 +95,7 @@ spring.profiles.active: ### Provider should be 'h2' or 'postgresql'
 
 The matching `application-DBMS.properties` file will be picked up.
 
-In the matching `application-DBMS.properties`, fill in the datasource properties: 
+In the matching `application-DBMS.properties`, fill in the datasource properties:
 
 ```yaml
 spring.datasource.url:
@@ -92,7 +103,8 @@ spring.datasource.username:
 spring.datasource.password:
 ```
 
-Please note that the `application-DBMS.properties` files activate Flyway to automatically set up the database structure (tables, constraints, etc.) and the minimum required functional data.
+Please note that the `application-DBMS.properties` files activate Flyway to automatically set up the database
+structure (tables, constraints, etc.) and the minimum required functional data.
 
 ### Authentication
 
@@ -100,13 +112,15 @@ Suricate provides multiple types of authentication that can be activated or deac
 
 #### LDAP vs Database
 
-You can log in to Suricate using either LDAP or a database after the sign-up step. You can specify these authentication modes using the following YAML property:
+You can log in to Suricate using either LDAP or a database after the sign-up step. You can specify these authentication
+modes using the following YAML property:
 
 ```yaml
 application.authentication.provider: ### Provider should be 'database' or 'ldap'
 ```
 
-If you choose the `database` authentication mode, it is ready to use without any additional configuration. However, if you choose the ldap mode, you must specify the following additional properties:
+If you choose the `database` authentication mode, it is ready to use without any additional configuration. However, if
+you choose the ldap mode, you must specify the following additional properties:
 
 ```yaml
 application.authentication.ldap.url=
@@ -122,9 +136,12 @@ application.authentication.ldap.userDnPatterns=
 
 #### Social Login
 
-Suricate supports authentication with GitHub and GitLab. You can configure social login using the `application-social-login.properties` file, which you can activate by running the application with the `social-login` profile.
+Suricate supports authentication with GitHub and GitLab. You can configure social login using
+the `application-social-login.properties` file, which you can activate by running the application with
+the `social-login` profile.
 
-When you activate social login, you can activate or deactivate a social login mode by adding or removing it from the property:
+When you activate social login, you can activate or deactivate a social login mode by adding or removing it from the
+property:
 
 ```yaml
 application.authentication.socialProviders=gitlab,github
@@ -167,15 +184,17 @@ spring.security.oauth2.client.provider.gitlab.user-name-attribute=username
 
 ##### Redirection to Front-End
 
-The social login is based on OAuth2/OIDC and is handled by the Back-End. After a successful or failed authentication with a social network, the Back-End redirects to the Front-End.
+The social login is based on OAuth2/OIDC and is handled by the Back-End. After a successful or failed authentication
+with a social network, the Back-End redirects to the Front-End.
 
 The Back-End uses the following methods to redirect to the Front-End in this order:
 
-- A given _redirect_uri_ query parameter provided by the Front-End to the Back-End in the authorization request (e.g., http://localhost:8080/api/oauth2/authorization/github?redirect_uri=localhost:4200/login).
+- A given _redirect_uri_ query parameter provided by the Front-End to the Back-End in the authorization request (
+  e.g., http://localhost:8080/api/oauth2/authorization/github?redirect_uri=localhost:4200/login).
 - The referer in this authorization, but it can be hidden or lost after a redirection to the ID provider.
 - A default target URL defined in the Back-End.
 
-The first option is currently used. 
+The first option is currently used.
 
 The other options are defined by the following properties:
 
@@ -186,7 +205,9 @@ application.authentication.oauth2.useReferer=false
 
 ##### Name Parsing Strategy
 
-By default, Suricate parses the user's first name and last name from the ID provider using the format "Firstname Lastname". However, you can also configure Suricate to parse the first name and last name based on the case (upper/lower) using the following property:
+By default, Suricate parses the user's first name and last name from the ID provider using the format "Firstname
+Lastname". However, you can also configure Suricate to parse the first name and last name based on the case (
+upper/lower) using the following property:
 
 ```yaml
 application.authentication.socialProvidersConfig.<provider>.nameCaseParse=true
@@ -196,7 +217,8 @@ Simply replace `<provider>` with the appropriate social provider, such as `githu
 
 #### Personal Access Token
 
-The application allows for the generation of personal access tokens, which can be used for authentication. The following properties are used for token generation and verification:
+The application allows for the generation of personal access tokens, which can be used for authentication. The following
+properties are used for token generation and verification:
 
 ```yaml
 application.authentication.pat.prefix=sup
@@ -209,20 +231,26 @@ The _prefix_ is used by the application to identify the token type and parse it.
 
 ### Repositories
 
-The first time you start the application, you'll need to configure a repository of widgets. To do this, navigate to the repositories tab and add a new repository. You can choose to add either a local or remote repository (such as GitLab or GitHub).
+The first time you start the application, you'll need to configure a repository of widgets. To do this, navigate to the
+repositories tab and add a new repository. You can choose to add either a local or remote repository (such as GitLab or
+GitHub).
 
-If you don't have a repository yet, you can create your own widgets repository by following the instructions provided in [the official open-source widgets GitHub repository](https://github.com/michelin/suricate-widgets), or use this repository directly.
+If you don't have a repository yet, you can create your own widgets repository by following the instructions provided
+in [the official open-source widgets GitHub repository](https://github.com/michelin/suricate-widgets), or use this
+repository directly.
 
 To configure this repository in Suricate, use the following settings:
 
 ```yaml
-Name: [Enter a name of your choice]
-URL : https://github.com/michelin/suricate-widgets.git
+Name: [ Enter a name of your choice ]
+URL: https://github.com/michelin/suricate-widgets.git
 branch: master
-login: [Your GitHub login]
-password: [Your GitHub password]
+login: [ Your GitHub login ]
+password: [ Your GitHub password ]
 ```
 
 ## Contribution
 
-We welcome contributions from the community! Before you get started, please take a look at our [contribution guide](https://github.com/michelin/suricate/blob/master/CONTRIBUTING.md) to learn about our guidelines and best practices. We appreciate your help in making Suricate a better tool for everyone.
+We welcome contributions from the community! Before you get started, please take a look at
+our [contribution guide](https://github.com/michelin/suricate/blob/master/CONTRIBUTING.md) to learn about our guidelines
+and best practices. We appreciate your help in making Suricate a better tool for everyone.

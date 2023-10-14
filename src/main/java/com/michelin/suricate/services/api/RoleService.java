@@ -16,23 +16,26 @@
 
 package com.michelin.suricate.services.api;
 
+import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.repositories.RoleRepository;
 import com.michelin.suricate.services.specifications.RoleSearchSpecification;
-import com.michelin.suricate.model.entities.Role;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
+/**
+ * Role service.
+ */
 @Service
 public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
     /**
-     * Get a role by name
+     * Get a role by name.
+     *
      * @param roleName The role name to find
      * @return The role as optional
      */
@@ -41,7 +44,8 @@ public class RoleService {
     }
 
     /**
-     * Get the full list of roles
+     * Get the full list of roles.
+     *
      * @return The roles
      */
     public Page<Role> getRoles(String search, Pageable pageable) {
@@ -49,7 +53,8 @@ public class RoleService {
     }
 
     /**
-     * Get a role by id
+     * Get a role by id.
+     *
      * @param id The id of the role
      * @return The related role
      */

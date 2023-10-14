@@ -22,17 +22,19 @@ import com.michelin.suricate.model.entities.ProjectGrid;
 import com.michelin.suricate.repositories.LibraryRepository;
 import com.michelin.suricate.services.specifications.LibrarySearchSpecification;
 import com.michelin.suricate.utils.IdUtils;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
+/**
+ * Library service.
+ */
 @Service
 public class LibraryService {
     @Autowired
@@ -42,7 +44,8 @@ public class LibraryService {
     private AssetService assetService;
 
     /**
-     * Get all the libraries
+     * Get all the libraries.
+     *
      * @return The list of libraries
      */
     @Transactional(readOnly = true)
@@ -51,19 +54,20 @@ public class LibraryService {
     }
 
     /**
-     * Get all libraries of a project
+     * Get all libraries of a project.
+     *
      * @param project The project
      * @return The libraries
      */
     @Transactional(readOnly = true)
     public List<Library> getLibrariesByProject(Project project) {
         List<Long> widgetIds = project.getGrids()
-                .stream()
-                .map(ProjectGrid::getWidgets)
-                .flatMap(Collection::stream)
-                .map(projectWidget -> projectWidget.getWidget().getId())
-                .distinct()
-                .collect(Collectors.toList());
+            .stream()
+            .map(ProjectGrid::getWidgets)
+            .flatMap(Collection::stream)
+            .map(projectWidget -> projectWidget.getWidget().getId())
+            .distinct()
+            .collect(Collectors.toList());
 
         if (widgetIds.isEmpty()) {
             return Collections.emptyList();
@@ -73,21 +77,23 @@ public class LibraryService {
     }
 
     /**
-     * Get all library tokens of a project
+     * Get all library tokens of a project.
+     *
      * @param project The project
      * @return The library tokens
      */
     @Transactional(readOnly = true)
     public List<String> getLibraryTokensByProject(Project project) {
         return getLibrariesByProject(project)
-                .stream()
-                .map(library -> library.getAsset().getId())
-                .map(IdUtils::encrypt)
-                .collect(Collectors.toList());
+            .stream()
+            .map(library -> library.getAsset().getId())
+            .map(IdUtils::encrypt)
+            .collect(Collectors.toList());
     }
 
     /**
-     * Create or update a list of libraries
+     * Create or update a list of libraries.
+     *
      * @param libraries All the libraries to create/update
      * @return The created/updated libraries
      */

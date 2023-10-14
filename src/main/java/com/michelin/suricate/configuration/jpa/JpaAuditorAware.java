@@ -1,17 +1,17 @@
 package com.michelin.suricate.configuration.jpa;
 
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Optional;
-
 /**
- * Update auditing column at each request
+ * JPA Auditor Aware.
  */
-public class JPAAuditorAwareImpl implements AuditorAware<String> {
+public class JpaAuditorAware implements AuditorAware<String> {
     /**
-     * Get the current logged in user
+     * Get the current logged-in user.
+     *
      * @return The auditor username
      */
     @NotNull

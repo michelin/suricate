@@ -19,61 +19,44 @@ package com.michelin.suricate.model.dto.js;
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import com.michelin.suricate.model.enums.JsExecutionErrorTypeEnum;
 import com.michelin.suricate.utils.JsonUtils;
-import lombok.*;
-
 import java.util.Date;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+/**
+ * Js result DTO.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
 public class JsResultDto extends AbstractDto {
-
-    /**
-     * The new calculated data
-     */
     private String data;
-
-    /**
-     * the log data
-     */
     private String log;
-
-    /**
-     * The project ID
-     */
     private Long projectId;
-
-    /**
-     * The projectWidget ID
-     */
     private Long projectWidgetId;
-
-    /**
-     * Launch date
-     */
     private Date launchDate;
-
-    /**
-     * Error
-     */
     private JsExecutionErrorTypeEnum error;
 
     /**
-     * Check if the Js result is valid
+     * Check if the Js result is valid.
      *
      * @return true if the Js result is valid, false otherwise
      */
     public boolean isValid() {
         return JsonUtils.isValid(data)
-                && projectId != null
-                && projectWidgetId != null
-                && error == null;
+            && projectId != null
+            && projectWidgetId != null
+            && error == null;
     }
 
     /**
-     * Check if the Js error result type is fatal
+     * Check if the Js error result type is fatal.
+     *
      * @return true if the Js error result is fatal, false otherwise
      */
     public boolean isFatal() {

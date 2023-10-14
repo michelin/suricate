@@ -18,9 +18,12 @@
 
 package com.michelin.suricate.utils.exceptions.js;
 
+/**
+ * Request exception.
+ */
 public class RequestException extends Exception {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param message The error message
      */

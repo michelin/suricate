@@ -21,7 +21,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository used to manage Asset data
+ * Asset repository.
  */
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, Long> {

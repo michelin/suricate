@@ -18,6 +18,8 @@
 
 package com.michelin.suricate.integrations;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.michelin.suricate.model.entities.AllowedSettingValue;
 import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.model.entities.Setting;
@@ -26,6 +28,9 @@ import com.michelin.suricate.model.enums.SettingType;
 import com.michelin.suricate.repositories.AllowedSettingValueRepository;
 import com.michelin.suricate.repositories.RoleRepository;
 import com.michelin.suricate.repositories.SettingRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,16 +41,16 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @Testcontainers
 @ActiveProfiles("integration-test-postgresql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PostgreSQLIntegrationTest {
+class PostgreSqlIntegrationTest {
+    @Container
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres")
+        .withDatabaseName("suricate")
+        .withUsername("sa")
+        .withPassword("sa");
+
     @Autowired
     private SettingRepository settingRepository;
 
@@ -54,12 +59,6 @@ class PostgreSQLIntegrationTest {
 
     @Autowired
     private RoleRepository roleRepository;
-
-    @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres")
-            .withDatabaseName("suricate")
-            .withUsername("sa")
-            .withPassword("sa");
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {

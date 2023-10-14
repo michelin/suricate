@@ -1,9 +1,26 @@
 package com.michelin.suricate.services.api;
 
-import com.michelin.suricate.model.entities.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.michelin.suricate.model.entities.Asset;
+import com.michelin.suricate.model.entities.Library;
+import com.michelin.suricate.model.entities.Library_;
+import com.michelin.suricate.model.entities.Project;
+import com.michelin.suricate.model.entities.ProjectGrid;
+import com.michelin.suricate.model.entities.ProjectWidget;
+import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.repositories.LibraryRepository;
 import com.michelin.suricate.services.specifications.LibrarySearchSpecification;
 import com.michelin.suricate.utils.IdUtils;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.metamodel.SingularAttribute;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,14 +31,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import javax.persistence.metamodel.SingularAttribute;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LibraryServiceTest {
@@ -44,18 +53,19 @@ class LibraryServiceTest {
 
         Library_.technicalName = technicalName;
         when(libraryRepository.findAll(any(LibrarySearchSpecification.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Collections.singletonList(library)));
+            .thenReturn(new PageImpl<>(Collections.singletonList(library)));
 
         Page<Library> actual = libraryService.getAll("search", Pageable.unpaged());
 
         assertThat(actual)
-                .isNotEmpty()
-                .contains(library);
+            .isNotEmpty()
+            .contains(library);
 
         verify(libraryRepository)
-                .findAll(Mockito.<LibrarySearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
-                                specification.getAttributes().contains(technicalName.getName())),
-                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
+            .findAll(Mockito.<LibrarySearchSpecification>argThat(
+                    specification -> specification.getSearch().equals("search")
+                        && specification.getAttributes().contains(technicalName.getName())),
+                Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -68,7 +78,7 @@ class LibraryServiceTest {
         assertThat(actual).isEmpty();
 
         verify(libraryRepository, times(0))
-                .findDistinctByWidgetsIdIn(any());
+            .findDistinctByWidgetsIdIn(any());
     }
 
     @Test
@@ -88,16 +98,16 @@ class LibraryServiceTest {
         Library library = new Library();
 
         when(libraryRepository.findDistinctByWidgetsIdIn(any()))
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
 
         List<Library> actual = libraryService.getLibrariesByProject(project);
 
         assertThat(actual)
-                .isNotEmpty()
-                .contains(library);
+            .isNotEmpty()
+            .contains(library);
 
         verify(libraryRepository)
-                .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
+            .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
     }
 
     @Test
@@ -122,17 +132,17 @@ class LibraryServiceTest {
             library.setAsset(asset);
 
             mocked.when(() -> IdUtils.encrypt(1L))
-                    .thenReturn("token");
+                .thenReturn("token");
             when(libraryRepository.findDistinctByWidgetsIdIn(any()))
-                    .thenReturn(Collections.singletonList(library));
+                .thenReturn(Collections.singletonList(library));
 
             List<String> actual = libraryService.getLibraryTokensByProject(project);
             assertThat(actual)
-                    .isNotEmpty()
-                    .contains("token");
+                .isNotEmpty()
+                .contains("token");
 
             verify(libraryRepository)
-                    .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
+                .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
         }
     }
 
@@ -143,13 +153,13 @@ class LibraryServiceTest {
         assertThat(actual).isEmpty();
 
         verify(libraryRepository, times(0))
-                .findByTechnicalName(any());
+            .findByTechnicalName(any());
         verify(assetService, times(0))
-                .save(any());
+            .save(any());
         verify(libraryRepository, times(0))
-                .saveAll(any());
+            .saveAll(any());
         verify(libraryRepository, times(0))
-                .findAll();
+            .findAll();
     }
 
     @Test
@@ -162,28 +172,28 @@ class LibraryServiceTest {
         library.setTechnicalName("technicalName");
 
         when(libraryRepository.findByTechnicalName(any()))
-                .thenReturn(null);
+            .thenReturn(null);
         when(assetService.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
         when(libraryRepository.saveAll(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
         when(libraryRepository.findAll())
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
 
         List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
 
         assertThat(actual)
-                .isNotEmpty()
-                .contains(library);
+            .isNotEmpty()
+            .contains(library);
 
         verify(libraryRepository)
-                .findByTechnicalName("technicalName");
+            .findByTechnicalName("technicalName");
         verify(assetService)
-                .save(asset);
+            .save(asset);
         verify(libraryRepository)
-                .saveAll(Collections.singletonList(library));
+            .saveAll(Collections.singletonList(library));
         verify(libraryRepository)
-                .findAll();
+            .findAll();
     }
 
     @Test
@@ -192,26 +202,26 @@ class LibraryServiceTest {
         library.setTechnicalName("technicalName");
 
         when(libraryRepository.findByTechnicalName(any()))
-                .thenReturn(null);
+            .thenReturn(null);
         when(libraryRepository.saveAll(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
         when(libraryRepository.findAll())
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
 
         List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
 
         assertThat(actual)
-                .isNotEmpty()
-                .contains(library);
+            .isNotEmpty()
+            .contains(library);
 
         verify(libraryRepository)
-                .findByTechnicalName("technicalName");
+            .findByTechnicalName("technicalName");
         verify(assetService, times(0))
-                .save(any());
+            .save(any());
         verify(libraryRepository)
-                .saveAll(Collections.singletonList(library));
+            .saveAll(Collections.singletonList(library));
         verify(libraryRepository)
-                .findAll();
+            .findAll();
     }
 
     @Test
@@ -228,13 +238,13 @@ class LibraryServiceTest {
         library.setTechnicalName("technicalName");
 
         when(libraryRepository.findByTechnicalName(any()))
-                .thenReturn(oldLibrary);
+            .thenReturn(oldLibrary);
         when(assetService.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
         when(libraryRepository.saveAll(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
         when(libraryRepository.findAll())
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
 
         List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
 
@@ -244,13 +254,13 @@ class LibraryServiceTest {
         assertThat(actual.get(0).getAsset().getId()).isEqualTo(2L);
 
         verify(libraryRepository)
-                .findByTechnicalName("technicalName");
+            .findByTechnicalName("technicalName");
         verify(assetService)
-                .save(argThat(createdAsset -> createdAsset.getId().equals(2L)));
+            .save(argThat(createdAsset -> createdAsset.getId().equals(2L)));
         verify(libraryRepository)
-                .saveAll(Collections.singletonList(library));
+            .saveAll(Collections.singletonList(library));
         verify(libraryRepository)
-                .findAll();
+            .findAll();
     }
 
     @Test
@@ -263,13 +273,13 @@ class LibraryServiceTest {
         library.setTechnicalName("technicalName");
 
         when(libraryRepository.findByTechnicalName(any()))
-                .thenReturn(oldLibrary);
+            .thenReturn(oldLibrary);
         when(assetService.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
         when(libraryRepository.saveAll(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
         when(libraryRepository.findAll())
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
 
         List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
 
@@ -279,12 +289,12 @@ class LibraryServiceTest {
         assertThat(actual.get(0).getAsset()).isNotNull();
 
         verify(libraryRepository)
-                .findByTechnicalName("technicalName");
+            .findByTechnicalName("technicalName");
         verify(assetService)
-                .save(argThat(createdAsset -> createdAsset.getId() == null));
+            .save(argThat(createdAsset -> createdAsset.getId() == null));
         verify(libraryRepository)
-                .saveAll(Collections.singletonList(library));
+            .saveAll(Collections.singletonList(library));
         verify(libraryRepository)
-                .findAll();
+            .findAll();
     }
 }

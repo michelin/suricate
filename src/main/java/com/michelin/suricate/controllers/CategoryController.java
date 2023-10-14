@@ -18,15 +18,15 @@
 
 package com.michelin.suricate.controllers;
 
+import com.michelin.suricate.configuration.swagger.ApiPageable;
 import com.michelin.suricate.model.dto.api.category.CategoryResponseDto;
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.dto.api.widget.WidgetResponseDto;
-import com.michelin.suricate.services.mapper.CategoryMapper;
-import com.michelin.suricate.services.mapper.WidgetMapper;
-import com.michelin.suricate.configuration.swagger.ApiPageable;
 import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.services.api.CategoryService;
 import com.michelin.suricate.services.api.WidgetService;
+import com.michelin.suricate.services.mapper.CategoryMapper;
+import com.michelin.suricate.services.mapper.WidgetMapper;
 import com.michelin.suricate.utils.exceptions.NoContentException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,6 +35,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.Optional;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,11 +44,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Category controller.
+ */
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Category", description = "Category Controller")
@@ -64,15 +70,19 @@ public class CategoryController {
     private WidgetMapper widgetMapper;
 
     /**
-     * Get the list of widget categories
+     * Get the list of widget categories.
+     *
      * @return A list of category
      */
     @Operation(summary = "Get the full list of widget categories")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "204", description = "No Content", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "204", description = "No Content", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @ApiPageable
     @GetMapping(value = "/v1/categories")
@@ -80,11 +90,12 @@ public class CategoryController {
     public Page<CategoryResponseDto> getCategories(@Parameter(name = "search", description = "Search keyword")
                                                    @RequestParam(value = "search", required = false) String search,
                                                    @ParameterObject Pageable pageable) {
-        return categoryService.getAll(search, pageable).map(categoryMapper::toCategoryWithoutParametersDTO);
+        return categoryService.getAll(search, pageable).map(categoryMapper::toCategoryWithoutParametersDto);
     }
 
     /**
-     * Get every widget for a category
+     * Get every widget for a category.
+     *
      * @param categoryId The category id
      * @return The list of related widgets
      */
@@ -98,17 +109,18 @@ public class CategoryController {
     })
     @GetMapping(value = "/v1/categories/{categoryId}/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetResponseDto>> getWidgetByCategory(@Parameter(name = "categoryId", description = "The category id", required = true, example = "1")
-                                                                       @PathVariable("categoryId") Long categoryId) {
+    public ResponseEntity<List<WidgetResponseDto>> getWidgetByCategory(
+        @Parameter(name = "categoryId", description = "The category id", required = true, example = "1")
+        @PathVariable("categoryId") Long categoryId) {
         Optional<List<Widget>> widgetsOptional = widgetService.getWidgetsByCategory(categoryId);
 
-        if (!widgetsOptional.isPresent()) {
+        if (widgetsOptional.isEmpty()) {
             throw new NoContentException(Widget.class);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetMapper.toWidgetsDTOs(widgetsOptional.get()));
+            .body(widgetMapper.toWidgetsDtos(widgetsOptional.get()));
     }
 }

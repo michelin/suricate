@@ -18,11 +18,18 @@ package com.michelin.suricate.model.dto.websocket;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import com.michelin.suricate.model.enums.UpdateType;
-import lombok.*;
-
 import java.io.Serializable;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+/**
+ * Update event.
+ */
 @Builder
 @Getter
 @Setter

@@ -20,15 +20,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import com.michelin.suricate.model.enums.ApiErrorEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Date;
-
 /**
- * Used for send errors through webservices
+ * Api error dto.
  */
 @Data
 @NoArgsConstructor
@@ -48,6 +47,11 @@ public class ApiErrorDto extends AbstractDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date timestamp;
 
+    /**
+     * Constructor.
+     *
+     * @param apiErrorEnum The api error enum
+     */
     public ApiErrorDto(ApiErrorEnum apiErrorEnum) {
         this.message = apiErrorEnum.getMessage();
         this.key = apiErrorEnum.getKey();

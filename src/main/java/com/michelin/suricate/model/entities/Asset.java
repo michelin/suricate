@@ -18,14 +18,22 @@ package com.michelin.suricate.model.entities;
 
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
-
+/**
+ * Asset entity.
+ */
 @Entity
 @Getter
 @Setter
@@ -54,21 +62,27 @@ public class Asset extends AbstractAuditingEntity<Long> {
     }
 
     /**
-     * Hashcode method
-     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * Hashcode method.
+     * Do not use lombok @EqualsAndHashCode method as it calls super method
      * then call the self-defined child Hashcode method
+     *
      * @return The hash code
      */
     @Override
-    public int hashCode() { return super.hashCode(); }
+    public int hashCode() {
+        return super.hashCode();
+    }
 
     /**
-     * Equals method
-     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * Equals method.
+     * Do not use lombok @EqualsAndHashCode method as it calls super method
      * then call the self-defined child Equals method
+     *
      * @param other The other object to compare
      * @return true if equals, false otherwise
      */
     @Override
-    public boolean equals(Object other) { return super.equals(other); }
+    public boolean equals(Object other) {
+        return super.equals(other);
+    }
 }

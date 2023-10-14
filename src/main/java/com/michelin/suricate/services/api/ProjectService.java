@@ -17,7 +17,11 @@
 package com.michelin.suricate.services.api;
 
 import com.michelin.suricate.model.dto.websocket.UpdateEvent;
-import com.michelin.suricate.model.entities.*;
+import com.michelin.suricate.model.entities.Asset;
+import com.michelin.suricate.model.entities.Project;
+import com.michelin.suricate.model.entities.ProjectGrid;
+import com.michelin.suricate.model.entities.ProjectWidget;
+import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.enums.UpdateType;
 import com.michelin.suricate.repositories.ProjectRepository;
 import com.michelin.suricate.security.LocalUser;
@@ -25,6 +29,9 @@ import com.michelin.suricate.services.specifications.ProjectSearchSpecification;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.utils.SecurityUtils;
 import com.michelin.suricate.utils.logging.LogExecutionTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +41,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+/**
+ * Project service.
+ */
 @Service
 public class ProjectService {
     @Autowired
@@ -60,7 +66,8 @@ public class ProjectService {
     private ProjectWidgetService projectWidgetService;
 
     /**
-     * Get the list of projects
+     * Get the list of projects.
+     *
      * @param search   The search string
      * @param pageable The page configurations
      * @return The list paginated
@@ -71,7 +78,8 @@ public class ProjectService {
     }
 
     /**
-     * Get all projects by user
+     * Get all projects by user.
+     *
      * @param user The user
      * @return A list of projects
      */
@@ -81,7 +89,8 @@ public class ProjectService {
     }
 
     /**
-     * Get a project by the project id
+     * Get a project by the project id.
+     *
      * @param id The id of the project
      * @return The project associated
      */
@@ -92,7 +101,8 @@ public class ProjectService {
     }
 
     /**
-     * Get a project by its token
+     * Get a project by its token.
+     *
      * @param token The token to find
      * @return The project
      */
@@ -102,7 +112,8 @@ public class ProjectService {
     }
 
     /**
-     * Create a new project
+     * Create a new project.
+     *
      * @param project The project to instantiate
      * @return The project instantiate
      */
@@ -116,7 +127,8 @@ public class ProjectService {
     }
 
     /**
-     * Create a new project for a user
+     * Create a new project for a user.
+     *
      * @param user    The user how create the project
      * @param project The project to instantiate
      * @return The project instantiate
@@ -128,8 +140,9 @@ public class ProjectService {
     }
 
     /**
-     * Create or update a list of projects
-     * @param projects All the projects to create/update
+     * Create or update a list of projects.
+     *
+     * @param projects      All the projects to create/update
      * @param connectedUser The connected user
      * @return The created/updated projects
      */
@@ -155,7 +168,8 @@ public class ProjectService {
             }
 
             project.getGrids().forEach(projectGrid -> {
-                Optional<ProjectGrid> projectGridOptional = projectGridService.findByIdAndProjectToken(projectGrid.getId(), project.getToken());
+                Optional<ProjectGrid> projectGridOptional =
+                    projectGridService.findByIdAndProjectToken(projectGrid.getId(), project.getToken());
                 if (projectGridOptional.isPresent()) {
                     projectGrid.setId(projectGridOptional.get().getId());
                 } else {
@@ -167,7 +181,8 @@ public class ProjectService {
                 projectGridService.create(projectGrid);
 
                 projectGrid.getWidgets().forEach(projectWidget -> {
-                    Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByIdAndProjectGridId(projectWidget.getId(), projectGrid.getId());
+                    Optional<ProjectWidget> projectWidgetOptional =
+                        projectWidgetService.findByIdAndProjectGridId(projectWidget.getId(), projectGrid.getId());
                     if (projectWidgetOptional.isPresent()) {
                         projectWidget.setId(projectWidgetOptional.get().getId());
                     } else {
@@ -185,16 +200,17 @@ public class ProjectService {
     }
 
     /**
-     * Method used to update a project
+     * Method used to update a project.
+     *
      * @param project      the project to update
      * @param newName      the new name
      * @param widgetHeight The new widget height
      * @param maxColumn    The new max column
-     * @param customCSS    The custom CSS style
+     * @param customCss    The custom CSS style
      */
     @Transactional
     public void updateProject(Project project, final String newName, final int widgetHeight, final int maxColumn,
-                              final String customCSS) {
+                              final String customCss) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
@@ -207,18 +223,20 @@ public class ProjectService {
             project.setMaxColumn(maxColumn);
         }
 
-        if (StringUtils.isNotBlank(customCSS)) {
-            project.setCssStyle(customCSS);
+        if (StringUtils.isNotBlank(customCss)) {
+            project.setCssStyle(customCss);
         }
 
         projectRepository.save(project);
 
         // Update grid
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build());
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(),
+            UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build());
     }
 
     /**
-     * Delete a user from a project
+     * Delete a user from a project.
+     *
      * @param user    The user to delete
      * @param project The project related
      */
@@ -228,7 +246,8 @@ public class ProjectService {
     }
 
     /**
-     * Method used for retrieve a project token from a project id
+     * Method used for retrieve a project token from a project id.
+     *
      * @param projectId The project id
      * @return The related token
      */
@@ -237,28 +256,33 @@ public class ProjectService {
     }
 
     /**
-     * Check if the connected user can access to this project
-     * @param project        The project
+     * Check if the connected user can access to this project.
+     *
+     * @param project       The project
      * @param connectedUser The connected user
      * @return True if he can, false otherwise
      */
     public boolean isConnectedUserCanAccessToProject(final Project project, final LocalUser connectedUser) {
         return SecurityUtils.isAdmin(connectedUser)
-            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(connectedUser.getUsername()));
+            || project.getUsers().stream()
+            .anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(connectedUser.getUsername()));
     }
 
     /**
-     * Method used to delete a project with its ID
+     * Method used to delete a project with its ID.
+     *
      * @param project The project to delete
      */
     @Transactional
     public void deleteProject(Project project) {
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(),
+            UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
         projectRepository.delete(project);
     }
 
     /**
-     * Add or update a screenshot for a project
+     * Add or update a screenshot for a project.
+     *
      * @param project     The project
      * @param content     The image content
      * @param contentType The image content type

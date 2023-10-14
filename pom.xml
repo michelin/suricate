@@ -22,10 +22,12 @@
     </parent>
 
     <properties>
+        <checkstyle.version>10.12.4</checkstyle.version>
         <packaging.type>jar</packaging.type>
         <java.version>17</java.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <apacheds.version>2.0.0.AM26</apacheds.version>
+        <maven.checkstyle.plugin>3.3.0</maven.checkstyle.plugin>
         <mockito.version>4.11.0</mockito.version>
         <testcontainers.version>1.19.1</testcontainers.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -352,6 +354,37 @@
                         </tags>
                     </to>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.plugin}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configLocation>.checkstyle/checkstyle.xml</configLocation>
+                    <sourceDirectories>
+                        <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                        <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
+                    </sourceDirectories>
+                    <violationSeverity>info</violationSeverity>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-style</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

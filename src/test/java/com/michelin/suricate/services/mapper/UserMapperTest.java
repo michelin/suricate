@@ -1,5 +1,9 @@
 package com.michelin.suricate.services.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.role.RoleResponseDto;
 import com.michelin.suricate.model.dto.api.user.AdminUserResponseDto;
 import com.michelin.suricate.model.dto.api.user.UserRequestDto;
@@ -8,6 +12,8 @@ import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.enums.AuthenticationProvider;
 import com.michelin.suricate.model.enums.UserRoleEnum;
+import java.util.Collections;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,13 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserMapperTest {
@@ -35,7 +34,7 @@ class UserMapperTest {
     private UserMapperImpl userMapper;
 
     @Test
-    void shouldToAdminUserDTO() {
+    void shouldToAdminUserDto() {
         Role role = new Role();
         role.setId(1L);
 
@@ -52,10 +51,10 @@ class UserMapperTest {
         roleResponseDto.setDescription("description");
         roleResponseDto.setName(UserRoleEnum.ROLE_USER);
 
-        when(roleMapper.toRoleDTO(any()))
-                .thenReturn(roleResponseDto);
+        when(roleMapper.toRoleDto(any()))
+            .thenReturn(roleResponseDto);
 
-        AdminUserResponseDto actual = userMapper.toAdminUserDTO(user);
+        AdminUserResponseDto actual = userMapper.toAdminUserDto(user);
 
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.getEmail()).isEqualTo("email");
@@ -66,7 +65,7 @@ class UserMapperTest {
     }
 
     @Test
-    void shouldToUserDTO() {
+    void shouldToUserDto() {
         Role role = new Role();
         role.setId(1L);
 
@@ -78,7 +77,7 @@ class UserMapperTest {
         user.setEmail("email");
         user.setRoles(Collections.singleton(role));
 
-        UserResponseDto actual = userMapper.toUserDTO(user);
+        UserResponseDto actual = userMapper.toUserDto(user);
 
         assertThat(actual.getFirstname()).isEqualTo("firstname");
         assertThat(actual.getLastname()).isEqualTo("lastname");
@@ -86,7 +85,7 @@ class UserMapperTest {
     }
 
     @Test
-    void shouldToUsersDTOs() {
+    void shouldToUsersDtos() {
         Role role = new Role();
         role.setId(1L);
 
@@ -98,7 +97,7 @@ class UserMapperTest {
         user.setEmail("email");
         user.setRoles(Collections.singleton(role));
 
-        List<UserResponseDto> actual = userMapper.toUsersDTOs(Collections.singletonList(user));
+        List<UserResponseDto> actual = userMapper.toUsersDtos(Collections.singletonList(user));
 
         assertThat(actual.get(0).getFirstname()).isEqualTo("firstname");
         assertThat(actual.get(0).getLastname()).isEqualTo("lastname");
@@ -108,7 +107,7 @@ class UserMapperTest {
     @Test
     void shouldConnectedUserToUserEntity() {
         User actual = userMapper.connectedUserToUserEntity("username", "firstname", "lastname", "email", "url",
-                AuthenticationProvider.GITLAB);
+            AuthenticationProvider.GITLAB);
 
         assertThat(actual.getUsername()).isEqualTo("username");
         assertThat(actual.getFirstname()).isEqualTo("firstname");
@@ -131,7 +130,7 @@ class UserMapperTest {
         userRequestDto.setRoles(Collections.singletonList(UserRoleEnum.ROLE_USER));
 
         when(passwordEncoder.encode(any()))
-                .thenReturn("encoded");
+            .thenReturn("encoded");
 
         User actual = userMapper.toUserEntity(userRequestDto, AuthenticationProvider.GITHUB);
 

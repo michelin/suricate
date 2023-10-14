@@ -22,15 +22,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
 /**
- * Manage the generation DTO/Model objects for Role class
+ * Role mapper.
  */
 @Mapper(componentModel = "spring")
 public abstract class RoleMapper {
     /**
-     * Map a role into a DTO
+     * Map a role into a DTO.
+     *
      * @param role The project to map
      * @return The role as DTO
      */
-    @Named("toRoleDTO")
-    public abstract RoleResponseDto toRoleDTO(Role role);
+    @Named("toRoleDto")
+    public abstract RoleResponseDto toRoleDto(Role role);
 }

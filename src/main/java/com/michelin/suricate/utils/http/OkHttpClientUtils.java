@@ -18,21 +18,26 @@
 
 package com.michelin.suricate.utils.http;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
+/**
+ * OK Http client utils.
+ */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OkHttpClientUtils {
     private static final int READ_TIMEOUT = 300;
 
@@ -40,17 +45,16 @@ public final class OkHttpClientUtils {
 
     private static final int CONNECT_TIMEOUT = 300;
 
-    private OkHttpClientUtils() { }
-
     /**
-     * Get an instance of OkHttpClient without certificates validation
+     * Get an instance of OkHttpClient without certificates validation.
+     *
      * @return An OkHttpClient instance
      */
     public static OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificates chain
             final TrustManager[] trustManager = new TrustManager[] {
-                    new AllTrustingTrustManager()
+                new AllTrustingTrustManager()
             };
 
             // Install the all-trusting trust manager
