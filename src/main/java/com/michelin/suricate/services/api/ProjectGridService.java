@@ -4,7 +4,7 @@ import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.model.entities.ProjectGrid;
 import com.michelin.suricate.repositories.ProjectGridRepository;
 import com.michelin.suricate.repositories.ProjectRepository;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridRequestDto;
 import com.michelin.suricate.model.dto.websocket.UpdateEvent;
@@ -98,7 +98,7 @@ public class ProjectGridService {
             ProjectGrid projectGrid = projectGridOptional.get();
 
             if (!projectGrid.getWidgets().isEmpty()) {
-                ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetsExecutionByGrid(projectGrid);
+                ctx.getBean(JsExecutionScheduler.class).cancelWidgetsExecutionByGrid(projectGrid);
             }
 
             projectGridRepository.deleteByProjectIdAndId(project.getId(), id);

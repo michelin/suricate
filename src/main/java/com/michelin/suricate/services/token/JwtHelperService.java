@@ -5,12 +5,12 @@ import io.jsonwebtoken.*;
 import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.security.LocalUser;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,7 @@ public class JwtHelperService {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + applicationProperties.getAuthentication().getJwt().getTokenValidityMs());
 
-        Map<String, Object> claims = new HashedMap<>();
+        Map<String, Object> claims = new HashMap<>();
         claims.put("firstname", userPrincipal.getUser().getFirstname());
         claims.put("lastname", userPrincipal.getUser().getLastname());
         claims.put("email", userPrincipal.getUser().getEmail());

@@ -7,7 +7,7 @@ import com.michelin.suricate.model.entities.ProjectWidget;
 import com.michelin.suricate.model.enums.UpdateType;
 import com.michelin.suricate.repositories.ProjectGridRepository;
 import com.michelin.suricate.repositories.ProjectRepository;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ class ProjectGridServiceTest {
     private ProjectGridRepository projectGridRepository;
 
     @Mock
-    private NashornRequestWidgetExecutionScheduler nashornRequestWidgetExecutionScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @InjectMocks
     private ProjectGridService projectGridService;
@@ -156,8 +156,8 @@ class ProjectGridServiceTest {
 
         when(projectGridRepository.findById(any()))
                 .thenReturn(Optional.of(projectGrid));
-        when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
-                .thenReturn(nashornRequestWidgetExecutionScheduler);
+        when(ctx.getBean(JsExecutionScheduler.class))
+                .thenReturn(jsExecutionScheduler);
 
         projectGridService.deleteByProjectIdAndId(project, 1L);
 
@@ -166,7 +166,7 @@ class ProjectGridServiceTest {
         verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
                         event.getDate() != null));
-        verify(nashornRequestWidgetExecutionScheduler)
+        verify(jsExecutionScheduler)
                 .cancelWidgetsExecutionByGrid(projectGrid);
     }
 
@@ -189,7 +189,7 @@ class ProjectGridServiceTest {
         verify(dashboardWebsocketService)
                 .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
                         event.getDate() != null));
-        verify(nashornRequestWidgetExecutionScheduler, times(0))
+        verify(jsExecutionScheduler, times(0))
                 .cancelWidgetsExecutionByGrid(any());
     }
 }

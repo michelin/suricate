@@ -1,7 +1,7 @@
 package com.michelin.suricate.services.api;
 
 import com.michelin.suricate.model.dto.api.widget.WidgetRequestDto;
-import com.michelin.suricate.model.dto.nashorn.WidgetVariableResponse;
+import com.michelin.suricate.model.dto.js.WidgetVariableResponseDto;
 import com.michelin.suricate.model.entities.*;
 import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
@@ -173,7 +173,7 @@ class WidgetServiceTest {
     }
 
     @Test
-    void shouldGetWidgetParametersForNashorn() {
+    void shouldGetWidgetParametersForJsExecution() {
         WidgetParam widgetParam = new WidgetParam();
         widgetParam.setId(1L);
         widgetParam.setName("Name1");
@@ -213,7 +213,7 @@ class WidgetServiceTest {
         when(categoryService.getCategoryParametersByWidget(any()))
                 .thenReturn(Arrays.asList(widgetParam, widgetParamTwo, widgetParamThree, widgetParamFour));
 
-        List<WidgetVariableResponse> actual = widgetService.getWidgetParametersForNashorn(widget);
+        List<WidgetVariableResponseDto> actual = widgetService.getWidgetParametersForJsExecution(widget);
 
         assertThat(actual)
                 .hasSize(4);

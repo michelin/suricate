@@ -16,7 +16,7 @@
 
 package com.michelin.suricate.utils;
 
-import com.michelin.suricate.services.nashorn.script.NashornWidgetScript;
+import com.michelin.suricate.services.js.script.JsEndpoints;
 import org.apache.commons.lang3.StringUtils;
 
 public final class JavaScriptUtils {
@@ -44,7 +44,7 @@ public final class JavaScriptUtils {
     /**
      * Full path to the checkInterrupted Java method
      */
-    private static final String INJECT_INTERRUPT_STRING = JavaScriptUtils.PACKAGES_LITERAL + NashornWidgetScript.class.getName() + ".checkInterrupted();";
+    private static final String INJECT_INTERRUPT_STRING = JavaScriptUtils.PACKAGES_LITERAL + JsEndpoints.class.getName() + ".checkInterrupted();";
 
     /**
      * Constructor
@@ -52,7 +52,7 @@ public final class JavaScriptUtils {
     private JavaScriptUtils() { }
 
     /**
-     * Method used to prepare Nashorn script and update path
+     * Method used to prepare Js execution and update path
      *
      * @param data javascript script
      * @return the script with all class path updated
@@ -60,7 +60,7 @@ public final class JavaScriptUtils {
     public static String prepare(String data) {
         return injectInterrupt(
                 StringUtils.trimToEmpty(data).replace(
-                        JavaScriptUtils.PACKAGES_LITERAL, JavaScriptUtils.PACKAGES_LITERAL + NashornWidgetScript.class.getName() + "."));
+                        JavaScriptUtils.PACKAGES_LITERAL, JavaScriptUtils.PACKAGES_LITERAL + JsEndpoints.class.getName() + "."));
     }
 
     /**

@@ -31,8 +31,8 @@ import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.UpdateType;
 import com.michelin.suricate.model.enums.WidgetStateEnum;
 import com.michelin.suricate.repositories.ProjectWidgetRepository;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
-import com.michelin.suricate.services.nashorn.services.DashboardScheduleService;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
+import com.michelin.suricate.services.js.services.DashboardScheduleService;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.utils.JavaScriptUtils;
 import com.michelin.suricate.utils.PropertiesUtils;
@@ -191,7 +191,7 @@ public class ProjectWidgetService {
         Optional<ProjectWidget> projectWidgetOptional = getOne(projectWidgetId);
 
         if (projectWidgetOptional.isPresent()) {
-            ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetExecution(projectWidgetId);
+            ctx.getBean(JsExecutionScheduler.class).cancelWidgetExecution(projectWidgetId);
 
             projectWidgetRepository.deleteById(projectWidgetId);
             projectWidgetRepository.flush();
@@ -246,7 +246,7 @@ public class ProjectWidgetService {
 
     /**
      * Instantiate the HTML of a widget with the data resulting from
-     * the Nashorn execution.
+     * the Js execution.
      *
      * @param projectWidget the widget instance
      * @return The instantiated HTML
@@ -260,7 +260,7 @@ public class ProjectWidgetService {
         String instantiateHtml = widget.getHtmlContent();
         if (StringUtils.isNotEmpty(projectWidget.getData())) {
             try {
-                map = objectMapper.readValue(projectWidget.getData(), new TypeReference<Map<String, Object>>() {});
+                map = objectMapper.readValue(projectWidget.getData(), new TypeReference<>() {});
                 // Add backend config
                 map.putAll(PropertiesUtils.convertStringWidgetPropertiesToMap(projectWidget.getBackendConfig()));
                 map.put(JavaScriptUtils.WIDGET_INSTANCE_ID_VARIABLE, projectWidget.getId());
@@ -291,7 +291,7 @@ public class ProjectWidgetService {
 
     /**
      * Update the configuration and the custom CSS for a widget instance.
-     * Then schedule a new Nashorn execution for the updated widget.
+     * Then schedule a new Js execution for the updated widget.
      *
      * @param projectWidget The widget instance
      * @param customStyle   The new CSS style
@@ -299,7 +299,7 @@ public class ProjectWidgetService {
      */
     @Transactional
     public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig) {
-        ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetExecution(projectWidget.getId());
+        ctx.getBean(JsExecutionScheduler.class).cancelWidgetExecution(projectWidget.getId());
 
         if (customStyle != null) {
             projectWidget.setCustomStyle(customStyle);
@@ -315,7 +315,7 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Update the state of a widget instance when Nashorn execution ends with a failure
+     * Update the state of a widget instance when Js execution ends with a failure
      *
      * @param executionDate   The execution date
      * @param log             The message to log
@@ -327,11 +327,11 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Update the state of a widget instance when Nashorn execution ends successfully
+     * Update the state of a widget instance when Js execution ends successfully
      *
      * @param executionDate The last execution date
-     * @param executionLog  The log of nashorn execution
-     * @param data          The data returned by nashorn
+     * @param executionLog  The log of Js execution
+     * @param data          The data returned by Js execution
      * @param widgetState   The widget state
      */
     public void updateWidgetInstanceAfterSucceededExecution(final Date executionDate, final String executionLog, final String data, final Long projectWidgetId, final WidgetStateEnum widgetState) {

@@ -20,14 +20,14 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.michelin.suricate.model.entities.Project;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
-import com.michelin.suricate.model.dto.nashorn.NashornRequest;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
+import com.michelin.suricate.model.dto.js.JsExecutionDto;
 import com.michelin.suricate.model.dto.websocket.UpdateEvent;
 import com.michelin.suricate.model.dto.websocket.WebsocketClient;
 import com.michelin.suricate.model.enums.UpdateType;
 import com.michelin.suricate.services.api.ProjectService;
 import com.michelin.suricate.services.mapper.ProjectMapper;
-import com.michelin.suricate.services.nashorn.services.NashornService;
+import com.michelin.suricate.services.js.services.JsExecutionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -44,7 +44,7 @@ import java.util.Optional;
 @Service
 public class DashboardWebSocketService {
     @Autowired
-    private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -58,7 +58,7 @@ public class DashboardWebSocketService {
     private ProjectMapper projectMapper;
 
     @Autowired
-    private NashornService nashornService;
+    private JsExecutionService jsExecutionService;
 
     private final Multimap<String, WebsocketClient> websocketClientByProjectToken = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
@@ -176,7 +176,7 @@ public class DashboardWebSocketService {
      * Triggered when a new subscription to a dashboard is done.
      *
      * If no client is connected to the dashboard already,
-     * initialize a Nashorn request for each widget of the project to refresh them.
+     * initialize a Js execution for each widget of the project to refresh them.
      *
      * @param project         The connected project
      * @param websocketClient The related websocket client
@@ -186,8 +186,8 @@ public class DashboardWebSocketService {
         websocketClientByProjectToken.put(project.getToken(), websocketClient);
 
         if (refreshProject) {
-            List<NashornRequest> nashornRequests = nashornService.getNashornRequestsByProject(project);
-            nashornWidgetScheduler.scheduleNashornRequests(nashornRequests, true);
+            List<JsExecutionDto> jsExecutionDtos = jsExecutionService.getJsExecutionsByProject(project);
+            jsExecutionScheduler.scheduleJsRequests(jsExecutionDtos, true);
         }
     }
 
@@ -246,7 +246,7 @@ public class DashboardWebSocketService {
 
         if (!websocketClientByProjectToken.containsKey(websocketClient.getProjectToken())) {
             projectService.getOneByToken(websocketClient.getProjectToken())
-                    .ifPresent(nashornWidgetScheduler::cancelWidgetsExecutionByProject);
+                    .ifPresent(jsExecutionScheduler::cancelWidgetsExecutionByProject);
         }
     }
 

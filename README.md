@@ -34,9 +34,16 @@ This repository contains the source code of the Suricate application.
 
 ## Download
 
-You can download Suricate as a fat jar from the project's releases page on GitHub at https://github.com/michelin/suricate/releases. Please note that Java 8 is required.
+You can download Suricate as a fat jar from the project's releases page on GitHub at https://github.com/michelin/suricate/releases.
 
 Additionally, a Docker image of the solution is available at https://hub.docker.com/repository/docker/michelin/suricate.
+
+## Requirements 
+
+Suricate runs JavaScript widgets from the Back-End side. To enable this functionality, ensure your system meets these requirements:
+
+- **Suricate v2.8.0 and Later:** Requires [GraalVM 17](https://www.graalvm.org/) with the [JavaScript module installed](https://www.graalvm.org/22.3/docs/getting-started/#run-javascript-and-nodejs). 
+- **Suricate Versions Prior to v2.8.0:** Requires Java 8.
 
 ## Install
 

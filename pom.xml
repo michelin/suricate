@@ -22,7 +22,7 @@
 
     <properties>
 	    <packaging.type>jar</packaging.type>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <apacheds.version>2.0.0.AM26</apacheds.version>
         <mockito.version>4.11.0</mockito.version>
@@ -100,30 +100,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.7.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-core</artifactId>
-            <version>${apacheds.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-protocol-ldap</artifactId>
-            <version>${apacheds.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-protocol-shared</artifactId>
-            <version>${apacheds.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-server-jndi</artifactId>
-            <version>${apacheds.version}</version>
         </dependency>
 
         <dependency>

@@ -76,11 +76,11 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
     void updateRowAndColAndWidthAndHeightById(@Param("row") int row, @Param("col") int col, @Param("width") int width, @Param("height") int height, @Param("id") Long id);
 
     /**
-     * Update the state of a widget instance when Nashorn execution ends successfully
+     * Update the state of a widget instance when Js execution ends successfully
      *
      * @param executionDate The last execution date
-     * @param log         The log of nashorn execution
-     * @param data        The data returned by nashorn
+     * @param log         The log of Js execution
+     * @param data        The data returned by Js
      * @param id          The id of the project widget
      * @param widgetState The widget state
      */
@@ -99,7 +99,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
                                @Param("state") WidgetStateEnum widgetState);
 
     /**
-     * Update the state of a project widget when nashorn execution ends with errors
+     * Update the state of a project widget when Js execution ends with errors
      *
      * @param date        The last execution date
      * @param log         The logs of the execution

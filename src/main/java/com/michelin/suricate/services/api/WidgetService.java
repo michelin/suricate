@@ -19,7 +19,7 @@ package com.michelin.suricate.services.api;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.michelin.suricate.model.dto.api.widget.WidgetRequestDto;
-import com.michelin.suricate.model.dto.nashorn.WidgetVariableResponse;
+import com.michelin.suricate.model.dto.js.WidgetVariableResponseDto;
 import com.michelin.suricate.model.entities.*;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import com.michelin.suricate.repositories.WidgetParamRepository;
@@ -116,36 +116,36 @@ public class WidgetService {
      * @return The list of widget parameters
      */
     @Transactional
-    public List<WidgetVariableResponse> getWidgetParametersForNashorn(final Widget widget) {
-        List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
+    public List<WidgetVariableResponseDto> getWidgetParametersForJsExecution(final Widget widget) {
+        List<WidgetVariableResponseDto> widgetVariableResponseDtos = new ArrayList<>();
 
         List<WidgetParam> widgetParameters = getWidgetParametersWithCategoryParameters(widget);
 
         for (WidgetParam widgetParameter : widgetParameters) {
-            WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
-            widgetVariableResponse.setName(widgetParameter.getName());
-            widgetVariableResponse.setDescription(widgetParameter.getDescription());
-            widgetVariableResponse.setType(widgetParameter.getType());
-            widgetVariableResponse.setDefaultValue(widgetParameter.getDefaultValue());
+            WidgetVariableResponseDto widgetVariableResponseDto = new WidgetVariableResponseDto();
+            widgetVariableResponseDto.setName(widgetParameter.getName());
+            widgetVariableResponseDto.setDescription(widgetParameter.getDescription());
+            widgetVariableResponseDto.setType(widgetParameter.getType());
+            widgetVariableResponseDto.setDefaultValue(widgetParameter.getDefaultValue());
 
-            if (widgetVariableResponse.getType() != null) {
-                switch (widgetVariableResponse.getType()) {
+            if (widgetVariableResponseDto.getType() != null) {
+                switch (widgetVariableResponseDto.getType()) {
                     case COMBO:
 
                     case MULTIPLE:
-                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
+                        widgetVariableResponseDto.setValues(getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
                         break;
 
                     default:
-                        widgetVariableResponse.setData(StringUtils.trimToNull(widgetParameter.getDefaultValue()));
+                        widgetVariableResponseDto.setData(StringUtils.trimToNull(widgetParameter.getDefaultValue()));
                         break;
                 }
             }
 
-            widgetVariableResponses.add(widgetVariableResponse);
+            widgetVariableResponseDtos.add(widgetVariableResponseDto);
         }
 
-        return widgetVariableResponses;
+        return widgetVariableResponseDtos;
     }
 
     /**

@@ -37,7 +37,7 @@ public class WidgetResponseDto extends AbstractDto {
     @Schema(description = "The css of this widget")
     private String cssContent;
 
-    @Schema(description = "Timeout for nashorn execution (prevent infinity loop)", example = "30")
+    @Schema(description = "Timeout for Js execution (prevent infinity loop)", example = "30")
     private Long timeout;
 
     @Schema(description = "A representation by an image of the widget")

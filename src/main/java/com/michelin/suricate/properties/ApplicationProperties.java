@@ -22,7 +22,6 @@ package com.michelin.suricate.properties;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.directory.server.core.api.ReferralHandlingMode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -71,7 +70,6 @@ public class ApplicationProperties {
         private String firstNameAttributeName;
         private String lastNameAttributeName;
         private String mailAttributeName;
-        private String referral = ReferralHandlingMode.IGNORE.getJndiValue();
     }
 
     @Getter

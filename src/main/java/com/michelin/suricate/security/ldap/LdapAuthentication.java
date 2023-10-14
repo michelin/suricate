@@ -103,10 +103,6 @@ public class LdapAuthentication {
             contextSource.setUserDn(applicationProperties.getAuthentication().getLdap().getUserDnPatterns());
         }
 
-        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getReferral())) {
-            contextSource.setReferral(applicationProperties.getAuthentication().getLdap().getReferral());
-        }
-
         if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getUsername())
                 && !StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getPassword()) ) {
             contextSource.setAuthenticationSource(new AuthenticationSource() {

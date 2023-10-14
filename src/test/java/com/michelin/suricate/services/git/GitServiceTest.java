@@ -9,7 +9,7 @@ import com.michelin.suricate.services.api.LibraryService;
 import com.michelin.suricate.services.api.RepositoryService;
 import com.michelin.suricate.services.api.WidgetService;
 import com.michelin.suricate.services.cache.CacheService;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GitServiceTest {
     @Mock
-    private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @Mock
     private ApplicationProperties applicationProperties;
@@ -124,7 +123,7 @@ class GitServiceTest {
 
         gitService.updateWidgetFromEnabledGitRepositoriesAsync();
 
-        verify(nashornWidgetScheduler)
+        verify(jsExecutionScheduler)
                 .init();
         verify(dashboardWebSocketService)
                 .reloadAllConnectedClientsToAllProjects();
@@ -260,7 +259,7 @@ class GitServiceTest {
         assertThatThrownBy(() -> gitService.readWidgetRepositories(Collections.singletonList(repository)))
                 .isInstanceOf(IOException.class);
 
-        verify(nashornWidgetScheduler)
+        verify(jsExecutionScheduler)
                 .init();
         verify(dashboardWebSocketService)
                 .reloadAllConnectedClientsToAllProjects();
@@ -322,7 +321,7 @@ class GitServiceTest {
                 .isInstanceOf(Exception.class)
                 .hasMessage("Exception caught during execution of fetch command");
 
-        verify(nashornWidgetScheduler)
+        verify(jsExecutionScheduler)
                 .init();
         verify(dashboardWebSocketService)
                 .reloadAllConnectedClientsToAllProjects();

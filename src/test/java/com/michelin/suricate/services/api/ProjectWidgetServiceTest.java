@@ -9,8 +9,8 @@ import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.UpdateType;
 import com.michelin.suricate.model.enums.WidgetStateEnum;
 import com.michelin.suricate.repositories.ProjectWidgetRepository;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
-import com.michelin.suricate.services.nashorn.services.DashboardScheduleService;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
+import com.michelin.suricate.services.js.services.DashboardScheduleService;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import org.assertj.core.api.Assertions;
 import org.jasypt.encryption.StringEncryptor;
@@ -52,7 +52,7 @@ class ProjectWidgetServiceTest {
     private StringEncryptor stringEncryptor;
 
     @Mock
-    private NashornRequestWidgetExecutionScheduler nashornRequestWidgetExecutionScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @InjectMocks
     private ProjectWidgetService projectWidgetService;
@@ -221,14 +221,14 @@ class ProjectWidgetServiceTest {
         projectWidget.setWidget(widget);
         projectWidget.setProjectGrid(projectGrid);
 
-        when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
-                .thenReturn(nashornRequestWidgetExecutionScheduler);
+        when(ctx.getBean(JsExecutionScheduler.class))
+                .thenReturn(jsExecutionScheduler);
         when(projectWidgetRepository.findById(any()))
                 .thenReturn(Optional.of(projectWidget));
 
         projectWidgetService.removeWidgetFromDashboard(1L);
 
-        verify(nashornRequestWidgetExecutionScheduler)
+        verify(jsExecutionScheduler)
                 .cancelWidgetExecution(1L);
         verify(projectWidgetRepository)
                 .deleteById(1L);
@@ -247,7 +247,7 @@ class ProjectWidgetServiceTest {
 
         projectWidgetService.removeWidgetFromDashboard(1L);
 
-        verify(nashornRequestWidgetExecutionScheduler, times(0))
+        verify(jsExecutionScheduler, times(0))
                 .cancelWidgetExecution(any());
         verify(projectWidgetRepository, times(0))
                 .deleteById(any());
@@ -466,8 +466,8 @@ class ProjectWidgetServiceTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
-                .thenReturn(nashornRequestWidgetExecutionScheduler);
+        when(ctx.getBean(JsExecutionScheduler.class))
+                .thenReturn(jsExecutionScheduler);
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
                 .thenReturn(Collections.singletonList(widgetParam));
         when(projectWidgetRepository.save(any()))
@@ -480,7 +480,7 @@ class ProjectWidgetServiceTest {
         assertThat(projectWidget.getBackendConfig())
                 .isEqualTo("param=value");
 
-        verify(nashornRequestWidgetExecutionScheduler)
+        verify(jsExecutionScheduler)
                 .cancelWidgetExecution(1L);
         verify(projectWidgetRepository)
                 .save(projectWidget);
@@ -497,8 +497,8 @@ class ProjectWidgetServiceTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
-                .thenReturn(nashornRequestWidgetExecutionScheduler);
+        when(ctx.getBean(JsExecutionScheduler.class))
+                .thenReturn(jsExecutionScheduler);
         when(projectWidgetRepository.save(any()))
                 .thenAnswer(answer -> answer.getArgument(0));
 
@@ -509,7 +509,7 @@ class ProjectWidgetServiceTest {
         assertThat(projectWidget.getBackendConfig())
                 .isNull();
 
-        verify(nashornRequestWidgetExecutionScheduler)
+        verify(jsExecutionScheduler)
                 .cancelWidgetExecution(1L);
         verify(projectWidgetRepository)
                 .save(projectWidget);

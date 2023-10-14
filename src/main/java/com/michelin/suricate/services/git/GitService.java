@@ -20,7 +20,7 @@ import com.michelin.suricate.model.entities.Category;
 import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.services.api.LibraryService;
 import com.michelin.suricate.services.cache.CacheService;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.model.entities.Library;
 import com.michelin.suricate.model.entities.Repository;
@@ -51,7 +51,7 @@ import java.util.Optional;
 @Service
 public class GitService {
     @Autowired
-    private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -100,7 +100,7 @@ public class GitService {
         }
 
         Optional<List<Repository>> optionalRepositories = repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
-        if (!optionalRepositories.isPresent()) {
+        if (optionalRepositories.isEmpty()) {
             log.info("No remote or local repository found");
             return;
         }
@@ -127,7 +127,7 @@ public class GitService {
                 }
             }
         } finally {
-            nashornWidgetScheduler.init();
+            jsExecutionScheduler.init();
             dashboardWebSocketService.reloadAllConnectedClientsToAllProjects();
         }
     }
