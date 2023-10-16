@@ -23,6 +23,7 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Setting mapper.
@@ -31,7 +32,8 @@ import org.mapstruct.Named;
     componentModel = "spring",
     uses = {
         AllowedSettingValueMapper.class
-    }
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class SettingMapper {
     /**

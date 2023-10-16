@@ -24,6 +24,7 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Widget mapper.
@@ -35,9 +36,9 @@ import org.mapstruct.Named;
         CategoryMapper.class
     },
     imports = {
-        java.util.stream.Collectors.class,
-        com.google.common.collect.Sets.class
-    }
+        java.util.stream.Collectors.class
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class WidgetMapper {
     /**

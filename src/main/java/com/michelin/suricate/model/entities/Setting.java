@@ -21,21 +21,22 @@ package com.michelin.suricate.model.entities;
 import com.michelin.suricate.model.entities.generic.AbstractEntity;
 import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.SettingType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
+import org.hibernate.type.YesNoConverter;
 
 /**
  * Setting entity.
@@ -54,7 +55,7 @@ public class Setting extends AbstractEntity<Long> {
     private String description;
 
     @Column(nullable = false)
-    @Type(type = "yes_no")
+    @Convert(converter = YesNoConverter.class)
     private boolean constrained;
 
     @Column(nullable = false, name = "data_type")

@@ -16,8 +16,6 @@
 
 package com.michelin.suricate.services.api;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.michelin.suricate.model.dto.api.widget.WidgetRequestDto;
 import com.michelin.suricate.model.dto.js.WidgetVariableResponseDto;
 import com.michelin.suricate.model.entities.Category;
@@ -31,6 +29,7 @@ import com.michelin.suricate.repositories.WidgetParamRepository;
 import com.michelin.suricate.repositories.WidgetRepository;
 import com.michelin.suricate.services.specifications.WidgetSearchSpecification;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -208,14 +207,14 @@ public class WidgetService {
             Optional<Widget> currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
 
             if (widget.getLibraries() != null && !widget.getLibraries().isEmpty() && libraries != null) {
-                List<Library> widgetLibraries = Lists.newArrayList(widget.getLibraries());
+                List<Library> widgetLibraries = new ArrayList<>(widget.getLibraries());
 
                 widgetLibraries.replaceAll(widgetLibrary -> libraries
                     .stream()
                     .filter(library -> library.getTechnicalName().equals(widgetLibrary.getTechnicalName()))
                     .findFirst().orElse(null));
 
-                widget.setLibraries(Sets.newHashSet(widgetLibraries));
+                widget.setLibraries(new HashSet<>(widgetLibraries));
             }
 
             if (widget.getImage() != null) {

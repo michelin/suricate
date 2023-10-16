@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.Sets;
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
 import com.michelin.suricate.model.entities.Category;
 import com.michelin.suricate.model.entities.CategoryParameter;
@@ -19,6 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -93,7 +93,7 @@ class JsExecutionServiceTest {
 
         Category category = new Category();
         category.setId(1L);
-        category.setConfigurations(Sets.newHashSet(categoryParameter, categoryParameterInBackendConfig));
+        category.setConfigurations(Set.of(categoryParameter, categoryParameterInBackendConfig));
 
         Widget widget = new Widget();
         widget.setId(1L);

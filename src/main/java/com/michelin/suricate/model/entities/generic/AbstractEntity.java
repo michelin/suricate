@@ -18,9 +18,9 @@
 
 package com.michelin.suricate.model.entities.generic;
 
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**

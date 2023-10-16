@@ -21,10 +21,10 @@ package com.michelin.suricate.controllers.handlers;
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.enums.ApiErrorEnum;
 import com.michelin.suricate.utils.exceptions.ApiException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.util.Objects;
 import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +46,52 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
     private static final String LOG_MESSAGE = "An exception has occurred in the API controllers part";
+
+    /**
+     * Method used to extract message from MethodArgumentNotValidException exception.
+     *
+     * @param bindingResult Binding result
+     * @return An error string
+     */
+    private static String extractMessage(BindingResult bindingResult) {
+        StringBuilder builder = new StringBuilder();
+
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            if (!builder.isEmpty()) {
+                builder.append(". ");
+            }
+            builder
+                .append(error.getField().substring(0, 1).toUpperCase())
+                .append(error.getField().substring(1))
+                .append(" ")
+                .append(error.getDefaultMessage());
+        }
+
+        return builder.toString();
+    }
+
+    /**
+     * Method used to extract message from ConstraintViolationException exception.
+     *
+     * @param constraintViolations The violated constraints
+     * @return An error string
+     */
+    private static String extractMessage(Set<ConstraintViolation<?>> constraintViolations) {
+        StringBuilder builder = new StringBuilder();
+
+        for (ConstraintViolation<?> error : constraintViolations) {
+            if (!builder.isEmpty()) {
+                builder.append(". ");
+            }
+            builder
+                .append(error.getPropertyPath().toString().substring(0, 1).toUpperCase())
+                .append(error.getPropertyPath().toString().substring(1))
+                .append(" ")
+                .append(error.getMessage());
+        }
+
+        return builder.toString();
+    }
 
     /**
      * Manage the API exception.
@@ -201,52 +247,6 @@ public class GlobalDefaultExceptionHandler {
         return ResponseEntity
             .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
             .body(new ApiErrorDto(ApiErrorEnum.INTERNAL_SERVER_ERROR));
-    }
-
-    /**
-     * Method used to extract message from MethodArgumentNotValidException exception.
-     *
-     * @param bindingResult Binding result
-     * @return An error string
-     */
-    private static String extractMessage(BindingResult bindingResult) {
-        StringBuilder builder = new StringBuilder();
-
-        for (FieldError error : bindingResult.getFieldErrors()) {
-            if (!builder.isEmpty()) {
-                builder.append(". ");
-            }
-            builder
-                .append(error.getField().substring(0, 1).toUpperCase())
-                .append(error.getField().substring(1))
-                .append(" ")
-                .append(error.getDefaultMessage());
-        }
-
-        return builder.toString();
-    }
-
-    /**
-     * Method used to extract message from ConstraintViolationException exception.
-     *
-     * @param constraintViolations The violated constraints
-     * @return An error string
-     */
-    private static String extractMessage(Set<ConstraintViolation<?>> constraintViolations) {
-        StringBuilder builder = new StringBuilder();
-
-        for (ConstraintViolation<?> error : constraintViolations) {
-            if (!builder.isEmpty()) {
-                builder.append(". ");
-            }
-            builder
-                .append(error.getPropertyPath().toString().substring(0, 1).toUpperCase())
-                .append(error.getPropertyPath().toString().substring(1))
-                .append(" ")
-                .append(error.getMessage());
-        }
-
-        return builder.toString();
     }
 
 }

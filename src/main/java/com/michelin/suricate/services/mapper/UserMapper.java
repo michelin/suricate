@@ -27,6 +27,7 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,8 @@ import org.springframework.stereotype.Component;
     componentModel = "spring",
     uses = {
         RoleMapper.class
-    }
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class UserMapper {
     @Autowired

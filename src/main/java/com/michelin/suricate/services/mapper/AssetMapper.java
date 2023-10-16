@@ -23,13 +23,14 @@ import com.michelin.suricate.model.dto.api.export.ImportExportAssetDto;
 import com.michelin.suricate.model.entities.Asset;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.stereotype.Component;
 
 /**
  * Asset mapper.
  */
 @Component
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class AssetMapper {
     /**
      * Map an asset into an asset DTO.

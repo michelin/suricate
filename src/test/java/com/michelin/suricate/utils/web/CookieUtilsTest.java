@@ -2,8 +2,8 @@ package com.michelin.suricate.utils.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.servlet.http.Cookie;
 import java.util.Optional;
-import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -98,10 +98,9 @@ class CookieUtilsTest {
     @Test
     void shouldSerialize() {
         assertThat(CookieUtils.serialize(new Cookie("myCookie", "value"))).isEqualTo(
-            "rO0ABXNyABlqYXZheC5zZXJ2bGV0Lmh0dHAuQ29va2llAAAAAAAAAAECAAlaAAhodHRwT25seUkABm1"
-                + "heEFnZVoABnNlY3VyZUkAB3ZlcnNpb25MAAdjb21tZW50dAASTGphdmEvbGFuZy9TdHJpbmc7TAAGZG9tY"
-                + "WlucQB-AAFMAARuYW1lcQB-AAFMAARwYXRocQB-AAFMAAV2YWx1ZXEAfgABeHAA_____wAAAAAAcHB0AAh"
-                + "teUNvb2tpZXB0AAV2YWx1ZQ==");
+            "rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
+                + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
+                + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU=");
     }
 
     @Test

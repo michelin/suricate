@@ -3,10 +3,10 @@ package com.michelin.suricate.services.specifications;
 
 import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.model.entities.Project_;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 
 

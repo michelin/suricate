@@ -3,13 +3,12 @@ package com.michelin.suricate.services.token;
 import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.security.LocalUser;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +41,7 @@ public class JwtHelperService {
         claims.put("lastname", userPrincipal.getUser().getLastname());
         claims.put("email", userPrincipal.getUser().getEmail());
         claims.put("avatar_url", userPrincipal.getUser().getAvatarUrl());
-        claims.put("authorities",
+        claims.put("roles",
             userPrincipal.getUser().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
         claims.put("mode", userPrincipal.getUser().getAuthenticationMethod());
 
@@ -51,11 +50,11 @@ public class JwtHelperService {
             new Date(now.getTime() + applicationProperties.getAuthentication().getJwt().getTokenValidityMs());
 
         return Jwts.builder()
-            .setSubject(userPrincipal.getUsername())
-            .setExpiration(expiryDate)
-            .setIssuedAt(now)
-            .addClaims(claims)
-            .signWith(SignatureAlgorithm.HS512, applicationProperties.getAuthentication().getJwt().getSigningKey())
+            .subject(userPrincipal.getUsername())
+            .expiration(expiryDate)
+            .issuedAt(now)
+            .claims(claims)
+            .signWith(Keys.hmacShaKeyFor(applicationProperties.getAuthentication().getJwt().getSigningKey().getBytes()))
             .compact();
     }
 
@@ -66,12 +65,13 @@ public class JwtHelperService {
      * @return The username
      */
     public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parser()
-            .setSigningKey(applicationProperties.getAuthentication().getJwt().getSigningKey())
-            .parseClaimsJws(token)
-            .getBody();
-
-        return claims.getSubject();
+        return Jwts.parser()
+            .verifyWith(
+                Keys.hmacShaKeyFor(applicationProperties.getAuthentication().getJwt().getSigningKey().getBytes()))
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .getSubject();
     }
 
     /**
@@ -83,8 +83,10 @@ public class JwtHelperService {
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser()
-                .setSigningKey(applicationProperties.getAuthentication().getJwt().getSigningKey())
-                .parseClaimsJws(authToken);
+                .verifyWith(
+                    Keys.hmacShaKeyFor(applicationProperties.getAuthentication().getJwt().getSigningKey().getBytes()))
+                .build()
+                .parseSignedClaims(authToken);
             return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT signature", e);
@@ -97,7 +99,7 @@ public class JwtHelperService {
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty", e);
         } catch (Exception e) {
-            log.error("Error reading public key", e);
+            log.error("Error reading JWT token", e);
         }
         return false;
     }

@@ -21,6 +21,7 @@ import com.michelin.suricate.model.entities.WidgetParam;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Widget param mapper.
@@ -29,7 +30,8 @@ import org.mapstruct.Named;
     componentModel = "spring",
     uses = {
         WidgetParamValueMapper.class
-    }
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class WidgetParamMapper {
     /**

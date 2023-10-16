@@ -4,11 +4,11 @@ import com.michelin.suricate.model.entities.Category;
 import com.michelin.suricate.model.entities.Category_;
 import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.model.entities.Widget_;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 
 

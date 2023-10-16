@@ -19,10 +19,10 @@ package com.michelin.suricate;
 import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.properties.ProxyProperties;
 import com.michelin.suricate.services.git.GitService;
+import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Locale;
-import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -47,8 +47,10 @@ public class BackendApplication {
 
     @Autowired
     private ApplicationProperties applicationProperties;
+
     @Autowired
     private GitService gitService;
+
     @Autowired
     private ProxyProperties proxyConfiguration;
 

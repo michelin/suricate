@@ -23,6 +23,7 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * User setting mapper.
@@ -32,7 +33,8 @@ import org.mapstruct.Named;
     uses = {
         SettingMapper.class,
         AllowedSettingValueMapper.class
-    }
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class UserSettingMapper {
 

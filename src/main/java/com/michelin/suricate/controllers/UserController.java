@@ -388,7 +388,7 @@ public class UserController {
             @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/users/personal-access-token")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_TOTO')")
     public ResponseEntity<List<PersonalAccessTokenResponseDto>> getPersonalAccessTokens(
         @Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser) {
         return ResponseEntity

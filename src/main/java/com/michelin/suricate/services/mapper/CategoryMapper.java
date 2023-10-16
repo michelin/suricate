@@ -24,6 +24,7 @@ import org.jasypt.encryption.StringEncryptor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -34,7 +35,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
     uses = {
         AssetMapper.class,
         WidgetMapper.class
-    })
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class CategoryMapper {
     /**
      * String encryptor.

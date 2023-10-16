@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.Lists;
 import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.security.LocalUser;
@@ -35,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,6 +74,7 @@ class UserDetailsDatabaseServiceTest {
 
         assertThat(actual.getUsername()).isEqualTo("username");
         assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(Lists.newArrayList(actual.getAuthorities()).get(0).getAuthority()).isEqualTo("ROLE_ADMIN");
+        assertThat(actual.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().get(0))
+            .isEqualTo("ROLE_ADMIN");
     }
 }

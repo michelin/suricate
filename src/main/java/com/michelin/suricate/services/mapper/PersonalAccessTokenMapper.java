@@ -6,13 +6,14 @@ import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.stereotype.Component;
 
 /**
  * Personal access token mapper.
  */
 @Component
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class PersonalAccessTokenMapper {
     /**
      * Map a token into a DTO.

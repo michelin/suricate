@@ -23,11 +23,12 @@ import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Allowed setting value mapper.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class AllowedSettingValueMapper {
     /**
      * Map an allowed setting value into a DTO.

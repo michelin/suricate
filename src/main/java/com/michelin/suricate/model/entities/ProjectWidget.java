@@ -20,22 +20,23 @@ package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import com.michelin.suricate.model.enums.WidgetStateEnum;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import java.sql.Types;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * Project widget entity.
@@ -52,7 +53,7 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
 
     @Column
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String data;
 
     @Column
@@ -68,15 +69,15 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private int height;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String customStyle;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String backendConfig;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String log;
 
     @Column

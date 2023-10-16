@@ -23,11 +23,12 @@ import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Widget param value mapper.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class WidgetParamValueMapper {
     /**
      * Map a widget parameter value into a widget parameter value DTO.

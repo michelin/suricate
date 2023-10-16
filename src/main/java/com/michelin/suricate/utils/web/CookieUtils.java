@@ -1,13 +1,14 @@
 package com.michelin.suricate.utils.web;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 import java.util.Base64;
 import java.util.Optional;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.util.SerializationUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * Utility class for cookies.
@@ -79,7 +80,7 @@ public class CookieUtils {
      * @param object The object to serialize
      * @return The encoded object as base64
      */
-    public static String serialize(Object object) {
+    public static String serialize(Serializable object) {
         return Base64.getUrlEncoder().encodeToString(SerializationUtils.serialize(object));
     }
 

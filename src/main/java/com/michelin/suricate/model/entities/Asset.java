@@ -18,18 +18,19 @@ package com.michelin.suricate.model.entities;
 
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import java.sql.Types;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * Asset entity.
@@ -45,7 +46,7 @@ public class Asset extends AbstractAuditingEntity<Long> {
     private Long id;
 
     @ToString.Exclude
-    @Type(type = "org.hibernate.type.BinaryType")
+    @JdbcTypeCode(Types.BINARY)
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private byte[] content;

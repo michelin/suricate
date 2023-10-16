@@ -37,14 +37,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -54,23 +56,8 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
  * Web configuration.
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class WebConfig implements WebMvcConfigurer {
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
-    /**
-     * CORS configuration.
-     *
-     * @param registry The CORS registry
-     */
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry
-            .addMapping("/api/**")
-            .combine(applicationProperties.getCors());
-    }
-
     /**
      * The view resolver.
      *
@@ -113,6 +100,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
+                                           ApplicationProperties applicationProperties,
                                            AuthenticationFailureEntryPoint authenticationFailureEntryPoint,
                                            HttpCookieOauth2AuthorizationRequestRepository authRequestRepository,
                                            Oauth2UserService userService,
@@ -121,62 +109,67 @@ public class WebConfig implements WebMvcConfigurer {
                                            Oauth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler)
         throws Exception {
         http
-            .cors()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .csrf().disable()
-            .exceptionHandling()
-            .authenticationEntryPoint(authenticationFailureEntryPoint)
-            .accessDeniedHandler(authenticationFailureEntryPoint)
-            .and()
-            .headers()
-            .frameOptions().disable()
-            .and()
-            .anonymous()
-            .and()
-            .authorizeRequests()
-            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers("/h2-console/**").permitAll()
-            .antMatchers("/actuator/**").permitAll()
-            .antMatchers("/api/*/auth/signin").permitAll()
-            .antMatchers("/api/*/users/signup").permitAll()
-            .antMatchers("/api/*/configurations/authentication-providers").permitAll()
-            .antMatchers("/api/*/projects/{projectToken}").permitAll()
-            .antMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
-            .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
-            .antMatchers("/api/*/widgets/{widgetId}").permitAll()
-            .antMatchers("/api/*/settings").permitAll()
-            .antMatchers("/api/*/assets/**").permitAll()
-            .antMatchers("/ws/**").permitAll()
-            .antMatchers("/api/oauth2/authorization/**").permitAll()
-            .antMatchers("/api/**").authenticated()
-            .and()
+            .cors(corsConfigurer -> corsConfigurer
+                .configurationSource(new UrlBasedCorsConfigurationSource() {
+                    {
+                        registerCorsConfiguration("/api/**", applicationProperties.getCors());
+                    }
+                }))
+            .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .csrf(AbstractHttpConfigurer::disable)
+            .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
+                .authenticationEntryPoint(authenticationFailureEntryPoint)
+                .accessDeniedHandler(authenticationFailureEntryPoint))
+            .headers(headersConfigurer -> headersConfigurer
+                .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .authorizeHttpRequests(authorizeRequestsConfigurer -> authorizeRequestsConfigurer
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers("/api/*/auth/signin").permitAll()
+                .requestMatchers("/api/*/users/signup").permitAll()
+                .requestMatchers("/api/*/configurations/authentication-providers").permitAll()
+                .requestMatchers("/api/*/projects/{projectToken}").permitAll()
+                .requestMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
+                .requestMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
+                .requestMatchers("/api/*/widgets/{widgetId}").permitAll()
+                .requestMatchers("/api/*/settings").permitAll()
+                .requestMatchers("/api/*/assets/**").permitAll()
+                .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/api/oauth2/authorization/**").permitAll()
+                .requestMatchers("/api/**").authenticated())
             .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         if (oauth2AuthenticationSuccessHandler.getAuthorizedClientRepository() != null) {
-            http.oauth2Login()
-                .authorizationEndpoint()
-                // Store auth request in a http cookie on the IDP response
-                .authorizationRequestRepository(authRequestRepository)
-                // Override default "oauth2/authorization/" endpoint by adding "/api"
-                // Endpoint that triggers the OAuth2 auth to given IDP
-                .baseUri("/api/oauth2/authorization")
-                .and()
-                .userInfoEndpoint()
-                .userService(userService)
-                .userService(userService)
-                .oidcUserService(oidcUserService)
-                .and()
-                .successHandler(oauth2AuthenticationSuccessHandler)
-                .failureHandler(oauth2AuthenticationFailureHandler);
+            http
+                .oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
+                    .authorizationEndpoint(authorizationEndpointConfigurer -> authorizationEndpointConfigurer
+                        // Store auth request in a http cookie on the IDP response
+                        .authorizationRequestRepository(authRequestRepository)
+                        // Override default "oauth2/authorization/" endpoint by adding "/api"
+                        // Endpoint that triggers the OAuth2 auth to given IDP
+                        .baseUri("/api/oauth2/authorization"))
+                    .userInfoEndpoint(userInfoEndpointConfigurer -> userInfoEndpointConfigurer
+                        .userService(userService)
+                        .oidcUserService(oidcUserService))
+                    .successHandler(oauth2AuthenticationSuccessHandler)
+                    .failureHandler(oauth2AuthenticationFailureHandler));
         }
 
         return http.build();
     }
 
+    /**
+     * Define the authentication manager.
+     * Used to inject it in the authentication controller.
+     *
+     * @param authConfiguration The auth configuration
+     * @return The authentication manager
+     * @throws Exception When an error occurred during the authentication manager creation
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
         return authConfiguration.getAuthenticationManager();

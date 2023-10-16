@@ -8,6 +8,7 @@ import com.michelin.suricate.model.entities.ProjectGrid;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Project grid mapper.
@@ -16,7 +17,8 @@ import org.mapstruct.Named;
     componentModel = "spring",
     uses = {
         ProjectWidgetMapper.class
-    }
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class ProjectGridMapper {
     /**
@@ -53,7 +55,7 @@ public abstract class ProjectGridMapper {
         ImportExportProjectDto.ImportExportProjectGridDto importProjectGridRequestDto);
 
     /**
-     * Map a project grid DTO into a project grid entity.
+     * Map a project into a project grid entity.
      *
      * @param project The project DTO
      * @return The project grid as entity

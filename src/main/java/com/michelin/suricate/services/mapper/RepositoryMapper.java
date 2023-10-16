@@ -22,11 +22,12 @@ import com.michelin.suricate.model.dto.api.repository.RepositoryResponseDto;
 import com.michelin.suricate.model.entities.Repository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Repository mapper.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class RepositoryMapper {
     /**
      * Map a repository into a DTO.
