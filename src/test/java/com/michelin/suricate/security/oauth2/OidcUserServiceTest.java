@@ -181,7 +181,7 @@ class OidcUserServiceTest {
 
         assertThatThrownBy(() -> oidcUserService.loadUser(request))
             .isInstanceOf(Oauth2AuthenticationProcessingException.class)
-            .hasMessage("Email not found from gitlab");
+            .hasMessage("Email not found from Gitlab");
     }
 
     @Test

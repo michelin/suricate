@@ -106,10 +106,9 @@ class CookieUtilsTest {
     @Test
     void shouldDeserializeCookieValue() {
         Cookie cookie = new Cookie("myCookie",
-            "rO0ABXNyABlqYXZheC5zZXJ2bGV0Lmh0dHAuQ29va2llAAAAAAAAAAECAAlaAAhodHRwT25seUkABm1heE"
-                + "FnZVoABnNlY3VyZUkAB3ZlcnNpb25MAAdjb21tZW50dAASTGphdmEvbGFuZy9TdHJpbmc7TAAGZG9tYWlu"
-                + "cQB-AAFMAARuYW1lcQB-AAFMAARwYXRocQB-AAFMAAV2YWx1ZXEAfgABeHAA_____wAAAAAAcHB0AAhteUN"
-                + "vb2tpZXB0AAV2YWx1ZQ==");
+            "rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
+                + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
+                + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU");
 
         Cookie deserialized = CookieUtils.deserialize(cookie, Cookie.class);
 

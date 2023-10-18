@@ -16,49 +16,49 @@
  *
  */
 
-import { RoleEnum } from '../../../enums/role.enum';
+import {RoleEnum} from '../../../enums/role.enum';
 
 /**
  * Represent the access token decoded
  */
 export interface AccessTokenDecoded {
-  /**
-   * The subject
-   */
-  sub: string;
+    /**
+     * The subject
+     */
+    sub: string;
 
-  /**
-   * User firstname
-   */
-  firstname: string;
+    /**
+     * User firstname
+     */
+    firstname: string;
 
-  /**
-   * User mail
-   */
-  lastname: string;
+    /**
+     * User mail
+     */
+    lastname: string;
 
-  /**
-   * User mail
-   */
-  email: string;
+    /**
+     * User mail
+     */
+    email: string;
 
-  /**
-   * The avatar URL
-   */
-  avatar_url: string;
+    /**
+     * The avatar URL
+     */
+    avatar_url: string;
 
-  /**
-   * The authentication method
-   */
-  mode: string;
+    /**
+     * The authentication method
+     */
+    mode: string;
 
-  /**
-   * The list of roles of the user
-   */
-  authorities: RoleEnum[];
+    /**
+     * The list of roles of the user
+     */
+    roles: RoleEnum[];
 
-  /**
-   * The expiration date as long
-   */
-  exp: number;
+    /**
+     * The expiration date as long
+     */
+    exp: number;
 }

@@ -146,7 +146,8 @@ class AuthenticationIntegrationTest {
 
         assertThat(methodNotSupportedResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(methodNotSupportedResponse.getBody()).isNotNull();
-        assertThat(methodNotSupportedResponse.getBody().getMessage()).isEqualTo("Request method 'PATCH' not supported");
+        assertThat(methodNotSupportedResponse.getBody().getMessage()).isEqualTo(
+            "Request method 'PATCH' is not supported");
 
         // Get personal access tokens
         ResponseEntity<List<PersonalAccessTokenResponseDto>> response =

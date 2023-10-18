@@ -72,7 +72,8 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             String email = oauth2User.getAttribute("email");
             if (StringUtils.isBlank(email)) {
                 throw new Oauth2AuthenticationProcessingException(
-                    String.format("Email not found from %s", userRequest.getClientRegistration().getRegistrationId()));
+                    String.format("Email not found from %s", StringUtils.capitalize(userRequest.getClientRegistration()
+                        .getRegistrationId())));
             }
 
             String firstName = null;

@@ -18,7 +18,6 @@
 
 package com.michelin.suricate.controllers;
 
-import com.michelin.suricate.configuration.swagger.ApiPageable;
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.dto.api.token.PersonalAccessTokenRequestDto;
 import com.michelin.suricate.model.dto.api.token.PersonalAccessTokenResponseDto;
@@ -54,7 +53,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -120,12 +119,12 @@ public class UserController {
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
-    @ApiPageable
+    @PageableAsQueryParam
     @GetMapping(value = "/v1/admin/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<AdminUserResponseDto> getAllForAdmins(@Parameter(name = "search", description = "Search keyword")
                                                       @RequestParam(value = "search", required = false) String search,
-                                                      @ParameterObject Pageable pageable) {
+                                                      @Parameter(hidden = true) Pageable pageable) {
         return userService.getAll(search, pageable).map(userMapper::toAdminUserDto);
     }
 
@@ -143,12 +142,12 @@ public class UserController {
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
-    @ApiPageable
+    @PageableAsQueryParam
     @GetMapping(value = "/v1/users")
     @PreAuthorize("hasRole('ROLE_USER')")
     public Page<UserResponseDto> getAll(@Parameter(name = "search", description = "Search keyword")
                                         @RequestParam(value = "search", required = false) String search,
-                                        @ParameterObject Pageable pageable) {
+                                        @Parameter(hidden = true) Pageable pageable) {
         return userService.getAll(search, pageable).map(userMapper::toUserDto);
     }
 
@@ -388,7 +387,7 @@ public class UserController {
             @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/users/personal-access-token")
-    //@PreAuthorize("hasRole('ROLE_TOTO')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<PersonalAccessTokenResponseDto>> getPersonalAccessTokens(
         @Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser) {
         return ResponseEntity

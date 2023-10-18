@@ -41,7 +41,7 @@ public interface CategoryRepository extends CrudRepository<Category, Long>, JpaS
     @NotNull
     @EntityGraph(attributePaths = {"configurations", "image", "widgets", "widgets.repository", "widgets.image",
         "widgets.libraries", "widgets.widgetParams", "widgets.widgetParams.possibleValuesMap"})
-    Page<Category> findAll(Specification<Category> specification, @NotNull Pageable pageable);
+    Page<Category> findAll(@NotNull Specification<Category> specification, @NotNull Pageable pageable);
 
     /**
      * Find category by technical name.

@@ -20,7 +20,6 @@ package com.michelin.suricate.controllers;
 
 import static com.michelin.suricate.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
 
-import com.michelin.suricate.configuration.swagger.ApiPageable;
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.dto.api.project.ProjectRequestDto;
 import com.michelin.suricate.model.dto.api.project.ProjectResponseDto;
@@ -55,7 +54,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -122,12 +121,12 @@ public class ProjectController {
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
-    @ApiPageable
+    @PageableAsQueryParam
     @GetMapping("/v1/projects")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<ProjectResponseDto> getAll(@Parameter(name = "search", description = "Search keyword")
                                            @RequestParam(value = "search", required = false) String search,
-                                           @ParameterObject Pageable pageable) {
+                                           @Parameter(hidden = true) Pageable pageable) {
         return projectService.getAll(search, pageable).map(projectMapper::toProjectDtoNoAsset);
     }
 

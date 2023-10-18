@@ -45,7 +45,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
     @NotNull
     @EntityGraph(attributePaths = {"screenshot", "grids", "grids.widgets", "grids.widgets.widget",
         "grids.widgets.widget.widgetParams"})
-    Page<Project> findAll(Specification<Project> specification, @NotNull Pageable pageable);
+    Page<Project> findAll(@NotNull Specification<Project> specification, @NotNull Pageable pageable);
 
     /**
      * Find projects by user id.

@@ -85,6 +85,7 @@ public class JsExecutionAsyncTask implements Callable<JsResultDto> {
             try (Context context = Context.newBuilder("js")
                 .out(output)
                 .err(output)
+                .options(Map.of("engine.WarnInterpreterOnly", "false"))
                 .allowHostAccess(HostAccess.ALL)
                 .allowHostClassLookup(className -> className.equals(JsEndpoints.class.getName()))
                 .build()) {

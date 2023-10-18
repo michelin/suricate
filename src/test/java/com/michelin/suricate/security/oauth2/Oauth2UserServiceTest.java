@@ -132,7 +132,7 @@ class Oauth2UserServiceTest {
 
         assertThatThrownBy(() -> oauth2UserService.loadUser(request))
             .isInstanceOf(Oauth2AuthenticationProcessingException.class)
-            .hasMessage("Email not found from gitlab");
+            .hasMessage("Email not found from Gitlab");
     }
 
     @Test

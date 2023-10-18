@@ -29,26 +29,33 @@ import java.io.IOException;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
@@ -56,7 +63,8 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
  * Web configuration.
  */
 @Configuration
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@EnableWebSecurity
+@EnableMethodSecurity
 public class WebConfig implements WebMvcConfigurer {
     /**
      * The view resolver.
@@ -65,12 +73,6 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/favicon.ico")
-            .addResourceLocations("classpath:/");
-
-        registry.addResourceHandler("swagger-ui.html")
-            .addResourceLocations("classpath:/META-INF/resources/");
-
         registry.addResourceHandler("/**")
             .addResourceLocations("classpath:/public/")
             .resourceChain(true)
@@ -88,26 +90,27 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * Define the security filter chain.
      *
-     * @param http                               The http security
-     * @param authenticationFailureEntryPoint    The authentication failure entry point
-     * @param authRequestRepository              The auth request repository
-     * @param userService                        The user service
-     * @param oidcUserService                    The oidc user service
-     * @param oauth2AuthenticationSuccessHandler The oauth2 authentication success handler
-     * @param oauth2AuthenticationFailureHandler The oauth2 authentication failure handler
+     * @param http                    The http security
+     * @param authFailureEntryPoint   The authentication failure entry point
+     * @param oauth2RequestRepository The auth request repository
+     * @param userService             The user service
+     * @param oidcUserService         The oidc user service
+     * @param oauth2SuccessHandler    The oauth2 authentication success handler
+     * @param oauth2FailureHandler    The oauth2 authentication failure handler
      * @return The security filter chain
      * @throws Exception When an error occurred
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           ApplicationProperties applicationProperties,
-                                           AuthenticationFailureEntryPoint authenticationFailureEntryPoint,
-                                           HttpCookieOauth2AuthorizationRequestRepository authRequestRepository,
-                                           Oauth2UserService userService,
-                                           OidcUserService oidcUserService, @Autowired(required = false)
-                                           Oauth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler,
-                                           Oauth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler)
-        throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, ApplicationProperties applicationProperties,
+                                           AuthenticationFailureEntryPoint authFailureEntryPoint,
+                                           HttpCookieOauth2AuthorizationRequestRepository oauth2RequestRepository,
+                                           Oauth2UserService userService, OidcUserService oidcUserService,
+                                           @Autowired(required = false)
+                                           Oauth2AuthenticationSuccessHandler oauth2SuccessHandler,
+                                           Oauth2AuthenticationFailureHandler oauth2FailureHandler,
+                                           HandlerMappingIntrospector introspector) throws Exception {
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+
         http
             .cors(corsConfigurer -> corsConfigurer
                 .configurationSource(new UrlBasedCorsConfigurationSource() {
@@ -119,44 +122,57 @@ public class WebConfig implements WebMvcConfigurer {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)
             .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
-                .authenticationEntryPoint(authenticationFailureEntryPoint)
-                .accessDeniedHandler(authenticationFailureEntryPoint))
+                .authenticationEntryPoint(authFailureEntryPoint)
+                .accessDeniedHandler(authFailureEntryPoint))
             .headers(headersConfigurer -> headersConfigurer
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(authorizeRequestsConfigurer -> authorizeRequestsConfigurer
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
-                .requestMatchers("/api/*/auth/signin").permitAll()
-                .requestMatchers("/api/*/users/signup").permitAll()
-                .requestMatchers("/api/*/configurations/authentication-providers").permitAll()
-                .requestMatchers("/api/*/projects/{projectToken}").permitAll()
-                .requestMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
-                .requestMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
-                .requestMatchers("/api/*/widgets/{widgetId}").permitAll()
-                .requestMatchers("/api/*/settings").permitAll()
-                .requestMatchers("/api/*/assets/**").permitAll()
-                .requestMatchers("/ws/**").permitAll()
-                .requestMatchers("/api/oauth2/authorization/**").permitAll()
-                .requestMatchers("/api/**").authenticated())
+                // Make H2 console served by the Jakarta servlet
+                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                // Make other MVC requests served by the DispatcherServlet
+                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.OPTIONS, "/**")).permitAll()
+                // Actuator
+                .requestMatchers(mvcMatcherBuilder.pattern("/actuator/**")).permitAll()
+                // Swagger
+                .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui.html")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/v3/api-docs/**")).permitAll()
+                // Suricate API
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/auth/signin")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/users/signup")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/configurations/authentication-providers"))
+                .permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projects/{projectToken}")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectToken}/projectWidgets"))
+                .permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectWidgetId}")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/widgets/{widgetId}")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/settings")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/assets/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/ws/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/oauth2/authorization/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
+                // Front-End
+                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/**")).permitAll()
+            )
             .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        if (oauth2AuthenticationSuccessHandler.getAuthorizedClientRepository() != null) {
+        if (oauth2SuccessHandler.getAuthorizedClientRepository() != null) {
             http
                 .oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
                     .authorizationEndpoint(authorizationEndpointConfigurer -> authorizationEndpointConfigurer
                         // Store auth request in a http cookie on the IDP response
-                        .authorizationRequestRepository(authRequestRepository)
+                        .authorizationRequestRepository(oauth2RequestRepository)
                         // Override default "oauth2/authorization/" endpoint by adding "/api"
                         // Endpoint that triggers the OAuth2 auth to given IDP
                         .baseUri("/api/oauth2/authorization"))
                     .userInfoEndpoint(userInfoEndpointConfigurer -> userInfoEndpointConfigurer
                         .userService(userService)
                         .oidcUserService(oidcUserService))
-                    .successHandler(oauth2AuthenticationSuccessHandler)
-                    .failureHandler(oauth2AuthenticationFailureHandler));
+                    .successHandler(oauth2SuccessHandler)
+                    .failureHandler(oauth2FailureHandler));
         }
 
         return http.build();
@@ -201,15 +217,28 @@ public class WebConfig implements WebMvcConfigurer {
      * @return The role hierarchy bean
      */
     @Bean
-    protected RoleHierarchyImpl roleHierarchy() {
+    public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
         return roleHierarchy;
     }
 
     /**
+     * Define a method security expression handler.
+     * Used to define the role hierarchy on the method security.
+     *
+     * @return The method security expression handler bean
+     */
+    @Bean
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy());
+        return expressionHandler;
+    }
+
+    /**
      * Define local language
-     * Used in "javax.validation" messages
+     * Used in "jakarta.validation" messages
      *
      * @return The local language
      */

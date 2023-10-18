@@ -18,7 +18,6 @@
 
 package com.michelin.suricate.controllers;
 
-import com.michelin.suricate.configuration.swagger.ApiPageable;
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.dto.api.role.RoleResponseDto;
 import com.michelin.suricate.model.dto.api.user.UserResponseDto;
@@ -36,7 +35,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Optional;
-import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,12 +78,12 @@ public class RoleController {
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
     })
-    @ApiPageable
+    @PageableAsQueryParam
     @GetMapping(value = "/v1/roles")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<RoleResponseDto> getRoles(@Parameter(name = "search", description = "Search keyword")
                                           @RequestParam(value = "search", required = false) String search,
-                                          @ParameterObject Pageable pageable) {
+                                          @Parameter(hidden = true) Pageable pageable) {
         return roleService.getRoles(search, pageable).map(roleMapper::toRoleDto);
     }
 

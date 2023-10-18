@@ -65,7 +65,8 @@ public class OidcUserService extends org.springframework.security.oauth2.client.
             String email = oidcUser.getAttribute("email");
             if (StringUtils.isBlank(email)) {
                 throw new Oauth2AuthenticationProcessingException(
-                    String.format("Email not found from %s", userRequest.getClientRegistration().getRegistrationId()));
+                    String.format("Email not found from %s", StringUtils.capitalize(userRequest.getClientRegistration()
+                        .getRegistrationId())));
             }
 
             String firstName = null;

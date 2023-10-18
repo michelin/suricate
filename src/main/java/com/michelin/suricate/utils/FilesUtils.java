@@ -28,11 +28,6 @@ import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jmimemagic.Magic;
-import net.sf.jmimemagic.MagicException;
-import net.sf.jmimemagic.MagicMatch;
-import net.sf.jmimemagic.MagicMatchNotFoundException;
-import net.sf.jmimemagic.MagicParseException;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -90,17 +85,15 @@ public final class FilesUtils {
     public static Asset readAsset(File file) throws IOException {
         Asset asset = new Asset();
         asset.setContent(FileUtils.readFileToByteArray(file));
-        try {
-            MagicMatch match = Magic.getMagicMatch(asset.getContent());
-            asset.setContentType(match.getMimeType());
-        } catch (MagicParseException | MagicMatchNotFoundException | MagicException e) {
-            log.trace(e.getMessage(), e);
-            asset.setContentType("text/plain");
-        }
+
+        String mimeType = Files.probeContentType(file.toPath()) != null ? Files.probeContentType(file.toPath())
+            : "text/plain";
 
         // Override mime type for javascript
         if (file.getName().endsWith(".js")) {
             asset.setContentType("application/javascript");
+        } else {
+            asset.setContentType(mimeType);
         }
 
         return asset;
