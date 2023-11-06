@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.1.5</version>
     </parent>
 
     <properties>
@@ -31,7 +31,7 @@
         <guava.version>32.1.3-jre</guava.version>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
         <jasypt.version>3.0.5</jasypt.version>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
         <jjwt.version>0.12.3</jjwt.version>
         <jgit.version>6.7.0.202309050840-r</jgit.version>
@@ -342,7 +342,7 @@
                 <version>${jib-maven-plugin.version}</version>
                 <configuration>
                     <from>
-                        <image>adoptopenjdk:17-jre-hotspot</image>
+                        <image>ghcr.io/graalvm/jdk-community:21.0.1-ol9-20231024</image>
                     </from>
                     <to>
                         <image>docker.io/michelin/${project.artifactId}:${project.version}</image>

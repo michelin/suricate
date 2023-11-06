@@ -38,9 +38,17 @@ This repository contains the source code of the Suricate application.
 You can download Suricate as a fat jar from the project's releases page on GitHub
 at https://github.com/michelin/suricate/releases.
 
-Please note that Java 17 is required.
-
 Additionally, a Docker image of the solution is available at https://hub.docker.com/repository/docker/michelin/suricate.
+
+## Requirements
+
+Suricate runs JavaScript widgets from the Back-End side. To enable this functionality, ensure your system meets these
+requirements:
+
+- **Suricate v2.8.0 and Later:** Requires [GraalVM 21](https://www.graalvm.org/downloads/#)
+  for [Polyglot JavaScript support](https://www.graalvm.org/jdk21/reference-manual/embed-languages/).
+- **Suricate Versions Prior to v2.8.0:** Requires [Java 8](https://adoptium.net/fr/temurin/releases/?version=8) for
+  Nashorn.
 
 ## Install
 
@@ -62,6 +70,8 @@ default properties:
 ```console
 docker-compose up -d
 ```
+
+Both Front-End and Back-End will be served on port 8080 by default.
 
 ## Configuration
 
