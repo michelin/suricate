@@ -2,7 +2,7 @@
   <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
   <ol class="carousel-indicators">
-    <li *ngFor="let grid of project.grids" (click)="redirectToGrid(grid.id)" [ngClass]="{ 'indicator-selected': grid.id == gridId }"></li>
+    <li *ngFor="let grid of project.grids" (click)="redirectToGrid(grid.id)" [ngClass]="{ 'indicator-selected': grid.id === gridId }"></li>
     <li (click)="redirectToAddGrid()" [ngClass]="{ 'indicator-selected': !gridId }"></li>
   </ol>
 

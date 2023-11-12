@@ -113,6 +113,12 @@
               "node_modules/moment/min/moment-with-locales.min.js"
             ]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/main/webapp/**/*.ts", "src/main/webapp/**/*.html"]
+          }
         }
       }
     },
@@ -143,5 +149,8 @@
     "@schematics/angular:application": {
       "strict": true
     }
+  },
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

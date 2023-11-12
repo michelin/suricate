@@ -1,6 +1,5 @@
 {
   "hooks": {
-    "pre-commit": "run-s prettyformat",
-    "pre-push": "run-s lint"
+    "pre-commit": "npx pretty-quick --staged"
   }
 }

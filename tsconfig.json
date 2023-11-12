@@ -15,9 +15,5 @@
       "dom"
     ],
     "typeRoots": ["node_modules/@types"]
-  },
-  "angularCompilerOptions": {
-    "enableIvy": true
-  },
-  "aot": false
+  }
 }
