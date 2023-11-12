@@ -31,20 +31,26 @@ import { SidenavService } from '../../../shared/services/frontend/sidenav/sidena
 import { DialogService } from '../../../shared/services/frontend/dialog/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
-import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { flatMap, switchMap, takeUntil, tap } from 'rxjs/operators';
+import {
+  ProjectFormFieldsService
+} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
+import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import {
+  ProjectUsersFormFieldsService
+} from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
 import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid.service';
-import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import {
+  HttpProjectWidgetService
+} from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
@@ -174,19 +180,19 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
       this.refreshProject()
         .pipe(
-          flatMap(() => this.isReadOnlyDashboard()),
-          flatMap(() => this.refreshProjectWidgets())
+          mergeMap(() => this.isReadOnlyDashboard()),
+          mergeMap(() => this.refreshProjectWidgets())
         )
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             this.isDashboardLoading = false;
             this.initHeaderConfiguration();
           },
-          () => {
+          error: () => {
             this.isDashboardLoading = false;
             this.router.navigate(['/home']);
           }
-        );
+      });
     });
   }
 

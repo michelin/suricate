@@ -5,13 +5,15 @@ import { ButtonConfiguration } from '../../../../shared/models/frontend/button/b
 import { UserSetting } from '../../../../shared/models/backend/setting/user-setting';
 import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication.service';
 import { IconEnum } from '../../../../shared/enums/icon.enum';
-import { from } from 'rxjs';
-import { flatMap, toArray } from 'rxjs/operators';
+import { from, mergeMap } from 'rxjs';
+import { toArray } from 'rxjs/operators';
 import { Setting } from '../../../../shared/models/backend/setting/setting';
 import { UserSettingRequest } from '../../../../shared/models/backend/setting/user-setting-request';
 import { AllowedSettingValue } from '../../../../shared/models/backend/setting/allowed-setting-value';
 import { SettingsService } from '../../../services/settings.service';
-import { SettingsFormFieldsService } from '../../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields.service';
+import {
+  SettingsFormFieldsService
+} from '../../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields.service';
 import { FormService } from '../../../../shared/services/frontend/form/form.service';
 import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user.service';
 
@@ -101,7 +103,7 @@ export class UxSettingsComponent implements OnInit {
   private saveSettings(formData: FormData): void {
     from(this.userSettings.map(userSetting => userSetting.setting))
       .pipe(
-        flatMap((setting: Setting) => {
+        mergeMap((setting: Setting) => {
           const userSettingRequest = new UserSettingRequest();
           if (setting.constrained && setting.allowedSettingValues) {
             const selectedAllowedSetting = setting.allowedSettingValues.find((allowedSettingValue: AllowedSettingValue) => {

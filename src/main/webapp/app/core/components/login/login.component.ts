@@ -23,10 +23,14 @@ import { AuthenticationProvider } from '../../../shared/enums/authentication-pro
 import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { LoginFormFieldsService } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
+import {
+  LoginFormFieldsService
+} from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { SettingsService } from '../../services/settings.service';
-import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import {
+  HttpConfigurationService
+} from '../../../shared/services/backend/http-configuration/http-configuration.service';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { TranslateService } from '@ngx-translate/core';
@@ -134,13 +138,13 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.loading = true;
 
-      this.authenticationService.authenticate(this.loginForm.value).subscribe(
-        () => this.navigateToHomePage(),
-        (error: HttpErrorResponse) => {
+      this.authenticationService.authenticate(this.loginForm.value).subscribe({
+        next: () => this.navigateToHomePage(),
+        error: (error: HttpErrorResponse) => {
           this.loading = false;
           this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
         }
-      );
+      });
     }
   }
 

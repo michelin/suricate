@@ -11,13 +11,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": [
-              "sockjs-client",
-              "html2canvas",
-              "jotform-css.js",
-              "url"
-            ],
-            "aot": false,
             "outputPath": "target/dist/public",
             "index": "src/main/webapp/index.html",
             "main": "src/main/webapp/main.ts",
@@ -41,15 +34,28 @@
               "node_modules/lodash/lodash.min.js",
               "node_modules/moment/min/moment-with-locales.min.js"
             ],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
+            "allowedCommonJsDependencies": [
+              "sockjs-client",
+              "html2canvas",
+              "jotform-css.js",
+              "url"
+            ],
             "optimization": false,
-            "namedChunks": true
+            "sourceMap": true,
+            "namedChunks": false,
+            "aot": true,
+            "extractLicenses": false,
+            "vendorChunk": true,
+            "buildOptimizer": true
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/environments/environment.ts",
+                  "with": "src/main/webapp/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "anyComponentStyle",
@@ -58,18 +64,12 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/main/webapp/environments/environment.ts",
-                  "with": "src/main/webapp/environments/environment.prod.ts"
-                }
-              ]
+              "vendorChunk": true,
+              "buildOptimizer": true
             },
             "es5": {
               "budgets": [

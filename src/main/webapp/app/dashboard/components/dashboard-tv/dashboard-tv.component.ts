@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { flatMap, takeUntil, tap } from 'rxjs/operators';
+import { mergeMap, takeUntil, tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -160,12 +160,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.isDashboardLoading = true;
 
     return this.refreshProject(projectToken)
-      .pipe(flatMap(() => this.refreshProjectWidgets(projectToken)))
+      .pipe(mergeMap(() => this.refreshProjectWidgets(projectToken)))
       .pipe(
-        tap(
-          () => (this.isDashboardLoading = false),
-          () => (this.isDashboardLoading = false)
-        )
+        tap({
+          next: () => (this.isDashboardLoading = false),
+          error: () => (this.isDashboardLoading = false)
+        })
       );
   }
 

@@ -21,15 +21,14 @@ import { Repository } from '../../shared/models/backend/repository/repository';
 import { HttpRepositoryService } from '../../shared/services/backend/http-repository/http-repository.service';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
-import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
+import {
+  RepositoryFormFieldsService
+} from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject, EMPTY, forkJoin, from, of, Subject } from 'rxjs';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { concatMap, last } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, EMPTY, forkJoin, of } from 'rxjs';
 import { DatePipe } from '@angular/common';
 
 /**
@@ -196,18 +195,18 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     this.dragAndDropDisabled = true;
     this.toastService.sendMessage('repositories.synchronize.running', ToastTypeEnum.INFO);
 
-    this.httpRepositoryService.synchronize().subscribe(
-      () => {
+    this.httpRepositoryService.synchronize().subscribe({
+      next: () => {
         this.disableAllReposSync.next(false);
         this.dragAndDropDisabled = false;
         this.toastService.sendMessage('repositories.synchronize.success', ToastTypeEnum.SUCCESS);
       },
-      () => {
+      error: () => {
         this.disableAllReposSync.next(false);
         this.dragAndDropDisabled = false;
         this.toastService.sendMessage('repositories.synchronize.failure', ToastTypeEnum.DANGER);
       }
-    );
+    });
   }
 
   /**
@@ -231,10 +230,10 @@ export class RepositoriesComponent extends ListComponent<Repository> {
       this.toastService.sendMessage('repository.update.running', ToastTypeEnum.INFO);
     }
 
-    this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(
-      () => this.onUpdateCreateSuccess(repositoryRequest),
-      () => this.onUpdateCreateError(repositoryRequest)
-    );
+    this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe({
+      next: () => this.onUpdateCreateSuccess(repositoryRequest),
+      error: () => this.onUpdateCreateError(repositoryRequest)
+    });
   }
 
   /**
@@ -250,10 +249,10 @@ export class RepositoriesComponent extends ListComponent<Repository> {
       this.toastService.sendMessage('repository.update.running', ToastTypeEnum.INFO);
     }
 
-    this.httpRepositoryService.create(repositoryRequest).subscribe(
-      () => this.onUpdateCreateSuccess(repositoryRequest),
-      () => this.onUpdateCreateError(repositoryRequest)
-    );
+    this.httpRepositoryService.create(repositoryRequest).subscribe({
+      next: () => this.onUpdateCreateSuccess(repositoryRequest),
+      error: () => this.onUpdateCreateError(repositoryRequest)
+    });
   }
 
   /**
@@ -300,17 +299,17 @@ export class RepositoriesComponent extends ListComponent<Repository> {
 
     forkJoin(
       this.objectsPaged.content.map(repository => this.httpRepositoryService.update(repository.id, Object.assign({}, repository), true))
-    ).subscribe(
-      () => {
+    ).subscribe({
+      next: () => {
         this.disableAllReposSync.next(false);
         this.dragAndDropDisabled = false;
         this.toastService.sendMessage('repository.priority.success', ToastTypeEnum.SUCCESS);
       },
-      () => {
+      error: () => {
         this.disableAllReposSync.next(false);
         this.dragAndDropDisabled = false;
         this.toastService.sendMessage('repository.priority.failure', ToastTypeEnum.DANGER);
       }
-    );
+    });
   }
 }

@@ -4,6 +4,7 @@
   "overrides": [
     {
       "files": ["*.ts"],
+      "plugins": ["deprecation"],
       "parserOptions": {
         "project": ["tsconfig.json", "e2e/tsconfig.json"],
         "createDefaultProgram": true
@@ -13,7 +14,7 @@
         "@angular-eslint/component-selector": [
           "error",
           {
-            "prefix": "app",
+            "prefix": "suricate",
             "style": "kebab-case",
             "type": "element"
           }
@@ -21,11 +22,12 @@
         "@angular-eslint/directive-selector": [
           "error",
           {
-            "prefix": "app",
+            "prefix": "suricate",
             "style": "camelCase",
             "type": "attribute"
           }
-        ]
+        ],
+        "deprecation/deprecation": "warn"
       }
     },
     {

@@ -46,9 +46,10 @@ export class ErrorInterceptor implements HttpInterceptor {
    */
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      tap(
-        () => {},
-        (httpError: any) => {
+      tap({
+        next: () => {
+        },
+        error: (httpError: any) => {
           if (httpError instanceof HttpErrorResponse) {
             switch (httpError.status) {
               // Authentication error, token invalid or expired
@@ -63,7 +64,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             }
           }
         }
-      )
+      })
     );
   }
 
