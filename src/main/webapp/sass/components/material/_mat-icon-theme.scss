@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 /**
@@ -38,7 +39,7 @@
     }
 
     &.mat-primary {
-      color: mat-color($primary, A700);
+      color: mat.get-color-from-palette($primary, A700);
     }
 
     &.mat-default {

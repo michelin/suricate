@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 .file-upload-wrapper {
@@ -65,10 +66,10 @@
   $warn: map-get($theme, warn);
 
   .file-input-button-error {
-    color: mat-color($warn, 500) !important;
+    color: mat.get-color-from-palette($warn, 500) !important;
   }
 
   .file-input-error {
-    color: mat-color($warn, 500);
+    color: mat.get-color-from-palette($warn, 500);
   }
 }

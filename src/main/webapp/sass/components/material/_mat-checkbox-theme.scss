@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 /**
@@ -33,7 +34,7 @@
   .mat-checkbox-checked {
     &.mat-primary {
       .mat-checkbox-background {
-        background-color: mat-color($primary, A700);
+        background-color: mat.get-color-from-palette($primary, A700);
       }
     }
   }
@@ -41,7 +42,7 @@
   .mat-checkbox:not(.mat-checkbox-disabled) {
     .mat-primary {
       .mat-checkbox-ripple .mat-ripple-element {
-        background-color: mat-color($primary, A700, 0.55);
+        background-color: mat.get-color-from-palette($primary, A700, 0.55);
       }
     }
   }

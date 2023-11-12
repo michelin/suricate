@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 .input-wrapper {
@@ -50,6 +51,6 @@
   $warn: map-get($theme, warn);
 
   .input-error {
-    color: mat-color($warn, 500);
+    color: mat.get-color-from-palette($warn, 500);
   }
 }

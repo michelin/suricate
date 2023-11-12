@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 @import '~sass/themes/light-theme/dashboard-light-palette';
@@ -24,9 +25,9 @@
 /* ************************************************************ */
 
 // Select colors
-$light-primary: mat-palette($suricate-palette-light-primary);
-$light-accent: mat-palette($suricate-palette-light-accent);
-$light-warn: mat-palette($suricate-palette-light-warn);
+$light-primary: mat.define-palette($suricate-palette-light-primary);
+$light-accent: mat.define-palette($suricate-palette-light-accent);
+$light-warn: mat.define-palette($suricate-palette-light-warn);
 
 // Theme creation
-$light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
+$light-theme: mat.define-light-theme($light-primary, $light-accent, $light-warn);

@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 @import '~sass/themes/dark-theme/dashboard-dark-palette';
@@ -26,9 +27,9 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$dark-primary: mat-palette($suricate-palette-dark-primary);
-$dark-accent: mat-palette($suricate-palette-dark-accent);
-$dark-warn: mat-palette($suricate-palette-dark-warn);
+$dark-primary: mat.define-palette($suricate-palette-dark-primary);
+$dark-accent: mat.define-palette($suricate-palette-dark-accent);
+$dark-warn: mat.define-palette($suricate-palette-dark-warn);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+$dark-theme: mat.define-dark-theme($dark-primary, $dark-accent, $dark-warn);

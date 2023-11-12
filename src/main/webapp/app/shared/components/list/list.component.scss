@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 .container {
@@ -105,7 +106,7 @@
   $background: map-get($theme, background);
 
   .list-item {
-    color: mat-color($foreground, text);
-    background-color: mat-color($background, background);
+    color: mat.get-color-from-palette($foreground, text);
+    background-color: mat.get-color-from-palette($background, background);
   }
 }

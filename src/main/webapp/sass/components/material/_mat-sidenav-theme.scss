@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 /**
@@ -105,7 +106,7 @@
         }
 
         &:hover {
-          background-color: mat-color($primary, 400);
+          background-color: mat.get-color-from-palette($primary, 400);
         }
 
         mat-icon {
@@ -122,11 +123,11 @@
       }
 
       &:hover {
-        background-color: mat-color($primary, 400);
+        background-color: mat.get-color-from-palette($primary, 400);
       }
 
       &.active {
-        background-color: mat-color($primary, 300);
+        background-color: mat.get-color-from-palette($primary, 300);
       }
     }
 
