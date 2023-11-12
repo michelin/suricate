@@ -10,8 +10,10 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
-    "lib": ["es2018", "dom"],
-    "emitDecoratorMetadata": true,
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "typeRoots": ["node_modules/@types"]
   },
   "angularCompilerOptions": {

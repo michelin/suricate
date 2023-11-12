@@ -31,7 +31,13 @@
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
               "node_modules/moment/min/moment-with-locales.min.js"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -65,7 +71,8 @@
               ],
               "tsConfig": "src/main/webapp/tsconfig-es5.app.json"
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
