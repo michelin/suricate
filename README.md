@@ -31,6 +31,7 @@ This repository contains the source code of the Suricate application.
             * [Name Parsing Strategy](#name-parsing-strategy)
         * [Personal Access Token](#personal-access-token)
     * [Repositories](#repositories)
+* [Swagger UI](#swagger-ui)
 * [Contribution](#contribution)
 
 ## Download
@@ -245,6 +246,15 @@ branch: master
 login: [ Your GitHub login ]
 password: [ Your GitHub password ]
 ```
+
+## Swagger UI
+
+Suricate provides a Swagger UI to test the API. You can access it at http://localhost:8080/swagger-ui/index.html.
+
+You can authenticate using the `POST /api/v1/auth/signin` endpoint and then use the `Authorize` button to add the
+JWT token in the `Authorization` header.
+
+> Note: The authentication through social login is not supported yet by the Swagger UI.
 
 ## Contribution
 
