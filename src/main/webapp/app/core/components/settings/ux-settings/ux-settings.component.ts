@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
 import { UserSetting } from '../../../../shared/models/backend/setting/user-setting';
@@ -24,7 +24,7 @@ export class UxSettingsComponent implements OnInit {
   /**
    * The form group for UX settings
    */
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   /**
    * The form fields for UX settings

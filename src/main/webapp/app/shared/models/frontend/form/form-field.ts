@@ -19,7 +19,7 @@
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { Observable } from 'rxjs';
 import { FormOption } from './form-option';
-import { AsyncValidatorFn, FormGroup, ValidatorFn } from '@angular/forms';
+import { AsyncValidatorFn, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { MosaicFormOption } from './mosaic-form-option';
 import { IconEnum } from '../../../enums/icon.enum';
 
@@ -132,5 +132,5 @@ export class FormField {
   /**
    * The mosaic options
    */
-  mosaicOptions?: (formGroup?: FormGroup) => Observable<MosaicFormOption[]>;
+  mosaicOptions?: (formGroup?: UntypedFormGroup) => Observable<MosaicFormOption[]>;
 }

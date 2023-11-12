@@ -28,7 +28,7 @@ import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 import { WidgetConfigurationFormFieldsService } from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
@@ -289,7 +289,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
         categoryParameters.filter(categorySetting =>
           this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(categorySetting.key, this.projectWidget.backendConfig)
         ).length > 0,
-      slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
+      slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: UntypedFormGroup, formFields: FormField[]) =>
         this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
           categoryParameters,
           event.checked,

@@ -33,7 +33,7 @@ import { IconEnum } from '../../enums/icon.enum';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { DataTypeEnum } from '../../enums/data-type.enum';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormService } from '../../services/frontend/form/form.service';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
@@ -140,7 +140,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   /**
    * The form displayed by the sidenav
    */
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   /**
    * Constructor

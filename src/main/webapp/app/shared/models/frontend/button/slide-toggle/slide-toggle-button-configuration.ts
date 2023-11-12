@@ -1,6 +1,6 @@
 import { FormField } from '../../form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 export class SlideToggleButtonConfiguration {
   /**
@@ -16,5 +16,5 @@ export class SlideToggleButtonConfiguration {
   /**
    * Function called when the slide toggle button is pressed
    */
-  slideToggleButtonPressed?: (event: MatSlideToggleChange, formGroup: FormGroup, formField: FormField[]) => void;
+  slideToggleButtonPressed?: (event: MatSlideToggleChange, formGroup: UntypedFormGroup, formField: FormField[]) => void;
 }

@@ -16,7 +16,7 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketClient } from '../../../shared/models/backend/websocket-client';
@@ -55,7 +55,7 @@ export class TvManagementDialogComponent implements OnInit {
   /**
    * The register screen form
    */
-  public registerScreenCodeFormField: FormGroup;
+  public registerScreenCodeFormField: UntypedFormGroup;
 
   /**
    * The description of the form

@@ -15,7 +15,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, flatMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
@@ -47,7 +47,7 @@ export class RegisterComponent implements OnInit {
   /**
    * The register form
    */
-  public registerForm: FormGroup;
+  public registerForm: UntypedFormGroup;
 
   /**
    * The description of the form

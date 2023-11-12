@@ -18,7 +18,7 @@
 
 import { Component, Injector, Input } from '@angular/core';
 import { InputComponent } from '../input/input.component';
-import { FormArray, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 
@@ -37,7 +37,7 @@ export class FieldsComponent extends InputComponent {
    * @public
    */
   @Input()
-  public formArray: FormArray;
+  public formArray: UntypedFormArray;
 
   /**
    * Constructor
@@ -68,7 +68,7 @@ export class FieldsComponent extends InputComponent {
    * @param innerFormGroup The form group that reflect the row
    * @param index The index of a the row in the parent form
    */
-  public deleteRow(innerFormGroup: FormGroup, index: number): void {
+  public deleteRow(innerFormGroup: UntypedFormGroup, index: number): void {
     this.field.deleteRow.callback(innerFormGroup.value[this.field.deleteRow.attribute]).subscribe(() => {
       this.formArray.removeAt(index);
     });

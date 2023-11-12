@@ -24,7 +24,7 @@ import { map, switchMap, tap, toArray } from 'rxjs/operators';
 import { MosaicFormOption } from '../../../../models/frontend/form/mosaic-form-option';
 import { Category } from '../../../../models/backend/category/category';
 import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
-import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Widget } from '../../../../models/backend/widget/widget';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { HttpWidgetService } from '../../../backend/http-widget/http-widget.service';
@@ -122,7 +122,7 @@ export class ProjectWidgetFormStepsService {
             key: ProjectWidgetFormStepsService.widgetIdFieldKey,
             type: DataTypeEnum.MOSAIC,
             columnNumber: 4,
-            mosaicOptions: (formGroup: FormGroup) => this.getAvailableWidgetsByCategory(formGroup),
+            mosaicOptions: (formGroup: UntypedFormGroup) => this.getAvailableWidgetsByCategory(formGroup),
             validators: [Validators.required]
           }
         ]
@@ -131,7 +131,7 @@ export class ProjectWidgetFormStepsService {
         key: ProjectWidgetFormStepsService.configureWidgetStepKey,
         title: 'widget.configuration',
         icon: IconEnum.WIDGET_CONFIGURATION,
-        asyncFields: (formGroup: FormGroup, step: FormStep) => this.getWidgetConfigurationFields(formGroup, step)
+        asyncFields: (formGroup: UntypedFormGroup, step: FormStep) => this.getWidgetConfigurationFields(formGroup, step)
       }
     ]);
   }
@@ -201,7 +201,7 @@ export class ProjectWidgetFormStepsService {
   /**
    * Get the available widgets for a given category
    */
-  private getAvailableWidgetsByCategory(formGroup: FormGroup): Observable<MosaicFormOption[]> {
+  private getAvailableWidgetsByCategory(formGroup: UntypedFormGroup): Observable<MosaicFormOption[]> {
     const categoryId = formGroup.root.value['categoryStep']['categoryId'];
 
     if (categoryId || categoryId === 0) {
@@ -230,7 +230,7 @@ export class ProjectWidgetFormStepsService {
    * @param formGroup The form group of the selected widget
    * @param step the current step
    */
-  private getWidgetConfigurationFields(formGroup: FormGroup, step: FormStep): Observable<FormField[]> {
+  private getWidgetConfigurationFields(formGroup: UntypedFormGroup, step: FormStep): Observable<FormField[]> {
     const widgetId = formGroup.root.value['widgetStep']['widgetId'];
 
     if (widgetId || widgetId === 0) {

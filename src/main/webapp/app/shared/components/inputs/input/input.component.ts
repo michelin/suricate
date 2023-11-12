@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
@@ -57,7 +57,7 @@ export class InputComponent implements OnInit {
    * The form created in which we have to create the input
    */
   @Input()
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   /**
    * Object that hold different information used for the instantiation of the input

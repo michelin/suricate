@@ -11,14 +11,20 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["sockjs-client", "@stomp/rx-stomp", "url"],
+            "allowedCommonJsDependencies": [
+              "sockjs-client",
+              "@stomp/rx-stomp",
+              "url"
+            ],
             "aot": false,
             "outputPath": "target/dist/public",
             "index": "src/main/webapp/index.html",
             "main": "src/main/webapp/main.ts",
             "tsConfig": "src/main/webapp/tsconfig.app.json",
             "polyfills": "src/main/webapp/polyfills.ts",
-            "assets": ["src/main/webapp/assets"],
+            "assets": [
+              "src/main/webapp/assets"
+            ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
@@ -26,7 +32,9 @@
                 "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
-            "styles": ["src/main/webapp/sass/styles.scss"],
+            "styles": [
+              "src/main/webapp/sass/styles.scss"
+            ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
@@ -98,7 +106,9 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/main/webapp/polyfills.ts",
             "tsConfig": "src/main/webapp/tsconfig.spec.json",
-            "assets": ["src/main/webapp/assets"],
+            "assets": [
+              "src/main/webapp/assets"
+            ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
@@ -106,7 +116,9 @@
                 "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
-            "styles": ["src/main/webapp/sass/styles.scss"],
+            "styles": [
+              "src/main/webapp/sass/styles.scss"
+            ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
@@ -117,7 +129,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/main/webapp/**/*.ts", "src/main/webapp/**/*.html"]
+            "lintFilePatterns": [
+              "src/main/webapp/**/*.ts",
+              "src/main/webapp/**/*.html"
+            ]
           }
         }
       }
@@ -137,7 +152,6 @@
       }
     }
   },
-  "defaultProject": "suricate-frontend",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "suricate",
@@ -151,6 +165,8 @@
     }
   },
   "cli": {
-    "defaultCollection": "@angular-eslint/schematics"
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }

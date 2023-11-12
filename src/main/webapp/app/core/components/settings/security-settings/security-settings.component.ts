@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
 import { FormService } from '../../../../shared/services/frontend/form/form.service';
@@ -40,7 +40,7 @@ export class SecuritySettingsComponent implements OnInit {
   /**
    * The form group for UX settings
    */
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   /**
    * The form fields for UX settings

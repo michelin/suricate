@@ -17,7 +17,7 @@
 import { Injectable } from '@angular/core';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
 import { FormService } from '../../form/form.service';
@@ -122,7 +122,7 @@ export class WidgetConfigurationFormFieldsService {
   public addOrRemoveCategoryParametersFormFields(
     categorySettings: CategoryParameter[],
     checked: boolean,
-    formGroup: FormGroup,
+    formGroup: UntypedFormGroup,
     fields: FormField[],
     widgetBackendConfig?: string
   ): void {

@@ -15,7 +15,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
   /**
    * The login form
    */
-  public loginForm: FormGroup;
+  public loginForm: UntypedFormGroup;
 
   /**
    * Fields used to describe/create the form

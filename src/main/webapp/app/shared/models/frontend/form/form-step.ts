@@ -19,7 +19,7 @@
 import { FormField } from './form-field';
 import { IconEnum } from '../../../enums/icon.enum';
 import { Observable } from 'rxjs';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { LinkConfiguration } from '../link/link-configuration';
 import { Category } from '../../backend/category/category';
 
@@ -70,7 +70,7 @@ export class FormStep {
   /**
    * Used to retrieve fields in an async way
    */
-  asyncFields?: (formGroup?: FormGroup, step?: FormStep) => Observable<FormField[]>;
+  asyncFields?: (formGroup?: UntypedFormGroup, step?: FormStep) => Observable<FormField[]>;
 
   /**
    * If the step is optional

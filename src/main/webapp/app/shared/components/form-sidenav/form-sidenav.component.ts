@@ -18,7 +18,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { IconEnum } from '../../enums/icon.enum';
@@ -56,7 +56,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   /**
    * The form displayed by the sidenav
    */
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
