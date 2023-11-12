@@ -59,7 +59,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 break;
 
               case 0:
-                this.displayUnknowErrorMessage();
+                this.displayUnknownErrorMessage();
                 break;
             }
           }
@@ -69,9 +69,9 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   /**
-   * Display the message when an unknown error occured
+   * Display the message when an unknown error occurred
    */
-  private displayUnknowErrorMessage(): void {
+  private displayUnknownErrorMessage(): void {
     this.toastService.sendMessage('server.unavailable', ToastTypeEnum.DANGER, 'server.unavailable.explanation');
   }
 }
