@@ -15,20 +15,20 @@
  *  * limitations under the License.
  *
  */
-@import '~sass/components/material/mat-sidenav-theme';
-@import '~sass/components/material/mat-icon-theme';
-@import '~sass/components/material/mat-button-theme';
-@import '~sass/components/material/mat-slide-toggle-theme';
-@import '~sass/components/material/mat-checkbox-theme';
-@import '~sass/components/material/mat-stepper-theme';
-@import '~sass/components/material/mat-form-field-theme';
-@import '~sass/components/material/mat-grid-list-theme';
-@import '~sass/components/material/mat-tab-group-theme';
-@import '~app/shared/components/communication-dialog/communication-dialog.component';
-@import '~app/shared/components/list/list.component';
-@import '~app/shared/components/inputs/input/input.component';
-@import '~app/shared/components/inputs/file-input/file-input.component';
-@import '~app/dashboard/components/dashboard-detail/dashboard-detail.component';
+@import 'sass/components/material/mat-sidenav-theme';
+@import 'sass/components/material/mat-icon-theme';
+@import 'sass/components/material/mat-button-theme';
+@import 'sass/components/material/mat-slide-toggle-theme';
+@import 'sass/components/material/mat-checkbox-theme';
+@import 'sass/components/material/mat-stepper-theme';
+@import 'sass/components/material/mat-form-field-theme';
+@import 'sass/components/material/mat-grid-list-theme';
+@import 'sass/components/material/mat-tab-group-theme';
+@import 'app/shared/components/communication-dialog/communication-dialog.component';
+@import 'app/shared/components/list/list.component';
+@import 'app/shared/components/inputs/input/input.component';
+@import 'app/shared/components/inputs/file-input/file-input.component';
+@import 'app/dashboard/components/dashboard-detail/dashboard-detail.component';
 
 /**
  * Mixin that inject every custom components (used in theme definitions)

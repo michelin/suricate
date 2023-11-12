@@ -20,7 +20,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FileUtils } from '../../../utils/file.utils';
-import * as html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas';
 
 /**
  * Component that manage the file input

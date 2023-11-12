@@ -30,7 +30,6 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
-import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
@@ -38,12 +37,15 @@ import { HttpAssetService } from '../../../shared/services/backend/http-asset/ht
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
+import {
+  ProjectWidgetPositionRequest
+} from '../../../shared/models/backend/project-widget/project-widget-position-request';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { LibraryService } from '../../services/library/library.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { IMessage } from '@stomp/rx-stomp';
 
 /**
  * Display the grid stack widgets
@@ -356,7 +358,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     this.websocketService
       .watch(projectSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribeProjectWebSocket))
-      .subscribe((stompMessage: Stomp.Message) => {
+      .subscribe((stompMessage: IMessage) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         switch (updateEvent.type) {
@@ -388,7 +390,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     this.websocketService
       .watch(screenSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribeProjectWebSocket))
-      .subscribe((stompMessage: Stomp.Message) => {
+      .subscribe((stompMessage: IMessage) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {

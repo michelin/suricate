@@ -18,16 +18,19 @@ import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
-import * as Stomp from '@stomp/stompjs';
 import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav.service';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
-import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import {
+  ProjectWidgetFormStepsService
+} from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
-import { WidgetConfigurationFormFieldsService } from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import {
+  WidgetConfigurationFormFieldsService
+} from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { UntypedFormGroup } from '@angular/forms';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -35,7 +38,9 @@ import { ProjectWidget } from '../../../../shared/models/backend/project-widget/
 import { Widget } from '../../../../shared/models/backend/widget/widget';
 import { WidgetStateEnum } from '../../../../shared/enums/widget-sate.enum';
 import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget.service';
-import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import {
+  HttpProjectWidgetService
+} from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket.service';
 import { LibraryService } from '../../../services/library/library.service';
 import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
@@ -43,8 +48,11 @@ import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websock
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
+import {
+  SlideToggleButtonConfiguration
+} from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
+import { IMessage } from '@stomp/rx-stomp';
 
 /**
  * Display the grid stack widgets
@@ -181,7 +189,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     this.websocketService
       .watch(projectWidgetSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe((stompMessage: Stomp.Message) => {
+      .subscribe((stompMessage: IMessage) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         if (updateEvent.type === WebsocketUpdateTypeEnum.REFRESH_WIDGET) {

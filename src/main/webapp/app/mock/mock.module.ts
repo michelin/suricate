@@ -17,7 +17,6 @@
  */
 
 import { ElementRef, NgModule } from '@angular/core';
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { MockRxStompService } from './services/mock-rx-stomp/mock-rx-stomp.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -28,6 +27,8 @@ import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../layout/layout.module';
 import { MockElementRef } from './models/mock-element-ref';
 import { NgGrid } from 'angular2-grid';
+import { RxStompService } from '../shared/services/frontend/rx-stomp/rx-stomp.service';
+import { CoreModule } from '../core/core.module';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { NgGrid } from 'angular2-grid';
     }),
     LayoutModule,
     SharedModule,
+    CoreModule,
     HttpClientTestingModule,
     RouterTestingModule
   ],

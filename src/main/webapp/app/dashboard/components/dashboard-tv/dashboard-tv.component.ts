@@ -20,7 +20,6 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { flatMap, takeUntil, tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
@@ -28,7 +27,10 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import {
+  HttpProjectWidgetService
+} from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import { IMessage } from '@stomp/rx-stomp';
 
 /**
  * Dashboard TV Management
@@ -73,14 +75,14 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The returned object of the setInterval rotation
    */
-  private rotationInterval;
+  private rotationInterval: NodeJS.Timeout;
 
   /**
    * Time in percent for progress bar
    */
   public timer = 0;
   public timerPercentage = 100;
-  public timerInterval;
+  public timerInterval: NodeJS.Timeout;
 
   /**
    * The constructor
@@ -138,7 +140,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.websocketService
       .watch(waitingConnectionUrl)
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe((stompMessage: Stomp.Message) => {
+      .subscribe((stompMessage: IMessage) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         // Received when synchronizing to a single dashboard
@@ -263,7 +265,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Disconnect TV from stompJS
+   * Disconnect TV from RxStomp
    */
   private disconnectTV(): void {
     this.unsubscribe.next();
