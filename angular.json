@@ -113,13 +113,6 @@
               "node_modules/moment/min/moment-with-locales.min.js"
             ]
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["src/main/webapp/tsconfig.app.json", "src/main/webapp/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     },
@@ -133,13 +126,6 @@
           "options": {
             "protractorConfig": "./protractor.conf.js",
             "devServerTarget": "suricate-frontend:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**"]
           }
         }
       }

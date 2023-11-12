@@ -28,16 +28,15 @@ import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widge
 import { TvManagementDialogComponent } from './components/tv-management-dialog/tv-management-dialog.component';
 
 @NgModule({
-  imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
-  declarations: [
-    DashboardDetailComponent,
-    DashboardScreenComponent,
-    DashboardScreenWidgetComponent,
-    DashboardTvComponent,
-    AddWidgetToProjectWizardComponent,
-    TvManagementDialogComponent
-  ],
-  entryComponents: [],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
+    declarations: [
+        DashboardDetailComponent,
+        DashboardScreenComponent,
+        DashboardScreenWidgetComponent,
+        DashboardTvComponent,
+        AddWidgetToProjectWizardComponent,
+        TvManagementDialogComponent
+    ],
+    exports: [RouterModule]
 })
 export class DashboardModule {}
