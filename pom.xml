@@ -414,7 +414,7 @@
                                 </goals>
                                 <configuration>
                                     <!-- For Node > 4.0.0 the plugin will use npm embedded by node -->
-                                    <nodeVersion>v12.13.1</nodeVersion>
+                                    <nodeVersion>v16.20.2</nodeVersion>
                                 </configuration>
                             </execution>
                             <!-- Install Angular dependencies -->

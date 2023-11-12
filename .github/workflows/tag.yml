@@ -24,10 +24,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Set up NodeJS 12.x
+      - name: Set up NodeJS 16.x
         uses: actions/setup-node@v4
         with:
-          node-version: '12.x'
+          node-version: '16.x'
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
