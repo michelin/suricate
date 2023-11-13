@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class OidcUserService extends org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService {
+public class OpenIdcUserService extends OidcUserService {
     @Autowired
     private UserService userService;
 

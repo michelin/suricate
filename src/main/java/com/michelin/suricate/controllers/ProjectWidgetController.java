@@ -46,7 +46,6 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -136,7 +135,7 @@ public class ProjectWidgetController {
         Project project = projectOptional.get();
         List<ProjectWidget> allWidgets =
             project.getGrids().stream().map(ProjectGrid::getWidgets).flatMap(Collection::stream)
-                .collect(Collectors.toList());
+                .toList();
         if (allWidgets.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

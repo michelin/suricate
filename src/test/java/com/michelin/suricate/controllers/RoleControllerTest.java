@@ -15,7 +15,6 @@ import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -58,7 +57,7 @@ class RoleControllerTest {
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(roleResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(roleResponseDto);
     }
 
     @Test

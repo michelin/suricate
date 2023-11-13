@@ -17,7 +17,6 @@
 package com.michelin.suricate.security;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,7 +65,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
         super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true,
             true,
             user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList()));
+                .toList());
         this.user = user;
         this.attributes = attributes;
     }
@@ -82,7 +81,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
         super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true,
             true,
             user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList()));
+                .toList());
         this.user = user;
         this.attributes = attributes;
         this.idToken = idToken;

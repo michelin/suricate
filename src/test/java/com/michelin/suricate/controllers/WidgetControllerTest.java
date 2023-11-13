@@ -14,7 +14,6 @@ import com.michelin.suricate.services.mapper.WidgetMapper;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,7 +53,7 @@ class WidgetControllerTest {
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(widgetResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(widgetResponseDto);
     }
 
     @Test

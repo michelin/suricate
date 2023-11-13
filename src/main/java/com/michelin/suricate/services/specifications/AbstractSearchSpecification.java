@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +34,7 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
      */
     protected AbstractSearchSpecification(final String search, final SingularAttribute<T, String>... filterAttributes) {
         this.search = search;
-        this.attributes = Arrays.stream(filterAttributes).map(Attribute::getName).collect(Collectors.toList());
+        this.attributes = Arrays.stream(filterAttributes).map(Attribute::getName).toList();
     }
 
     /**

@@ -21,7 +21,6 @@ import com.michelin.suricate.model.enums.AuthenticationProvider;
 import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.services.api.UserService;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +70,6 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
         return registeredUser.getRoles()
             .stream()
             .map(role -> new SimpleGrantedAuthority(role.getName()))
-            .collect(Collectors.toList());
+            .toList();
     }
 }

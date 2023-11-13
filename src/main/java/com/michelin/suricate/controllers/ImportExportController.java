@@ -22,7 +22,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +117,7 @@ public class ImportExportController {
         List<Repository> repositories = importDto.getRepositories()
             .stream()
             .map(repositoryMapper::toRepositoryEntity)
-            .collect(Collectors.toList());
+            .toList();
 
         // For existing repos, restore the ID
         repositories.forEach(repository -> {
@@ -132,7 +131,7 @@ public class ImportExportController {
         List<Project> projects = importDto.getProjects()
             .stream()
             .map(projectMapper::toProjectEntity)
-            .collect(Collectors.toList());
+            .toList();
 
         projectService.createUpdateProjects(projects, connectedUser.getUser());
 
