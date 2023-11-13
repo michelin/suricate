@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -136,7 +135,7 @@ public class CategoryService {
             .map(configurations -> configurations
                 .stream()
                 .map(CategoryParametersService::convertCategoryParametersToWidgetParameters)
-                .collect(Collectors.toList()))
+                .toList())
             .orElseGet(ArrayList::new);
     }
 }

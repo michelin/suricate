@@ -12,7 +12,6 @@ import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -42,7 +41,7 @@ public class JwtHelperService {
         claims.put("email", userPrincipal.getUser().getEmail());
         claims.put("avatar_url", userPrincipal.getUser().getAvatarUrl());
         claims.put("roles",
-            userPrincipal.getUser().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+            userPrincipal.getUser().getRoles().stream().map(Role::getName).toList());
         claims.put("mode", userPrincipal.getUser().getAuthenticationMethod());
 
         Date now = new Date();

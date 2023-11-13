@@ -25,7 +25,6 @@ import com.michelin.suricate.utils.IdUtils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,7 +66,7 @@ public class LibraryService {
             .flatMap(Collection::stream)
             .map(projectWidget -> projectWidget.getWidget().getId())
             .distinct()
-            .collect(Collectors.toList());
+            .toList();
 
         if (widgetIds.isEmpty()) {
             return Collections.emptyList();
@@ -88,7 +87,7 @@ public class LibraryService {
             .stream()
             .map(library -> library.getAsset().getId())
             .map(IdUtils::encrypt)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**

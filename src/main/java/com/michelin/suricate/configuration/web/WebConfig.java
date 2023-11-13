@@ -24,7 +24,7 @@ import com.michelin.suricate.security.oauth2.HttpCookieOauth2AuthorizationReques
 import com.michelin.suricate.security.oauth2.Oauth2AuthenticationFailureHandler;
 import com.michelin.suricate.security.oauth2.Oauth2AuthenticationSuccessHandler;
 import com.michelin.suricate.security.oauth2.Oauth2UserService;
-import com.michelin.suricate.security.oauth2.OidcUserService;
+import com.michelin.suricate.security.oauth2.OpenIdcUserService;
 import java.io.IOException;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
@@ -66,6 +66,9 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebConfig implements WebMvcConfigurer {
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
     /**
      * The view resolver.
      *
@@ -94,17 +97,17 @@ public class WebConfig implements WebMvcConfigurer {
      * @param authFailureEntryPoint   The authentication failure entry point
      * @param oauth2RequestRepository The auth request repository
      * @param userService             The user service
-     * @param oidcUserService         The oidc user service
+     * @param openIdcUserService         The oidc user service
      * @param oauth2SuccessHandler    The oauth2 authentication success handler
      * @param oauth2FailureHandler    The oauth2 authentication failure handler
      * @return The security filter chain
      * @throws Exception When an error occurred
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, ApplicationProperties applicationProperties,
+    public SecurityFilterChain filterChain(HttpSecurity http,
                                            AuthenticationFailureEntryPoint authFailureEntryPoint,
                                            HttpCookieOauth2AuthorizationRequestRepository oauth2RequestRepository,
-                                           Oauth2UserService userService, OidcUserService oidcUserService,
+                                           Oauth2UserService userService, OpenIdcUserService openIdcUserService,
                                            @Autowired(required = false)
                                            Oauth2AuthenticationSuccessHandler oauth2SuccessHandler,
                                            Oauth2AuthenticationFailureHandler oauth2FailureHandler,
@@ -113,11 +116,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         http
             .cors(corsConfigurer -> corsConfigurer
-                .configurationSource(new UrlBasedCorsConfigurationSource() {
-                    {
-                        registerCorsConfiguration("/api/**", applicationProperties.getCors());
-                    }
-                }))
+                .configurationSource(corsConfiguration()))
             .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)
@@ -170,12 +169,23 @@ public class WebConfig implements WebMvcConfigurer {
                         .baseUri("/api/oauth2/authorization"))
                     .userInfoEndpoint(userInfoEndpointConfigurer -> userInfoEndpointConfigurer
                         .userService(userService)
-                        .oidcUserService(oidcUserService))
+                        .oidcUserService(openIdcUserService))
                     .successHandler(oauth2SuccessHandler)
                     .failureHandler(oauth2FailureHandler));
         }
 
         return http.build();
+    }
+
+    /**
+     * Define the CORS configuration.
+     *
+     * @return The CORS configuration
+     */
+    public UrlBasedCorsConfigurationSource corsConfiguration() {
+        UrlBasedCorsConfigurationSource corsConfiguration = new UrlBasedCorsConfigurationSource();
+        corsConfiguration.registerCorsConfiguration("/api/**", applicationProperties.getCors());
+        return corsConfiguration;
     }
 
     /**

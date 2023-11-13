@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -96,7 +95,7 @@ class ProjectControllerTest {
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(projectResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(projectResponseDto);
     }
 
     @Test

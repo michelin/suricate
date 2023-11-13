@@ -138,19 +138,6 @@ class DashboardWebSocketServiceTest {
     }
 
     @Test
-    void shouldSendEventToScreenProjectSubscriber() {
-        UpdateEvent updateEvent = new UpdateEvent();
-        updateEvent.setDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
-        updateEvent.setContent("test");
-        updateEvent.setType(CONNECT_DASHBOARD);
-
-        dashboardWebSocketService.sendEventToScreenProjectSubscriber("token", "screen", updateEvent);
-
-        verify(simpMessagingTemplate)
-            .convertAndSendToUser("token-screen", "/queue/unique", updateEvent);
-    }
-
-    @Test
     void shouldAddClientToProjectAndRefreshFirstClient() {
         WebsocketClient websocketClient = new WebsocketClient();
         websocketClient.setProjectToken("token");

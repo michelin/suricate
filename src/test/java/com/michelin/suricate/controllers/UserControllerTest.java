@@ -32,7 +32,6 @@ import com.michelin.suricate.utils.exceptions.UsernameAlreadyExistException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -94,7 +93,7 @@ class UserControllerTest {
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(adminUserResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(adminUserResponseDto);
     }
 
     @Test
@@ -114,7 +113,7 @@ class UserControllerTest {
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(userResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(userResponseDto);
     }
 
     @Test

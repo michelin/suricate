@@ -29,7 +29,7 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 
 @ExtendWith(MockitoExtension.class)
-class OidcUserServiceTest {
+class OpenIdcUserServiceTest {
     @Mock
     private UserService userService;
 
@@ -40,7 +40,7 @@ class OidcUserServiceTest {
     private Oauth2UserService oauth2UserService;
 
     @InjectMocks
-    private OidcUserService oidcUserService;
+    private OpenIdcUserService openIdcUserService;
 
     @Test
     void shouldNotLoadUserWhenIdProviderNotRecognized() {
@@ -84,7 +84,7 @@ class OidcUserServiceTest {
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        assertThatThrownBy(() -> oidcUserService.loadUser(request))
+        assertThatThrownBy(() -> openIdcUserService.loadUser(request))
             .isInstanceOf(Oauth2AuthenticationProcessingException.class)
             .hasMessage("ID provider unknownIDP is not recognized");
     }
@@ -131,7 +131,7 @@ class OidcUserServiceTest {
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        assertThatThrownBy(() -> oidcUserService.loadUser(request))
+        assertThatThrownBy(() -> openIdcUserService.loadUser(request))
             .isInstanceOf(Oauth2AuthenticationProcessingException.class)
             .hasMessage("Username not found from gitlab");
     }
@@ -179,7 +179,7 @@ class OidcUserServiceTest {
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        assertThatThrownBy(() -> oidcUserService.loadUser(request))
+        assertThatThrownBy(() -> openIdcUserService.loadUser(request))
             .isInstanceOf(Oauth2AuthenticationProcessingException.class)
             .hasMessage("Email not found from Gitlab");
     }
@@ -242,7 +242,7 @@ class OidcUserServiceTest {
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        LocalUser actual = (LocalUser) oidcUserService.loadUser(request);
+        LocalUser actual = (LocalUser) openIdcUserService.loadUser(request);
 
         assertThat(actual.getUsername()).isEqualTo("username");
         assertThat(actual.getPassword()).isEqualTo("password");
@@ -317,7 +317,7 @@ class OidcUserServiceTest {
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        LocalUser actual = (LocalUser) oidcUserService.loadUser(request);
+        LocalUser actual = (LocalUser) openIdcUserService.loadUser(request);
 
         assertThat(actual.getUsername()).isEqualTo("username");
         assertThat(actual.getPassword()).isEqualTo("password");
@@ -383,7 +383,7 @@ class OidcUserServiceTest {
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        LocalUser actual = (LocalUser) oidcUserService.loadUser(request);
+        LocalUser actual = (LocalUser) openIdcUserService.loadUser(request);
 
         assertThat(actual.getUsername()).isEqualTo("username");
         assertThat(actual.getPassword()).isEqualTo("password");

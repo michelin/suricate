@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -49,7 +48,7 @@ public final class FilesUtils {
                 return list.map(Path::toFile)
                     .filter(File::isDirectory)
                     .sorted()
-                    .collect(Collectors.toList());
+                    .toList();
 
             }
         }
@@ -69,7 +68,7 @@ public final class FilesUtils {
                 return list.map(Path::toFile)
                     .filter(File::isFile)
                     .sorted()
-                    .collect(Collectors.toList());
+                    .toList();
             }
         }
         return Collections.emptyList();

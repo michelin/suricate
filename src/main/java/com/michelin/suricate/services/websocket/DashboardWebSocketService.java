@@ -153,27 +153,6 @@ public class DashboardWebSocketService {
     }
 
     /**
-     * Send an event through the associated websocket to the unique subscriber.
-     * The path of the websocket contains a project token and a screen code so it is unique for each
-     * screen (so each subscriber).
-     * Used to disconnect a given single screen from a dashboard.
-     *
-     * @param projectToken The project
-     * @param screenCode   The unique screen code
-     */
-    @Async
-    public void sendEventToScreenProjectSubscriber(String projectToken, String screenCode, UpdateEvent payload) {
-        log.debug("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken,
-            screenCode.replaceAll("[\n\r\t]", "_"));
-
-        simpMessagingTemplate.convertAndSendToUser(
-            projectToken.trim() + "-" + screenCode,
-            "/queue/unique",
-            payload
-        );
-    }
-
-    /**
      * Add a new link between a project (dashboard) materialized by its projectToken
      * and a client materialized by its WebsocketClient.
      * Triggered when a new subscription to a dashboard is done.
@@ -261,9 +240,18 @@ public class DashboardWebSocketService {
      * @param projectToken The project token
      * @param screenCode   The screen code
      */
+    @Async
     public void disconnectClient(final String projectToken, final String screenCode) {
-        sendEventToScreenProjectSubscriber(projectToken, screenCode,
-            UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
+        UpdateEvent payload = UpdateEvent.builder().type(UpdateType.DISCONNECT).build();
+
+        log.info("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken,
+            screenCode.replaceAll("[\n\r\t]", "_"));
+
+        simpMessagingTemplate.convertAndSendToUser(
+            projectToken.trim() + "-" + screenCode,
+            "/queue/unique",
+            payload
+        );
     }
 
     /**
