@@ -146,9 +146,7 @@ public class WidgetService {
 
             if (widgetVariableResponseDto.getType() != null) {
                 switch (widgetVariableResponseDto.getType()) {
-                    case COMBO:
-
-                    case MULTIPLE:
+                    case COMBO, MULTIPLE:
                         widgetVariableResponseDto.setValues(
                             getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
                         break;
