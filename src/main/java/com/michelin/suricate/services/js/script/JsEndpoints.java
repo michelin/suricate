@@ -47,14 +47,13 @@ public final class JsEndpoints {
      * @param headerValue    The value to set to the added header
      * @param headerToReturn The name of the header to return
      * @param body           The body of the request. Can be null in case of GET HTTP request
-     * @param mediaType      The requested media type
      * @return The response body of the request or the value of the requested header
      * @throws IOException      If an error occurred during the execution of the request
      * @throws RemoteException  If an error occurred during the execution of the request
      * @throws RequestException If an error occurred during the execution of the request
      */
     private static String executeRequest(String url, String headerName, String headerValue, String headerToReturn,
-                                         String body, String mediaType, boolean returnCode)
+                                         String body, boolean returnCode)
         throws IOException, RemoteException, RequestException {
         Request.Builder builder = new Request.Builder().url(url);
 
@@ -63,7 +62,8 @@ public final class JsEndpoints {
         }
 
         if (StringUtils.isNotBlank(body)) {
-            builder.post(RequestBody.create(body, MediaType.parse(mediaType)));
+            builder.post(
+                RequestBody.create(body, MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE)));
         }
 
         Request request = builder.build();
@@ -103,7 +103,7 @@ public final class JsEndpoints {
      * @return The response body of the request
      */
     public static String get(String url) throws RemoteException, IOException, RequestException {
-        return JsEndpoints.executeRequest(url, null, null, null, null, "application/json", false);
+        return JsEndpoints.executeRequest(url, null, null, null, null, false);
     }
 
     /**
@@ -114,7 +114,7 @@ public final class JsEndpoints {
      * @return The http status code
      */
     public static String get(String url, boolean returnCode) throws IOException, RemoteException, RequestException {
-        return JsEndpoints.executeRequest(url, null, null, null, null, "application/json", returnCode);
+        return JsEndpoints.executeRequest(url, null, null, null, null, returnCode);
     }
 
     /**
@@ -127,7 +127,7 @@ public final class JsEndpoints {
      */
     public static String get(String url, String headerName, String headerValue)
         throws RemoteException, IOException, RequestException {
-        return JsEndpoints.executeRequest(url, headerName, headerValue, null, null, "application/json", false);
+        return JsEndpoints.executeRequest(url, headerName, headerValue, null, null, false);
     }
 
     /**
@@ -141,7 +141,7 @@ public final class JsEndpoints {
      */
     public static String get(String url, String headerName, String headerValue, boolean returnCode)
         throws RemoteException, IOException, RequestException {
-        return JsEndpoints.executeRequest(url, headerName, headerValue, null, null, "application/json", returnCode);
+        return JsEndpoints.executeRequest(url, headerName, headerValue, null, null, returnCode);
     }
 
     /**
@@ -155,8 +155,7 @@ public final class JsEndpoints {
      */
     public static String get(String url, String headerName, String headerValue, String headerToReturn)
         throws RemoteException, IOException, RequestException {
-        return JsEndpoints.executeRequest(url, headerName, headerValue, headerToReturn, null, "application/json",
-            false);
+        return JsEndpoints.executeRequest(url, headerName, headerValue, headerToReturn, null, false);
     }
 
     /**
@@ -168,7 +167,7 @@ public final class JsEndpoints {
      */
     public static String post(String url, String body) throws RemoteException, IOException, RequestException {
         return JsEndpoints.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body,
-            "application/json", false);
+            false);
     }
 
     /**
@@ -182,7 +181,7 @@ public final class JsEndpoints {
     public static String post(String url, String body, boolean returnCode)
         throws RemoteException, IOException, RequestException {
         return JsEndpoints.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body,
-            "application/json", returnCode);
+            returnCode);
     }
 
     /**
@@ -197,7 +196,7 @@ public final class JsEndpoints {
     public static String post(String url, String body, String headerName, String headerValue)
         throws RemoteException, IOException, RequestException {
         return JsEndpoints.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body,
-            "application/json", false);
+            false);
     }
 
     /**
@@ -213,7 +212,7 @@ public final class JsEndpoints {
     public static String post(String url, String body, String headerName, String headerValue, boolean returnCode)
         throws RemoteException, IOException, RequestException {
         return JsEndpoints.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body,
-            "application/json", returnCode);
+            returnCode);
     }
 
     /**

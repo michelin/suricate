@@ -31,7 +31,6 @@ import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.utils.WidgetUtils;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -157,9 +156,8 @@ public class GitService {
 
         localRepository.mkdirs();
 
-        String remoteRepository = new URL(url).toExternalForm();
         CloneCommand cloneCmd = Git.cloneRepository()
-            .setURI(remoteRepository)
+            .setURI(url)
             .setBranch(branch)
             .setDirectory(localRepository);
 
