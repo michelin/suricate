@@ -24,6 +24,7 @@ import com.michelin.suricate.model.entities.Repository;
 import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.model.entities.WidgetParam;
 import com.michelin.suricate.model.entities.WidgetParamValue;
+import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import com.michelin.suricate.repositories.WidgetParamRepository;
 import com.michelin.suricate.repositories.WidgetRepository;
@@ -144,17 +145,12 @@ public class WidgetService {
             widgetVariableResponseDto.setType(widgetParameter.getType());
             widgetVariableResponseDto.setDefaultValue(widgetParameter.getDefaultValue());
 
-            if (widgetVariableResponseDto.getType() != null) {
-                switch (widgetVariableResponseDto.getType()) {
-                    case COMBO, MULTIPLE:
-                        widgetVariableResponseDto.setValues(
-                            getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
-                        break;
-
-                    default:
-                        widgetVariableResponseDto.setData(StringUtils.trimToNull(widgetParameter.getDefaultValue()));
-                        break;
-                }
+            if (widgetVariableResponseDto.getType() == DataTypeEnum.COMBO
+                || widgetVariableResponseDto.getType() == DataTypeEnum.MULTIPLE) {
+                widgetVariableResponseDto.setValues(
+                    getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
+            } else {
+                widgetVariableResponseDto.setData(StringUtils.trimToNull(widgetParameter.getDefaultValue()));
             }
 
             widgetVariableResponseDtos.add(widgetVariableResponseDto);
