@@ -33,13 +33,26 @@
     margin-right: 15px;
 
     .upload-button {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
       .mat-icon {
-        margin-right: 10px;
+        margin-right: 5px;
       }
     }
 
     .take-screenshot-button {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       margin: 10px 0;
+
+      .mat-icon {
+        margin-right: 5px;
+      }
     }
   }
 

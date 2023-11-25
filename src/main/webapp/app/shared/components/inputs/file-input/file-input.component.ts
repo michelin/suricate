@@ -118,10 +118,14 @@ export class FileInputComponent extends InputComponent implements OnInit {
   /**
    * Take a screenshot of the dashboard
    */
-  public takeScreenshot(): void {
-    html2canvas(this.belongingComponent['nativeElement']).then((htmlCanvasElement: HTMLCanvasElement) => {
+  public screenshot(): void {
+    html2canvas(this.belongingComponent['nativeElement'], {
+      backgroundColor: 'transparent',
+      foreignObjectRendering: true,
+      scrollX: -190,
+      scrollY: -80
+    }).then((htmlCanvasElement: HTMLCanvasElement) => {
       const b64: string = htmlCanvasElement.toDataURL('image/png');
-
       this.setBase64File(b64);
       super.getFormControl().setValue(b64);
       super.getFormControl().markAsDirty();

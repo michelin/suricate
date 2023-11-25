@@ -556,8 +556,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param content
+   * Set the dashboard screen component
+   * @param content The dashboard screen component
    */
   @ViewChild('dashboardScreen', { read: ElementRef })
   public set content(content: DashboardScreenComponent) {

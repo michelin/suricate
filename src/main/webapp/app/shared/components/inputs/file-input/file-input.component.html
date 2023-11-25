@@ -11,7 +11,7 @@
       (click)="file.click()"
     >
       <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
-      <span class="sentence"> {{ field.label | translate }} </span>
+      <span> {{ field.label | translate }} </span>
     </button>
 
     <button
@@ -22,10 +22,10 @@
       class="take-screenshot-button"
       color="primary"
       [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
-      (click)="takeScreenshot()"
+      (click)="screenshot()"
     >
       <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
-      <span class="sentence"> {{ 'dashboard.take.screenshot' | translate }} </span>
+      <span> {{ 'dashboard.take.screenshot' | translate }} </span>
     </button>
 
     <!-- Error Message for file input -->
