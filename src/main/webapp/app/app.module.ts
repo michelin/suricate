@@ -48,7 +48,7 @@ registerLocaleData(localeFr);
     CoreModule,
     DashboardModule,
     LayoutModule,
-    RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(appRoutes, {}),
     AdminModule,
     SharedModule,
     WidgetModule
