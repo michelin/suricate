@@ -60,7 +60,7 @@ jobs:
       - name: Build
         run: |
           npm install --no-progress
-          npm run build -- --prod
+          npm run build -- --configuration production
 
       - name: Lint
         run: npm run lint
