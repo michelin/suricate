@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
-import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav.service';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
 import {
@@ -43,7 +42,6 @@ import {
 } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket.service';
 import { LibraryService } from '../../../services/library/library.service';
-import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
 import { Subject } from 'rxjs';
@@ -53,6 +51,7 @@ import {
 } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
 import { IMessage } from '@stomp/rx-stomp';
+import { KtdGridLayoutItem } from '@katoid/angular-grid-layout/lib/grid.definitions';
 
 /**
  * Display the grid stack widgets
@@ -73,10 +72,10 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * The grid item config
    */
   @Input()
-  public gridStackItem: NgGridItemConfig;
+  public gridItem: KtdGridLayoutItem;
 
   /**
-   * Tell if we are on
+   * Tell if the screen is in read only mode
    */
   @Input()
   public readOnly: boolean;
@@ -105,7 +104,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * The configuration of this project widget on the grid
    */
-  private startGridStackItem: NgGridItemConfig;
+  private startGridItem: KtdGridLayoutItem;
 
   /**
    * Is the widget loading or not
@@ -130,7 +129,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Constructor
    *
-   * @param elementRef A reference to the current element
    * @param translateService Front-End service used to manage translations
    * @param httpWidgetService Back-End service used to manage http calls for widgets
    * @param httpProjectWidgetService Back-End service used to manage http calls for project widgets
@@ -143,7 +141,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param libraryService Front-End service used to manage the libraries
    */
   constructor(
-    private readonly elementRef: ElementRef,
     private readonly translateService: TranslateService,
     private readonly httpWidgetService: HttpWidgetService,
     private readonly httpProjectWidgetService: HttpProjectWidgetService,
@@ -161,7 +158,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.initWebsocketConnectionForProjectWidget();
-    this.startGridStackItem = { ...this.gridStackItem };
+    this.startGridItem = { ...this.gridItem };
 
     this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
       this.widget = widget;
@@ -205,30 +202,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
       this.projectWidget = projectWidget;
     });
-  }
-
-  /**
-   * Register the new position of the element
-   *
-   * Keep track of the position to prevent the click when moving it
-   *
-   * @param gridItemEvent The grid item event
-   */
-  public registerNewPosition(gridItemEvent: NgGridItemEvent): void {
-    this.gridStackItem.col = gridItemEvent.col;
-    this.gridStackItem.row = gridItemEvent.row;
-    this.gridStackItem.sizey = gridItemEvent.sizey;
-    this.gridStackItem.sizex = gridItemEvent.sizex;
-  }
-
-  /**
-   * Disable click event if the item have been moved
-   * @param event The click event
-   */
-  public preventDefault(event: MouseEvent): void {
-    if (GridItemUtils.isItemHaveBeenMoved(this.startGridStackItem, this.gridStackItem)) {
-      event.preventDefault();
-    }
   }
 
   /**

@@ -19,7 +19,7 @@
 import { MenuCategoryConfiguration } from './menu-category-configuration';
 
 /**
- * Represent a the menu
+ * Represent the menu
  */
 export class MenuConfiguration {
   categories: MenuCategoryConfiguration[] = [];

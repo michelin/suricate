@@ -4,23 +4,40 @@
   <span>{{ screenCode }}</span>
 </div>
 
-<!-- Grid project -->
-<div
+<ktd-grid
+  class="grid grid-stack"
   *ngIf="gridOptions"
-  class="grid-stack"
-  [ngGrid]="gridOptions"
-  (onResizeStop)="updateProjectWidgetsPosition()"
-  (onDragStop)="updateProjectWidgetsPosition()"
->
-  <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
-  <span #externalJsLibraries></span>
-
-  <suricate-dashboard-screen-widget
-    *ngFor="let gridItem of currentGrid"
-    [projectWidget]="gridItem.payload"
-    [gridStackItem]="gridItem"
-    [projectToken]="project.token"
-    [readOnly]="readOnly"
+  [cols]="gridOptions.cols"
+  [rowHeight]="gridOptions.rowHeight"
+  [gap]="gridOptions.gap"
+  [compactType]="gridOptions.compactType"
+  [layout]="currentGrid"
+  (layoutUpdated)="onLayoutUpdated($event)"
   >
-  </suricate-dashboard-screen-widget>
-</div>
+    <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
+    <span #externalJsLibraries></span>
+
+    <ktd-grid-item *ngFor="let gridItem of currentGrid"
+                   [id]="gridItem.id"
+                   [draggable]="gridOptions.draggable"
+                   [resizable]="gridOptions.resizable">
+      <suricate-dashboard-screen-widget
+        [projectWidget]="getProjectWidgetById(gridItem.id)"
+        [gridItem]="gridItem"
+        [projectToken]="project.token"
+        [readOnly]="readOnly">
+      </suricate-dashboard-screen-widget>
+
+      <!-- Background when moving the widget -->
+      <ng-template ktdGridItemPlaceholder>
+        <span class="widget-move-bg">
+          <suricate-dashboard-screen-widget
+            [projectWidget]="getProjectWidgetById(gridItem.id)"
+            [gridItem]="gridItem"
+            [projectToken]="project.token"
+            [readOnly]="readOnly">
+          </suricate-dashboard-screen-widget>
+        </span>
+      </ng-template>
+    </ktd-grid-item>
+</ktd-grid>

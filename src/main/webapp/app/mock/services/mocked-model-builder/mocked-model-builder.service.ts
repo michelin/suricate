@@ -10,8 +10,9 @@ import { GridProperties } from '../../../shared/models/backend/project/grid-prop
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetPosition } from '../../../shared/models/backend/project-widget/project-widget-position';
 import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
-import { NgGridItemConfig } from 'angular2-grid';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
+import { KtdGridLayoutItem } from '@katoid/angular-grid-layout/lib/grid.definitions';
+import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
 
 @Injectable({
   providedIn: 'root'
@@ -143,12 +144,27 @@ export class MockedModelBuilderService {
   /**
    * Build a mocked gridItemConfig for the unit tests
    */
-  public buildGridStackItem(): NgGridItemConfig {
+  public buildGridStackItem(): KtdGridLayoutItem {
     return {
-      col: 0,
-      row: 0,
-      sizey: 50,
-      sizex: 50
+      id: "1",
+      x: 0,
+      y: 0,
+      w: 50,
+      h: 50
     };
+  }
+
+  /**
+   * Build a mocked gridOptions for the unit tests
+   */
+  public buildGridOptions(): GridOptions {
+    return {
+      cols: 5,
+      rowHeight: 300,
+      gap: 10,
+      draggable: true,
+      resizable: true,
+      compactType: 'vertical'
+    }
   }
 }

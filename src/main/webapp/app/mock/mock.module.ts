@@ -26,7 +26,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../layout/layout.module';
 import { MockElementRef } from './models/mock-element-ref';
-import { NgGrid } from 'angular2-grid';
 import { RxStompService } from '../shared/services/frontend/rx-stomp/rx-stomp.service';
 import { CoreModule } from '../core/core.module';
 
@@ -45,7 +44,7 @@ import { CoreModule } from '../core/core.module';
     HttpClientTestingModule,
     RouterTestingModule
   ],
-  providers: [{ provide: RxStompService, useClass: MockRxStompService }, { provide: ElementRef, useClass: MockElementRef }, NgGrid],
+  providers: [{ provide: RxStompService, useClass: MockRxStompService }, { provide: ElementRef, useClass: MockElementRef }],
   exports: [LayoutModule, SharedModule, HttpClientTestingModule, RouterTestingModule]
 })
 export class MockModule {}

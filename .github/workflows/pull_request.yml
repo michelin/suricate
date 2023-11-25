@@ -39,6 +39,7 @@ jobs:
           path: ${{ github.workspace }}/target/suricate.jar
 
       - name: Sonar
+        if: github.repository_owner == 'michelin'
         run: mvn verify sonar:sonar -DcentralAnalyzerEnabled=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

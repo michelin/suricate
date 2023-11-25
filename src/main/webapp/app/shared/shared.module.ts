@@ -18,7 +18,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NgGridModule } from 'angular2-grid';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -53,6 +52,7 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
 import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { KtdGridModule } from '@katoid/angular-grid-layout';
 
 @NgModule({
     imports: [
@@ -64,7 +64,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         HttpClientModule,
         MaterialCDKModule,
         MaterialModule,
-        NgGridModule,
+        KtdGridModule,
         ReactiveFormsModule,
         RouterModule,
         TranslateModule,
@@ -109,7 +109,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         InputComponent,
         MaterialCDKModule,
         MaterialModule,
-        NgGridModule,
+        KtdGridModule,
         DragDropModule,
         ReactiveFormsModule,
         RouterModule,

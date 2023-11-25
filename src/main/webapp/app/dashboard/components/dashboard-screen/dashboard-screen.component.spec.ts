@@ -37,6 +37,7 @@ describe('DashboardScreenComponent', () => {
       fixture = TestBed.createComponent(DashboardScreenComponent);
       component = fixture.componentInstance;
       component.project = mockedModelBuilderService.buildMockedProject();
+      component.gridOptions = mockedModelBuilderService.buildGridOptions();
 
       fixture.detectChanges();
     })
