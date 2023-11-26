@@ -25,6 +25,12 @@ body {
   margin: 0;
   min-height: 100vh;
 
+  .mat-icon {
+    & {
+      font-variant: none;
+    }
+  }
+
   .container {
     min-height: 89vh;
 

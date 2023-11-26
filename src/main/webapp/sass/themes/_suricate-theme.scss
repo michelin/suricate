@@ -16,7 +16,6 @@
  *
  */
 @import 'sass/components/mat-sidenav-theme';
-@import 'sass/components/mat-icon-theme';
 @import 'sass/components/mat-button-theme';
 @import 'sass/components/mat-slide-toggle-theme';
 @import 'sass/components/mat-checkbox-theme';
@@ -35,7 +34,6 @@
  */
 @mixin suricate-theme($theme) {
   @include custom-mat-sidenav-theme($theme);
-  @include custom-mat-icon-theme($theme);
   @include custom-mat-button-theme($theme);
   @include custom-mat-slide-toggle-theme($theme);
   @include custom-mat-checkbox-theme($theme);
