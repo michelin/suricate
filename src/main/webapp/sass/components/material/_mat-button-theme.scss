@@ -48,12 +48,11 @@
     }
   }
 
-  .mat-stroked-button {
+  .mat-mdc-outlined-button {
+    --mdc-outlined-button-outline-color: mat.get-color-from-palette($primary, 500);
+
     &.mat-warn {
       border: 1px solid mat.get-color-from-palette($warn, 500);
-    }
-    &.mat-primary {
-      border: 1px solid mat.get-color-from-palette($primary, 500);
     }
   }
 }

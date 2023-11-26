@@ -15,98 +15,100 @@
  *  * limitations under the License.
  *
  */
-@use '@angular/material' as mat;
-@import '@angular/material/theming';
 
 .container {
   .list-wrapper {
     height: 100%;
   }
-}
 
-.list-item {
-  height: 100px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-
-  &:first-child {
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  .search-div {
+    max-width: 600px;
+    margin: auto;
+    padding: 40px 0;
   }
-
-  &.list-item-show {
-    &:hover {
-      cursor: pointer;
-      background-color: #a4a4a41f;
-    }
-  }
-
-  &.drag-drop-item {
-    cursor: move;
-  }
-
-  .list-image {
-    height: inherit;
-    padding: 10px;
-
-    img {
-      width: auto;
-      max-height: 100%;
-    }
-  }
-
-  .list-detail {
-    height: inherit;
-    padding-left: 10px;
-
-    h1,
-    h2,
-    h3 {
-      margin-block-start: 0;
-      margin-block-end: 0.4em;
-    }
-
-    h2,
-    h3 {
-      font-weight: 400;
-    }
-
-    h1 {
-      font-size: 1em;
-      font-weight: 600;
-    }
-
-    h2 {
-      font-size: 0.9em;
-      max-width: 100%;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    h3 {
-      font-size: 0.8em;
-    }
-  }
-}
-
-.cdk-drag-preview {
-  box-sizing: border-box;
-  border-radius: 4px;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
-}
-
-.cdk-drag-placeholder {
-  opacity: 0;
-}
-
-.cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-@mixin list-component-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
 
   .list-item {
-    color: mat.get-color-from-palette($foreground, text);
-    background-color: mat.get-color-from-palette($background, background);
+    height: 100px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+    &.list-item-show {
+      &:hover {
+        cursor: pointer;
+        background-color: #a4a4a41f;
+      }
+    }
+
+    &.drag-drop-item {
+      cursor: move;
+    }
+
+    .list-image {
+      height: inherit;
+      padding: 10px;
+
+      img {
+        width: auto;
+        max-height: 100%;
+      }
+    }
+
+    .list-detail {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+      height: inherit;
+      padding: 0 20px;
+
+      h1,
+      h2,
+      h3 {
+        margin-block-start: 0;
+        margin-block-end: 0.4em;
+      }
+
+      h2,
+      h3 {
+        font-weight: 400;
+      }
+
+      h1 {
+        font-size: 1em;
+        font-weight: 500;
+      }
+
+      h2 {
+        font-size: 0.9em;
+        max-width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      h3 {
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  .list-buttons {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px;
+  }
+
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 }

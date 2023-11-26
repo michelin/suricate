@@ -84,22 +84,9 @@
         }
       }
 
-      &#button-section {
-        & {
-          margin-bottom: 7px !important;
-          margin-top: 0;
-        }
-
-        & > a {
-          display: block;
-          width: 40%;
-        }
-      }
-
       .common-icon-button {
         & {
-          height: 33px;
-          width: 40%;
+          height: 48px;
         }
 
         &:hover {
@@ -114,10 +101,6 @@
     }
 
     .sidenav-menu-section {
-      .mdc-list > .mdc-list-item:hover {
-        background-color: mat.get-color-from-palette($primary, 400);
-      }
-
       .mdc-list > .mdc-list-item > span:first-child {
         padding: 0 16px;
       }
@@ -195,13 +178,11 @@
         .mat-list-base {
           padding-bottom: 8px;
         }
-
-        .mat-list-item {
-          height: 28px !important;
-          width: 90%;
-          margin: auto;
-        }
       }
+    }
+
+    .mdc-list > .mdc-list-item:hover {
+      background-color: mat.get-color-from-palette($primary, 400);
     }
   }
 

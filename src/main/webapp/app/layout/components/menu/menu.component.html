@@ -43,10 +43,10 @@
     </mat-accordion>
   </div>
 
-  <div *ngIf="menu" class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
+  <div *ngIf="menu" class="sidenav-section-container" fxLayout="column wrap">
     <mat-divider></mat-divider>
 
-    <div id="button-section" class="sidenav-section" fxLayout="row wrap" fxLayoutAlign="start center">
+    <div class="sidenav-section" fxLayout="row wrap" fxLayoutAlign="start center">
       <a fxFlex="50" routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
         <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
           <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
@@ -72,7 +72,7 @@
     </div>
   </div>
 
-  <mat-divider class="menu-divider"></mat-divider>
+  <mat-divider></mat-divider>
 
   <suricate-pages-footer id="footer">footer</suricate-pages-footer>
 </div>

@@ -216,22 +216,6 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   }
 
   /**
-   * Get the size of the block
-   */
-  public getDetailBlockSize(object: T): string {
-    const hasImage = !!this.getObjectImageURL(object);
-    const hasButtons = !!this.listConfiguration.buttons;
-
-    if (hasImage && hasButtons) {
-      return '60%';
-    }
-    if (hasImage || hasButtons) {
-      return '80%';
-    }
-    return '100%';
-  }
-
-  /**
    * Called when we change page from paginator
    *
    * @param pageEvent The angular material page event

@@ -43,7 +43,6 @@
   @include custom-mat-grid-list-theme($theme);
   @include custom-mat-form-field-theme($theme);
   @include custom-mat-tab-group-theme($theme);
-  @include list-component-theme($theme);
   @include communication-dialog-component-theme($theme);
   @include file-component-theme($theme);
   @include file-input-component-theme($theme);

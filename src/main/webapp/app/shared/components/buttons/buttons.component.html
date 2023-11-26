@@ -21,7 +21,6 @@
   <button
     *ngIf="shouldDisplayButton(configuration, object)"
     mat-stroked-button
-    class="button button-single"
     [matTooltip]="configuration.tooltip?.message | translate"
     [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip.position) : 'below'"
     [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
@@ -29,7 +28,11 @@
     [disabled]="configuration.disabled | async"
     (click)="configuration.callback ? configuration.callback($event, object) : null"
   >
-    <ng-template *ngTemplateOutlet="buttonContent; context: { configuration: configuration }"></ng-template>
+    <mat-icon *ngIf="configuration.icon" [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
+      {{ materialIconRecords[configuration.icon] }}
+    </mat-icon>
+
+    <span *ngIf="configuration.label"> {{ configuration.label | translate }} </span>
   </button>
 </ng-template>
 
@@ -37,7 +40,6 @@
   <button
     *ngIf="shouldDisplayButton(configuration, object)"
     mat-mini-fab
-    class="button button-single"
     [matTooltip]="configuration.tooltip?.message | translate"
     [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip?.position) : 'below'"
     [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
@@ -45,18 +47,10 @@
     [disabled]="configuration.disabled | async"
     (click)="configuration.callback ? configuration.callback($event, object) : null"
   >
-    <ng-template *ngTemplateOutlet="buttonContent; context: { configuration: configuration }"></ng-template>
+    <mat-icon *ngIf="configuration.icon" [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
+      {{ materialIconRecords[configuration.icon] }}
+    </mat-icon>
+
+    <span *ngIf="configuration.label"> {{ configuration.label | translate }} </span>
   </button>
-</ng-template>
-
-<!------------------------------------------------------------------------------------------------------------->
-<!--                                         BUTTON CONTENT                                                  -->
-<!------------------------------------------------------------------------------------------------------------->
-
-<ng-template #buttonContent let-configuration="configuration">
-  <mat-icon *ngIf="configuration.icon" [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
-    {{ materialIconRecords[configuration.icon] }}
-  </mat-icon>
-
-  <span *ngIf="configuration.label"> {{ configuration.label | translate }} </span>
 </ng-template>

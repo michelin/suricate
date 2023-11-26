@@ -28,8 +28,7 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-tab-label,
-  .mat-tab-link {
+  .mat-mdc-tab {
     font-size: 1.2rem;
     font-variant: all-small-caps;
   }

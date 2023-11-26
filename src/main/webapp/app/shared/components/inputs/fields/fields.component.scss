@@ -23,6 +23,16 @@
     font-size: 1.3em;
   }
 
+  .fields-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .delete-row {
+      padding-top: 8px;
+    }
+  }
+
   .trash-icon {
     transform: translateY(-50%);
 

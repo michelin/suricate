@@ -16,16 +16,6 @@
  *
  */
 
-.button {
-  &.button-single {
-    margin-right: 10px;
-  }
-
-  .mat-icon {
-    &.icon-with-label {
-      height: 20px;
-      width: 20px;
-      font-size: 20px;
-    }
-  }
+.tptp {
+  display: flex;
 }
