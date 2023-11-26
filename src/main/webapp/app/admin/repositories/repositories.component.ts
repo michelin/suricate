@@ -132,6 +132,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
           icon: IconEnum.EDIT,
           tooltip: { message: 'repository.edit' },
           color: 'primary',
+          variant: 'miniFab',
           callback: (event: Event, repository: Repository) => this.openFormSidenav(event, repository, this.updateRepository.bind(this)),
           disabled: this.disableAllReposSync.asObservable()
         }

@@ -21,13 +21,20 @@
     padding-top: 10px;
   }
 
-  .titles {
-    display: inline-block;
-  }
+  .header-sub-container {
+    display: flex;
+    align-items: center;
 
-  .actions {
-    display: inline-block;
-    float: right;
+    .header-info {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
   }
 
   h2.header {
