@@ -18,6 +18,7 @@
     <span #externalJsLibraries></span>
 
     <ktd-grid-item *ngFor="let gridItem of currentGrid"
+                   class="mat-elevation-z4"
                    [id]="gridItem.id"
                    [draggable]="gridOptions.draggable"
                    [resizable]="gridOptions.resizable">

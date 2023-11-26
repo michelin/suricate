@@ -118,6 +118,7 @@ export class TvManagementDialogComponent implements OnInit {
       {
         icon: IconEnum.SHARE_SCREEN,
         color: 'primary',
+        variant: 'miniFab',
         type: ButtonTypeEnum.SUBMIT,
         tooltip: { message: 'screen.subscribe' },
         callback: () => this.validateFormBeforeSave()
@@ -129,6 +130,7 @@ export class TvManagementDialogComponent implements OnInit {
         icon: IconEnum.STOP_SHARE_SCREEN,
         color: 'primary',
         type: ButtonTypeEnum.BUTTON,
+        variant: 'miniFab',
         tooltip: { message: 'screen.unsubscribe' },
         callback: (event: Event, websocketClient: WebsocketClient) => this.disconnectScreen(websocketClient)
       }

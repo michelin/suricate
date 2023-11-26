@@ -55,6 +55,7 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.REPOSITORY_TYPE]: 'cloud_queue',
   [IconEnum.REPOSITORY_PRIORITY]: 'low_priority',
   [IconEnum.SAVE]: 'done',
+  [IconEnum.SCREENSHOT]: 'screenshot',
   [IconEnum.SEARCH]: 'search',
   [IconEnum.SETTINGS]: 'settings',
   [IconEnum.SHARE_SCREEN]: 'screen_share',

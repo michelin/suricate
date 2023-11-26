@@ -31,7 +31,7 @@
   "dashboard.grid.delete": "Suppression d'un tableau de bord ou d'une grille",
   "dashboard.grid.delete.dialog.message": "Sélectionnez l'entité à supprimer",
   "dashboard.grid.delete.dialog.select.dashboard": "Le tableau de bord",
-  "dashboard.grid.delete.dialog.select.grid": "La grille sélectionnée",
+  "dashboard.grid.delete.dialog.select.grid": "La grille actuelle",
   "dashboard.grid.delete.success": "Grille supprimée avec succès",
   "dashboard.grid.management": "Gestion des grilles",
   "dashboard.grid.management.progress.bar.form.field": "Afficher la barre de progression avant la rotation suivante",

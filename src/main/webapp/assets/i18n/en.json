@@ -31,7 +31,7 @@
   "dashboard.grid.delete": "Delete dashboard or grid",
   "dashboard.grid.delete.dialog.message": "Select the entity to delete",
   "dashboard.grid.delete.dialog.select.dashboard": "The dashboard",
-  "dashboard.grid.delete.dialog.select.grid": "The selected grid",
+  "dashboard.grid.delete.dialog.select.grid": "The current grid",
   "dashboard.grid.delete.success": "Grid deleted successfully",
   "dashboard.grid.management": "Grids management",
   "dashboard.grid.management.progress.bar.form.field": "Display progress bar before next rotation",

@@ -28,7 +28,11 @@
 .stepper-actions-wrapper {
   padding-left: 24px;
   margin-block-end: 40px;
-  margin-block-start: 30px;
+
+  .stepper-actions {
+    display: flex;
+    gap: 10px;
+  }
 }
 
 .widget-data-title {

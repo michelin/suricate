@@ -2,37 +2,36 @@
   {{ 'screen.management' | translate }}
 </h1>
 
-<mat-dialog-content fxLayout="column" fxLayoutGap="20px">
+<mat-dialog-content>
   <!-- Register screen part -->
-  <form *ngIf="registerScreenCodeFormField" fxLayout="column">
+  <form *ngIf="registerScreenCodeFormField">
     <h2 class="little title">{{ 'screen.enroll' | translate }}</h2>
-    <mat-divider></mat-divider>
 
-    <div fxLayout="row" fxLayoutGap="25px" class="input-wrapper">
+    <div class="input-wrapper">
       <suricate-input
+        class="screen-code-input"
         *ngFor="let field of formFields"
-        fxFlex="100%"
         [formGroup]="registerScreenCodeFormField"
         [field]="field"
       ></suricate-input>
-      <suricate-buttons fxFlex [configurations]="shareButtonsConfiguration"></suricate-buttons>
+      <suricate-buttons class="enroll-screen-button" [configurations]="shareButtonsConfiguration"></suricate-buttons>
     </div>
   </form>
 
   <!-- Registered screen part -->
-  <div fxLayout="column">
+  <div>
     <div>
       <h2 class="little title">{{ 'screen.linked' | translate }} - {{ websocketClients?.length }} {{ 'client' | translate }}</h2>
       <mat-divider></mat-divider>
     </div>
 
     <!-- screen codes -->
-    <div id="connected-screen-container" fxLayout="column" fxLayoutGap="20px">
-      <div *ngFor="let websocketClient of websocketClients" fxLayout="row" fxLayoutAlign="start center">
-        <mat-icon class="screen-icon" fxFlex="16%">
+    <div id="connected-screen-container">
+      <div class="connected-screens" *ngFor="let websocketClient of websocketClients">
+        <mat-icon class="screen-icon">
           {{ materialIconRecords[iconEnum.TV] }}
         </mat-icon>
-        <span class="screen-code" fxFlex> {{ 'screen.code' | translate }}: {{ websocketClient.screenCode }} </span>
+        <span class="screen-code"> {{ 'screen.code' | translate }}: {{ websocketClient.screenCode }} </span>
         <suricate-buttons [configurations]="connectedScreenButtonsConfiguration" [object]="websocketClient"></suricate-buttons>
       </div>
     </div>
@@ -40,7 +39,7 @@
 
   <!-- Show screen code -->
   <div id="display-code-link">
-    <a fxLayout="col wrap" fxLayoutAlign="start center" (click)="displayScreenCode()">
+    <a (click)="displayScreenCode()">
       <mat-icon> {{ materialIconRecords[iconEnum.ARROW_DOWN] }} </mat-icon>
       <span> {{ 'screen.display.code' | translate }} </span>
     </a>
