@@ -15,19 +15,19 @@
  *  * limitations under the License.
  *
  */
-@import 'sass/components/material/mat-sidenav-theme';
-@import 'sass/components/material/mat-icon-theme';
-@import 'sass/components/material/mat-button-theme';
-@import 'sass/components/material/mat-slide-toggle-theme';
-@import 'sass/components/material/mat-checkbox-theme';
-@import 'sass/components/material/mat-stepper-theme';
-@import 'sass/components/material/mat-form-field-theme';
-@import 'sass/components/material/mat-grid-list-theme';
-@import 'sass/components/material/mat-tab-group-theme';
+@import 'sass/components/mat-sidenav-theme';
+@import 'sass/components/mat-icon-theme';
+@import 'sass/components/mat-button-theme';
+@import 'sass/components/mat-slide-toggle-theme';
+@import 'sass/components/mat-checkbox-theme';
+@import 'sass/components/mat-stepper-theme';
+@import 'sass/components/mat-form-field-theme';
+@import 'sass/components/mat-grid-list-theme';
+@import 'sass/components/mat-tab-group-theme';
+@import 'sass/components/mat-list-theme';
+@import 'sass/components/mat-input-theme';
+@import 'sass/components/mat-file-input-theme';
 @import 'app/shared/components/communication-dialog/communication-dialog.component';
-@import 'app/shared/components/list/list.component';
-@import 'app/shared/components/inputs/input/input.component';
-@import 'app/shared/components/inputs/file-input/file-input.component';
 @import 'app/dashboard/components/dashboard-detail/dashboard-detail.component';
 
 /**
@@ -43,8 +43,9 @@
   @include custom-mat-grid-list-theme($theme);
   @include custom-mat-form-field-theme($theme);
   @include custom-mat-tab-group-theme($theme);
+  @include custom-list-component-theme($theme);
+  @include custom-input-component-theme($theme);
+  @include custom-file-input-component-theme($theme);
   @include communication-dialog-component-theme($theme);
-  @include file-component-theme($theme);
-  @include file-input-component-theme($theme);
   @include dashboard-detail-component-theme($theme);
 }

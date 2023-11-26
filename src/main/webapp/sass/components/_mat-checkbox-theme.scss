@@ -15,12 +15,13 @@
  *  * limitations under the License.
  *
  */
-@import '@angular/material/theming';
+@use '../../../../../node_modules/@angular/material/index' as mat;
+@import '../../../../../node_modules/@angular/material/theming';
 
 /**
- * Component for that modify the theme of Angular Material mat-button
+ * Component for that modify the theme of Angular Material mat-checkbox
  */
-@mixin custom-mat-form-field-theme($theme) {
+@mixin custom-mat-checkbox-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -29,29 +30,20 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-form-field {
-    &.mat-form-field-readonly {
-      .mat-form-field-outline {
-        background-color: #7f7f7f0f;
+  .mat-checkbox-indeterminate,
+  .mat-checkbox-checked {
+    &.mat-primary {
+      .mat-checkbox-background {
+        background-color: mat.get-color-from-palette($primary, A700);
       }
-    }
-
-    .mat-icon.prefix {
-      margin-right: 10px;
-    }
-
-    .mat-icon.suffix {
-      margin-left: 10px;
-      cursor: pointer;
     }
   }
 
-  // Stylize the autofill suggestions of the browser
-  input:-webkit-autofill::first-line,
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    font: 15px Roboto, sans-serif !important;
+  .mat-checkbox:not(.mat-checkbox-disabled) {
+    .mat-primary {
+      .mat-checkbox-ripple .mat-ripple-element {
+        background-color: mat.get-color-from-palette($primary, A700, 0.55);
+      }
+    }
   }
 }

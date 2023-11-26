@@ -15,13 +15,13 @@
  *  * limitations under the License.
  *
  */
-@use '@angular/material' as mat;
-@import '@angular/material/theming';
+@use '../../../../../node_modules/@angular/material/index' as mat;
+@import '../../../../../node_modules/@angular/material/theming';
 
 /**
- * Component for that modify the theme of Angular Material mat-checkbox
+ * Component for that modify the theme of Angular Material mat-slide-toggle
  */
-@mixin custom-mat-checkbox-theme($theme) {
+@mixin custom-mat-slide-toggle-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -30,19 +30,16 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-checkbox-indeterminate,
-  .mat-checkbox-checked {
+  .mat-slide-toggle {
     &.mat-primary {
-      .mat-checkbox-background {
-        background-color: mat.get-color-from-palette($primary, A700);
-      }
-    }
-  }
+      &.mat-checked {
+        .mat-slide-toggle-thumb {
+          background-color: mat.get-color-from-palette($primary, A700);
+        }
 
-  .mat-checkbox:not(.mat-checkbox-disabled) {
-    .mat-primary {
-      .mat-checkbox-ripple .mat-ripple-element {
-        background-color: mat.get-color-from-palette($primary, A700, 0.55);
+        .mat-slide-toggle-bar {
+          background-color: mat.get-color-from-palette($primary, A700, 0.55);
+        }
       }
     }
   }
