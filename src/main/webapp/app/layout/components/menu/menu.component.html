@@ -3,7 +3,7 @@
   <div id="user-section" class="sidenav-section">
     <div class="avatar-container">
       <div class="avatar">
-        <img *ngIf="connectedUser.avatarUrl" src="{{ connectedUser.avatarUrl }}" />
+        <img *ngIf="connectedUser.avatarUrl" src="{{ connectedUser.avatarUrl }}" alt="avatar"/>
         <span *ngIf="!connectedUser.avatarUrl">{{ getInitials() }}</span>
       </div>
     </div>
@@ -18,26 +18,26 @@
                 <div>{{ connectedUser.username }}</div>
               </div>
               <div *ngIf="isConnectedByIdp()" class="idp-icon">
-                <img *ngIf="isConnectedWithGithub()" src="../../../../../assets/images/github-white.svg" />
-                <img *ngIf="isConnectedWithGitlab()" src="../../../../../assets/images/gitlab.svg" />
+                <img *ngIf="isConnectedWithGithub()" src="../../../../../assets/images/github-white.svg" alt='GitHub'/>
+                <img *ngIf="isConnectedWithGitlab()" src="../../../../../assets/images/gitlab.svg" alt='GitLab'/>
               </div>
             </div>
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-nav-list class="submenu">
-          <div>
-            <a mat-list-item [routerLink]="['/settings']">
+        <mat-nav-list>
+          <mat-list-item>
+            <a class="submenu-item" [routerLink]="['/settings']">
               <mat-icon> {{ materialIconRecords[iconEnum.SETTINGS] }} </mat-icon>
               <span> {{ 'settings' | translate }} </span>
             </a>
-          </div>
-          <div>
-            <a mat-list-item (click)="logout()">
+          </mat-list-item>
+          <mat-list-item>
+            <a class="submenu-item" (click)="logout()">
               <mat-icon> {{ materialIconRecords[iconEnum.LOGOUT] }} </mat-icon>
               <span> {{ 'logout' | translate }} </span>
             </a>
-          </div>
+          </mat-list-item>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
@@ -49,21 +49,20 @@
     <div id="button-section" class="sidenav-section" fxLayout="row wrap" fxLayoutAlign="start center">
       <a fxFlex="50" routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
         <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
-          <mat-icon color="default"> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
+          <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
         </div>
       </a>
       <a fxFlex="50" routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
         <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
-          <mat-icon color="default"> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
+          <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
         </div>
       </a>
     </div>
 
     <mat-divider></mat-divider>
 
-    <!-- Build the menu -->
-    <div *ngFor="let category of menu.categories" class="sidenav-section">
-      <h1 class="little title">{{ category.label | translate }}</h1>
+    <div *ngFor="let category of menu.categories" class="sidenav-menu-section">
+      <h1 class="menu-title">{{ category.label | translate }}</h1>
 
       <mat-nav-list>
         <a *ngFor="let item of category.items" mat-list-item routerLinkActive="active" [routerLink]="item.linkConfiguration.link">
@@ -73,7 +72,7 @@
     </div>
   </div>
 
-  <mat-divider></mat-divider>
+  <mat-divider class="menu-divider"></mat-divider>
 
   <suricate-pages-footer id="footer">footer</suricate-pages-footer>
 </div>

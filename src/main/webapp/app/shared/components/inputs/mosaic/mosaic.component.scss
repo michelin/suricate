@@ -16,7 +16,6 @@
  *
  */
 @use '@angular/material' as mat;
-@import '../../../../../sass/dashboard-themes';
 
 .mat-grid-tile {
   @include mat.elevation-transition();

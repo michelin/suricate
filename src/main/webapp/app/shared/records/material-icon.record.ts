@@ -69,7 +69,7 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.TV_LIVE]: 'live_tv',
   [IconEnum.UPLOAD]: 'cloud_upload',
   [IconEnum.URL]: 'link',
-  [IconEnum.USERNAME]: 'android',
+  [IconEnum.USERNAME]: 'face',
   [IconEnum.USERS]: 'people',
   [IconEnum.USER]: 'person',
   [IconEnum.USER_ADD]: 'person_add',

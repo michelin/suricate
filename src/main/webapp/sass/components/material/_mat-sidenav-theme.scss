@@ -40,23 +40,21 @@
       background-color: $sidenav-background-primary;
       color: $sidenav-text;
       font-variant: all-small-caps;
-      font-size: 0.8em;
     }
 
     .mat-divider {
       width: 100%;
-      color: #303030;
+      border-top-color: $sidenav-text;
     }
 
     .sidenav-section {
       & {
-        width: 85%;
-        margin: 0 auto;
+        margin-bottom: 0 !important;
       }
 
       &#user-section {
         & {
-          padding: 15px 0 10px 0;
+          padding-top: 15px;
           margin: 0;
           width: 100%;
         }
@@ -64,8 +62,8 @@
         & > .avatar-container {
           & {
             margin: 0 auto;
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             overflow: hidden;
             border-radius: 50%;
             border: 1px solid #303030;
@@ -74,7 +72,7 @@
           & > .avatar {
             height: 100%;
             font-size: 25px;
-            line-height: 54px;
+            line-height: 64px;
             text-align: center;
             background: #303030;
 
@@ -90,7 +88,6 @@
         & {
           margin-bottom: 7px !important;
           margin-top: 0;
-          width: 90%;
         }
 
         & > a {
@@ -111,6 +108,23 @@
 
         mat-icon {
           font-size: 24px;
+          color: $sidenav-text;
+        }
+      }
+    }
+
+    .sidenav-menu-section {
+      .mdc-list > .mdc-list-item:hover {
+        background-color: mat.get-color-from-palette($primary, 400);
+      }
+
+      .mdc-list > .mdc-list-item > span:first-child {
+        padding: 0 16px;
+      }
+
+      .mdc-list {
+        span {
+          color: $sidenav-text;
         }
       }
     }
@@ -119,7 +133,7 @@
       & {
         color: $sidenav-text;
         font-size: 1em;
-        height: 25px !important;
+        height: 50px !important;
       }
 
       &:hover {
@@ -138,6 +152,10 @@
       }
 
       .mat-expansion-panel-header {
+        .mat-content-hide-toggle {
+          margin-right: 0 !important;
+        }
+
         .mat-expansion-panel-header-title {
           color: inherit;
           font-size: 0.8em;
@@ -157,6 +175,10 @@
           font-size: 1em;
         }
 
+        span {
+          color: $sidenav-text;
+        }
+
         .mat-expansion-panel-body {
           padding: 0;
         }
@@ -167,6 +189,7 @@
           height: 20px;
           width: 19px;
           font-size: 19px;
+          color: $sidenav-text;
         }
 
         .mat-list-base {

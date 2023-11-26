@@ -46,12 +46,8 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
 import { WidgetHtmlDirective } from './directives/widget-html.directive';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
-import { ClipboardModule } from '@angular/cdk/clipboard';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { KtdGridModule } from '@katoid/angular-grid-layout';
 
 @NgModule({
@@ -69,8 +65,6 @@ import { KtdGridModule } from '@katoid/angular-grid-layout';
         RouterModule,
         TranslateModule,
         ColorPickerModule,
-        ClipboardModule,
-        DragDropModule
     ],
     declarations: [
         CommunicationDialogComponent,
@@ -110,7 +104,6 @@ import { KtdGridModule } from '@katoid/angular-grid-layout';
         MaterialCDKModule,
         MaterialModule,
         KtdGridModule,
-        DragDropModule,
         ReactiveFormsModule,
         RouterModule,
         WidgetHtmlDirective,
@@ -125,8 +118,6 @@ import { KtdGridModule } from '@katoid/angular-grid-layout';
         ColorPickerComponent,
         PaginatorComponent,
         SlideToggleComponent,
-        MatBadgeModule,
-        MatProgressBarModule,
         ProgressBarComponent
     ],
     providers: [
