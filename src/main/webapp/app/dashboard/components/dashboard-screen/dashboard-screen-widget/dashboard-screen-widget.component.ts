@@ -51,7 +51,6 @@ import {
 } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
 import { IMessage } from '@stomp/rx-stomp';
-import { KtdGridLayoutItem } from '@katoid/angular-grid-layout/lib/grid.definitions';
 
 /**
  * Display the grid stack widgets
@@ -67,12 +66,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   @Input()
   public projectWidget: ProjectWidget;
-
-  /**
-   * The grid item config
-   */
-  @Input()
-  public gridItem: KtdGridLayoutItem;
 
   /**
    * Tell if the screen is in read only mode
@@ -100,11 +93,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * The enumeration that hold the state of a widget (used in HTML)
    */
   public widgetStateEnum = WidgetStateEnum;
-
-  /**
-   * The configuration of this project widget on the grid
-   */
-  private startGridItem: KtdGridLayoutItem;
 
   /**
    * Is the widget loading or not
@@ -158,7 +146,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.initWebsocketConnectionForProjectWidget();
-    this.startGridItem = { ...this.gridItem };
 
     this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
       this.widget = widget;

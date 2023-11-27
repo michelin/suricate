@@ -18,8 +18,11 @@
 
 #screen-code-div {
   & {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
     height: 220px;
-    margin-bottom: 20px;
     font-size: 8em;
   }
 
@@ -32,9 +35,8 @@
 
 .grid-stack {
   overflow-x: hidden;
-}
 
-.widget-move-bg {
-  background-color: blue;
-  opacity: 0.3;
+  .grid-placeholder {
+    opacity: 0.2;
+  }
 }

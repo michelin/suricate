@@ -36,7 +36,6 @@ describe('DashboardScreenWidgetComponent', () => {
       fixture = TestBed.createComponent(DashboardScreenWidgetComponent);
       component = fixture.componentInstance;
       component.projectWidget = mockedModelBuilderService.buildMockedProjectWidget();
-      component.gridItem = mockedModelBuilderService.buildGridStackItem();
 
       fixture.detectChanges();
     })

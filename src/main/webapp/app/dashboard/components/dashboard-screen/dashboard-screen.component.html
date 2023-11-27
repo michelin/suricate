@@ -1,5 +1,5 @@
 <!-- Display Screen code -->
-<div *ngIf="shouldDisplayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+<div *ngIf="shouldDisplayScreenCode" id="screen-code-div">
   <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
   <span>{{ screenCode }}</span>
 </div>
@@ -24,21 +24,18 @@
                    [resizable]="gridOptions.resizable">
       <suricate-dashboard-screen-widget
         [projectWidget]="getProjectWidgetById(gridItem.id)"
-        [gridItem]="gridItem"
         [projectToken]="project.token"
         [readOnly]="readOnly">
       </suricate-dashboard-screen-widget>
 
       <!-- Background when moving the widget -->
       <ng-template ktdGridItemPlaceholder>
-        <span class="widget-move-bg">
-          <suricate-dashboard-screen-widget
-            [projectWidget]="getProjectWidgetById(gridItem.id)"
-            [gridItem]="gridItem"
-            [projectToken]="project.token"
-            [readOnly]="readOnly">
-          </suricate-dashboard-screen-widget>
-        </span>
+        <suricate-dashboard-screen-widget
+          class="grid-placeholder"
+          [projectWidget]="getProjectWidgetById(gridItem.id)"
+          [projectToken]="project.token"
+          [readOnly]="readOnly">
+        </suricate-dashboard-screen-widget>
       </ng-template>
     </ktd-grid-item>
 </ktd-grid>

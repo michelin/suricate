@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { WidgetHtmlDirective } from './widget-html.directive';
 import { TestBed } from '@angular/core/testing';
-import { MockModule } from '../../mock/mock.module';
+import { MockModule } from '../../../mock/mock.module';
+import { HideAfterInitDirective } from './hide-after-init.directive';
 
-describe('WidgetJsScriptsDirective', () => {
-  let directive: WidgetHtmlDirective;
+describe('HideAfterInit', () => {
+  let directive: HideAfterInitDirective;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockModule],
-      providers: [WidgetHtmlDirective]
+      providers: [HideAfterInitDirective]
     });
 
-    directive = TestBed.inject(WidgetHtmlDirective);
+    directive = TestBed.inject(HideAfterInitDirective);
   });
 
   it('should create', () => {

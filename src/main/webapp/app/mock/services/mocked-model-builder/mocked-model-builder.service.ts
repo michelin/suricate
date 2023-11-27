@@ -11,7 +11,6 @@ import { ProjectWidget } from '../../../shared/models/backend/project-widget/pro
 import { ProjectWidgetPosition } from '../../../shared/models/backend/project-widget/project-widget-position';
 import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
-import { KtdGridLayoutItem } from '@katoid/angular-grid-layout/lib/grid.definitions';
 import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
 
 @Injectable({
@@ -138,19 +137,6 @@ export class MockedModelBuilderService {
       projectToken: 'Token',
       widgetId: 1,
       gridId: 1
-    };
-  }
-
-  /**
-   * Build a mocked gridItemConfig for the unit tests
-   */
-  public buildGridStackItem(): KtdGridLayoutItem {
-    return {
-      id: "1",
-      x: 0,
-      y: 0,
-      w: 50,
-      h: 50
     };
   }
 

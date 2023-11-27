@@ -20,7 +20,8 @@
   <ng-template #dashboardScreen>
     <suricate-dashboard-screen
       *ngFor="let entry of projectWidgetsByGrid | keyvalue; let i = index"
-      [fxHide]="entry.key !== project.grids[rotationIndex].id"
+      hideAfterInit
+      [hide]="entry.key !== project.grids[rotationIndex].id"
       [project]="project"
       [projectWidgets]="entry.value"
       [screenCode]="screenCode"

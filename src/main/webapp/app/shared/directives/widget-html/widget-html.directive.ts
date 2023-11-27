@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ProjectWidget } from '../models/backend/project-widget/project-widget';
+import { ProjectWidget } from '../../models/backend/project-widget/project-widget';
 
 /**
  * Directive for Widget's JS scripts

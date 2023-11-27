@@ -45,10 +45,11 @@ import { FieldsComponent } from './components/inputs/fields/fields.component';
 import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
-import { WidgetHtmlDirective } from './directives/widget-html.directive';
+import { WidgetHtmlDirective } from './directives/widget-html/widget-html.directive';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
 import { KtdGridModule } from '@katoid/angular-grid-layout';
+import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-init.directive';
 
 @NgModule({
     imports: [
@@ -73,6 +74,7 @@ import { KtdGridModule } from '@katoid/angular-grid-layout';
         InputComponent,
         CheckboxComponent,
         WidgetHtmlDirective,
+        HideAfterInitDirective,
         SafeHtmlPipe,
         ToastComponent,
         ListComponent,
@@ -107,6 +109,7 @@ import { KtdGridModule } from '@katoid/angular-grid-layout';
         ReactiveFormsModule,
         RouterModule,
         WidgetHtmlDirective,
+        HideAfterInitDirective,
         SafeHtmlPipe,
         ToastComponent,
         TranslateModule,

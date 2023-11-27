@@ -236,13 +236,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       if (this.project.displayProgressBar) {
         this.startTimer();
       }
-
+      
       this.rotationInterval = setInterval(() => {
         this.rotationIndex = this.rotationIndex === this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
 
-        if (this.project.displayProgressBar) {
-          this.startTimer();
-        }
+        clearInterval(this.rotationInterval);
+        this.scheduleRotation();
+
       }, this.project.grids[this.rotationIndex].time * 1000);
     }
   }
