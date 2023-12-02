@@ -25,6 +25,20 @@
 
 .sidenav-section-container {
   flex-grow: 1;
+
+  .home-tv-menu {
+    display: flex;
+
+    a {
+      flex-grow: 1;
+    }
+
+    .common-icon-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 
 .mdc-list {

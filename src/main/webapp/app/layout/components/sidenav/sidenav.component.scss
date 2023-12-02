@@ -15,3 +15,17 @@
  *  * limitations under the License.
  *
  */
+
+.menu-sidenav {
+  display: flex;
+  flex: 1 1 180px;
+  max-width: 180px;
+  min-width: 180px;
+}
+
+.form-sidenav {
+  display: flex;
+  flex: 1 1 680px;
+  max-width: 680px;
+  min-width: 680px;
+}
