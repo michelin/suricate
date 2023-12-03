@@ -16,7 +16,6 @@
  *
  */
 @use '../../../../../node_modules/@angular/material/index' as mat;
-@import '../../../../../node_modules/@angular/material/theming';
 
 @mixin custom-file-input-component-theme($theme) {
   $warn: map-get($theme, warn);
