@@ -413,8 +413,7 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <!-- For Node > 4.0.0 the plugin will use npm embedded by node -->
-                                    <nodeVersion>v18.18.2</nodeVersion>
+                                    <nodeVersion>v20.10.0</nodeVersion>
                                 </configuration>
                             </execution>
                             <!-- Install Angular dependencies -->

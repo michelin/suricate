@@ -39,7 +39,6 @@ jobs:
           path: ${{ github.workspace }}/target/suricate.jar
 
       - name: Sonar
-        if: github.repository_owner == 'michelin'
         run: mvn verify sonar:sonar -DcentralAnalyzerEnabled=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -53,10 +52,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up NodeJS 18.x
+      - name: Set up NodeJS 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '20.x'
 
       - name: Build
         run: |
