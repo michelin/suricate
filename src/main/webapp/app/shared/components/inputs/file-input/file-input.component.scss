@@ -17,10 +17,10 @@
  */
 
 .file-upload-wrapper {
-  & {
-    margin-bottom: 20px;
-    place-content: baseline !important;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 20px;
 
   img {
     max-width: 100%;
@@ -28,29 +28,15 @@
   }
 
   .upload-button-wrapper {
-    margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 
     .upload-button {
       display: flex;
-      flex-direction: row;
       align-items: center;
       justify-content: center;
-
-      .mat-icon {
-        margin-right: 5px;
-      }
-    }
-
-    .take-screenshot-button {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      margin: 10px 0;
-
-      .mat-icon {
-        margin-right: 5px;
-      }
+      flex: 1 1 100%;
     }
   }
 
@@ -66,9 +52,4 @@
   width: 100%;
   overflow: hidden;
   font-size: 75%;
-}
-
-.uploaded-file {
-  min-height: 290px;
-  max-height: 290px;
 }

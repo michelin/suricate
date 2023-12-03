@@ -65,7 +65,7 @@ import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-
         ReactiveFormsModule,
         RouterModule,
         TranslateModule,
-        ColorPickerModule,
+        ColorPickerModule
     ],
     declarations: [
         CommunicationDialogComponent,
@@ -121,7 +121,8 @@ import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-
         ColorPickerComponent,
         PaginatorComponent,
         SlideToggleComponent,
-        ProgressBarComponent
+        ProgressBarComponent,
+        ColorPickerModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

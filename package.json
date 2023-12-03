@@ -38,7 +38,7 @@
     "jquery": "^3.5.0",
     "lodash": "^4.17.21",
     "moment": "^2.22.1",
-    "ngx-color-picker": "^8.2.0",
+    "ngx-color-picker": "^14.0.0",
     "normalize-scss": "^7.0.1",
     "rxjs": "7.4.0",
     "sockjs-client": "^1.6.1",

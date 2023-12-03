@@ -1,5 +1,5 @@
 <ng-container *ngIf="!mosaicOptions">
-  <suricate-spinner fxFill fxFlexAlign="center"></suricate-spinner>
+  <suricate-spinner></suricate-spinner>
 </ng-container>
 
 <mat-grid-list *ngIf="mosaicOptions?.length > 0" [cols]="field.columnNumber ? field.columnNumber : 4" rowHeight="250px" gutterSize="17px">

@@ -3,8 +3,8 @@
     <aside>
       <div class="notification mat-elevation-z12" [ngClass]="message.style">
         <button class="delete" (click)="hideToast()"></button>
-        <div class="notification-body" fxLayout="row" fxLayoutAlign="start center">
-          <div fxFlex="30" class="icon-wrapper" fxLayoutAlign="center center" [ngSwitch]="message.style">
+        <div class="notification-body">
+          <div class="icon-wrapper" [ngSwitch]="message.style">
             <mat-icon class="material-icons" *ngSwitchCase="toastType.INFO">
               {{ materialIconRecords[iconEnum.INFO] }}
             </mat-icon>
@@ -18,7 +18,7 @@
               {{ materialIconRecords[iconEnum.SUCCESS] }}
             </mat-icon>
           </div>
-          <div class="notification-content" fxFlex="70">
+          <div class="notification-content">
             <div class="notification-title">
               {{ message.title | translate }}
             </div>
