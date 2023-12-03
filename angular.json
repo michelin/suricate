@@ -15,14 +15,16 @@
             "index": "src/main/webapp/index.html",
             "main": "src/main/webapp/main.ts",
             "tsConfig": "src/main/webapp/tsconfig.app.json",
-            "polyfills": "src/main/webapp/polyfills.ts",
+            "polyfills": [
+              "zone.js",
+              "src/main/webapp/polyfills.ts"
+            ],
             "assets": [
               "src/main/webapp/assets"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
-                "node_modules/material-design-icons-iconfont/src",
                 "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
@@ -112,7 +114,11 @@
           "options": {
             "main": "src/main/webapp/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/main/webapp/polyfills.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "src/main/webapp/polyfills.ts"
+            ],
             "tsConfig": "src/main/webapp/tsconfig.spec.json",
             "assets": [
               "src/main/webapp/assets"
@@ -120,7 +126,6 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
-                "node_modules/material-design-icons-iconfont/src",
                 "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
