@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { CanActivate, CanActivateChild, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { AuthenticationService } from '../../services/frontend/authentication/authentication.service';
 
@@ -25,7 +25,7 @@ import { AuthenticationService } from '../../services/frontend/authentication/au
  * Manage the right of the users
  */
 @Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate, CanActivateChild {
+export class AuthGuard  {
   /**
    * The constructor
    *

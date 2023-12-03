@@ -15,7 +15,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { CanActivate, CanActivateChild, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 import { AuthenticationService } from '../../services/frontend/authentication/authentication.service';
@@ -24,7 +24,7 @@ import { AuthenticationService } from '../../services/frontend/authentication/au
  * The admin guard
  */
 @Injectable({ providedIn: 'root' })
-export class AdminGuard implements CanActivate, CanActivateChild {
+export class AdminGuard  {
   /**
    * The constructor
    * @param router The router
