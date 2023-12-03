@@ -16,23 +16,25 @@
 
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from '../shared/guards/auth/auth.guard';
-import { AdminGuard } from '../shared/guards/admin/admin.guard';
 import { UsersComponent } from './users/users.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
 import { ConfigurationsComponent } from './configurations/configurations.component';
+import { adminGuard } from '../shared/guards/admin/admin.guard';
+import { authGuard } from '../shared/guards/auth/auth.guard';
 
 export const adminRoutes: Routes = [
   {
     path: 'admin/dashboards',
     component: DashboardsComponent,
-    canActivate: [AuthGuard, AdminGuard]
+    canActivate: [authGuard, adminGuard],
+    canActivateChild: [authGuard, adminGuard]
   },
   {
     path: 'admin/users',
     component: UsersComponent,
-    canActivate: [AuthGuard, AdminGuard],
+    canActivate: [authGuard, adminGuard],
+    canActivateChild: [authGuard, adminGuard],
     data: {
       breadcrumb: 'Users'
     }
@@ -40,11 +42,13 @@ export const adminRoutes: Routes = [
   {
     path: 'admin/repositories',
     component: RepositoriesComponent,
-    canActivate: [AuthGuard, AdminGuard]
+    canActivate: [authGuard, adminGuard],
+    canActivateChild: [authGuard, adminGuard],
   },
   {
     path: 'admin/configurations',
     component: ConfigurationsComponent,
-    canActivate: [AuthGuard, AdminGuard]
+    canActivate: [authGuard, adminGuard],
+    canActivateChild: [authGuard, adminGuard],
   }
 ];

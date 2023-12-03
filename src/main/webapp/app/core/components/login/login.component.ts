@@ -27,13 +27,11 @@ import {
   LoginFormFieldsService
 } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { SettingsService } from '../../services/settings.service';
 import {
   HttpConfigurationService
 } from '../../../shared/services/backend/http-configuration/http-configuration.service';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
-import { TranslateService } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 /**
@@ -87,9 +85,7 @@ export class LoginComponent implements OnInit {
    * @param httpConfigurationService Service used to manage http calls for configurations
    * @param authenticationService Service used to manage authentications
    * @param formService Front-End service used to manage forms
-   * @param settingsService Front-End service used to manage the user's settings
    * @param toastService The toast service
-   * @param translateService The translate service
    */
   constructor(
     private readonly router: Router,
@@ -97,9 +93,7 @@ export class LoginComponent implements OnInit {
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
-    private readonly settingsService: SettingsService,
     private readonly toastService: ToastService,
-    private readonly translateService: TranslateService
   ) {}
 
   /**

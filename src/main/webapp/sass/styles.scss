@@ -18,6 +18,13 @@
 
 @use "@angular/material" as mat;
 @import "@angular/material/theming";
+
+// Font Awesome icons for widgets
+@import '@fortawesome/fontawesome-free/scss/fontawesome';
+@import '@fortawesome/fontawesome-free/scss/brands';
+@import '@fortawesome/fontawesome-free/scss/regular';
+@import '@fortawesome/fontawesome-free/scss/solid';
+
 @include mat.core();
 
 @import 'sass/global-styles';

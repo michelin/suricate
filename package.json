@@ -24,10 +24,11 @@
     "@angular/platform-browser": "^16.2.12",
     "@angular/platform-browser-dynamic": "^16.2.12",
     "@angular/router": "^16.2.12",
-    "@auth0/angular-jwt": "^3.0.0",
+    "@auth0/angular-jwt": "^5.2.0",
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "@katoid/angular-grid-layout": "^2.2.0",
-    "@ngx-translate/core": "^12.1.2",
-    "@ngx-translate/http-loader": "^5.0.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "@stomp/rx-stomp": "^2.0.0",
     "cerialize": "^0.1.18",
     "core-js": "^2.6.5",
@@ -37,7 +38,7 @@
     "jquery": "^3.5.0",
     "lodash": "^4.17.21",
     "moment": "^2.22.1",
-    "ngx-color-picker": "^14.0.0",
+    "ngx-color-picker": "^16.0.0",
     "normalize-scss": "^7.0.1",
     "rxjs": "7.4.0",
     "sockjs-client": "^1.6.1",
@@ -73,6 +74,6 @@
     "pretty-quick": "^3.1.1",
     "protractor": "~7.0.0",
     "ts-node": "~3.2.0",
-    "typescript": "~4.9.5"
+    "typescript": "~5.0.4"
   }
 }

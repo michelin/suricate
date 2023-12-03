@@ -17,9 +17,11 @@
 import { Routes } from '@angular/router';
 
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
-import { AuthGuard } from '../shared/guards/auth/auth.guard';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
-import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
+import {
+  AddWidgetToProjectWizardComponent
+} from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
+import { authGuard } from '../shared/guards/auth/auth.guard';
 
 export const DashboardRoutes: Routes = [
   {
@@ -29,16 +31,19 @@ export const DashboardRoutes: Routes = [
   {
     path: 'dashboards/:dashboardToken',
     component: DashboardDetailComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
   },
   {
     path: 'dashboards/:dashboardToken/:gridId',
     component: DashboardDetailComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
   },
   {
     path: 'dashboards/:dashboardToken/:gridId/widgets/create',
     component: AddWidgetToProjectWizardComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
   }
 ];

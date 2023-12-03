@@ -16,43 +16,16 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/frontend/authentication/authentication.service';
 
-/**
- * Manage the right of the users
- */
-@Injectable({ providedIn: 'root' })
-export class AuthGuard  {
-  /**
-   * The constructor
-   *
-   * @param router The router
-   */
-  constructor(private readonly router: Router) {}
-
-  /**
-   * Manage user roles
-   *
-   * @returns {Observable<boolean>}
-   */
-  public canActivate(): Observable<boolean> {
-    if (!AuthenticationService.isTokenExpired()) {
-      return of(true);
-    }
-
-    // not logged in so redirect to login page
-    this.router.navigate(['/login']);
-    return of(false);
+export const authGuard: CanActivateFn = (route, state) => {
+  const router = inject(Router);
+  if (!AuthenticationService.isTokenExpired()) {
+    return true;
   }
 
-  /**
-   * Activation for child routes
-   * @returns {Observable<boolean>}
-   */
-  public canActivateChild(): Observable<boolean> {
-    return this.canActivate();
-  }
-}
+  router.navigate(['/login']);
+  return false;
+};

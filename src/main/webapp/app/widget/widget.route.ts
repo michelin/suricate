@@ -18,13 +18,14 @@
 
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from '../shared/guards/auth/auth.guard';
+import { authGuard } from '../shared/guards/auth/auth.guard';
 import { CatalogComponent } from './catalog/catalog.component';
 
 export const widgetRoutes: Routes = [
   {
     path: 'widgets/catalog',
     component: CatalogComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
   }
 ];

@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { AdminGuard } from './admin.guard';
+import { CanActivateFn } from '@angular/router';
+import { adminGuard } from './admin.guard';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('AdminGuard', () => {
+  const executeGuard: CanActivateFn = (...guardParameters) =>
+    TestBed.runInInjectionContext(() => adminGuard(...guardParameters));
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [AdminGuard]
+      imports: [MockModule]
     });
   });
 
-  it('should create', inject([AdminGuard], (guard: AdminGuard) => {
-    expect(guard).toBeTruthy();
-  }));
+  it('should be created', () => {
+    expect(executeGuard).toBeTruthy();
+  });
 });
