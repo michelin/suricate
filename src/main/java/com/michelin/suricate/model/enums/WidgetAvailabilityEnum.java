@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.enums;
 
 /**
- * Widget availability
+ * Widget availability.
  */
 public enum WidgetAvailabilityEnum {
     ACTIVATED,

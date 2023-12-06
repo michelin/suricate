@@ -1,5 +1,10 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.token.JwtAuthenticationResponseDto;
 import com.michelin.suricate.model.dto.api.user.SignInRequestDto;
 import com.michelin.suricate.services.token.JwtHelperService;
@@ -15,10 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationControllerTest {
@@ -41,9 +42,9 @@ class AuthenticationControllerTest {
         signInRequestDto.setPassword("password");
 
         when(authenticationManager.authenticate(any()))
-                .thenReturn(authentication);
+            .thenReturn(authentication);
         when(jwtHelperService.createToken(any()))
-                .thenReturn("token");
+            .thenReturn("token");
 
         ResponseEntity<JwtAuthenticationResponseDto> actual = authenticationController.signIn(signInRequestDto);
 
@@ -53,10 +54,10 @@ class AuthenticationControllerTest {
         assertThat(actual.getBody().getAccessToken()).isEqualTo("token");
 
         verify(authenticationManager)
-                .authenticate(Mockito.<UsernamePasswordAuthenticationToken>argThat(auth ->
-                        auth.getPrincipal().equals("username") &&
-                        auth.getCredentials().equals("password")));
+            .authenticate(Mockito.<UsernamePasswordAuthenticationToken>argThat(auth ->
+                auth.getPrincipal().equals("username")
+                    && auth.getCredentials().equals("password")));
         verify(jwtHelperService)
-                .createToken(authentication);
+            .createToken(authentication);
     }
 }

@@ -17,20 +17,18 @@
 package com.michelin.suricate.repositories;
 
 import com.michelin.suricate.model.entities.Role;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 /**
- * Repository used for request Roles in database
+ * Role repository.
  */
 @Repository
 public interface RoleRepository extends CrudRepository<Role, Long>, JpaSpecificationExecutor<Role> {
-
     /**
-     * Find a role by name
+     * Find a role by name.
      *
      * @param name The name of the role
      * @return The role as optional

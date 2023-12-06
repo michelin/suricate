@@ -18,10 +18,23 @@ package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import com.michelin.suricate.model.enums.DataTypeEnum;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
-
+/**
+ * Category parameter entity.
+ */
 @Entity
 @Table(name = "category_param")
 @Getter
@@ -58,21 +71,27 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
     }
 
     /**
-     * Hashcode method
-     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * Hashcode method.
+     * Do not use lombok @EqualsAndHashCode method as it calls super method
      * then call the self-defined child Hashcode method
+     *
      * @return The hash code
      */
     @Override
-    public int hashCode() { return super.hashCode(); }
+    public int hashCode() {
+        return super.hashCode();
+    }
 
     /**
-     * Equals method
-     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * Equals method.
+     * Do not use lombok @EqualsAndHashCode method as it calls super method
      * then call the self-defined child Equals method
+     *
      * @param other The other object to compare
      * @return true if equals, false otherwise
      */
     @Override
-    public boolean equals(Object other) { return super.equals(other); }
+    public boolean equals(Object other) {
+        return super.equals(other);
+    }
 }

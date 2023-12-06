@@ -22,17 +22,26 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.michelin.suricate.model.entities.Category;
 import com.michelin.suricate.model.entities.Library;
 import com.michelin.suricate.model.entities.Widget;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-
+/**
+ * Widget utils.
+ */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WidgetUtils {
     private static final ObjectMapper mapper;
 
@@ -42,7 +51,7 @@ public final class WidgetUtils {
     }
 
     /**
-     * Method used to parse library folder
+     * Method used to parse library folder.
      *
      * @param rootFolder the root library folder
      * @return the list of library
@@ -67,7 +76,7 @@ public final class WidgetUtils {
     }
 
     /**
-     * Method used to parse category folder
+     * Method used to parse category folder.
      *
      * @param rootFolder the folder to parse
      * @return the list of category to parse
@@ -96,7 +105,7 @@ public final class WidgetUtils {
     }
 
     /**
-     * Method used to get category from Folder
+     * Method used to get category from Folder.
      *
      * @param folderCategory folder category
      * @return the category bean
@@ -149,7 +158,7 @@ public final class WidgetUtils {
     }
 
     /**
-     * Get widget from a given folder
+     * Get widget from a given folder.
      *
      * @param folder The folder from which to retrieve the widget
      * @return The built widget from the folder
@@ -178,7 +187,8 @@ public final class WidgetUtils {
                 return null;
             }
 
-            if (StringUtils.isAnyBlank(widget.getCssContent(), widget.getDescription(), widget.getHtmlContent(), widget.getTechnicalName(), widget.getName())) {
+            if (StringUtils.isAnyBlank(widget.getCssContent(), widget.getDescription(), widget.getHtmlContent(),
+                widget.getTechnicalName(), widget.getName())) {
                 log.error("Widget is not well formatted : {}", folder.getPath());
                 return null;
             }
@@ -192,7 +202,7 @@ public final class WidgetUtils {
      * fill the widget with the information contained in the file
      *
      * @param widget The widget
-     * @param file The file containing information to set to the widget
+     * @param file   The file containing information to set to the widget
      * @throws IOException Exception triggered during file reading
      */
     private static void readWidgetConfig(Widget widget, File file) throws IOException {
@@ -210,6 +220,4 @@ public final class WidgetUtils {
             mapper.readerForUpdating(widget).readValue(file);
         }
     }
-
-    private WidgetUtils() { }
 }

@@ -18,11 +18,13 @@
 
 package com.michelin.suricate.utils.exceptions.constants;
 
-public class ErrorMessage {
-    public static final String USER_NOT_ALLOWED_PROJECT = "The user is not allowed to modify this project";
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-    /**
-     * Constructor
-     */
-    private ErrorMessage() { }
+/**
+ * Class containing all error messages.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public abstract class ErrorMessage {
+    public static final String USER_NOT_ALLOWED_PROJECT = "The user is not allowed to modify this project";
 }

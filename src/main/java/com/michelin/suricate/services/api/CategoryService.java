@@ -17,11 +17,16 @@
 package com.michelin.suricate.services.api;
 
 import com.michelin.suricate.model.entities.Category;
-import com.michelin.suricate.repositories.CategoryRepository;
-import com.michelin.suricate.services.specifications.CategorySearchSpecification;
 import com.michelin.suricate.model.entities.CategoryParameter;
 import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.model.entities.WidgetParam;
+import com.michelin.suricate.repositories.CategoryRepository;
+import com.michelin.suricate.services.specifications.CategorySearchSpecification;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -29,9 +34,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+/**
+ * Category service.
+ */
 @Service
 public class CategoryService {
     @Autowired
@@ -44,7 +49,8 @@ public class CategoryService {
     private CategoryParametersService categoryParametersService;
 
     /**
-     * Get all the categories
+     * Get all the categories.
+     *
      * @return The list of categories
      */
     @Cacheable("widget-categories")
@@ -54,7 +60,8 @@ public class CategoryService {
     }
 
     /**
-     * Find a category by technical name
+     * Find a category by technical name.
+     *
      * @param technicalName The technical name of the category
      * @return The related category
      */
@@ -63,7 +70,8 @@ public class CategoryService {
     }
 
     /**
-     * Add or update a category
+     * Add or update a category.
+     *
      * @param category The category to add or update
      */
     @Transactional
@@ -87,8 +95,8 @@ public class CategoryService {
         }
 
         // Save the configurations
-        List<CategoryParameter> categoryOldConfigurations = existingCategory != null ?
-                new ArrayList<>(existingCategory.getConfigurations()) : new ArrayList<>();
+        List<CategoryParameter> categoryOldConfigurations = existingCategory != null
+            ? new ArrayList<>(existingCategory.getConfigurations()) : new ArrayList<>();
 
         Set<CategoryParameter> categoryNewConfigurations = category.getConfigurations();
         category.setConfigurations(new HashSet<>());
@@ -99,9 +107,9 @@ public class CategoryService {
         // Create/Update configurations
         if (categoryNewConfigurations != null && !categoryNewConfigurations.isEmpty()) {
             List<String> categoryNewConfigurationsKeys = categoryNewConfigurations
-                    .stream()
-                    .map(CategoryParameter::getId)
-                    .collect(Collectors.toList());
+                .stream()
+                .map(CategoryParameter::getId)
+                .toList();
 
             for (CategoryParameter categoryConfiguration : categoryOldConfigurations) {
                 if (!categoryNewConfigurationsKeys.contains(categoryConfiguration.getId())) {
@@ -114,19 +122,20 @@ public class CategoryService {
     }
 
     /**
-     * Get the parameters of the category linked with the given widget
+     * Get the parameters of the category linked with the given widget.
+     *
      * @param widget The widget
      * @return The category parameters
      */
     public List<WidgetParam> getCategoryParametersByWidget(final Widget widget) {
         Optional<List<CategoryParameter>> configurationsOptional = categoryParametersService
-                .getParametersByCategoryId(widget.getCategory().getId());
+            .getParametersByCategoryId(widget.getCategory().getId());
 
         return configurationsOptional
-                .map(configurations -> configurations
-                        .stream()
-                        .map(CategoryParametersService::convertCategoryParametersToWidgetParameters)
-                        .collect(Collectors.toList()))
-                .orElseGet(ArrayList::new);
+            .map(configurations -> configurations
+                .stream()
+                .map(CategoryParametersService::convertCategoryParametersToWidgetParameters)
+                .toList())
+            .orElseGet(ArrayList::new);
     }
 }

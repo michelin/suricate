@@ -1,7 +1,16 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.entities.Asset;
 import com.michelin.suricate.services.api.AssetService;
+import java.time.Instant;
+import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,15 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
-
-import java.time.Instant;
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class AssetControllerTest {
@@ -39,18 +39,18 @@ class AssetControllerTest {
         WebRequest webRequest = mock(WebRequest.class);
 
         when(assetService.getAssetById(any()))
-                .thenReturn(asset);
+            .thenReturn(asset);
         when(webRequest.checkNotModified(anyLong()))
-                .thenReturn(true);
+            .thenReturn(true);
 
         ResponseEntity<byte[]> actual = assetController.getAsset(webRequest, "token");
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NOT_MODIFIED);
 
         verify(assetService)
-                .getAssetById("token");
+            .getAssetById("token");
         verify(webRequest)
-                .checkNotModified(946688400000L);
+            .checkNotModified(946688400000L);
     }
 
     @Test
@@ -63,9 +63,9 @@ class AssetControllerTest {
         WebRequest webRequest = mock(WebRequest.class);
 
         when(assetService.getAssetById(any()))
-                .thenReturn(asset);
+            .thenReturn(asset);
         when(webRequest.checkNotModified(anyLong()))
-                .thenReturn(false);
+            .thenReturn(false);
 
         ResponseEntity<byte[]> actual = assetController.getAsset(webRequest, "token");
 
@@ -76,8 +76,8 @@ class AssetControllerTest {
         assertThat(actual.getBody()).isEqualTo(new byte[10]);
 
         verify(assetService)
-                .getAssetById("token");
+            .getAssetById("token");
         verify(webRequest)
-                .checkNotModified(946688400000L);
+            .checkNotModified(946688400000L);
     }
 }

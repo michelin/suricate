@@ -1,14 +1,30 @@
 package com.michelin.suricate.services.websocket;
 
+import static com.michelin.suricate.model.enums.UpdateType.CONNECT_DASHBOARD;
+import static com.michelin.suricate.model.enums.UpdateType.DISCONNECT;
+import static com.michelin.suricate.model.enums.UpdateType.RELOAD;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.project.ProjectResponseDto;
-import com.michelin.suricate.model.entities.Project;
-import com.michelin.suricate.services.api.ProjectService;
-import com.michelin.suricate.services.mapper.ProjectMapper;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
-import com.michelin.suricate.services.nashorn.services.NashornService;
-import com.michelin.suricate.model.dto.nashorn.NashornRequest;
+import com.michelin.suricate.model.dto.js.JsExecutionDto;
 import com.michelin.suricate.model.dto.websocket.UpdateEvent;
 import com.michelin.suricate.model.dto.websocket.WebsocketClient;
+import com.michelin.suricate.model.entities.Project;
+import com.michelin.suricate.services.api.ProjectService;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
+import com.michelin.suricate.services.js.services.JsExecutionService;
+import com.michelin.suricate.services.mapper.ProjectMapper;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,21 +32,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static com.michelin.suricate.model.enums.UpdateType.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class DashboardWebSocketServiceTest {
     @Mock
-    private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @Mock
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -42,7 +47,7 @@ class DashboardWebSocketServiceTest {
     private ProjectMapper projectMapper;
 
     @Mock
-    private NashornService nashornService;
+    private JsExecutionService jsExecutionService;
 
     @InjectMocks
     private DashboardWebSocketService dashboardWebSocketService;
@@ -55,16 +60,16 @@ class DashboardWebSocketServiceTest {
         ProjectResponseDto projectResponseDto = new ProjectResponseDto();
         projectResponseDto.setName("name");
 
-        when(projectMapper.toProjectDTO(any())).thenReturn(projectResponseDto);
+        when(projectMapper.toProjectDto(any())).thenReturn(projectResponseDto);
 
         dashboardWebSocketService.sendConnectProjectEventToScreenSubscriber(project, "screenCode");
 
         verify(projectMapper)
-                .toProjectDTO(project);
+            .toProjectDto(project);
         verify(simpMessagingTemplate)
-                .convertAndSendToUser(eq("screenCode"), eq("/queue/connect"),
-                        argThat(updateEvent -> ((UpdateEvent) updateEvent).getType().equals(CONNECT_DASHBOARD) &&
-                                ((UpdateEvent) updateEvent).getContent().equals(projectResponseDto)));
+            .convertAndSendToUser(eq("screenCode"), eq("/queue/connect"),
+                argThat(updateEvent -> ((UpdateEvent) updateEvent).getType().equals(CONNECT_DASHBOARD)
+                    && ((UpdateEvent) updateEvent).getContent().equals(projectResponseDto)));
     }
 
     @Test
@@ -77,7 +82,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers("token", 1L, updateEvent);
 
         verify(simpMessagingTemplate)
-                .convertAndSendToUser("token-projectWidget-1", "/queue/live", updateEvent);
+            .convertAndSendToUser("token-projectWidget-1", "/queue/live", updateEvent);
     }
 
     @Test
@@ -90,7 +95,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(null, 1L, updateEvent);
 
         verify(simpMessagingTemplate, times(0))
-                .convertAndSendToUser(any(), any(), any());
+            .convertAndSendToUser(any(), any(), any());
     }
 
     @Test
@@ -103,7 +108,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers("token", null, updateEvent);
 
         verify(simpMessagingTemplate, times(0))
-                .convertAndSendToUser(any(), any(), any());
+            .convertAndSendToUser(any(), any(), any());
     }
 
     @Test
@@ -116,7 +121,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToProjectSubscribers("token", updateEvent);
 
         verify(simpMessagingTemplate)
-                .convertAndSendToUser("token", "/queue/live", updateEvent);
+            .convertAndSendToUser("token", "/queue/live", updateEvent);
     }
 
     @Test
@@ -129,20 +134,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.sendEventToProjectSubscribers(null, updateEvent);
 
         verify(simpMessagingTemplate, times(0))
-                .convertAndSendToUser(any(), any(), any());
-    }
-
-    @Test
-    void shouldSendEventToScreenProjectSubscriber() {
-        UpdateEvent updateEvent = new UpdateEvent();
-        updateEvent.setDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
-        updateEvent.setContent("test");
-        updateEvent.setType(CONNECT_DASHBOARD);
-
-        dashboardWebSocketService.sendEventToScreenProjectSubscriber("token", "screen", updateEvent);
-
-        verify(simpMessagingTemplate)
-                .convertAndSendToUser("token-screen", "/queue/unique", updateEvent);
+            .convertAndSendToUser(any(), any(), any());
     }
 
     @Test
@@ -154,11 +146,11 @@ class DashboardWebSocketServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        NashornRequest nashornRequest = new NashornRequest();
-        nashornRequest.setProjectId(1L);
-        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+        JsExecutionDto jsExecutionDto = new JsExecutionDto();
+        jsExecutionDto.setProjectId(1L);
+        List<JsExecutionDto> jsExecutionDtos = Collections.singletonList(jsExecutionDto);
 
-        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         dashboardWebSocketService.addClientToProject(project, websocketClient);
@@ -166,10 +158,10 @@ class DashboardWebSocketServiceTest {
 
         assertThat(actual).contains(websocketClient);
 
-        verify(nashornService)
-                .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler)
-                .scheduleNashornRequests(nashornRequests, true);
+        verify(jsExecutionService)
+            .getJsExecutionsByProject(project);
+        verify(jsExecutionScheduler)
+            .scheduleJsRequests(jsExecutionDtos, true);
     }
 
     @Test
@@ -182,21 +174,21 @@ class DashboardWebSocketServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        NashornRequest nashornRequest = new NashornRequest();
-        nashornRequest.setProjectId(1L);
-        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+        JsExecutionDto jsExecutionDto = new JsExecutionDto();
+        jsExecutionDto.setProjectId(1L);
+        List<JsExecutionDto> jsExecutionDtos = Collections.singletonList(jsExecutionDto);
 
-        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         Optional<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsBySessionId("session");
 
         assertThat(actual).contains(websocketClient);
 
-        verify(nashornService)
-                .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler)
-                .scheduleNashornRequests(nashornRequests, true);
+        verify(jsExecutionService)
+            .getJsExecutionsByProject(project);
+        verify(jsExecutionScheduler)
+            .scheduleJsRequests(jsExecutionDtos, true);
     }
 
     @Test
@@ -209,21 +201,21 @@ class DashboardWebSocketServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        NashornRequest nashornRequest = new NashornRequest();
-        nashornRequest.setProjectId(1L);
-        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+        JsExecutionDto jsExecutionDto = new JsExecutionDto();
+        jsExecutionDto.setProjectId(1L);
+        List<JsExecutionDto> jsExecutionDtos = Collections.singletonList(jsExecutionDto);
 
-        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         int actual = dashboardWebSocketService.countWebsocketClients();
 
         assertThat(actual).isEqualTo(1);
 
-        verify(nashornService)
-                .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler)
-                .scheduleNashornRequests(nashornRequests, true);
+        verify(jsExecutionService)
+            .getJsExecutionsByProject(project);
+        verify(jsExecutionScheduler)
+            .scheduleJsRequests(jsExecutionDtos, true);
     }
 
     @Test
@@ -237,14 +229,15 @@ class DashboardWebSocketServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        NashornRequest nashornRequest = new NashornRequest();
-        nashornRequest.setProjectId(1L);
-        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+        JsExecutionDto jsExecutionDto = new JsExecutionDto();
+        jsExecutionDto.setProjectId(1L);
+        List<JsExecutionDto> jsExecutionDtos = Collections.singletonList(jsExecutionDto);
 
-        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
-        Optional<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId("session", "subscription");
+        Optional<WebsocketClient> actual =
+            dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId("session", "subscription");
 
         assertThat(actual).contains(websocketClient);
     }
@@ -260,20 +253,20 @@ class DashboardWebSocketServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        NashornRequest nashornRequest = new NashornRequest();
-        nashornRequest.setProjectId(1L);
-        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+        JsExecutionDto jsExecutionDto = new JsExecutionDto();
+        jsExecutionDto.setProjectId(1L);
+        List<JsExecutionDto> jsExecutionDtos = Collections.singletonList(jsExecutionDto);
 
-        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         Optional<WebsocketClient> actual = dashboardWebSocketService
-                .getWebsocketClientsBySessionIdAndSubscriptionId("unknownSession", "unknownSubscription");
+            .getWebsocketClientsBySessionIdAndSubscriptionId("unknownSession", "unknownSubscription");
 
         assertThat(actual).isEmpty();
 
         actual = dashboardWebSocketService
-                .getWebsocketClientsBySessionIdAndSubscriptionId("session", "unknownSubscription");
+            .getWebsocketClientsBySessionIdAndSubscriptionId("session", "unknownSubscription");
 
         assertThat(actual).isEmpty();
     }
@@ -289,11 +282,11 @@ class DashboardWebSocketServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        NashornRequest nashornRequest = new NashornRequest();
-        nashornRequest.setProjectId(1L);
-        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+        JsExecutionDto jsExecutionDto = new JsExecutionDto();
+        jsExecutionDto.setProjectId(1L);
+        List<JsExecutionDto> jsExecutionDtos = Collections.singletonList(jsExecutionDto);
 
-        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
         when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
@@ -305,14 +298,14 @@ class DashboardWebSocketServiceTest {
         actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
         assertThat(actual).isEmpty();
 
-        verify(nashornService)
-                .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler)
-                .scheduleNashornRequests(nashornRequests, true);
+        verify(jsExecutionService)
+            .getJsExecutionsByProject(project);
+        verify(jsExecutionScheduler)
+            .scheduleJsRequests(jsExecutionDtos, true);
         verify(projectService)
-                .getOneByToken("token");
-        verify(nashornWidgetScheduler)
-                .cancelWidgetsExecutionByProject(project);
+            .getOneByToken("token");
+        verify(jsExecutionScheduler)
+            .cancelWidgetsExecutionByProject(project);
     }
 
     @Test
@@ -331,33 +324,33 @@ class DashboardWebSocketServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        NashornRequest nashornRequest = new NashornRequest();
-        nashornRequest.setProjectId(1L);
-        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+        JsExecutionDto jsExecutionDto = new JsExecutionDto();
+        jsExecutionDto.setProjectId(1L);
+        List<JsExecutionDto> jsExecutionDtos = Collections.singletonList(jsExecutionDto);
 
-        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         dashboardWebSocketService.addClientToProject(project, websocketClient2);
         List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
 
         assertThat(actual)
-                .contains(websocketClient)
-                .contains(websocketClient2);
+            .contains(websocketClient)
+            .contains(websocketClient2);
 
         dashboardWebSocketService.removeClientFromProject(websocketClient);
 
         actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
         assertThat(actual).contains(websocketClient2);
 
-        verify(nashornService)
-                .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler)
-                .scheduleNashornRequests(nashornRequests, true);
+        verify(jsExecutionService)
+            .getJsExecutionsByProject(project);
+        verify(jsExecutionScheduler)
+            .scheduleJsRequests(jsExecutionDtos, true);
         verify(projectService, times(0))
-                .getOneByToken(any());
-        verify(nashornWidgetScheduler, times(0))
-                .cancelWidgetsExecutionByProject(any());
+            .getOneByToken(any());
+        verify(jsExecutionScheduler, times(0))
+            .cancelWidgetsExecutionByProject(any());
     }
 
     @Test
@@ -365,8 +358,8 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.disconnectClient("token", "screen");
 
         verify(simpMessagingTemplate)
-                .convertAndSendToUser(eq("token-screen"), eq("/queue/unique"), argThat(updateEvent ->
-                        ((UpdateEvent) updateEvent).getType().equals(DISCONNECT)));
+            .convertAndSendToUser(eq("token-screen"), eq("/queue/unique"), argThat(updateEvent ->
+                ((UpdateEvent) updateEvent).getType().equals(DISCONNECT)));
     }
 
     @Test
@@ -384,29 +377,29 @@ class DashboardWebSocketServiceTest {
         project2.setId(2L);
         project2.setToken("token2");
 
-        NashornRequest nashornRequest = new NashornRequest();
-        nashornRequest.setProjectId(1L);
-        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+        JsExecutionDto jsExecutionDto = new JsExecutionDto();
+        jsExecutionDto.setProjectId(1L);
+        List<JsExecutionDto> jsExecutionDtos = Collections.singletonList(jsExecutionDto);
 
-        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        when(jsExecutionService.getJsExecutionsByProject(any())).thenReturn(jsExecutionDtos);
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         dashboardWebSocketService.reloadAllConnectedClientsToAllProjects();
 
-        verify(nashornService)
-                .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler)
-                .scheduleNashornRequests(nashornRequests, true);
+        verify(jsExecutionService)
+            .getJsExecutionsByProject(project);
+        verify(jsExecutionScheduler)
+            .scheduleJsRequests(jsExecutionDtos, true);
         verify(simpMessagingTemplate)
-                .convertAndSendToUser(eq("token"), eq("/queue/live"), argThat(updateEvent ->
-                        ((UpdateEvent) updateEvent).getType().equals(RELOAD)));
+            .convertAndSendToUser(eq("token"), eq("/queue/live"), argThat(updateEvent ->
+                ((UpdateEvent) updateEvent).getType().equals(RELOAD)));
     }
 
     @Test
-    void shouldNotReloadAllConnectedClientsToAProjectWhenEmpty() {
-        dashboardWebSocketService.reloadAllConnectedClientsToAProject("token");
+    void shouldNotReloadAllConnectedClientsToProjectWhenEmpty() {
+        dashboardWebSocketService.reloadAllConnectedClientsToProject("token");
 
         verify(simpMessagingTemplate, times(0))
-                .convertAndSendToUser(any(), any(), any());
+            .convertAndSendToUser(any(), any(), any());
     }
 }

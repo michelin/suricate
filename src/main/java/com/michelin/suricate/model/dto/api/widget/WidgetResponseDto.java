@@ -5,12 +5,14 @@ import com.michelin.suricate.model.dto.api.asset.AssetResponseDto;
 import com.michelin.suricate.model.dto.api.category.CategoryResponseDto;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
+/**
+ * Widget response DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -37,7 +39,7 @@ public class WidgetResponseDto extends AbstractDto {
     @Schema(description = "The css of this widget")
     private String cssContent;
 
-    @Schema(description = "Timeout for nashorn execution (prevent infinity loop)", example = "30")
+    @Schema(description = "Timeout for Js execution (prevent infinity loop)", example = "30")
     private Long timeout;
 
     @Schema(description = "A representation by an image of the widget")

@@ -1,21 +1,23 @@
 package com.michelin.suricate.services.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.entities.Asset;
 import com.michelin.suricate.repositories.AssetRepository;
 import com.michelin.suricate.utils.IdUtils;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AssetServiceTest {
@@ -35,18 +37,18 @@ class AssetServiceTest {
             asset.setContentType("contentType");
 
             mocked.when(() -> IdUtils.decrypt("token"))
-                    .thenReturn(1L);
+                .thenReturn(1L);
             when(assetRepository.findById(1L))
-                    .thenReturn(Optional.of(asset));
+                .thenReturn(Optional.of(asset));
 
             Asset actual = assetService.getAssetById("token");
 
             assertThat(actual)
-                    .isNotNull()
-                    .isEqualTo(asset);
+                .isNotNull()
+                .isEqualTo(asset);
 
             verify(assetRepository)
-                    .findById(1L);
+                .findById(1L);
         }
     }
 
@@ -60,12 +62,12 @@ class AssetServiceTest {
             asset.setContentType("contentType");
 
             mocked.when(() -> IdUtils.decrypt("token"))
-                    .thenReturn(1L);
+                .thenReturn(1L);
             when(assetRepository.findById(1L))
-                    .thenReturn(Optional.empty());
+                .thenReturn(Optional.empty());
 
             assertThatThrownBy(() -> assetService.getAssetById("token"))
-                    .isInstanceOf(ObjectNotFoundException.class);
+                .isInstanceOf(ObjectNotFoundException.class);
         }
     }
 
@@ -78,15 +80,15 @@ class AssetServiceTest {
         asset.setContentType("contentType");
 
         when(assetRepository.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         Asset actual = assetService.save(asset);
 
         assertThat(actual)
-                .isNotNull()
-                .isEqualTo(asset);
+            .isNotNull()
+            .isEqualTo(asset);
 
         verify(assetRepository)
-                .save(asset);
+            .save(asset);
     }
 }

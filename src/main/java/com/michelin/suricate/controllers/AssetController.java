@@ -39,6 +39,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
+/**
+ * Asset controller.
+ */
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Asset", description = "Asset Controller")
@@ -47,15 +50,18 @@ public class AssetController {
     private AssetService assetService;
 
     /**
-     * Get asset for the specified token
+     * Get asset for the specified token.
+     *
      * @param token the asset token used to identify the asset
      * @return the asset data
      */
     @Operation(summary = "Get an asset by its token")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Cannot decrypt token", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "401", description = "Invalid token", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "400", description = "Cannot decrypt token", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Invalid token", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(path = "/v1/assets/{token}/content")
     public ResponseEntity<byte[]> getAsset(@Parameter(hidden = true) WebRequest webRequest,

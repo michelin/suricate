@@ -18,40 +18,41 @@ package com.michelin.suricate.services.mapper;
 
 import com.michelin.suricate.model.dto.api.setting.SettingResponseDto;
 import com.michelin.suricate.model.entities.Setting;
+import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
+import org.mapstruct.ReportingPolicy;
 
 /**
- * Manage the generation DTO/Model objects for Setting class
+ * Setting mapper.
  */
 @Mapper(
     componentModel = "spring",
     uses = {
         AllowedSettingValueMapper.class
-    }
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class SettingMapper {
     /**
-     * Map a setting into a DTO
+     * Map a setting into a DTO.
      *
      * @param setting The setting to map
      * @return The setting as DTO
      */
-    @Named("toSettingDTO")
-    @Mapping(target = "allowedSettingValues", qualifiedByName = "toAllowedSettingValuesDTOs")
-    public abstract SettingResponseDto toSettingDTO(Setting setting);
+    @Named("toSettingDto")
+    @Mapping(target = "allowedSettingValues", qualifiedByName = "toAllowedSettingValuesDtos")
+    public abstract SettingResponseDto toSettingDto(Setting setting);
 
     /**
-     * Map a list of settings into a list of settings DTO
+     * Map a list of settings into a list of settings DTO.
      *
      * @param settings The list of settings to map
      * @return The list of settings as DTOs
      */
-    @Named("toSettingsDTOs")
-    @IterableMapping(qualifiedByName = "toSettingDTO")
-    public abstract List<SettingResponseDto> toSettingsDTOs(List<Setting> settings);
+    @Named("toSettingsDtos")
+    @IterableMapping(qualifiedByName = "toSettingDto")
+    public abstract List<SettingResponseDto> toSettingsDtos(List<Setting> settings);
 }

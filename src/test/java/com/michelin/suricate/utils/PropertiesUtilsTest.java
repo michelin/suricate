@@ -1,12 +1,11 @@
 package com.michelin.suricate.utils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 import java.util.Properties;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
 
 class PropertiesUtilsTest {
     @Test
@@ -25,17 +24,18 @@ class PropertiesUtilsTest {
     void shouldConvertStringWidgetPropertiesToMap() {
         Map<String, String> actual = PropertiesUtils.convertStringWidgetPropertiesToMap("key=test\nkey2=test2");
         assertThat(actual)
-                .containsEntry("key", "test")
-                .containsEntry("key2", "test2");
+            .containsEntry("key", "test")
+            .containsEntry("key2", "test2");
     }
 
     @Test
     void shouldConvertStringWidgetPropertiesToMapWithoutEscaping() {
-        Map<String, String> actual = PropertiesUtils.convertStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
+        Map<String, String> actual =
+            PropertiesUtils.convertStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
         assertThat(actual)
-                .containsEntry("key", "test")
-                .containsEntry("key2", "test2\ntest")
-                .containsEntry("key3", "test3");
+            .containsEntry("key", "test")
+            .containsEntry("key2", "test2\ntest")
+            .containsEntry("key3", "test3");
     }
 
     @Test
@@ -52,19 +52,21 @@ class PropertiesUtilsTest {
 
     @Test
     void shouldConvertAndEscapeStringWidgetPropertiesToMap() {
-        Map<String, String> actual = PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2");
+        Map<String, String> actual =
+            PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2");
         assertThat(actual)
-                .containsEntry("key", "test")
-                .containsEntry("key2", "test2");
+            .containsEntry("key", "test")
+            .containsEntry("key2", "test2");
     }
 
     @Test
     void shouldConvertAndPreserveEscapeStringWidgetPropertiesToMap() {
-        Map<String, String> actual = PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
+        Map<String, String> actual =
+            PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
         assertThat(actual)
-                .containsEntry("key", "test")
-                .containsEntry("key2", "test2\\ntest")
-                .containsEntry("key3", "test3");
+            .containsEntry("key", "test")
+            .containsEntry("key2", "test2\\ntest")
+            .containsEntry("key3", "test3");
     }
 
     @Test
@@ -83,7 +85,7 @@ class PropertiesUtilsTest {
     void shouldConvertStringWidgetPropertiesToProperties() {
         Properties actual = PropertiesUtils.convertStringWidgetPropertiesToProperties("key=test\nkey2=test2");
         assertThat(actual)
-                .containsEntry("key", "test")
-                .containsEntry("key2", "test2");
+            .containsEntry("key", "test")
+            .containsEntry("key2", "test2");
     }
 }

@@ -1,12 +1,11 @@
 package com.michelin.suricate.utils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
 
 class ToStringUtilsTest {
     @Test
@@ -35,13 +34,15 @@ class ToStringUtilsTest {
 
     @Test
     void shouldHideWidgetConfigurationInLogs() {
-        String actual = ToStringUtils.hideWidgetConfigurationInLogs("Should hide my password", Collections.singletonList("password"));
+        String actual = ToStringUtils.hideWidgetConfigurationInLogs("Should hide my password",
+            Collections.singletonList("password"));
         assertThat(actual).isEqualTo("Should hide my ********");
     }
 
     @Test
     void shouldAvoidNullValue() {
-        String actual = ToStringUtils.hideWidgetConfigurationInLogs("Should hide my password", Arrays.asList("password", null));
+        String actual =
+            ToStringUtils.hideWidgetConfigurationInLogs("Should hide my password", Arrays.asList("password", null));
         assertThat(actual).isEqualTo("Should hide my ********");
     }
 }

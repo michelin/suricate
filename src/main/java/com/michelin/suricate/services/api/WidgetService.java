@@ -16,15 +16,26 @@
 
 package com.michelin.suricate.services.api;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.michelin.suricate.model.dto.api.widget.WidgetRequestDto;
-import com.michelin.suricate.model.dto.nashorn.WidgetVariableResponse;
-import com.michelin.suricate.model.entities.*;
+import com.michelin.suricate.model.dto.js.WidgetVariableResponseDto;
+import com.michelin.suricate.model.entities.Category;
+import com.michelin.suricate.model.entities.Library;
+import com.michelin.suricate.model.entities.Repository;
+import com.michelin.suricate.model.entities.Widget;
+import com.michelin.suricate.model.entities.WidgetParam;
+import com.michelin.suricate.model.entities.WidgetParamValue;
+import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import com.michelin.suricate.repositories.WidgetParamRepository;
 import com.michelin.suricate.repositories.WidgetRepository;
 import com.michelin.suricate.services.specifications.WidgetSearchSpecification;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +44,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+/**
+ * Widget service.
+ */
 @Slf4j
 @Service
 public class WidgetService {
@@ -52,7 +63,8 @@ public class WidgetService {
     private CategoryService categoryService;
 
     /**
-     * Find a widget by id
+     * Find a widget by id.
+     *
      * @param id The id
      * @return The widget
      */
@@ -62,7 +74,8 @@ public class WidgetService {
     }
 
     /**
-     * Find a widget by technical name
+     * Find a widget by technical name.
+     *
      * @param technicalName The technical name
      * @return The widget
      */
@@ -72,7 +85,8 @@ public class WidgetService {
     }
 
     /**
-     * Return every widgets order by category name
+     * Return every widgets order by category name.
+     *
      * @return The list of widgets order by category name
      */
     @Transactional(readOnly = true)
@@ -81,7 +95,8 @@ public class WidgetService {
     }
 
     /**
-     * Get every widget for a category
+     * Get every widget for a category.
+     *
      * @param categoryId The category id used for found widgets
      * @return The list of related widgets
      */
@@ -98,7 +113,8 @@ public class WidgetService {
 
     /**
      * Return the full list of parameters of a widget including the parameters of the widget
-     * and the global parameters of the category
+     * and the global parameters of the category.
+     *
      * @param widget The widget
      * @return A list of parameters
      */
@@ -111,45 +127,41 @@ public class WidgetService {
     }
 
     /**
-     * Get the list of widget parameters
+     * Get the list of widget parameters.
+     *
      * @param widget The widget
      * @return The list of widget parameters
      */
     @Transactional
-    public List<WidgetVariableResponse> getWidgetParametersForNashorn(final Widget widget) {
-        List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
+    public List<WidgetVariableResponseDto> getWidgetParametersForJsExecution(final Widget widget) {
+        List<WidgetVariableResponseDto> widgetVariableResponseDtos = new ArrayList<>();
 
         List<WidgetParam> widgetParameters = getWidgetParametersWithCategoryParameters(widget);
 
         for (WidgetParam widgetParameter : widgetParameters) {
-            WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
-            widgetVariableResponse.setName(widgetParameter.getName());
-            widgetVariableResponse.setDescription(widgetParameter.getDescription());
-            widgetVariableResponse.setType(widgetParameter.getType());
-            widgetVariableResponse.setDefaultValue(widgetParameter.getDefaultValue());
+            WidgetVariableResponseDto widgetVariableResponseDto = new WidgetVariableResponseDto();
+            widgetVariableResponseDto.setName(widgetParameter.getName());
+            widgetVariableResponseDto.setDescription(widgetParameter.getDescription());
+            widgetVariableResponseDto.setType(widgetParameter.getType());
+            widgetVariableResponseDto.setDefaultValue(widgetParameter.getDefaultValue());
 
-            if (widgetVariableResponse.getType() != null) {
-                switch (widgetVariableResponse.getType()) {
-                    case COMBO:
-
-                    case MULTIPLE:
-                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
-                        break;
-
-                    default:
-                        widgetVariableResponse.setData(StringUtils.trimToNull(widgetParameter.getDefaultValue()));
-                        break;
-                }
+            if (widgetVariableResponseDto.getType() == DataTypeEnum.COMBO
+                || widgetVariableResponseDto.getType() == DataTypeEnum.MULTIPLE) {
+                widgetVariableResponseDto.setValues(
+                    getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
+            } else {
+                widgetVariableResponseDto.setData(StringUtils.trimToNull(widgetParameter.getDefaultValue()));
             }
 
-            widgetVariableResponses.add(widgetVariableResponse);
+            widgetVariableResponseDtos.add(widgetVariableResponseDto);
         }
 
-        return widgetVariableResponses;
+        return widgetVariableResponseDtos;
     }
 
     /**
-     * Update a widget
+     * Update a widget.
+     *
      * @param widgetId         The widget id to update
      * @param widgetRequestDto The object that holds changes
      * @return The widget update
@@ -174,8 +186,9 @@ public class WidgetService {
      * parameters anymore, then delete these parameters.
      * Set the activated state by default to the widget.
      * Set the category and the repository to the widget.
+     *
      * @param category   The category
-     * @param libraries The libraries
+     * @param libraries  The libraries
      * @param repository The git repository
      */
     @Transactional
@@ -188,14 +201,14 @@ public class WidgetService {
             Optional<Widget> currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
 
             if (widget.getLibraries() != null && !widget.getLibraries().isEmpty() && libraries != null) {
-                List<Library> widgetLibraries = Lists.newArrayList(widget.getLibraries());
+                List<Library> widgetLibraries = new ArrayList<>(widget.getLibraries());
 
                 widgetLibraries.replaceAll(widgetLibrary -> libraries
-                        .stream()
-                        .filter(library -> library.getTechnicalName().equals(widgetLibrary.getTechnicalName()))
-                        .findFirst().orElse(null));
+                    .stream()
+                    .filter(library -> library.getTechnicalName().equals(widgetLibrary.getTechnicalName()))
+                    .findFirst().orElse(null));
 
-                widget.setLibraries(Sets.newHashSet(widgetLibraries));
+                widget.setLibraries(new HashSet<>(widgetLibraries));
             }
 
             if (widget.getImage() != null) {
@@ -207,9 +220,9 @@ public class WidgetService {
             }
 
             // Replace the existing list of params and values by the new one
-            if (widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty() &&
-                    currentWidget.isPresent() && currentWidget.get().getWidgetParams() != null &&
-                    !currentWidget.get().getWidgetParams().isEmpty()) {
+            if (widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty()
+                && currentWidget.isPresent() && currentWidget.get().getWidgetParams() != null
+                && !currentWidget.get().getWidgetParams().isEmpty()) {
 
                 Set<WidgetParam> currentWidgetParams = currentWidget.get().getWidgetParams();
 
@@ -224,17 +237,22 @@ public class WidgetService {
                         widgetParam.setId(currentWidgetParamFound.getId());
 
                         // Search params with the current WidgetParam in DB
-                        if (widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty() &&
-                            currentWidgetParamFound.getPossibleValuesMap() != null && !currentWidgetParamFound.getPossibleValuesMap().isEmpty()) {
+                        if (widgetParam.getPossibleValuesMap() != null
+                            && !widgetParam.getPossibleValuesMap().isEmpty()
+                            && currentWidgetParamFound.getPossibleValuesMap() != null
+                            && !currentWidgetParamFound.getPossibleValuesMap().isEmpty()) {
 
                             widgetParam.getPossibleValuesMap().forEach(possibleValueMap -> {
                                 //Search the current widget possible values in DB
-                                Optional<WidgetParamValue> possibleValueMapToFind = currentWidgetParamFound.getPossibleValuesMap()
-                                    .stream()
-                                    .filter(currentPossibleValueMap -> currentPossibleValueMap.getJsKey().equals(possibleValueMap.getJsKey()))
-                                    .findAny();
+                                Optional<WidgetParamValue> possibleValueMapToFind =
+                                    currentWidgetParamFound.getPossibleValuesMap()
+                                        .stream()
+                                        .filter(currentPossibleValueMap -> currentPossibleValueMap.getJsKey()
+                                            .equals(possibleValueMap.getJsKey()))
+                                        .findAny();
                                 //Set ID of the new object with the current one in DB
-                                possibleValueMapToFind.ifPresent(possibleValueMapFound -> possibleValueMap.setId(possibleValueMapFound.getId()));
+                                possibleValueMapToFind.ifPresent(
+                                    possibleValueMapFound -> possibleValueMap.setId(possibleValueMapFound.getId()));
                             });
                         }
                     });
@@ -243,7 +261,8 @@ public class WidgetService {
 
             // Set ID and remove parameters which are not present anymore
             if (currentWidget.isPresent()) {
-                widget.setWidgetAvailability(currentWidget.get().getWidgetAvailability()); // Keep the previous widget state
+                widget.setWidgetAvailability(
+                    currentWidget.get().getWidgetAvailability()); // Keep the previous widget state
                 widget.setId(currentWidget.get().getId());
 
                 for (WidgetParam oldWidgetParameter : currentWidget.get().getWidgetParams()) {
@@ -263,18 +282,19 @@ public class WidgetService {
             widgetRepository.save(widget);
 
             log.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
-                    widget.getRepository().getBranch(), widget.getRepository().getName());
+                widget.getRepository().getBranch(), widget.getRepository().getName());
         }
     }
 
     /**
-     * Get the widget param list as a Map
+     * Get the widget param list as a Map.
+     *
      * @param widgetParamValues The list of the widget param values
-     * @return The list as a Map<String, String>
+     * @return The list
      */
     public Map<String, String> getWidgetParamValuesAsMap(Set<WidgetParamValue> widgetParamValues) {
         return widgetParamValues
-                .stream()
-                .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
+            .stream()
+            .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
     }
 }

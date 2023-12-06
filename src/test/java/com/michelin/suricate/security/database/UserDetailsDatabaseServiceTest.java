@@ -18,25 +18,24 @@
 
 package com.michelin.suricate.security.database;
 
-import com.google.common.collect.Lists;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.security.LocalUser;
 import com.michelin.suricate.services.api.UserService;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserDetailsDatabaseServiceTest {
@@ -49,11 +48,11 @@ class UserDetailsDatabaseServiceTest {
     @Test
     void shouldThrowUsernameNotFound() {
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userDetailsDatabaseService.loadUserByUsername("username"))
-                .isInstanceOf(UsernameNotFoundException.class)
-                .hasMessage("Bad credentials");
+            .isInstanceOf(UsernameNotFoundException.class)
+            .hasMessage("Bad credentials");
     }
 
     @Test
@@ -69,12 +68,13 @@ class UserDetailsDatabaseServiceTest {
         user.setRoles(Collections.singleton(role));
 
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
 
         LocalUser actual = userDetailsDatabaseService.loadUserByUsername("username");
 
         assertThat(actual.getUsername()).isEqualTo("username");
         assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(Lists.newArrayList(actual.getAuthorities()).get(0).getAuthority()).isEqualTo("ROLE_ADMIN");
+        assertThat(actual.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().get(0))
+            .isEqualTo("ROLE_ADMIN");
     }
 }

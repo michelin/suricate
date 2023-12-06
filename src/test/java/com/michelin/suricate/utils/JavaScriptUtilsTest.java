@@ -1,16 +1,16 @@
 package com.michelin.suricate.utils;
 
-import com.michelin.suricate.services.nashorn.script.NashornWidgetScript;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.michelin.suricate.services.js.script.JsEndpoints;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class JavaScriptUtilsTest {
     @Test
     void shouldPrepare() {
         String actual = JavaScriptUtils.prepare("Packages.checkInterrupted()");
-        assertThat(actual).isEqualTo("Packages." + NashornWidgetScript.class.getName() + ".checkInterrupted()");
+        assertThat(actual).isEqualTo("Packages." + JsEndpoints.class.getName() + ".checkInterrupted()");
     }
 
     @Test
@@ -34,9 +34,11 @@ class JavaScriptUtilsTest {
     @Test
     void shouldInjectInterruptLoop() {
         String actual = JavaScriptUtils.injectInterrupt("function(){};");
-        assertThat(actual).isEqualTo("function(){Packages." + NashornWidgetScript.class.getName() + ".checkInterrupted();};");
+        assertThat(actual).isEqualTo("function(){Packages." + JsEndpoints.class.getName() + ".checkInterrupted();};");
 
         String actualTwo = JavaScriptUtils.injectInterrupt("function()\n{\nwhile(true)\n{\n}\n};");
-        assertThat(actualTwo).isEqualTo("function(){Packages." + NashornWidgetScript.class.getName() + ".checkInterrupted();\nwhile(true){Packages." + NashornWidgetScript.class.getName() + ".checkInterrupted();\n}\n};");
+        assertThat(actualTwo).isEqualTo(
+            "function(){Packages." + JsEndpoints.class.getName() + ".checkInterrupted();\nwhile(true){Packages."
+                + JsEndpoints.class.getName() + ".checkInterrupted();\n}\n};");
     }
 }

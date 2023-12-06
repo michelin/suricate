@@ -19,6 +19,10 @@ package com.michelin.suricate;
 import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.properties.ProxyProperties;
 import com.michelin.suricate.services.git.GitService;
+import jakarta.annotation.PostConstruct;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -28,13 +32,8 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Locale;
-
 /**
- * Spring Boot application class
+ * Spring Boot application class.
  */
 @EnableAsync
 @EnableCaching
@@ -42,6 +41,10 @@ import java.util.Locale;
 @SpringBootApplication
 @EnableConfigurationProperties({ApplicationProperties.class})
 public class BackendApplication {
+    static {
+        Locale.setDefault(Locale.ENGLISH);
+    }
+
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -51,12 +54,9 @@ public class BackendApplication {
     @Autowired
     private ProxyProperties proxyConfiguration;
 
-    static {
-        Locale.setDefault(Locale.ENGLISH);
-    }
-
     /**
-     * Main springboot class
+     * Main Spring Boot class.
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) {
@@ -64,33 +64,39 @@ public class BackendApplication {
     }
 
     /**
-     * Add trust store and key store to classpath
+     * Add trust store and key store to classpath.
      */
     @PostConstruct
     protected void init() throws FileNotFoundException {
         // Define Trust Store properties
         if (StringUtils.isNotBlank(applicationProperties.getSsl().getTrustStore().getPath())) {
             if (!new File(applicationProperties.getSsl().getTrustStore().getPath()).exists()) {
-                throw new FileNotFoundException("Trust store not found under path : '" + applicationProperties.getSsl().getTrustStore().getPath());
+                throw new FileNotFoundException(
+                    "Trust store not found under path : '" + applicationProperties.getSsl().getTrustStore().getPath());
             }
             System.setProperty("javax.net.ssl.trustStore", applicationProperties.getSsl().getTrustStore().getPath());
-            System.setProperty("javax.net.ssl.trustStorePassword", applicationProperties.getSsl().getTrustStore().getPassword());
+            System.setProperty("javax.net.ssl.trustStorePassword",
+                applicationProperties.getSsl().getTrustStore().getPassword());
 
             if (StringUtils.isNotBlank(applicationProperties.getSsl().getTrustStore().getType())) {
-                System.setProperty("javax.net.ssl.trustStoreType", applicationProperties.getSsl().getTrustStore().getType());
+                System.setProperty("javax.net.ssl.trustStoreType",
+                    applicationProperties.getSsl().getTrustStore().getType());
             }
         }
 
         //Define Key Store properties
         if (StringUtils.isNotBlank(applicationProperties.getSsl().getKeyStore().getPath())) {
             if (!new File(applicationProperties.getSsl().getKeyStore().getPath()).exists()) {
-                throw new FileNotFoundException("Key store not found under path : '" + applicationProperties.getSsl().getKeyStore().getPath());
+                throw new FileNotFoundException(
+                    "Key store not found under path : '" + applicationProperties.getSsl().getKeyStore().getPath());
             }
             System.setProperty("javax.net.ssl.keyStore", applicationProperties.getSsl().getKeyStore().getPath());
-            System.setProperty("javax.net.ssl.keyStorePassword", applicationProperties.getSsl().getKeyStore().getPassword());
+            System.setProperty("javax.net.ssl.keyStorePassword",
+                applicationProperties.getSsl().getKeyStore().getPassword());
 
             if (StringUtils.isNotBlank(applicationProperties.getSsl().getKeyStore().getType())) {
-                System.setProperty("javax.net.ssl.keyStoreType", applicationProperties.getSsl().getKeyStore().getType());
+                System.setProperty("javax.net.ssl.keyStoreType",
+                    applicationProperties.getSsl().getKeyStore().getType());
             }
         }
 

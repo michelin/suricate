@@ -16,22 +16,25 @@
 
 package com.michelin.suricate.services.api;
 
-import com.michelin.suricate.repositories.SettingRepository;
 import com.michelin.suricate.model.entities.Setting;
+import com.michelin.suricate.repositories.SettingRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Setting service.
+ */
 @Service
 public class SettingService {
     @Autowired
     private SettingRepository settingRepository;
 
     /**
-     * Get setting by id
+     * Get setting by id.
+     *
      * @param settingId The setting id
      * @return The setting
      */
@@ -41,7 +44,8 @@ public class SettingService {
     }
 
     /**
-     * Get settings by description
+     * Get settings by description.
+     *
      * @return The list of the settings
      */
     @Transactional

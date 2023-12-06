@@ -1,9 +1,22 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.token.PersonalAccessTokenRequestDto;
 import com.michelin.suricate.model.dto.api.token.PersonalAccessTokenResponseDto;
-import com.michelin.suricate.model.dto.api.user.*;
-import com.michelin.suricate.model.entities.*;
+import com.michelin.suricate.model.dto.api.user.AdminUserResponseDto;
+import com.michelin.suricate.model.dto.api.user.UserRequestDto;
+import com.michelin.suricate.model.dto.api.user.UserResponseDto;
+import com.michelin.suricate.model.dto.api.user.UserSettingRequestDto;
+import com.michelin.suricate.model.dto.api.user.UserSettingResponseDto;
+import com.michelin.suricate.model.entities.PersonalAccessToken;
+import com.michelin.suricate.model.entities.Role;
+import com.michelin.suricate.model.entities.Setting;
+import com.michelin.suricate.model.entities.User;
+import com.michelin.suricate.model.entities.UserSetting;
 import com.michelin.suricate.security.LocalUser;
 import com.michelin.suricate.services.api.PersonalAccessTokenService;
 import com.michelin.suricate.services.api.SettingService;
@@ -16,6 +29,9 @@ import com.michelin.suricate.services.token.PersonalAccessTokenHelperService;
 import com.michelin.suricate.utils.exceptions.EmailAlreadyExistException;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
 import com.michelin.suricate.utils.exceptions.UsernameAlreadyExistException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,16 +46,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -79,15 +85,15 @@ class UserControllerTest {
         user.setId(1L);
 
         when(userService.getAll(any(), any()))
-                .thenReturn(new PageImpl<>(Collections.singletonList(user)));
-        when(userMapper.toAdminUserDTO(any()))
-                .thenReturn(adminUserResponseDto);
+            .thenReturn(new PageImpl<>(Collections.singletonList(user)));
+        when(userMapper.toAdminUserDto(any()))
+            .thenReturn(adminUserResponseDto);
 
         Page<AdminUserResponseDto> actual = userController.getAllForAdmins("search", Pageable.unpaged());
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(adminUserResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(adminUserResponseDto);
     }
 
     @Test
@@ -99,25 +105,25 @@ class UserControllerTest {
         user.setId(1L);
 
         when(userService.getAll(any(), any()))
-                .thenReturn(new PageImpl<>(Collections.singletonList(user)));
-        when(userMapper.toUserDTO(any()))
-                .thenReturn(userResponseDto);
+            .thenReturn(new PageImpl<>(Collections.singletonList(user)));
+        when(userMapper.toUserDto(any()))
+            .thenReturn(userResponseDto);
 
         Page<UserResponseDto> actual = userController.getAll("search", Pageable.unpaged());
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(userResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(userResponseDto);
     }
 
     @Test
     void shouldGetOneNotFound() {
         when(userService.getOne(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userController.getOne(1L))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("User '1' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("User '1' not found");
     }
 
     @Test
@@ -129,9 +135,9 @@ class UserControllerTest {
         user.setId(1L);
 
         when(userService.getOne(any()))
-                .thenReturn(Optional.of(user));
-        when(userMapper.toUserDTO(any()))
-                .thenReturn(userResponseDto);
+            .thenReturn(Optional.of(user));
+        when(userMapper.toUserDto(any()))
+            .thenReturn(userResponseDto);
 
         ResponseEntity<UserResponseDto> actual = userController.getOne(1L);
 
@@ -145,11 +151,11 @@ class UserControllerTest {
         userRequestDto.setUsername("username");
 
         when(userService.updateUser(any(), any(), any(), any(), any(), any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userController.updateOne(1L, userRequestDto))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("User '1' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("User '1' not found");
     }
 
     @Test
@@ -161,7 +167,7 @@ class UserControllerTest {
         user.setId(1L);
 
         when(userService.updateUser(any(), any(), any(), any(), any(), any()))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
 
         ResponseEntity<Void> actual = userController.updateOne(1L, userRequestDto);
 
@@ -172,11 +178,11 @@ class UserControllerTest {
     @Test
     void shouldDeleteOneNotFound() {
         when(userService.getOne(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userController.deleteOne(1L))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("User '1' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("User '1' not found");
     }
 
     @Test
@@ -185,7 +191,7 @@ class UserControllerTest {
         user.setId(1L);
 
         when(userService.getOne(any()))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
 
         ResponseEntity<Void> actual = userController.deleteOne(1L);
 
@@ -196,11 +202,11 @@ class UserControllerTest {
     @Test
     void shouldGetUserSettingsNotFound() {
         when(userSettingService.getUserSettingsByUsername(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userController.getUserSettings("username"))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("UserSetting 'username' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("UserSetting 'username' not found");
     }
 
     @Test
@@ -212,9 +218,9 @@ class UserControllerTest {
         userSettingResponseDto.setId(1L);
 
         when(userSettingService.getUserSettingsByUsername(any()))
-                .thenReturn(Optional.of(Collections.singletonList(userSetting)));
-        when(userSettingMapper.toUserSettingsDTOs(any()))
-                .thenReturn(Collections.singletonList(userSettingResponseDto));
+            .thenReturn(Optional.of(Collections.singletonList(userSetting)));
+        when(userSettingMapper.toUserSettingsDtos(any()))
+            .thenReturn(Collections.singletonList(userSettingResponseDto));
 
         ResponseEntity<List<UserSettingResponseDto>> actual = userController.getUserSettings("username");
 
@@ -240,11 +246,11 @@ class UserControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("User 'username' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("User 'username' not found");
     }
 
     @Test
@@ -265,11 +271,11 @@ class UserControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
 
         assertThatThrownBy(() -> userController.updateUserSettings(localUser, "username2", 1L, userSettingRequestDto))
-                .isInstanceOf(AccessDeniedException.class)
-                .hasMessage("User username is not allowed to modify this resource");
+            .isInstanceOf(AccessDeniedException.class)
+            .hasMessage("User username is not allowed to modify this resource");
     }
 
     @Test
@@ -290,13 +296,13 @@ class UserControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
         when(settingService.getOneById(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Setting '1' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Setting '1' not found");
     }
 
     @Test
@@ -320,11 +326,12 @@ class UserControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
         when(settingService.getOneById(any()))
-                .thenReturn(Optional.of(setting));
+            .thenReturn(Optional.of(setting));
 
-        ResponseEntity<UserResponseDto> actual = userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto);
+        ResponseEntity<UserResponseDto> actual =
+            userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto);
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(actual.getBody()).isNull();
@@ -339,11 +346,11 @@ class UserControllerTest {
         user.setId(1L);
 
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
 
         assertThatThrownBy(() -> userController.signUp(userRequestDto))
-                .isInstanceOf(UsernameAlreadyExistException.class)
-                .hasMessage("Username 'username' already exist");
+            .isInstanceOf(UsernameAlreadyExistException.class)
+            .hasMessage("Username 'username' already exist");
     }
 
     @Test
@@ -356,13 +363,13 @@ class UserControllerTest {
         user.setId(1L);
 
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(userService.getOneByEmail(any()))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
 
         assertThatThrownBy(() -> userController.signUp(userRequestDto))
-                .isInstanceOf(EmailAlreadyExistException.class)
-                .hasMessage("Email 'email' already exist");
+            .isInstanceOf(EmailAlreadyExistException.class)
+            .hasMessage("Email 'email' already exist");
     }
 
     @Test
@@ -379,15 +386,15 @@ class UserControllerTest {
 
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
         when(userService.getOneByUsername(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(userService.getOneByEmail(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(userMapper.toUserEntity(any(), any()))
-                .thenReturn(user);
+            .thenReturn(user);
         when(userService.create(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
-        when(userMapper.toUserDTO(any()))
-                .thenReturn(userResponseDto);
+            .thenAnswer(answer -> answer.getArgument(0));
+        when(userMapper.toUserDto(any()))
+            .thenReturn(userResponseDto);
 
         ResponseEntity<UserResponseDto> actual = userController.signUp(userRequestDto);
 
@@ -407,8 +414,6 @@ class UserControllerTest {
         user.setPassword("password");
         user.setRoles(Collections.singleton(role));
 
-        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
-
         PersonalAccessToken personalAccessToken = new PersonalAccessToken();
         personalAccessToken.setId(1L);
 
@@ -416,9 +421,11 @@ class UserControllerTest {
         personalAccessTokenResponseDto.setName("name");
 
         when(patService.findAllByUser(any()))
-                .thenReturn(Collections.singletonList(personalAccessToken));
-        when(personalAccessTokenMapper.toPersonalAccessTokensDTOs(any()))
-                .thenReturn(Collections.singletonList(personalAccessTokenResponseDto));
+            .thenReturn(Collections.singletonList(personalAccessToken));
+        when(personalAccessTokenMapper.toPersonalAccessTokensDtos(any()))
+            .thenReturn(Collections.singletonList(personalAccessTokenResponseDto));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         ResponseEntity<List<PersonalAccessTokenResponseDto>> actual = userController.getPersonalAccessTokens(localUser);
 
@@ -438,8 +445,6 @@ class UserControllerTest {
         user.setPassword("password");
         user.setRoles(Collections.singleton(role));
 
-        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
-
         PersonalAccessTokenRequestDto personalAccessTokenRequestDto = new PersonalAccessTokenRequestDto();
         personalAccessTokenRequestDto.setName("name");
 
@@ -450,15 +455,18 @@ class UserControllerTest {
         personalAccessTokenResponseDto.setName("name");
 
         when(patHelperService.createPersonalAccessToken())
-                .thenReturn("token");
+            .thenReturn("token");
         when(patHelperService.computePersonAccessTokenChecksum(any()))
-                .thenReturn(15L);
+            .thenReturn(15L);
         when(patService.create(any(), any(), any()))
-                .thenReturn(personalAccessToken);
-        when(personalAccessTokenMapper.toPersonalAccessTokenDTO(any(), any()))
-                .thenReturn(personalAccessTokenResponseDto);
+            .thenReturn(personalAccessToken);
+        when(personalAccessTokenMapper.toPersonalAccessTokenDto(any(), any()))
+            .thenReturn(personalAccessTokenResponseDto);
 
-        ResponseEntity<PersonalAccessTokenResponseDto> actual = userController.createPersonalAccessToken(localUser, personalAccessTokenRequestDto);
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        ResponseEntity<PersonalAccessTokenResponseDto> actual =
+            userController.createPersonalAccessToken(localUser, personalAccessTokenRequestDto);
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody()).isEqualTo(personalAccessTokenResponseDto);
@@ -479,11 +487,11 @@ class UserControllerTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(patService.findByNameAndUser(any(), any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userController.deletePersonalAccessToken(localUser, "token"))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("PersonalAccessToken 'token' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("PersonalAccessToken 'token' not found");
     }
 
     @Test
@@ -504,7 +512,7 @@ class UserControllerTest {
         personalAccessToken.setId(1L);
 
         when(patService.findByNameAndUser(any(), any()))
-                .thenReturn(Optional.of(personalAccessToken));
+            .thenReturn(Optional.of(personalAccessToken));
 
         ResponseEntity<Void> actual = userController.deletePersonalAccessToken(localUser, "token");
 

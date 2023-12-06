@@ -20,15 +20,27 @@ package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import com.michelin.suricate.model.enums.WidgetStateEnum;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import java.sql.Types;
+import java.util.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 
-import javax.persistence.*;
-import java.util.Date;
-
+/**
+ * Project widget entity.
+ */
 @Entity
 @Getter
 @Setter
@@ -41,7 +53,7 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
 
     @Column
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String data;
 
     @Column
@@ -57,15 +69,15 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private int height;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String customStyle;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String backendConfig;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String log;
 
     @Column
@@ -89,21 +101,27 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private Widget widget;
 
     /**
-     * Hashcode method
-     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * Hashcode method.
+     * Do not use lombok @EqualsAndHashCode method as it calls super method
      * then call the self-defined child Hashcode method
+     *
      * @return The hash code
      */
     @Override
-    public int hashCode() { return super.hashCode(); }
+    public int hashCode() {
+        return super.hashCode();
+    }
 
     /**
-     * Equals method
-     * Do not used lombok @EqualsAndHashCode method as it calls super method
+     * Equals method.
+     * Do not use lombok @EqualsAndHashCode method as it calls super method
      * then call the self-defined child Equals method
+     *
      * @param other The other object to compare
      * @return true if equals, false otherwise
      */
     @Override
-    public boolean equals(Object other) { return super.equals(other); }
+    public boolean equals(Object other) {
+        return super.equals(other);
+    }
 }

@@ -1,18 +1,12 @@
 package com.michelin.suricate.utils;
 
-import com.michelin.suricate.model.entities.Asset;
-import net.sf.jmimemagic.Magic;
-import net.sf.jmimemagic.MagicException;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.michelin.suricate.model.entities.Asset;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mockStatic;
+import org.junit.jupiter.api.Test;
 
 class FilesUtilsTest {
 
@@ -48,7 +42,7 @@ class FilesUtilsTest {
     }
 
     @Test
-    void shouldReadJSAsset() throws IOException {
+    void shouldReadJsAsset() throws IOException {
         Asset actual = FilesUtils.readAsset(new File("src/test/resources/repository/libraries/test.js"));
 
         assertThat(actual).isNotNull();
@@ -56,16 +50,21 @@ class FilesUtilsTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenReadingJSAsset() throws IOException {
-        try (MockedStatic<Magic> mocked = mockStatic(Magic.class)) {
-            mocked.when(() -> Magic.getMagicMatch(any()))
-                    .thenThrow(new MagicException("error"));
+    void shouldReadImageAsset() throws IOException {
+        Asset actual = FilesUtils.readAsset(
+            new File("src/test/resources/repository/content/github/widgets/count-issues/image.png"));
 
-            Asset actual = FilesUtils.readAsset(new File("src/test/resources/repository/content/other/description.yml"));
+        assertThat(actual).isNotNull();
+        assertThat(actual.getContentType()).isEqualTo("image/png");
+    }
 
-            assertThat(actual.getContentType()).isEqualTo("text/plain");
-            assertThat(actual.getSize()).isPositive();
-            assertThat(actual.getContent()).isNotEmpty();
-        }
+    @Test
+    void shouldSetContentTypeToDefaultTextPlain() throws IOException {
+        Asset actual =
+            FilesUtils.readAsset(new File("src/test/resources/repository/content/other/description.yml"));
+
+        assertThat(actual.getContentType()).isEqualTo("text/plain");
+        assertThat(actual.getSize()).isPositive();
+        assertThat(actual.getContent()).isNotEmpty();
     }
 }

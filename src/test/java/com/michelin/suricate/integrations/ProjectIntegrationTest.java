@@ -1,5 +1,8 @@
 package com.michelin.suricate.integrations;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpMethod.POST;
+
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.dto.api.project.ProjectRequestDto;
 import com.michelin.suricate.model.dto.api.project.ProjectResponseDto;
@@ -20,14 +23,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpMethod.POST;
-
 @RunWith(SpringRunner.class)
 @ActiveProfiles("integration-test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProjectIntegrationTest {
-    @Value(value="${local.server.port}")
+    @Value(value = "${local.server.port}")
     private int port;
 
     @Autowired
@@ -45,14 +45,15 @@ class ProjectIntegrationTest {
 
         // Sign up
         restTemplate.exchange("http://localhost:" + port + "/api/v1/users/signup",
-                POST, new HttpEntity<>(userRequestDto), UserResponseDto.class);
+            POST, new HttpEntity<>(userRequestDto), UserResponseDto.class);
 
         SignInRequestDto signInRequestDto = new SignInRequestDto();
         signInRequestDto.setUsername("username");
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate.exchange("http://localhost:" + port + "/api/v1/auth/signin",
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse =
+            restTemplate.exchange("http://localhost:" + port + "/api/v1/auth/signin",
                 POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
 
         assertThat(signInResponse.getBody()).isNotNull();
@@ -66,7 +67,8 @@ class ProjectIntegrationTest {
         noNameProjectRequestDto.setCssStyle("css");
 
         // Create project with no name
-        ResponseEntity<ApiErrorDto> noNameProjectResponse = restTemplate.exchange("http://localhost:" + port + "/api/v1/projects",
+        ResponseEntity<ApiErrorDto> noNameProjectResponse =
+            restTemplate.exchange("http://localhost:" + port + "/api/v1/projects",
                 POST, new HttpEntity<>(noNameProjectRequestDto, headers), ApiErrorDto.class);
 
         assertThat(noNameProjectResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -80,7 +82,8 @@ class ProjectIntegrationTest {
         projectRequestDto.setCssStyle("css");
 
         // Create project
-        ResponseEntity<ProjectResponseDto> projectResponse = restTemplate.exchange("http://localhost:" + port + "/api/v1/projects",
+        ResponseEntity<ProjectResponseDto> projectResponse =
+            restTemplate.exchange("http://localhost:" + port + "/api/v1/projects",
                 POST, new HttpEntity<>(projectRequestDto, headers), ProjectResponseDto.class);
 
         assertThat(projectResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);

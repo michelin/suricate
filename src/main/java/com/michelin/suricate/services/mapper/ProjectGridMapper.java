@@ -8,24 +8,54 @@ import com.michelin.suricate.model.entities.ProjectGrid;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
+/**
+ * Project grid mapper.
+ */
 @Mapper(
-        componentModel = "spring",
-        uses = {
-            ProjectWidgetMapper.class
-        }
+    componentModel = "spring",
+    uses = {
+        ProjectWidgetMapper.class
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class ProjectGridMapper {
     /**
-     * Map a project grid into a DTO
+     * Map a project grid into a DTO.
+     *
      * @param projectGrid The project grid to map
      * @return The project grid as DTO
      */
-    @Named("toProjectGridDTO")
-    public abstract ProjectGridResponseDto toProjectGridDTO(ProjectGrid projectGrid);
+    @Named("toProjectGridDto")
+    public abstract ProjectGridResponseDto toProjectGridDto(ProjectGrid projectGrid);
 
     /**
-     * Map a project grid DTO into a project grid entity
+     * Map a project grid DTO into a project grid entity.
+     *
+     * @param projectGridRequestDto The project grid DTO
+     * @param project               The project DTO
+     * @return The project grid as entity
+     */
+    @Named("toProjectGridEntity")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "project", source = "project")
+    public abstract ProjectGrid toProjectGridEntity(ProjectGridRequestDto.GridRequestDto projectGridRequestDto,
+                                                    Project project);
+
+    /**
+     * Map a project grid DTO into a project grid entity.
+     *
+     * @param importProjectGridRequestDto The imported project grid DTO from json file
+     * @return The project grid as entity
+     */
+    @Named("toProjectGridEntity")
+    @Mapping(target = "widgets", qualifiedByName = "toProjectWidgetEntity")
+    public abstract ProjectGrid toProjectGridEntity(
+        ImportExportProjectDto.ImportExportProjectGridDto importProjectGridRequestDto);
+
+    /**
+     * Map a project into a project grid entity.
      *
      * @param project The project DTO
      * @return The project grid as entity
@@ -37,33 +67,13 @@ public abstract class ProjectGridMapper {
     public abstract ProjectGrid toProjectGridEntity(Project project);
 
     /**
-     * Map a project grid into an import export project DTO
+     * Map a project grid into an import export project DTO.
+     *
      * @param projectGrid The project grid to map
      * @return The project grid as DTO
      */
-    @Named("toImportExportProjectGridDTO")
-    @Mapping(target = "widgets", qualifiedByName = "toImportExportProjectWidgetDTO")
-    public abstract ImportExportProjectDto.ImportExportProjectGridDto toImportExportProjectGridDTO(ProjectGrid projectGrid);
-
-    /**
-     * Map a project grid DTO into a project grid entity
-     *
-     * @param projectGridRequestDto The project grid DTO
-     * @param project The project DTO
-     * @return The project grid as entity
-     */
-    @Named("toProjectGridEntity")
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "project", source = "project")
-    public abstract ProjectGrid toProjectGridEntity(ProjectGridRequestDto.GridRequestDto projectGridRequestDto, Project project);
-
-    /**
-     * Map a project grid DTO into a project grid entity
-     *
-     * @param importProjectGridRequestDto The imported project grid DTO from json file
-     * @return The project grid as entity
-     */
-    @Named("toProjectGridEntity")
-    @Mapping(target = "widgets", qualifiedByName = "toProjectWidgetEntity")
-    public abstract ProjectGrid toProjectGridEntity(ImportExportProjectDto.ImportExportProjectGridDto importProjectGridRequestDto);
+    @Named("toImportExportProjectGridDto")
+    @Mapping(target = "widgets", qualifiedByName = "toImportExportProjectWidgetDto")
+    public abstract ImportExportProjectDto.ImportExportProjectGridDto toImportExportProjectGridDto(
+        ProjectGrid projectGrid);
 }

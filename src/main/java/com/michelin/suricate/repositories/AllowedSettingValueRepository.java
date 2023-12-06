@@ -20,6 +20,9 @@ import com.michelin.suricate.model.entities.AllowedSettingValue;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Allowed setting value repository.
+ */
 @Repository
 public interface AllowedSettingValueRepository extends CrudRepository<AllowedSettingValue, Long> {
 }

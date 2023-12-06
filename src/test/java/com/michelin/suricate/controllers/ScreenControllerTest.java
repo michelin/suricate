@@ -1,9 +1,15 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.services.api.ProjectService;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,13 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ScreenControllerTest {
@@ -33,11 +32,11 @@ class ScreenControllerTest {
     @Test
     void shouldConnectProjectToScreenNotFound() {
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> screenController.connectProjectToScreen("token", "code"))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Project 'token' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Project 'token' not found");
     }
 
     @Test
@@ -46,7 +45,7 @@ class ScreenControllerTest {
         project.setId(1L);
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
 
         ResponseEntity<Void> actual = screenController.connectProjectToScreen("token", "code");
 
@@ -73,11 +72,11 @@ class ScreenControllerTest {
     @Test
     void shouldDisplayScreenCodeEveryConnectedScreensForProjectNotFound() {
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> screenController.displayScreenCodeEveryConnectedScreensForProject("token"))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Project 'token' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Project 'token' not found");
     }
 
     @Test
@@ -86,7 +85,7 @@ class ScreenControllerTest {
         project.setId(1L);
 
         when(projectService.getOneByToken(any()))
-                .thenReturn(Optional.of(project));
+            .thenReturn(Optional.of(project));
 
         ResponseEntity<Void> actual = screenController.displayScreenCodeEveryConnectedScreensForProject("token");
 
@@ -97,7 +96,7 @@ class ScreenControllerTest {
     @Test
     void shouldGetConnectedScreensQuantity() {
         when(dashboardWebSocketService.countWebsocketClients())
-                .thenReturn(15);
+            .thenReturn(15);
 
         ResponseEntity<Integer> actual = screenController.getConnectedScreensQuantity();
 

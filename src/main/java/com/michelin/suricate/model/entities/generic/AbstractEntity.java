@@ -18,12 +18,16 @@
 
 package com.michelin.suricate.model.entities.generic;
 
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import java.io.Serializable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
-
+/**
+ * Abstract entity.
+ *
+ * @param <T> The type of the entity
+ */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity<T> implements Serializable {
@@ -31,7 +35,7 @@ public abstract class AbstractEntity<T> implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
 

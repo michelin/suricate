@@ -16,26 +16,29 @@
 
 package com.michelin.suricate.services.api;
 
+import com.michelin.suricate.model.entities.Repository;
 import com.michelin.suricate.repositories.RepositoryRepository;
 import com.michelin.suricate.services.specifications.RepositorySearchSpecification;
-import com.michelin.suricate.model.entities.Repository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Repository service.
+ */
 @Service
 public class RepositoryService {
     @Autowired
     private RepositoryRepository repositoryRepository;
 
     /**
-     * Get all repositories
-     * @param search The search string
+     * Get all repositories.
+     *
+     * @param search   The search string
      * @param pageable The pageable object
      * @return The paginated list of repositories
      */
@@ -45,7 +48,8 @@ public class RepositoryService {
     }
 
     /**
-     * Get the full list of repository by enabled
+     * Get the full list of repository by enabled.
+     *
      * @param enabled Tru if we want every enabled repositories
      * @return The related list
      */
@@ -55,7 +59,8 @@ public class RepositoryService {
     }
 
     /**
-     * Get the repository by id
+     * Get the repository by id.
+     *
      * @param repositoryId The repository id to find
      * @return The repository as optional
      */
@@ -65,7 +70,8 @@ public class RepositoryService {
     }
 
     /**
-     * Get the repository by name
+     * Get the repository by name.
+     *
      * @param name The repository name
      * @return The repository as optional
      */
@@ -75,7 +81,7 @@ public class RepositoryService {
     }
 
     /**
-     * Check if the repository exists
+     * Check if the repository exists.
      *
      * @param repositoryId The repository id to check
      * @return True if exist false otherwise
@@ -86,7 +92,8 @@ public class RepositoryService {
     }
 
     /**
-     * Add or update a repository
+     * Add or update a repository.
+     *
      * @param repository The repository to process
      */
     @Transactional
@@ -95,7 +102,8 @@ public class RepositoryService {
     }
 
     /**
-     * Add or update a list of repositories
+     * Add or update a list of repositories.
+     *
      * @param repositories All the repositories to add/update
      */
     @Transactional

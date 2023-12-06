@@ -16,9 +16,11 @@
 
 package com.michelin.suricate.security.database;
 
-import com.michelin.suricate.services.api.UserService;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.security.LocalUser;
+import com.michelin.suricate.services.api.UserService;
+import java.util.Collections;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,9 +28,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Optional;
-
+/**
+ * User details database service.
+ */
 @Slf4j
 @Service("userDetailsService")
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "database")
@@ -37,7 +39,8 @@ public class UserDetailsDatabaseService implements UserDetailsService {
     private UserService userService;
 
     /**
-     * Load user from database by username
+     * Load user from database by username.
+     *
      * @param username The username of the user to search
      * @return The user connected
      * @throws UsernameNotFoundException When no user has been found
@@ -48,7 +51,7 @@ public class UserDetailsDatabaseService implements UserDetailsService {
 
         Optional<User> currentUser = userService.getOneByUsername(username);
 
-        if (!currentUser.isPresent()) {
+        if (currentUser.isEmpty()) {
             throw new UsernameNotFoundException("Bad credentials");
         }
 

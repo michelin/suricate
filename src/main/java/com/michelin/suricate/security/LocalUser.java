@@ -16,6 +16,7 @@
 
 package com.michelin.suricate.security;
 
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,57 +28,60 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
- * Hold the user connected
- *
+ * Hold the user connected.
  */
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class LocalUser extends User implements OAuth2User, OidcUser {
     /**
-     * The user
+     * The user.
      */
     private com.michelin.suricate.model.entities.User user;
 
     /**
-     * The OAuth2/OIDC attributes
+     * The OAuth2/OIDC attributes.
      */
     private Map<String, Object> attributes;
 
     /**
-     * The OIDC token
+     * The OIDC token.
      */
     private OidcIdToken idToken;
 
     /**
-     * The OIDC user info
+     * The OIDC user info.
      */
     private OidcUserInfo userInfo;
 
     /**
-     * Constructor
-     * @param user The user entity
+     * Constructor.
+     *
+     * @param user       The user entity
      * @param attributes The OAuth2 attributes
      */
     public LocalUser(com.michelin.suricate.model.entities.User user, Map<String, Object> attributes) {
-        super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true, true,
-                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()));
+        super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true,
+            true,
+            user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+                .toList());
         this.user = user;
         this.attributes = attributes;
     }
 
     /**
-     * Constructor
-     * @param user The user entity
+     * Constructor.
+     *
+     * @param user       The user entity
      * @param attributes The OAuth2 attributes
      */
-    public LocalUser(com.michelin.suricate.model.entities.User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
-        super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true, true,
-                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()));
+    public LocalUser(com.michelin.suricate.model.entities.User user, Map<String, Object> attributes,
+                     OidcIdToken idToken, OidcUserInfo userInfo) {
+        super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true,
+            true,
+            user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+                .toList());
         this.user = user;
         this.attributes = attributes;
         this.idToken = idToken;
@@ -85,7 +89,8 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
     }
 
     /**
-     * Get the OAuth2 attributes
+     * Get the OAuth2 attributes.
+     *
      * @return The OAuth2 attributes
      */
     @Override
@@ -94,7 +99,8 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
     }
 
     /**
-     * Get the username
+     * Get the username.
+     *
      * @return The username
      */
     @Override

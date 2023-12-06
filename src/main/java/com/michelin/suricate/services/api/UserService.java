@@ -16,14 +16,19 @@
 
 package com.michelin.suricate.services.api;
 
-import com.michelin.suricate.repositories.UserRepository;
-import com.michelin.suricate.services.mapper.UserMapper;
-import com.michelin.suricate.services.specifications.UserSearchSpecification;
 import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.enums.AuthenticationProvider;
 import com.michelin.suricate.model.enums.UserRoleEnum;
+import com.michelin.suricate.repositories.UserRepository;
+import com.michelin.suricate.services.mapper.UserMapper;
+import com.michelin.suricate.services.specifications.UserSearchSpecification;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +37,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+/**
+ * User service.
+ */
 @Slf4j
 @Service
 public class UserService {
@@ -57,7 +59,8 @@ public class UserService {
     private UserSettingService userSettingService;
 
     /**
-     * Register a new user in database authentication mode
+     * Register a new user in database authentication mode.
+     *
      * @param user User to register
      * @return The user registered
      */
@@ -65,7 +68,7 @@ public class UserService {
     public User create(User user) {
         UserRoleEnum roleEnum = userRepository.count() > 0 ? UserRoleEnum.ROLE_USER : UserRoleEnum.ROLE_ADMIN;
         Optional<Role> role = roleService.getRoleByName(roleEnum.name());
-        if (!role.isPresent()) {
+        if (role.isEmpty()) {
             log.error("Role {} not available in database", roleEnum);
             throw new ObjectNotFoundException(Role.class, roleEnum);
         }
@@ -79,12 +82,13 @@ public class UserService {
     }
 
     /**
-     * Register a new user in ldap/oauth2 authentication mode
-     * @param username The username
-     * @param firstname The user firstname
-     * @param lastname The user lastname
-     * @param email The user email
-     * @param avatarUrl The user avatar URL
+     * Register a new user in ldap/oauth2 authentication mode.
+     *
+     * @param username             The username
+     * @param firstname            The user firstname
+     * @param lastname             The user lastname
+     * @param email                The user email
+     * @param avatarUrl            The user avatar URL
      * @param authenticationMethod The ID provider used
      * @return The registered user
      */
@@ -93,7 +97,7 @@ public class UserService {
                              AuthenticationProvider authenticationMethod) {
         Optional<User> optionalUser = getOneByEmail(email);
 
-        if (!optionalUser.isPresent()) {
+        if (optionalUser.isEmpty()) {
             int countUsername = 1;
             String availableUsername = username;
             while (existsByUsername(availableUsername)) {
@@ -101,15 +105,18 @@ public class UserService {
             }
             username = availableUsername;
 
-            User user = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
+            User user = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl,
+                authenticationMethod);
             return create(user);
         }
 
-        return update(optionalUser.get(), optionalUser.get().getUsername(), firstname, lastname, email, avatarUrl, authenticationMethod);
+        return update(optionalUser.get(), optionalUser.get().getUsername(), firstname, lastname, email, avatarUrl,
+            authenticationMethod);
     }
 
     /**
-     * Update the user information
+     * Update the user information.
+     *
      * @param user                 The user to update
      * @param username             The username
      * @param firstname            The user firstname
@@ -119,8 +126,10 @@ public class UserService {
      * @param authenticationMethod The ID provider used
      * @return The updated user
      */
-    public User update(final User user, String username, String firstname, String lastname, String email, String avatarUrl, AuthenticationProvider authenticationMethod) {
-        User userUpdated = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
+    public User update(final User user, String username, String firstname, String lastname, String email,
+                       String avatarUrl, AuthenticationProvider authenticationMethod) {
+        User userUpdated =
+            userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());
         userUpdated.setUserSettings(user.getUserSettings());
@@ -131,7 +140,8 @@ public class UserService {
     }
 
     /**
-     * Get a user by id
+     * Get a user by id.
+     *
      * @param userId The user id
      * @return The user as optional
      */
@@ -140,7 +150,8 @@ public class UserService {
     }
 
     /**
-     * Get a user by username ignoring case
+     * Get a user by username ignoring case.
+     *
      * @param username The username
      * @return The user as optional
      */
@@ -150,7 +161,8 @@ public class UserService {
     }
 
     /**
-     * Get a user by email ignoring case
+     * Get a user by email ignoring case.
+     *
      * @param email The email
      * @return The user as optional
      */
@@ -160,7 +172,8 @@ public class UserService {
     }
 
     /**
-     * Check if a given username exists
+     * Check if a given username exists.
+     *
      * @param username The username
      * @return true if it is, false otherwise
      */
@@ -170,9 +183,9 @@ public class UserService {
     }
 
     /**
-     * Get all paginated users
+     * Get all paginated users.
      *
-     * @param search The specification to apply
+     * @param search   The specification to apply
      * @param pageable The pageable to apply
      * @return The paginated users
      */
@@ -182,7 +195,8 @@ public class UserService {
     }
 
     /**
-     * Delete a user
+     * Delete a user.
+     *
      * @param user the user to delete
      */
     @Transactional
@@ -192,7 +206,7 @@ public class UserService {
     }
 
     /**
-     * Update a user
+     * Update a user.
      *
      * @param userId    The user id
      * @param username  The username to update
@@ -210,7 +224,7 @@ public class UserService {
                                      final List<UserRoleEnum> roleNames) {
         Optional<User> userOpt = getOne(userId);
 
-        if (!userOpt.isPresent()) {
+        if (userOpt.isEmpty()) {
             return Optional.empty();
         }
 
@@ -242,16 +256,16 @@ public class UserService {
     }
 
     /**
-     * Update the roles for a user
+     * Update the roles for a user.
      *
      * @param user      The user
      * @param roleNames The roles to set
      */
     private void updateUserRoles(User user, List<UserRoleEnum> roleNames) {
         Set<Role> rolesToSet = roleNames
-                .stream()
-                .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
-                .collect(Collectors.toSet());
+            .stream()
+            .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
+            .collect(Collectors.toSet());
 
         if (!rolesToSet.isEmpty()) {
             user.setRoles(rolesToSet);

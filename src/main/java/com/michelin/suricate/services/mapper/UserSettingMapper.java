@@ -18,44 +18,45 @@ package com.michelin.suricate.services.mapper;
 
 import com.michelin.suricate.model.dto.api.user.UserSettingResponseDto;
 import com.michelin.suricate.model.entities.UserSetting;
+import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
+import org.mapstruct.ReportingPolicy;
 
 /**
- * Manage the generation DTO/Model objects for UserSetting class
+ * User setting mapper.
  */
 @Mapper(
     componentModel = "spring",
     uses = {
         SettingMapper.class,
         AllowedSettingValueMapper.class
-    }
+    },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class UserSettingMapper {
 
     /**
-     * Map a user setting into a user setting DTO
+     * Map a user setting into a user setting DTO.
      *
      * @param userSetting The user setting to map
      * @return The user setting DTO
      */
-    @Named("toUserSettingDTO")
+    @Named("toUserSettingDto")
     @Mapping(target = "userId", source = "userSetting.user.id")
-    @Mapping(target = "setting", qualifiedByName = "toSettingDTO")
-    @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDTO")
-    public abstract UserSettingResponseDto toUserSettingDTO(UserSetting userSetting);
+    @Mapping(target = "setting", qualifiedByName = "toSettingDto")
+    @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDto")
+    public abstract UserSettingResponseDto toUserSettingDto(UserSetting userSetting);
 
     /**
-     * Map a list of user settings into a list of user settings DTOs
+     * Map a list of user settings into a list of user settings DTOs.
      *
      * @param userSettings The list of user settings to map
      * @return The list of user settings as DTO
      */
-    @Named("toUserSettingsDTOs")
-    @IterableMapping(qualifiedByName = "toUserSettingDTO")
-    public abstract List<UserSettingResponseDto> toUserSettingsDTOs(List<UserSetting> userSettings);
+    @Named("toUserSettingsDtos")
+    @IterableMapping(qualifiedByName = "toUserSettingDto")
+    public abstract List<UserSettingResponseDto> toUserSettingsDtos(List<UserSetting> userSettings);
 }

@@ -4,22 +4,20 @@ import com.michelin.suricate.model.entities.Category;
 import com.michelin.suricate.model.entities.Category_;
 import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.model.entities.Widget_;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
- * Class used to filter JPA queries
+ * Widget search specification.
  */
 public class WidgetSearchSpecification extends AbstractSearchSpecification<Widget> {
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param search The string to search
      */
@@ -28,7 +26,7 @@ public class WidgetSearchSpecification extends AbstractSearchSpecification<Widge
     }
 
     /**
-     * Used to add search predicates
+     * Used to add search predicates.
      *
      * @param root            The root entity
      * @param criteriaBuilder Used to build new predicate
@@ -37,7 +35,8 @@ public class WidgetSearchSpecification extends AbstractSearchSpecification<Widge
     @Override
     protected void addSearchPredicate(Root<Widget> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
         if (StringUtils.isNotBlank(search)) {
-            Predicate searchByName = criteriaBuilder.like(criteriaBuilder.lower(root.get(Widget_.name)), String.format(LIKE_OPERATOR_FORMATTER, search.toLowerCase()));
+            Predicate searchByName = criteriaBuilder.like(criteriaBuilder.lower(root.get(Widget_.name)),
+                String.format(LIKE_OPERATOR_FORMATTER, search.toLowerCase()));
             Predicate searchByCategoryName = widgetByCategoryName(root, criteriaBuilder);
 
             predicates.add(criteriaBuilder.or(searchByName, searchByCategoryName));
@@ -45,9 +44,9 @@ public class WidgetSearchSpecification extends AbstractSearchSpecification<Widge
     }
 
     /**
-     * Add a predicate which allow widgets to be searched by the category name
+     * Add a predicate which allow widgets to be searched by the category name.
      *
-     * @param root The root entity
+     * @param root            The root entity
      * @param criteriaBuilder The criteria builder
      * @return A predicate on the category name
      */
@@ -55,6 +54,7 @@ public class WidgetSearchSpecification extends AbstractSearchSpecification<Widge
         Join<Widget, Category> join = root.join(Widget_.category);
 
         return criteriaBuilder.like(
-                criteriaBuilder.lower(join.get(Category_.name)), String.format(LIKE_OPERATOR_FORMATTER, search.toLowerCase()));
+            criteriaBuilder.lower(join.get(Category_.name)),
+            String.format(LIKE_OPERATOR_FORMATTER, search.toLowerCase()));
     }
 }

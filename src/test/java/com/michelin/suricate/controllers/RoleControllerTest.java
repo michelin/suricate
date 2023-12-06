@@ -1,5 +1,10 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.role.RoleResponseDto;
 import com.michelin.suricate.model.dto.api.user.UserResponseDto;
 import com.michelin.suricate.model.entities.Role;
@@ -7,6 +12,9 @@ import com.michelin.suricate.services.api.RoleService;
 import com.michelin.suricate.services.mapper.RoleMapper;
 import com.michelin.suricate.services.mapper.UserMapper;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,16 +25,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RoleControllerTest {
@@ -51,25 +49,25 @@ class RoleControllerTest {
         role.setId(1L);
 
         when(roleService.getRoles(any(), any()))
-                .thenReturn(new PageImpl<>(Collections.singletonList(role)));
-        when(roleMapper.toRoleDTO(any()))
-                .thenReturn(roleResponseDto);
+            .thenReturn(new PageImpl<>(Collections.singletonList(role)));
+        when(roleMapper.toRoleDto(any()))
+            .thenReturn(roleResponseDto);
 
         Page<RoleResponseDto> actual = roleController.getRoles("search", Pageable.unpaged());
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(roleResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(roleResponseDto);
     }
 
     @Test
     void shouldGetOneNotFound() {
         when(roleService.getOneById(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> roleController.getOne(1L))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Role '1' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Role '1' not found");
     }
 
     @Test
@@ -81,9 +79,9 @@ class RoleControllerTest {
         role.setId(1L);
 
         when(roleService.getOneById(any()))
-                .thenReturn(Optional.of(role));
-        when(roleMapper.toRoleDTO(any()))
-                .thenReturn(roleResponseDto);
+            .thenReturn(Optional.of(role));
+        when(roleMapper.toRoleDto(any()))
+            .thenReturn(roleResponseDto);
 
         ResponseEntity<RoleResponseDto> actual = roleController.getOne(1L);
 
@@ -94,11 +92,11 @@ class RoleControllerTest {
     @Test
     void shouldGetUsersByRoleNotFound() {
         when(roleService.getOneById(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> roleController.getUsersByRole(1L))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Role '1' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Role '1' not found");
     }
 
     @Test
@@ -110,9 +108,9 @@ class RoleControllerTest {
         userResponseDto.setUsername("username");
 
         when(roleService.getOneById(any()))
-                .thenReturn(Optional.of(role));
-        when(userMapper.toUsersDTOs(any()))
-                .thenReturn(Collections.singletonList(userResponseDto));
+            .thenReturn(Optional.of(role));
+        when(userMapper.toUsersDtos(any()))
+            .thenReturn(Collections.singletonList(userResponseDto));
 
         ResponseEntity<List<UserResponseDto>> actual = roleController.getUsersByRole(1L);
 

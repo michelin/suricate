@@ -1,19 +1,18 @@
 package com.michelin.suricate.services.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.michelin.suricate.model.dto.api.export.ImportExportRepositoryDto;
 import com.michelin.suricate.model.dto.api.repository.RepositoryRequestDto;
 import com.michelin.suricate.model.dto.api.repository.RepositoryResponseDto;
 import com.michelin.suricate.model.entities.Repository;
 import com.michelin.suricate.model.enums.RepositoryTypeEnum;
+import java.time.Instant;
+import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.Instant;
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class RepositoryMapperTest {
@@ -21,7 +20,7 @@ class RepositoryMapperTest {
     private RepositoryMapperImpl repositoryMapper;
 
     @Test
-    void shouldToRepositoryDTONoWidgets() {
+    void shouldToRepositoryDtoNoWidgets() {
         Repository repository = new Repository();
         repository.setId(1L);
         repository.setName("name");
@@ -35,7 +34,7 @@ class RepositoryMapperTest {
         repository.setEnabled(false);
         repository.setCreatedDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
 
-        RepositoryResponseDto actual = repositoryMapper.toRepositoryDTONoWidgets(repository);
+        RepositoryResponseDto actual = repositoryMapper.toRepositoryDtoNoWidgets(repository);
 
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.getName()).isEqualTo("name");
@@ -51,7 +50,7 @@ class RepositoryMapperTest {
     }
 
     @Test
-    void shouldToImportExportRepositoryDTO() {
+    void shouldToImportExportRepositoryDto() {
         Repository repository = new Repository();
         repository.setId(1L);
         repository.setName("name");
@@ -65,7 +64,7 @@ class RepositoryMapperTest {
         repository.setEnabled(false);
         repository.setCreatedDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
 
-        ImportExportRepositoryDto actual = repositoryMapper.toImportExportRepositoryDTO(repository);
+        ImportExportRepositoryDto actual = repositoryMapper.toImportExportRepositoryDto(repository);
 
         assertThat(actual.getName()).isEqualTo("name");
         assertThat(actual.getUrl()).isEqualTo("url");

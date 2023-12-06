@@ -22,6 +22,9 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
+/**
+ * Cache service.
+ */
 @Slf4j
 @Service
 public class CacheService {
@@ -29,14 +32,14 @@ public class CacheService {
     private CacheManager cacheManager;
 
     /**
-     * Clear all caches
+     * Clear all caches.
      */
     public void clearAllCache() {
         cacheManager.getCacheNames().forEach(this::clearCache);
     }
 
     /**
-     * Method used to clear cache by cache name
+     * Method used to clear cache by cache name.
      *
      * @param cacheName the cache name to clear
      */

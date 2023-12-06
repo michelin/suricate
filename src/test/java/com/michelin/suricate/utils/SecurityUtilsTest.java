@@ -1,14 +1,13 @@
 package com.michelin.suricate.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.enums.UserRoleEnum;
 import com.michelin.suricate.security.LocalUser;
-import org.junit.jupiter.api.Test;
-
 import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class SecurityUtilsTest {
     @Test

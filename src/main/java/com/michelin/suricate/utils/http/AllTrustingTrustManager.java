@@ -18,14 +18,18 @@
 
 package com.michelin.suricate.utils.http;
 
-import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
+import javax.net.ssl.X509TrustManager;
 
+/**
+ * Trust manager that does not check certificates.
+ */
 public class AllTrustingTrustManager implements X509TrustManager {
     /**
-     * Do not check the trusted client
-     * @param x509Certificates
-     * @param s
+     * Do not check the trusted client.
+     *
+     * @param x509Certificates The certificates
+     * @param s                The string
      */
     @Override
     public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
@@ -33,9 +37,10 @@ public class AllTrustingTrustManager implements X509TrustManager {
     }
 
     /**
-     * Do not check certificates
-     * @param x509Certificates
-     * @param s
+     * Do not check certificates.
+     *
+     * @param x509Certificates The certificates
+     * @param s                The string
      */
     @Override
     public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
@@ -43,11 +48,12 @@ public class AllTrustingTrustManager implements X509TrustManager {
     }
 
     /**
-     * Do not get issuers
+     * Do not get issuers.
+     *
      * @return An empty list of issuers
      */
     @Override
     public X509Certificate[] getAcceptedIssuers() {
-        return new X509Certificate[]{};
+        return new X509Certificate[] {};
     }
 }

@@ -17,6 +17,7 @@
 package com.michelin.suricate.repositories;
 
 import com.michelin.suricate.model.entities.User;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,42 +25,44 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 /**
- * Repository used for request Users in database
+ * User repository.
  */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-	/**
-	 * Find all paginated users
-	 * @param specification The specification to apply
-	 * @param pageable The pageable to apply
-	 * @return The paginated users
-	 */
-	@EntityGraph(attributePaths = "roles")
-	Page<User> findAll(Specification<User> specification, Pageable pageable);
+    /**
+     * Find all paginated users.
+     *
+     * @param specification The specification to apply
+     * @param pageable      The pageable to apply
+     * @return The paginated users
+     */
+    @EntityGraph(attributePaths = "roles")
+    Page<User> findAll(Specification<User> specification, Pageable pageable);
 
-	/**
-	 * Find a user by the username ignoring case
-	 * @param username The username
-	 * @return The user as optional
-	 */
-	@EntityGraph(attributePaths = "roles")
-	Optional<User> findByUsernameIgnoreCase(String username);
+    /**
+     * Find a user by the username ignoring case.
+     *
+     * @param username The username
+     * @return The user as optional
+     */
+    @EntityGraph(attributePaths = "roles")
+    Optional<User> findByUsernameIgnoreCase(String username);
 
-	/**
-	 * Find a user by the email ignoring case
-	 * @param username The username
-	 * @return The user as optional
-	 */
-	@EntityGraph(attributePaths = "roles")
-	Optional<User> findByEmailIgnoreCase(String email);
+    /**
+     * Find a user by the email ignoring case.
+     *
+     * @param email The email
+     * @return The user as optional
+     */
+    @EntityGraph(attributePaths = "roles")
+    Optional<User> findByEmailIgnoreCase(String email);
 
-	/**
-	 * Check if a given username exists
-	 * @param username The username
-	 * @return true if it is, false otherwise
-	 */
-	boolean existsByUsername(String username);
+    /**
+     * Check if a given username exists.
+     *
+     * @param username The username
+     * @return true if it is, false otherwise
+     */
+    boolean existsByUsername(String username);
 }

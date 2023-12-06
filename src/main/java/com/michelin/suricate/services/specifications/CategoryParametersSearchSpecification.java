@@ -3,10 +3,13 @@ package com.michelin.suricate.services.specifications;
 import com.michelin.suricate.model.entities.CategoryParameter;
 import com.michelin.suricate.model.entities.CategoryParameter_;
 
+/**
+ * Category parameters search specification.
+ */
 public class CategoryParametersSearchSpecification extends AbstractSearchSpecification<CategoryParameter> {
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param search The string to search
      */

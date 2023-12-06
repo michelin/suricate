@@ -25,47 +25,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * String encryptor configuration
+ * String encryptor configuration.
  * Mainly used to encrypt and decrypt secret information for widgets
  */
 @Configuration
 @EnableEncryptableProperties
 public class StringEncryptorConfiguration {
-
     /**
-     * String encryptor password
+     * String encryptor password.
      */
     @Value("${jasypt.encryptor.password}")
     private String encryptorPassword;
 
     /**
-     * Configure the default string encryptor without salt
-     * @return The default encryptor
-     */
-    @Bean(name = "noSaltEncryptor")
-    public StringEncryptor stringEncryptor() {
-        return getPooledPBEStringEncryptor(encryptorPassword, "org.jasypt.salt.ZeroSaltGenerator");
-    }
-
-    /**
-     * Default string encryptor
-     *
-     * @return The string encryptor
-     */
-    @Bean("jasyptStringEncryptor")
-    public StringEncryptor defaultStringEncryptor() {
-        return getPooledPBEStringEncryptor(encryptorPassword, "org.jasypt.salt.RandomSaltGenerator");
-    }
-
-    /**
-     * Method used to create a String encryptor
+     * Method used to create a String encryptor.
      *
      * @param encryptorPassword      encryptor password
      * @param saltGeneratorClassName salt class name
      * @return The encryptor
      */
-    private static PooledPBEStringEncryptor getPooledPBEStringEncryptor(String encryptorPassword, String saltGeneratorClassName) {
-        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
+    private static PooledPBEStringEncryptor getPooledPbeStringEncryptor(String encryptorPassword,
+                                                                        String saltGeneratorClassName) {
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         config.setPassword(encryptorPassword);
         config.setAlgorithm("PBEWithMD5AndDES");
@@ -74,7 +54,29 @@ public class StringEncryptorConfiguration {
         config.setProviderName("SunJCE");
         config.setSaltGeneratorClassName(saltGeneratorClassName);
         config.setStringOutputType("hexadecimal");
+
+        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         encryptor.setConfig(config);
         return encryptor;
+    }
+
+    /**
+     * Configure the default string encryptor without salt.
+     *
+     * @return The default encryptor
+     */
+    @Bean(name = "noSaltEncryptor")
+    public StringEncryptor stringEncryptor() {
+        return getPooledPbeStringEncryptor(encryptorPassword, "org.jasypt.salt.ZeroSaltGenerator");
+    }
+
+    /**
+     * Default string encryptor.
+     *
+     * @return The string encryptor
+     */
+    @Bean("jasyptStringEncryptor")
+    public StringEncryptor defaultStringEncryptor() {
+        return getPooledPbeStringEncryptor(encryptorPassword, "org.jasypt.salt.RandomSaltGenerator");
     }
 }

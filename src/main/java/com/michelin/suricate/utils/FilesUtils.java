@@ -17,25 +17,27 @@
 package com.michelin.suricate.utils;
 
 import com.michelin.suricate.model.entities.Asset;
-import lombok.extern.slf4j.Slf4j;
-import net.sf.jmimemagic.*;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 
+/**
+ * Files utils.
+ */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FilesUtils {
-    private FilesUtils() { }
-
     /**
-     * Method used to list all folder inside a root folder
+     * Method used to list all folder inside a root folder.
+     *
      * @param rootFolder the root folder used to find folder
      * @return the list of folder
      * @throws IOException exception with file
@@ -46,7 +48,7 @@ public final class FilesUtils {
                 return list.map(Path::toFile)
                     .filter(File::isDirectory)
                     .sorted()
-                    .collect(Collectors.toList());
+                    .toList();
 
             }
         }
@@ -54,7 +56,7 @@ public final class FilesUtils {
     }
 
     /**
-     * Get all the files inside a given folder
+     * Get all the files inside a given folder.
      *
      * @param folder The folder containing the files
      * @return The list of files
@@ -66,14 +68,14 @@ public final class FilesUtils {
                 return list.map(Path::toFile)
                     .filter(File::isFile)
                     .sorted()
-                    .collect(Collectors.toList());
+                    .toList();
             }
         }
         return Collections.emptyList();
     }
 
     /**
-     * Method used to read File asset
+     * Method used to read File asset.
      *
      * @param file the file asset to read
      * @return the asset corresponding to the file content
@@ -82,17 +84,15 @@ public final class FilesUtils {
     public static Asset readAsset(File file) throws IOException {
         Asset asset = new Asset();
         asset.setContent(FileUtils.readFileToByteArray(file));
-        try {
-            MagicMatch match = Magic.getMagicMatch(asset.getContent());
-            asset.setContentType(match.getMimeType());
-        } catch (MagicParseException | MagicMatchNotFoundException | MagicException e) {
-            log.trace(e.getMessage(), e);
-            asset.setContentType("text/plain");
-        }
+
+        String mimeType = Files.probeContentType(file.toPath()) != null ? Files.probeContentType(file.toPath())
+            : "text/plain";
 
         // Override mime type for javascript
         if (file.getName().endsWith(".js")) {
             asset.setContentType("application/javascript");
+        } else {
+            asset.setContentType(mimeType);
         }
 
         return asset;

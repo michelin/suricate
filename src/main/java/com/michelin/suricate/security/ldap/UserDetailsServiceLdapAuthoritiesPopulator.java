@@ -16,10 +16,11 @@
 
 package com.michelin.suricate.security.ldap;
 
-import com.michelin.suricate.properties.ApplicationProperties;
-import com.michelin.suricate.services.api.UserService;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.enums.AuthenticationProvider;
+import com.michelin.suricate.properties.ApplicationProperties;
+import com.michelin.suricate.services.api.UserService;
+import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+/**
+ * User details service for LDAP.
+ */
 @Slf4j
 @Service
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "ldap")
@@ -44,25 +45,31 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
     private ApplicationProperties applicationProperties;
 
     /**
-     * Get authorities for authenticated user
+     * Get authorities for authenticated user.
+     *
      * @param userData The user data from LDAP
      * @param username The username of the connected user
      * @return The user authorities
      */
     @Override
-    public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String username) {
+    public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData,
+                                                                        String username) {
         log.debug("Authenticating user <{}> with LDAP", username);
 
-        String firstname = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getFirstNameAttributeName());
-        String lastname = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getLastNameAttributeName());
-        String email = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getMailAttributeName());
+        String firstname = userData.getStringAttribute(
+            applicationProperties.getAuthentication().getLdap().getFirstNameAttributeName());
+        String lastname =
+            userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getLastNameAttributeName());
+        String email =
+            userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getMailAttributeName());
         AuthenticationProvider authenticationMethod = AuthenticationProvider.LDAP;
 
-        User registeredUser = userService.registerUser(username, firstname, lastname, email, StringUtils.EMPTY, authenticationMethod);
+        User registeredUser =
+            userService.registerUser(username, firstname, lastname, email, StringUtils.EMPTY, authenticationMethod);
 
         return registeredUser.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+            .stream()
+            .map(role -> new SimpleGrantedAuthority(role.getName()))
+            .toList();
     }
 }

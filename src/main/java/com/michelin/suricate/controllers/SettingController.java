@@ -27,6 +27,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +36,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Setting controller.
+ */
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Setting", description = "Setting Controller")
@@ -48,7 +50,8 @@ public class SettingController {
     private SettingMapper settingMapper;
 
     /**
-     * Get the full list of settings
+     * Get the full list of settings.
+     *
      * @return The full list of settings
      */
     @Operation(summary = "Get the full list of settings")
@@ -60,13 +63,13 @@ public class SettingController {
     public ResponseEntity<List<SettingResponseDto>> getAll() {
         Optional<List<Setting>> settingsOptional = settingService.getAll();
 
-        if (!settingsOptional.isPresent()) {
+        if (settingsOptional.isEmpty()) {
             throw new NoContentException(Setting.class);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(settingMapper.toSettingsDTOs(settingsOptional.get()));
+            .body(settingMapper.toSettingsDtos(settingsOptional.get()));
     }
 }

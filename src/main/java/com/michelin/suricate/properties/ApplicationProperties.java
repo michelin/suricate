@@ -19,21 +19,22 @@
 
 package com.michelin.suricate.properties;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.directory.server.core.api.ReferralHandlingMode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.cors.CorsConfiguration;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+/**
+ * Application properties.
+ */
 @Getter
 @Setter
 @Configuration
@@ -46,19 +47,25 @@ public class ApplicationProperties {
     private Widgets widgets;
     private Swagger swagger;
 
+    /**
+     * Authentication properties.
+     */
     @Getter
     @Setter
     public static class Authentication {
         private Ldap ldap;
         private Jwt jwt;
         private PersonalAccessToken pat;
-        private OAuth2 oauth2;
+        private Oauth2 oauth2;
         @Pattern(regexp = "ldap|database")
         private String provider;
         private List<String> socialProviders;
         private Map<String, SocialProvidersConfig> socialProvidersConfig = new HashMap<>();
     }
 
+    /**
+     * LDAP properties.
+     */
     @Getter
     @Setter
     public static class Ldap {
@@ -71,9 +78,11 @@ public class ApplicationProperties {
         private String firstNameAttributeName;
         private String lastNameAttributeName;
         private String mailAttributeName;
-        private String referral = ReferralHandlingMode.IGNORE.getJndiValue();
     }
 
+    /**
+     * JWT properties.
+     */
     @Getter
     @Setter
     public static class Jwt {
@@ -84,6 +93,9 @@ public class ApplicationProperties {
         private String signingKey;
     }
 
+    /**
+     * Personal Access Token properties.
+     */
     @Getter
     @Setter
     public static class PersonalAccessToken {
@@ -94,13 +106,19 @@ public class ApplicationProperties {
         private String checksumSecret;
     }
 
+    /**
+     * OAuth2 properties.
+     */
     @Getter
     @Setter
-    public static class OAuth2 {
+    public static class Oauth2 {
         private String defaultTargetUrl;
         private boolean useReferer;
     }
 
+    /**
+     * SSL properties.
+     */
     @Getter
     @Setter
     public static class Ssl {
@@ -108,6 +126,9 @@ public class ApplicationProperties {
         private TrustStore trustStore;
     }
 
+    /**
+     * KeyStore properties.
+     */
     @Getter
     @Setter
     public static class KeyStore {
@@ -116,6 +137,9 @@ public class ApplicationProperties {
         private String type;
     }
 
+    /**
+     * TrustStore properties.
+     */
     @Getter
     @Setter
     public static class TrustStore {
@@ -124,6 +148,9 @@ public class ApplicationProperties {
         private String type;
     }
 
+    /**
+     * Widgets properties.
+     */
     @Getter
     @Setter
     public static class Widgets {
@@ -132,6 +159,9 @@ public class ApplicationProperties {
         private String cloneDir = "/tmp";
     }
 
+    /**
+     * Swagger properties.
+     */
     @Getter
     @Setter
     public static class Swagger {
@@ -148,6 +178,9 @@ public class ApplicationProperties {
         private String contactEmail;
     }
 
+    /**
+     * Social providers properties.
+     */
     @Getter
     @Setter
     public static class SocialProvidersConfig {

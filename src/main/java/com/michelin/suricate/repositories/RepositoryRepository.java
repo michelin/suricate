@@ -17,26 +17,27 @@
 package com.michelin.suricate.repositories;
 
 import com.michelin.suricate.model.entities.Repository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
- * Repositories repository
+ * Repositories repository.
  */
 @org.springframework.stereotype.Repository
 public interface RepositoryRepository extends JpaRepository<Repository, Long>, JpaSpecificationExecutor<Repository> {
     /**
-     * Find all by enabled order by name
+     * Find all by enabled order by name.
+     *
      * @param enabled True if we want every enabled repository, false otherwise
      * @return The list of repositories
      */
     Optional<List<Repository>> findAllByEnabledOrderByPriorityDescCreatedDateAsc(final boolean enabled);
 
     /**
-     * Find repository by name
+     * Find repository by name.
+     *
      * @param name The repository name
      * @return An optional repository
      */

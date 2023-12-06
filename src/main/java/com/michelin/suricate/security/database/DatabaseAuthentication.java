@@ -22,11 +22,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Database authentication provider.
+ */
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "database")
 public class DatabaseAuthentication {
+    /**
+     * Create the authentication provider.
+     *
+     * @param userDetailsDatabaseService The user details service
+     * @param passwordEncoder            The password encoder
+     * @return The authentication provider
+     */
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(UserDetailsDatabaseService userDetailsDatabaseService, PasswordEncoder passwordEncoder) {
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsDatabaseService userDetailsDatabaseService,
+                                                            PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsDatabaseService);
         authProvider.setPasswordEncoder(passwordEncoder);

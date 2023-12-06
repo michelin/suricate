@@ -20,142 +20,190 @@ import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.security.AuthenticationFailureEntryPoint;
 import com.michelin.suricate.security.filter.JwtTokenFilter;
 import com.michelin.suricate.security.filter.PersonalAccessTokenFilter;
-import com.michelin.suricate.security.oauth2.*;
+import com.michelin.suricate.security.oauth2.HttpCookieOauth2AuthorizationRequestRepository;
+import com.michelin.suricate.security.oauth2.Oauth2AuthenticationFailureHandler;
+import com.michelin.suricate.security.oauth2.Oauth2AuthenticationSuccessHandler;
+import com.michelin.suricate.security.oauth2.Oauth2UserService;
+import com.michelin.suricate.security.oauth2.OpenIdcUserService;
+import java.io.IOException;
+import java.util.Locale;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
-import java.io.IOException;
-import java.util.Locale;
-
+/**
+ * Web configuration.
+ */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableWebSecurity
+@EnableMethodSecurity
 public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private ApplicationProperties applicationProperties;
 
     /**
-     * CORS configuration
-     * @param registry The CORS registry
-     */
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry
-                .addMapping("/api/**")
-                .combine(applicationProperties.getCors());
-    }
-
-    /**
-     * The view resolver
+     * The view resolver.
+     *
      * @param registry Store the configurations
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/favicon.ico")
-                .addResourceLocations("classpath:/");
-
-        registry.addResourceHandler("swagger-ui.html")
-            .addResourceLocations("classpath:/META-INF/resources/");
-
         registry.addResourceHandler("/**")
             .addResourceLocations("classpath:/public/")
             .resourceChain(true)
             .addResolver(new PathResourceResolver() {
                 @Override
-                protected Resource getResource(String resourcePath, Resource location) throws IOException {
+                protected Resource getResource(@NotNull String resourcePath, @NotNull Resource location)
+                    throws IOException {
                     Resource requestedResource = location.createRelative(resourcePath);
-                    return requestedResource.exists() && requestedResource.isReadable() ? requestedResource : new ClassPathResource("/public/index.html");
+                    return requestedResource.exists() && requestedResource.isReadable() ? requestedResource :
+                        new ClassPathResource("/public/index.html");
                 }
             });
     }
 
+    /**
+     * Define the security filter chain.
+     *
+     * @param http                    The http security
+     * @param authFailureEntryPoint   The authentication failure entry point
+     * @param oauth2RequestRepository The auth request repository
+     * @param userService             The user service
+     * @param openIdcUserService         The oidc user service
+     * @param oauth2SuccessHandler    The oauth2 authentication success handler
+     * @param oauth2FailureHandler    The oauth2 authentication failure handler
+     * @return The security filter chain
+     * @throws Exception When an error occurred
+     */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationFailureEntryPoint authenticationFailureEntryPoint,
-                                           HttpCookieOAuth2AuthorizationRequestRepository authRequestRepository, OAuth2UserService userService,
-                                           OIDCUserService oidcUserService, @Autowired(required = false) OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
-                                           OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) throws Exception {
-        http
-                .cors()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationFailureEntryPoint)
-                .accessDeniedHandler(authenticationFailureEntryPoint)
-                .and()
-                .headers()
-                .frameOptions().disable()
-                .and()
-                .anonymous()
-                .and()
-                .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/actuator/**").permitAll()
-                .antMatchers("/api/*/auth/signin").permitAll()
-                .antMatchers("/api/*/users/signup").permitAll()
-                .antMatchers("/api/*/configurations/authentication-providers").permitAll()
-                .antMatchers("/api/*/projects/{projectToken}").permitAll()
-                .antMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
-                .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
-                .antMatchers("/api/*/widgets/{widgetId}").permitAll()
-                .antMatchers("/api/*/settings").permitAll()
-                .antMatchers("/api/*/assets/**").permitAll()
-                .antMatchers("/ws/**").permitAll()
-                .antMatchers("/api/oauth2/authorization/**").permitAll()
-                .antMatchers("/api/**").authenticated()
-                .and()
-                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           AuthenticationFailureEntryPoint authFailureEntryPoint,
+                                           HttpCookieOauth2AuthorizationRequestRepository oauth2RequestRepository,
+                                           Oauth2UserService userService, OpenIdcUserService openIdcUserService,
+                                           @Autowired(required = false)
+                                           Oauth2AuthenticationSuccessHandler oauth2SuccessHandler,
+                                           Oauth2AuthenticationFailureHandler oauth2FailureHandler,
+                                           HandlerMappingIntrospector introspector) throws Exception {
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
-        if (oAuth2AuthenticationSuccessHandler.getOAuth2AuthorizedClientRepository() != null) {
-            http.oauth2Login()
-                    .authorizationEndpoint()
-                    // Store auth request in a http cookie on the IDP response
-                    .authorizationRequestRepository(authRequestRepository)
-                    // Override default "oauth2/authorization/" endpoint by adding "/api"
-                    // Endpoint that triggers the OAuth2 auth to given IDP
-                    .baseUri("/api/oauth2/authorization")
-                    .and()
-                    .userInfoEndpoint()
-                    .userService(userService)
-                    .userService(userService)
-                    .oidcUserService(oidcUserService)
-                    .and()
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
-                    .failureHandler(oAuth2AuthenticationFailureHandler);
+        http
+            .cors(corsConfigurer -> corsConfigurer
+                .configurationSource(corsConfiguration()))
+            .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .csrf(AbstractHttpConfigurer::disable)
+            .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
+                .authenticationEntryPoint(authFailureEntryPoint)
+                .accessDeniedHandler(authFailureEntryPoint))
+            .headers(headersConfigurer -> headersConfigurer
+                .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .authorizeHttpRequests(authorizeRequestsConfigurer -> authorizeRequestsConfigurer
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                // Make H2 console served by the Jakarta servlet
+                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                // Make other MVC requests served by the DispatcherServlet
+                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.OPTIONS, "/**")).permitAll()
+                // Actuator
+                .requestMatchers(mvcMatcherBuilder.pattern("/actuator/**")).permitAll()
+                // Swagger
+                .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui.html")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/v3/api-docs/**")).permitAll()
+                // Suricate API
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/auth/signin")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/users/signup")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/configurations/authentication-providers"))
+                .permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projects/{projectToken}")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectToken}/projectWidgets"))
+                .permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectWidgetId}")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/widgets/{widgetId}")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/settings")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/assets/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/ws/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/oauth2/authorization/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
+                // Front-End
+                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/**")).permitAll()
+            )
+            .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        if (oauth2SuccessHandler.getAuthorizedClientRepository() != null) {
+            http
+                .oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
+                    .authorizationEndpoint(authorizationEndpointConfigurer -> authorizationEndpointConfigurer
+                        // Store auth request in a http cookie on the IDP response
+                        .authorizationRequestRepository(oauth2RequestRepository)
+                        // Override default "oauth2/authorization/" endpoint by adding "/api"
+                        // Endpoint that triggers the OAuth2 auth to given IDP
+                        .baseUri("/api/oauth2/authorization"))
+                    .userInfoEndpoint(userInfoEndpointConfigurer -> userInfoEndpointConfigurer
+                        .userService(userService)
+                        .oidcUserService(openIdcUserService))
+                    .successHandler(oauth2SuccessHandler)
+                    .failureHandler(oauth2FailureHandler));
         }
 
         return http.build();
     }
 
+    /**
+     * Define the CORS configuration.
+     *
+     * @return The CORS configuration
+     */
+    public UrlBasedCorsConfigurationSource corsConfiguration() {
+        UrlBasedCorsConfigurationSource corsConfiguration = new UrlBasedCorsConfigurationSource();
+        corsConfiguration.registerCorsConfiguration("/api/**", applicationProperties.getCors());
+        return corsConfiguration;
+    }
+
+    /**
+     * Define the authentication manager.
+     * Used to inject it in the authentication controller.
+     *
+     * @param authConfiguration The auth configuration
+     * @return The authentication manager
+     * @throws Exception When an error occurred during the authentication manager creation
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
         return authConfiguration.getAuthenticationManager();
     }
 
     /**
-     * HTTP filter processing the given jwt token in header
+     * HTTP filter processing the given jwt token in header.
+     *
      * @return The token authentication filter bean
      */
     @Bean
@@ -164,7 +212,8 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * HTTP filter processing the given personal access token in header
+     * HTTP filter processing the given personal access token in header.
+     *
      * @return The token authentication filter bean
      */
     @Bean
@@ -173,19 +222,34 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Define a role hierarchy
+     * Define a role hierarchy.
+     *
      * @return The role hierarchy bean
      */
     @Bean
-    protected RoleHierarchyImpl roleHierarchy() {
+    public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
         return roleHierarchy;
     }
 
     /**
+     * Define a method security expression handler.
+     * Used to define the role hierarchy on the method security.
+     *
+     * @return The method security expression handler bean
+     */
+    @Bean
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy());
+        return expressionHandler;
+    }
+
+    /**
      * Define local language
-     * Used in "javax.validation" messages
+     * Used in "jakarta.validation" messages
+     *
      * @return The local language
      */
     @Bean

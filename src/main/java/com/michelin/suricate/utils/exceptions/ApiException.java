@@ -21,11 +21,14 @@ import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.enums.ApiErrorEnum;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Api exception.
+ */
 public class ApiException extends RuntimeException {
     private final ApiErrorEnum error;
 
     /**
-     * Default constructor using field
+     * Constructor.
      *
      * @param error the API error object to store into the exception
      */
@@ -35,7 +38,7 @@ public class ApiException extends RuntimeException {
     }
 
     /**
-     * Default constructor using field
+     * Constructor.
      *
      * @param message custom message
      * @param error   the API error object to store into the exception
@@ -47,7 +50,7 @@ public class ApiException extends RuntimeException {
 
 
     /**
-     * Method used to retrieve the error
+     * Method used to retrieve the error.
      *
      * @return the APi error
      */

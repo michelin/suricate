@@ -1,13 +1,12 @@
 package com.michelin.suricate.utils.web;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import jakarta.servlet.http.Cookie;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import javax.servlet.http.Cookie;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class CookieUtilsTest {
 
@@ -21,8 +20,8 @@ class CookieUtilsTest {
         Optional<Cookie> actual = CookieUtils.getCookie(request, "myCookie");
 
         assertThat(actual)
-                .isPresent()
-                .contains(cookie);
+            .isPresent()
+            .contains(cookie);
     }
 
     @Test
@@ -98,12 +97,18 @@ class CookieUtilsTest {
 
     @Test
     void shouldSerialize() {
-        assertThat(CookieUtils.serialize(new Cookie("myCookie", "value"))).isEqualTo("rO0ABXNyABlqYXZheC5zZXJ2bGV0Lmh0dHAuQ29va2llAAAAAAAAAAECAAlaAAhodHRwT25seUkABm1heEFnZVoABnNlY3VyZUkAB3ZlcnNpb25MAAdjb21tZW50dAASTGphdmEvbGFuZy9TdHJpbmc7TAAGZG9tYWlucQB-AAFMAARuYW1lcQB-AAFMAARwYXRocQB-AAFMAAV2YWx1ZXEAfgABeHAA_____wAAAAAAcHB0AAhteUNvb2tpZXB0AAV2YWx1ZQ==");
+        assertThat(CookieUtils.serialize(new Cookie("myCookie", "value"))).isEqualTo(
+            "rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
+                + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
+                + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU=");
     }
 
     @Test
     void shouldDeserializeCookieValue() {
-        Cookie cookie = new Cookie("myCookie", "rO0ABXNyABlqYXZheC5zZXJ2bGV0Lmh0dHAuQ29va2llAAAAAAAAAAECAAlaAAhodHRwT25seUkABm1heEFnZVoABnNlY3VyZUkAB3ZlcnNpb25MAAdjb21tZW50dAASTGphdmEvbGFuZy9TdHJpbmc7TAAGZG9tYWlucQB-AAFMAARuYW1lcQB-AAFMAARwYXRocQB-AAFMAAV2YWx1ZXEAfgABeHAA_____wAAAAAAcHB0AAhteUNvb2tpZXB0AAV2YWx1ZQ==");
+        Cookie cookie = new Cookie("myCookie",
+            "rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
+                + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
+                + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU");
 
         Cookie deserialized = CookieUtils.deserialize(cookie, Cookie.class);
 

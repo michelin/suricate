@@ -1,5 +1,10 @@
 package com.michelin.suricate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.category.CategoryParameterResponseDto;
 import com.michelin.suricate.model.dto.api.widgetconfiguration.WidgetConfigurationRequestDto;
 import com.michelin.suricate.model.entities.CategoryParameter;
@@ -7,6 +12,8 @@ import com.michelin.suricate.services.api.CategoryParametersService;
 import com.michelin.suricate.services.cache.CacheService;
 import com.michelin.suricate.services.mapper.CategoryMapper;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,15 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Collections;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryParametersControllerTest {
@@ -51,25 +49,25 @@ class CategoryParametersControllerTest {
         categoryParameterResponseDto.setKey("key");
 
         when(categoryParametersService.getAll(any(), any()))
-                .thenReturn(new PageImpl<>(Collections.singletonList(categoryParameter)));
-        when(categoryMapper.toCategoryParameterDTO(any()))
-                .thenReturn(categoryParameterResponseDto);
+            .thenReturn(new PageImpl<>(Collections.singletonList(categoryParameter)));
+        when(categoryMapper.toCategoryParameterDto(any()))
+            .thenReturn(categoryParameterResponseDto);
 
         Page<CategoryParameterResponseDto> actual = categoryParametersController.getAll("search", Pageable.unpaged());
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().collect(Collectors.toList()).get(0)).isEqualTo(categoryParameterResponseDto);
+        assertThat(actual.get().toList().get(0)).isEqualTo(categoryParameterResponseDto);
     }
 
     @Test
     void shouldGetOneByKeyNotFound() {
         when(categoryParametersService.getOneByKey(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> categoryParametersController.getOneByKey("key"))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("CategoryParameter 'key' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("CategoryParameter 'key' not found");
     }
 
     @Test
@@ -81,9 +79,9 @@ class CategoryParametersControllerTest {
         categoryParameterResponseDto.setKey("key");
 
         when(categoryParametersService.getOneByKey(any()))
-                .thenReturn(Optional.of(categoryParameter));
-        when(categoryMapper.toCategoryParameterDTO(any()))
-                .thenReturn(categoryParameterResponseDto);
+            .thenReturn(Optional.of(categoryParameter));
+        when(categoryMapper.toCategoryParameterDto(any()))
+            .thenReturn(categoryParameterResponseDto);
 
         ResponseEntity<CategoryParameterResponseDto> actual = categoryParametersController.getOneByKey("key");
 
@@ -99,11 +97,11 @@ class CategoryParametersControllerTest {
         widgetConfigurationRequestDto.setValue("value");
 
         when(categoryParametersService.getOneByKey(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("CategoryParameter 'key' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("CategoryParameter 'key' not found");
     }
 
     @Test
@@ -115,7 +113,7 @@ class CategoryParametersControllerTest {
         widgetConfigurationRequestDto.setValue("value");
 
         when(categoryParametersService.getOneByKey(any()))
-                .thenReturn(Optional.of(categoryParameter));
+            .thenReturn(Optional.of(categoryParameter));
 
         ResponseEntity<Void> actual = categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto);
 
@@ -125,11 +123,11 @@ class CategoryParametersControllerTest {
     @Test
     void shouldDeleteOneByKeyNotFound() {
         when(categoryParametersService.getOneByKey(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> categoryParametersController.deleteOneByKey("key"))
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("CategoryParameter 'key' not found");
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("CategoryParameter 'key' not found");
     }
 
     @Test
@@ -138,7 +136,7 @@ class CategoryParametersControllerTest {
         categoryParameter.setKey("key");
 
         when(categoryParametersService.getOneByKey(any()))
-                .thenReturn(Optional.of(categoryParameter));
+            .thenReturn(Optional.of(categoryParameter));
 
         ResponseEntity<Void> actual = categoryParametersController.deleteOneByKey("key");
 

@@ -19,7 +19,7 @@
 package com.michelin.suricate.model.enums;
 
 /**
- * Possible data type for a widget parameter
+ * Possible data type for a widget parameter.
  */
 public enum DataTypeEnum {
     // Simple data types

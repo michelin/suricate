@@ -1,16 +1,28 @@
 package com.michelin.suricate.services.git;
 
-import com.michelin.suricate.properties.ApplicationProperties;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.entities.Library;
 import com.michelin.suricate.model.entities.Repository;
 import com.michelin.suricate.model.enums.RepositoryTypeEnum;
+import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.services.api.CategoryService;
 import com.michelin.suricate.services.api.LibraryService;
 import com.michelin.suricate.services.api.RepositoryService;
 import com.michelin.suricate.services.api.WidgetService;
 import com.michelin.suricate.services.cache.CacheService;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,19 +30,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class GitServiceTest {
     @Mock
-    private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @Mock
     private ApplicationProperties applicationProperties;
@@ -72,36 +75,36 @@ class GitServiceTest {
         repository.setLocalPath("src/test/resources/repository");
 
         when(applicationProperties.getWidgets())
-                .thenReturn(widgetsProperties);
+            .thenReturn(widgetsProperties);
         when(repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-                .thenReturn(Optional.of(Collections.singletonList(repository)));
+            .thenReturn(Optional.of(Collections.singletonList(repository)));
         when(libraryService.createUpdateLibraries(any()))
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
 
         gitService.updateWidgetFromEnabledGitRepositoriesAsync();
 
         verify(repositoryService)
-                .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
         verify(libraryService).createUpdateLibraries(argThat(libraries ->
-                libraries.get(0).getTechnicalName().equals("test.js") &&
-                        libraries.get(0).getAsset() != null &&
-                        libraries.get(0).getAsset().getContentType().equals("application/javascript")));
+            libraries.get(0).getTechnicalName().equals("test.js")
+                && libraries.get(0).getAsset() != null
+                && libraries.get(0).getAsset().getContentType().equals("application/javascript")));
         verify(categoryService)
-                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub") &&
-                        category.getTechnicalName().equals("github")));
+            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub")
+                && category.getTechnicalName().equals("github")));
         verify(categoryService)
-                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab") &&
-                        category.getTechnicalName().equals("gitlab")));
+            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab")
+                && category.getTechnicalName().equals("gitlab")));
         verify(widgetService)
-                .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub") &&
-                                category.getTechnicalName().equals("github")),
-                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                        argThat(repository::equals));
+            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub")
+                    && category.getTechnicalName().equals("github")),
+                argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                argThat(repository::equals));
         verify(widgetService)
-                .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab") &&
-                                category.getTechnicalName().equals("gitlab")),
-                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                        argThat(repository::equals));
+            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab")
+                    && category.getTechnicalName().equals("gitlab")),
+                argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                argThat(repository::equals));
         verify(cacheService).clearAllCache();
     }
 
@@ -118,18 +121,18 @@ class GitServiceTest {
         repository.setLocalPath("unknown");
 
         when(applicationProperties.getWidgets())
-                .thenReturn(widgetsProperties);
+            .thenReturn(widgetsProperties);
         when(repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-                .thenReturn(Optional.of(Collections.singletonList(repository)));
+            .thenReturn(Optional.of(Collections.singletonList(repository)));
 
         gitService.updateWidgetFromEnabledGitRepositoriesAsync();
 
-        verify(nashornWidgetScheduler)
-                .init();
+        verify(jsExecutionScheduler)
+            .init();
         verify(dashboardWebSocketService)
-                .reloadAllConnectedClientsToAllProjects();
+            .reloadAllConnectedClientsToAllProjects();
         verify(repositoryService)
-                .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
     @Test
@@ -148,48 +151,48 @@ class GitServiceTest {
         repository.setLocalPath("src/test/resources/repository");
 
         when(applicationProperties.getWidgets())
-                .thenReturn(widgetsProperties);
+            .thenReturn(widgetsProperties);
         when(repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-                .thenReturn(Optional.of(Collections.singletonList(repository)));
+            .thenReturn(Optional.of(Collections.singletonList(repository)));
         when(libraryService.createUpdateLibraries(any()))
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
 
         gitService.updateWidgetFromEnabledGitRepositories();
 
         verify(repositoryService)
-                .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
         verify(libraryService).createUpdateLibraries(argThat(libraries ->
-                libraries.get(0).getTechnicalName().equals("test.js") &&
-                        libraries.get(0).getAsset() != null &&
-                        libraries.get(0).getAsset().getContentType().equals("application/javascript")));
+            libraries.get(0).getTechnicalName().equals("test.js")
+                && libraries.get(0).getAsset() != null
+                && libraries.get(0).getAsset().getContentType().equals("application/javascript")));
         verify(categoryService)
-                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub") &&
-                        category.getTechnicalName().equals("github")));
+            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub")
+                && category.getTechnicalName().equals("github")));
         verify(categoryService)
-                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab") &&
-                        category.getTechnicalName().equals("gitlab")));
+            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab")
+                && category.getTechnicalName().equals("gitlab")));
         verify(widgetService)
-                .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub") &&
-                                category.getTechnicalName().equals("github")),
-                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                        argThat(repository::equals));
+            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub")
+                    && category.getTechnicalName().equals("github")),
+                argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                argThat(repository::equals));
         verify(widgetService)
-                .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab") &&
-                                category.getTechnicalName().equals("gitlab")),
-                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                        argThat(repository::equals));
+            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab")
+                    && category.getTechnicalName().equals("gitlab")),
+                argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                argThat(repository::equals));
         verify(cacheService).clearAllCache();
     }
 
     @Test
     void shouldNotUpdateWidgetFromEnabledGitRepositoriesWhenUpdateIsDisabled() throws GitAPIException, IOException {
         when(applicationProperties.getWidgets())
-                .thenReturn(new ApplicationProperties.Widgets());
+            .thenReturn(new ApplicationProperties.Widgets());
 
         gitService.updateWidgetFromEnabledGitRepositories();
 
         verify(repositoryService, times(0))
-                .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
     @Test
@@ -198,14 +201,14 @@ class GitServiceTest {
         widgetsProperties.setUpdateEnable(true);
 
         when(applicationProperties.getWidgets())
-                .thenReturn(widgetsProperties);
+            .thenReturn(widgetsProperties);
         when(repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         gitService.updateWidgetFromEnabledGitRepositories();
 
         verify(repositoryService)
-                .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
     @Test
@@ -221,30 +224,30 @@ class GitServiceTest {
         repository.setLocalPath("src/test/resources/repository");
 
         when(libraryService.createUpdateLibraries(any()))
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
 
         gitService.readWidgetRepositories(Collections.singletonList(repository));
 
         verify(libraryService).createUpdateLibraries(argThat(libraries ->
-                libraries.get(0).getTechnicalName().equals("test.js") &&
-                libraries.get(0).getAsset() != null &&
-                libraries.get(0).getAsset().getContentType().equals("application/javascript")));
+            libraries.get(0).getTechnicalName().equals("test.js")
+                && libraries.get(0).getAsset() != null
+                && libraries.get(0).getAsset().getContentType().equals("application/javascript")));
         verify(categoryService)
-                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub") &&
-                        category.getTechnicalName().equals("github")));
+            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub")
+                && category.getTechnicalName().equals("github")));
         verify(categoryService)
-                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab") &&
-                        category.getTechnicalName().equals("gitlab")));
+            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab")
+                && category.getTechnicalName().equals("gitlab")));
         verify(widgetService)
-                .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub") &&
-                        category.getTechnicalName().equals("github")),
-                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                        argThat(repository::equals));
+            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub")
+                    && category.getTechnicalName().equals("github")),
+                argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                argThat(repository::equals));
         verify(widgetService)
-                .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab") &&
-                                category.getTechnicalName().equals("gitlab")),
-                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                        argThat(repository::equals));
+            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab")
+                    && category.getTechnicalName().equals("gitlab")),
+                argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                argThat(repository::equals));
         verify(cacheService).clearAllCache();
     }
 
@@ -258,12 +261,12 @@ class GitServiceTest {
         repository.setLocalPath("unknown");
 
         assertThatThrownBy(() -> gitService.readWidgetRepositories(Collections.singletonList(repository)))
-                .isInstanceOf(IOException.class);
+            .isInstanceOf(IOException.class);
 
-        verify(nashornWidgetScheduler)
-                .init();
+        verify(jsExecutionScheduler)
+            .init();
         verify(dashboardWebSocketService)
-                .reloadAllConnectedClientsToAllProjects();
+            .reloadAllConnectedClientsToAllProjects();
     }
 
     @Test
@@ -282,20 +285,20 @@ class GitServiceTest {
         repository.setType(RepositoryTypeEnum.REMOTE);
 
         when(libraryService.createUpdateLibraries(any()))
-                .thenReturn(Collections.singletonList(library));
+            .thenReturn(Collections.singletonList(library));
         when(applicationProperties.getWidgets())
-                .thenReturn(widgetsProperties);
+            .thenReturn(widgetsProperties);
 
         gitService.readWidgetRepositories(Collections.singletonList(repository));
 
         verify(libraryService)
-                .createUpdateLibraries(anyList());
+            .createUpdateLibraries(anyList());
         verify(categoryService, atLeastOnce())
-                .addOrUpdateCategory(any());
+            .addOrUpdateCategory(any());
         verify(widgetService, atLeastOnce())
-                .addOrUpdateWidgets(any(), any(), any());
+            .addOrUpdateWidgets(any(), any(), any());
         verify(cacheService)
-                .clearAllCache();
+            .clearAllCache();
     }
 
     @Test
@@ -316,15 +319,15 @@ class GitServiceTest {
         repository.setType(RepositoryTypeEnum.REMOTE);
 
         when(applicationProperties.getWidgets())
-                .thenReturn(widgetsProperties);
+            .thenReturn(widgetsProperties);
 
         assertThatThrownBy(() -> gitService.readWidgetRepositories(Collections.singletonList(repository)))
-                .isInstanceOf(Exception.class)
-                .hasMessage("Exception caught during execution of fetch command");
+            .isInstanceOf(Exception.class)
+            .hasMessage("Exception caught during execution of fetch command");
 
-        verify(nashornWidgetScheduler)
-                .init();
+        verify(jsExecutionScheduler)
+            .init();
         verify(dashboardWebSocketService)
-                .reloadAllConnectedClientsToAllProjects();
+            .reloadAllConnectedClientsToAllProjects();
     }
 }

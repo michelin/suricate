@@ -19,17 +19,17 @@
 package com.michelin.suricate.utils.exceptions;
 
 import com.michelin.suricate.model.enums.ApiErrorEnum;
-
 import java.text.MessageFormat;
 
+/**
+ * Username already exist exception.
+ */
 public class UsernameAlreadyExistException extends ApiException {
-    /**
-     * Message for username already exist
-     */
     private static final String MSG_USERNAME_ALREADY_EXIST = "Username ''{0}'' already exist";
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param username The email that already exist
      */
     public UsernameAlreadyExistException(String username) {

@@ -22,11 +22,12 @@ import com.michelin.suricate.model.dto.api.repository.RepositoryResponseDto;
 import com.michelin.suricate.model.entities.Repository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 /**
- * Manage the generation DTO/Model objects for Widget class
+ * Repository mapper.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class RepositoryMapper {
     /**
      * Map a repository into a DTO.
@@ -35,13 +36,13 @@ public abstract class RepositoryMapper {
      * @param repository The repository to map
      * @return The repository as DTO
      */
-    @Named("toRepositoryDTONoWidgets")
-    public abstract RepositoryResponseDto toRepositoryDTONoWidgets(Repository repository);
+    @Named("toRepositoryDtoNoWidgets")
+    public abstract RepositoryResponseDto toRepositoryDtoNoWidgets(Repository repository);
 
     /**
-     * Map a repository DTO as entity
+     * Map a repository DTO as entity.
      *
-     * @param repositoryId         The repository id
+     * @param id                   The repository id
      * @param repositoryRequestDto The repository DTO to map
      * @return The repository as entity
      */
@@ -49,19 +50,20 @@ public abstract class RepositoryMapper {
     public abstract Repository toRepositoryEntity(Long id, RepositoryRequestDto repositoryRequestDto);
 
     /**
-     * Map a repository into an import export repository DTO
+     * Map an import export repository DTO as entity.
      *
-     * @param repository The repository to map
-     * @return The import export repository as DTO
-     */
-    @Named("toImportExportRepositoryDTO")
-    public abstract ImportExportRepositoryDto toImportExportRepositoryDTO(Repository repository);
-
-    /**
-     * Map an import export repository DTO as entity
-     * @param repositoryRequestDto The repository DTO to map
+     * @param importExportRepositoryDto The repository DTO to map
      * @return The repository as entity
      */
     @Named("toRepositoryEntity")
     public abstract Repository toRepositoryEntity(ImportExportRepositoryDto importExportRepositoryDto);
+
+    /**
+     * Map a repository into an import export repository DTO.
+     *
+     * @param repository The repository to map
+     * @return The import export repository as DTO
+     */
+    @Named("toImportExportRepositoryDto")
+    public abstract ImportExportRepositoryDto toImportExportRepositoryDto(Repository repository);
 }

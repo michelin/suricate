@@ -16,29 +16,32 @@
 
 package com.michelin.suricate.services.api;
 
+import com.michelin.suricate.model.entities.Asset;
 import com.michelin.suricate.repositories.AssetRepository;
 import com.michelin.suricate.utils.IdUtils;
-import com.michelin.suricate.model.entities.Asset;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
+/**
+ * Asset service.
+ */
 @Service
 public class AssetService {
     @Autowired
     private AssetRepository assetRepository;
 
     /**
-     * Find an asset by ID
+     * Find an asset by ID.
+     *
      * @param token the asset token used to identify the asset
      * @return The related asset
      */
     public Asset getAssetById(final String token) {
         Optional<Asset> assetOptional = assetRepository.findById(IdUtils.decrypt(token));
 
-        if (!assetOptional.isPresent()) {
+        if (assetOptional.isEmpty()) {
             throw new ObjectNotFoundException(Asset.class, token);
         }
 
@@ -46,7 +49,8 @@ public class AssetService {
     }
 
     /**
-     * Save an asset
+     * Save an asset.
+     *
      * @param asset The asset to save
      * @return The saved asset
      */

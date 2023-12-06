@@ -1,14 +1,14 @@
 package com.michelin.suricate.services.token;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.properties.ApplicationProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PersonalAccessTokenHelperServiceTest {
@@ -44,7 +44,8 @@ class PersonalAccessTokenHelperServiceTest {
 
         when(applicationProperties.getAuthentication()).thenReturn(authProperties);
 
-        Long actual = personalAccessTokenHelperService.computePersonAccessTokenChecksum("test_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
+        Long actual =
+            personalAccessTokenHelperService.computePersonAccessTokenChecksum("test_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
 
         assertThat(actual).isEqualTo(3008800073L);
     }
@@ -72,7 +73,8 @@ class PersonalAccessTokenHelperServiceTest {
 
         when(applicationProperties.getAuthentication()).thenReturn(authProperties);
 
-        boolean actual = personalAccessTokenHelperService.validateToken("wrongPrefix_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
+        boolean actual =
+            personalAccessTokenHelperService.validateToken("wrongPrefix_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
 
         assertThat(actual).isFalse();
     }

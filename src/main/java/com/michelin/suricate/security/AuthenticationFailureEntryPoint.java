@@ -22,6 +22,10 @@ package com.michelin.suricate.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.enums.ApiErrorEnum;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -29,48 +33,22 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
+/**
+ * Handle authentication and access denied exceptions.
+ */
 @Slf4j
 @Component
 public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint, AccessDeniedHandler {
     /**
-     * Handle authentication exception
-     * @param httpServletRequest The request
+     * Process the authentication/access exceptions.
+     *
+     * @param httpServletRequest  The request
      * @param httpServletResponse The response
-     * @param e The exception
-     * @throws IOException Any IO exception
-     * @throws ServletException Any servlet exception
-     */
-    @Override
-    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        resolveException(httpServletRequest, httpServletResponse, e);
-    }
-
-    /**
-     * Handle access denied exception
-     * @param httpServletRequest The request
-     * @param httpServletResponse The response
-     * @param e The exception
-     * @throws IOException Any IO exception
-     * @throws ServletException Any servlet exception
-     */
-    @Override
-    public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-        resolveException(httpServletRequest, httpServletResponse, e);
-    }
-
-    /**
-     * Process the authentication/access exceptions
-     * @param httpServletRequest The request
-     * @param httpServletResponse The response
-     * @param e The exception
+     * @param e                   The exception
      * @throws IOException Any IO exception
      */
-    private static void resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, RuntimeException e) throws IOException {
+    private static void resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                                         RuntimeException e) throws IOException {
         String path = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
         log.debug("Authentication error - {}", path, e);
 
@@ -79,5 +57,34 @@ public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint
 
         ObjectMapper obj = new ObjectMapper();
         obj.writeValue(httpServletResponse.getOutputStream(), new ApiErrorDto(ApiErrorEnum.AUTHENTICATION_ERROR));
+    }
+
+    /**
+     * Handle authentication exception.
+     *
+     * @param httpServletRequest  The request
+     * @param httpServletResponse The response
+     * @param e                   The exception
+     * @throws IOException Any IO exception
+     */
+    @Override
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                         AuthenticationException e) throws IOException {
+        resolveException(httpServletRequest, httpServletResponse, e);
+    }
+
+    /**
+     * Handle access denied exception.
+     *
+     * @param httpServletRequest  The request
+     * @param httpServletResponse The response
+     * @param e                   The exception
+     * @throws IOException      Any IO exception
+     * @throws ServletException Any servlet exception
+     */
+    @Override
+    public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                       AccessDeniedException e) throws IOException, ServletException {
+        resolveException(httpServletRequest, httpServletResponse, e);
     }
 }

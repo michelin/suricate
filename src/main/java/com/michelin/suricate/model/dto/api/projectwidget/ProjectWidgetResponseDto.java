@@ -22,12 +22,14 @@ package com.michelin.suricate.model.dto.api.projectwidget;
 import com.michelin.suricate.model.dto.api.AbstractDto;
 import com.michelin.suricate.model.enums.WidgetStateEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
+/**
+ * Project widget response DTO.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

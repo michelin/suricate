@@ -1,5 +1,13 @@
 package com.michelin.suricate.services.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridRequestDto;
 import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.model.entities.ProjectGrid;
@@ -7,22 +15,17 @@ import com.michelin.suricate.model.entities.ProjectWidget;
 import com.michelin.suricate.model.enums.UpdateType;
 import com.michelin.suricate.repositories.ProjectGridRepository;
 import com.michelin.suricate.repositories.ProjectRepository;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectGridServiceTest {
@@ -39,7 +42,7 @@ class ProjectGridServiceTest {
     private ProjectGridRepository projectGridRepository;
 
     @Mock
-    private NashornRequestWidgetExecutionScheduler nashornRequestWidgetExecutionScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @InjectMocks
     private ProjectGridService projectGridService;
@@ -50,16 +53,16 @@ class ProjectGridServiceTest {
         projectGrid.setId(1L);
 
         when(projectGridRepository.findById(any()))
-                .thenReturn(Optional.of(projectGrid));
+            .thenReturn(Optional.of(projectGrid));
 
         Optional<ProjectGrid> actual = projectGridService.getOneById(1L);
 
         assertThat(actual)
-                .isPresent()
-                .contains(projectGrid);
+            .isPresent()
+            .contains(projectGrid);
 
         verify(projectGridRepository)
-                .findById(1L);
+            .findById(1L);
     }
 
     @Test
@@ -68,16 +71,16 @@ class ProjectGridServiceTest {
         projectGrid.setId(1L);
 
         when(projectGridRepository.findByIdAndProjectToken(any(), any()))
-                .thenReturn(Optional.of(projectGrid));
+            .thenReturn(Optional.of(projectGrid));
 
         Optional<ProjectGrid> actual = projectGridService.findByIdAndProjectToken(1L, "token");
 
         assertThat(actual)
-                .isPresent()
-                .contains(projectGrid);
+            .isPresent()
+            .contains(projectGrid);
 
         verify(projectGridRepository)
-                .findByIdAndProjectToken(1L, "token");
+            .findByIdAndProjectToken(1L, "token");
     }
 
     @Test
@@ -86,15 +89,15 @@ class ProjectGridServiceTest {
         projectGrid.setId(1L);
 
         when(projectGridRepository.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
 
         ProjectGrid actual = projectGridService.create(projectGrid);
 
         assertThat(actual)
-                .isEqualTo(projectGrid);
+            .isEqualTo(projectGrid);
 
         verify(projectGridRepository)
-                .save(projectGrid);
+            .save(projectGrid);
     }
 
     @Test
@@ -113,32 +116,32 @@ class ProjectGridServiceTest {
         projectGridRequestDto.setGrids(Collections.singletonList(gridRequestDto));
 
         when(projectRepository.save(any()))
-                .thenAnswer(answer -> answer.getArgument(0));
+            .thenAnswer(answer -> answer.getArgument(0));
         when(projectGridRepository.saveAll(any()))
-                .thenReturn(new ArrayList<>());
+            .thenReturn(new ArrayList<>());
 
-       projectGridService.updateAll(project, projectGridRequestDto);
+        projectGridService.updateAll(project, projectGridRequestDto);
 
-       assertThat(new ArrayList<>(project.getGrids()).get(0).getTime())
-               .isEqualTo(10);
+        assertThat(new ArrayList<>(project.getGrids()).get(0).getTime())
+            .isEqualTo(10);
 
         verify(projectRepository)
-                .save(project);
+            .save(project);
         verify(projectGridRepository)
-                .saveAll(Collections.singleton(projectGrid));
+            .saveAll(Collections.singleton(projectGrid));
     }
 
     @Test
     void shouldDeleteByProjectIdAndIdWhenNotPresent() {
         when(projectGridRepository.findById(any()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         projectGridService.deleteByProjectIdAndId(new Project(), 1L);
 
         verify(projectGridRepository, times(0))
-                .deleteByProjectIdAndId(any(), any());
+            .deleteByProjectIdAndId(any(), any());
         verify(dashboardWebsocketService, times(0))
-                .sendEventToProjectSubscribers(any(), any());
+            .sendEventToProjectSubscribers(any(), any());
     }
 
     @Test
@@ -155,19 +158,20 @@ class ProjectGridServiceTest {
         project.setToken("token");
 
         when(projectGridRepository.findById(any()))
-                .thenReturn(Optional.of(projectGrid));
-        when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
-                .thenReturn(nashornRequestWidgetExecutionScheduler);
+            .thenReturn(Optional.of(projectGrid));
+        when(ctx.getBean(JsExecutionScheduler.class))
+            .thenReturn(jsExecutionScheduler);
 
         projectGridService.deleteByProjectIdAndId(project, 1L);
 
         verify(projectGridRepository)
-                .deleteByProjectIdAndId(1L, 1L);
+            .deleteByProjectIdAndId(1L, 1L);
         verify(dashboardWebsocketService)
-                .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
-                        event.getDate() != null));
-        verify(nashornRequestWidgetExecutionScheduler)
-                .cancelWidgetsExecutionByGrid(projectGrid);
+            .sendEventToProjectSubscribers(eq("token"),
+                argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)
+                    && event.getDate() != null));
+        verify(jsExecutionScheduler)
+            .cancelWidgetsExecutionByGrid(projectGrid);
     }
 
     @Test
@@ -180,16 +184,17 @@ class ProjectGridServiceTest {
         project.setToken("token");
 
         when(projectGridRepository.findById(any()))
-                .thenReturn(Optional.of(projectGrid));
+            .thenReturn(Optional.of(projectGrid));
 
         projectGridService.deleteByProjectIdAndId(project, 1L);
 
         verify(projectGridRepository)
-                .deleteByProjectIdAndId(1L, 1L);
+            .deleteByProjectIdAndId(1L, 1L);
         verify(dashboardWebsocketService)
-                .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
-                        event.getDate() != null));
-        verify(nashornRequestWidgetExecutionScheduler, times(0))
-                .cancelWidgetsExecutionByGrid(any());
+            .sendEventToProjectSubscribers(eq("token"),
+                argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)
+                    && event.getDate() != null));
+        verify(jsExecutionScheduler, times(0))
+            .cancelWidgetsExecutionByGrid(any());
     }
 }

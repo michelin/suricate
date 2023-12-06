@@ -1,5 +1,8 @@
 package com.michelin.suricate.services.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mockStatic;
+
 import com.michelin.suricate.model.dto.api.category.CategoryParameterResponseDto;
 import com.michelin.suricate.model.dto.api.category.CategoryResponseDto;
 import com.michelin.suricate.model.entities.Asset;
@@ -8,17 +11,14 @@ import com.michelin.suricate.model.entities.CategoryParameter;
 import com.michelin.suricate.model.entities.Widget;
 import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.utils.IdUtils;
+import java.util.Collections;
 import org.assertj.core.api.Assertions;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mockStatic;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryMapperTest {
@@ -26,29 +26,14 @@ class CategoryMapperTest {
     private CategoryMapperImpl categoryMapper;
 
     @Test
-    void shouldToCategoryWithoutParametersDTO() {
+    void shouldToCategoryWithoutParametersDto() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
-            CategoryParameter categoryParameter = new CategoryParameter();
-            categoryParameter.setKey("key");
-
-            Asset asset = new Asset();
-            asset.setId(1L);
-
-            Widget widget = new Widget();
-            widget.setId(1L);
-
-            Category category = new Category();
-            category.setId(1L);
-            category.setName("name");
-            category.setTechnicalName("technicalName");
-            category.setImage(asset);
-            category.setWidgets(Collections.singleton(widget));
-            category.setConfigurations(Collections.singleton(categoryParameter));
+            Category category = getCategory();
 
             mocked.when(() -> IdUtils.encrypt(1L))
-                    .thenReturn("encrypted");
+                .thenReturn("encrypted");
 
-            CategoryResponseDto actual = categoryMapper.toCategoryWithoutParametersDTO(category);
+            CategoryResponseDto actual = categoryMapper.toCategoryWithoutParametersDto(category);
 
             assertThat(actual.getId()).isEqualTo(1L);
             assertThat(actual.getName()).isEqualTo("name");
@@ -61,7 +46,7 @@ class CategoryMapperTest {
     }
 
     @Test
-    void shouldToCategoryWithHiddenValueParametersDTO() {
+    void shouldToCategoryWithHiddenValueParametersDto() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             CategoryParameter categoryParameter = new CategoryParameter();
             categoryParameter.setKey("key");
@@ -85,9 +70,9 @@ class CategoryMapperTest {
             category.setConfigurations(Collections.singleton(categoryParameter));
 
             mocked.when(() -> IdUtils.encrypt(1L))
-                    .thenReturn("encrypted");
+                .thenReturn("encrypted");
 
-            CategoryResponseDto actual = categoryMapper.toCategoryWithHiddenValueParametersDTO(category);
+            CategoryResponseDto actual = categoryMapper.toCategoryWithHiddenValueParametersDto(category);
 
             assertThat(actual.getId()).isEqualTo(1L);
             assertThat(actual.getName()).isEqualTo("name");
@@ -107,29 +92,14 @@ class CategoryMapperTest {
     }
 
     @Test
-    void shouldToCategoryParameterDTO() {
+    void shouldToCategoryParameterDto() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
-            Asset asset = new Asset();
-            asset.setId(1L);
-
-            Category category = new Category();
-            category.setId(1L);
-            category.setName("name");
-            category.setTechnicalName("technicalName");
-            category.setImage(asset);
-
-            CategoryParameter categoryParameter = new CategoryParameter();
-            categoryParameter.setKey("key");
-            categoryParameter.setValue("value");
-            categoryParameter.setDataType(DataTypeEnum.TEXT);
-            categoryParameter.setExport(true);
-            categoryParameter.setDescription("description");
-            categoryParameter.setCategory(category);
+            CategoryParameter categoryParameter = getCategoryParameter();
 
             mocked.when(() -> IdUtils.encrypt(1L))
-                    .thenReturn("encrypted");
+                .thenReturn("encrypted");
 
-            CategoryParameterResponseDto actual = categoryMapper.toCategoryParameterDTO(categoryParameter);
+            CategoryParameterResponseDto actual = categoryMapper.toCategoryParameterDto(categoryParameter);
 
             assertThat(actual.getKey()).isEqualTo("key");
             assertThat(actual.getValue()).isEqualTo("value");
@@ -147,29 +117,15 @@ class CategoryMapperTest {
     }
 
     @Test
-    void shouldToCategoryParameterWithHiddenValuesDTO() {
+    void shouldToCategoryParameterWithHiddenValuesDto() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
-            Asset asset = new Asset();
-            asset.setId(1L);
-
-            Category category = new Category();
-            category.setId(1L);
-            category.setName("name");
-            category.setTechnicalName("technicalName");
-            category.setImage(asset);
-
-            CategoryParameter categoryParameter = new CategoryParameter();
-            categoryParameter.setKey("key");
-            categoryParameter.setValue("value");
-            categoryParameter.setDataType(DataTypeEnum.TEXT);
-            categoryParameter.setExport(true);
-            categoryParameter.setDescription("description");
-            categoryParameter.setCategory(category);
+            CategoryParameter categoryParameter = getCategoryParameter();
 
             mocked.when(() -> IdUtils.encrypt(1L))
-                    .thenReturn("encrypted");
+                .thenReturn("encrypted");
 
-            CategoryParameterResponseDto actual = categoryMapper.toCategoryParameterWithHiddenValuesDTO(categoryParameter);
+            CategoryParameterResponseDto actual =
+                categoryMapper.toCategoryParameterWithHiddenValuesDto(categoryParameter);
 
             assertThat(actual.getKey()).isEqualTo("key");
             assertThat(actual.getValue()).isEqualTo("value");
@@ -178,5 +134,47 @@ class CategoryMapperTest {
             assertThat(actual.getDescription()).isEqualTo("description");
             assertThat(actual.getCategory()).isNull();
         }
+    }
+
+    @NotNull
+    private static Category getCategory() {
+        CategoryParameter categoryParameter = new CategoryParameter();
+        categoryParameter.setKey("key");
+
+        Asset asset = new Asset();
+        asset.setId(1L);
+
+        Widget widget = new Widget();
+        widget.setId(1L);
+
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("name");
+        category.setTechnicalName("technicalName");
+        category.setImage(asset);
+        category.setWidgets(Collections.singleton(widget));
+        category.setConfigurations(Collections.singleton(categoryParameter));
+        return category;
+    }
+    
+    @NotNull
+    private static CategoryParameter getCategoryParameter() {
+        Asset asset = new Asset();
+        asset.setId(1L);
+
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("name");
+        category.setTechnicalName("technicalName");
+        category.setImage(asset);
+
+        CategoryParameter categoryParameter = new CategoryParameter();
+        categoryParameter.setKey("key");
+        categoryParameter.setValue("value");
+        categoryParameter.setDataType(DataTypeEnum.TEXT);
+        categoryParameter.setExport(true);
+        categoryParameter.setDescription("description");
+        categoryParameter.setCategory(category);
+        return categoryParameter;
     }
 }

@@ -18,21 +18,19 @@
 
 package com.michelin.suricate.services.cache;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.concurrent.Callable;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CacheServiceTest {
@@ -51,11 +49,11 @@ class CacheServiceTest {
     @Test
     void shouldClearAllCaches() {
         when(cacheManager.getCacheNames())
-                .thenReturn(Arrays.asList("cache", "cacheTwo"));
+            .thenReturn(Arrays.asList("cache", "cacheTwo"));
 
         when(cacheManager.getCache(any()))
-                .thenReturn(cache)
-                .thenReturn(cacheTwo);
+            .thenReturn(cache)
+            .thenReturn(cacheTwo);
 
         cacheService.clearAllCache();
 
@@ -66,7 +64,7 @@ class CacheServiceTest {
     @Test
     void shouldClearCache() {
         when(cacheManager.getCache(any()))
-                .thenReturn(cache);
+            .thenReturn(cache);
 
         cacheService.clearCache("cache");
 
@@ -76,7 +74,7 @@ class CacheServiceTest {
     @Test
     void shouldNotClearCacheIfEmpty() {
         when(cacheManager.getCache(any()))
-                .thenReturn(null);
+            .thenReturn(null);
 
         cacheService.clearCache("cache");
 

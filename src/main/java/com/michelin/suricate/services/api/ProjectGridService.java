@@ -1,21 +1,23 @@
 package com.michelin.suricate.services.api;
 
-import com.michelin.suricate.model.entities.Project;
-import com.michelin.suricate.model.entities.ProjectGrid;
-import com.michelin.suricate.repositories.ProjectGridRepository;
-import com.michelin.suricate.repositories.ProjectRepository;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
-import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridRequestDto;
 import com.michelin.suricate.model.dto.websocket.UpdateEvent;
+import com.michelin.suricate.model.entities.Project;
+import com.michelin.suricate.model.entities.ProjectGrid;
 import com.michelin.suricate.model.enums.UpdateType;
+import com.michelin.suricate.repositories.ProjectGridRepository;
+import com.michelin.suricate.repositories.ProjectRepository;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
+import com.michelin.suricate.services.websocket.DashboardWebSocketService;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
+/**
+ * Project grid service.
+ */
 @Service
 public class ProjectGridService {
     @Autowired
@@ -31,7 +33,8 @@ public class ProjectGridService {
     private ProjectGridRepository projectGridRepository;
 
     /**
-     * Get a project grid by the id
+     * Get a project grid by the id.
+     *
      * @param id The id of the project grid
      * @return The project grid associated
      */
@@ -41,8 +44,9 @@ public class ProjectGridService {
     }
 
     /**
-     * Find a grid by id and project token
-     * @param id The ID
+     * Find a grid by id and project token.
+     *
+     * @param id    The ID
      * @param token The project token
      * @return The grid
      */
@@ -52,7 +56,7 @@ public class ProjectGridService {
     }
 
     /**
-     * Persist a given project grid
+     * Persist a given project grid.
      *
      * @param projectGrid The grid
      */
@@ -62,9 +66,9 @@ public class ProjectGridService {
     }
 
     /**
-     * Persist a given list of project grids
+     * Persist a given list of project grids.
      *
-     * @param project The project to update
+     * @param project               The project to update
      * @param projectGridRequestDto The new data as DTO
      */
     @Transactional
@@ -75,9 +79,9 @@ public class ProjectGridService {
 
         project.getGrids().forEach(projectGrid -> {
             Optional<ProjectGridRequestDto.GridRequestDto> gridRequestDtoOptional = projectGridRequestDto.getGrids()
-                    .stream()
-                    .filter(dto -> dto.getId().equals(projectGrid.getId()))
-                    .findFirst();
+                .stream()
+                .filter(dto -> dto.getId().equals(projectGrid.getId()))
+                .findFirst();
 
             gridRequestDtoOptional.ifPresent(gridRequestDto -> projectGrid.setTime(gridRequestDto.getTime()));
         });
@@ -86,9 +90,10 @@ public class ProjectGridService {
     }
 
     /**
-     * Delete a grid by project id and id
+     * Delete a grid by project id and id.
+     *
      * @param project The project
-     * @param id The grid id
+     * @param id      The grid id
      */
     @Transactional
     public void deleteByProjectIdAndId(Project project, Long id) {
@@ -98,14 +103,14 @@ public class ProjectGridService {
             ProjectGrid projectGrid = projectGridOptional.get();
 
             if (!projectGrid.getWidgets().isEmpty()) {
-                ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetsExecutionByGrid(projectGrid);
+                ctx.getBean(JsExecutionScheduler.class).cancelWidgetsExecutionByGrid(projectGrid);
             }
 
             projectGridRepository.deleteByProjectIdAndId(project.getId(), id);
 
             UpdateEvent updateEvent = UpdateEvent.builder()
-                    .type(UpdateType.REFRESH_DASHBOARD)
-                    .build();
+                .type(UpdateType.REFRESH_DASHBOARD)
+                .build();
 
             dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
         }

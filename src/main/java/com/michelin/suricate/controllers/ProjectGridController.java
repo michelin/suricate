@@ -18,8 +18,9 @@
 
 package com.michelin.suricate.controllers;
 
+import static com.michelin.suricate.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
+
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
-import com.michelin.suricate.services.mapper.ProjectGridMapper;
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridRequestDto;
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridResponseDto;
 import com.michelin.suricate.model.entities.Project;
@@ -28,6 +29,7 @@ import com.michelin.suricate.model.enums.ApiErrorEnum;
 import com.michelin.suricate.security.LocalUser;
 import com.michelin.suricate.services.api.ProjectGridService;
 import com.michelin.suricate.services.api.ProjectService;
+import com.michelin.suricate.services.mapper.ProjectGridMapper;
 import com.michelin.suricate.utils.exceptions.ApiException;
 import com.michelin.suricate.utils.exceptions.GridNotFoundException;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
@@ -38,19 +40,22 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
-
-import static com.michelin.suricate.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Project Grid controller
+ * Project grid controller.
  */
 @RestController
 @RequestMapping("/api")
@@ -66,27 +71,32 @@ public class ProjectGridController {
     private ProjectGridMapper projectGridMapper;
 
     /**
-     * Add a new grid to a project
+     * Add a new grid to a project.
+     *
      * @param connectedUser  The authentication entity
      * @param gridRequestDto The grid to add
      * @return The saved grid
      */
     @Operation(summary = "Create a new grid")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "404", description = "Current user not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "Current user not found", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PostMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectGridResponseDto> create(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
-                                                         @Parameter(name = "projectToken", description = "The project token", required = true)
-                                                         @PathVariable("projectToken") String projectToken,
-                                                         @Parameter(name = "projectGridRequestDto", description = "The project grid information", required = true)
-                                                         @RequestBody ProjectGridRequestDto.GridRequestDto gridRequestDto) {
+    public ResponseEntity<ProjectGridResponseDto> create(
+        @Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
+        @Parameter(name = "projectToken", description = "The project token", required = true)
+        @PathVariable("projectToken") String projectToken,
+        @Parameter(name = "projectGridRequestDto", description = "The project grid information", required = true)
+        @RequestBody ProjectGridRequestDto.GridRequestDto gridRequestDto) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
-        if (!projectOptional.isPresent()) {
+        if (projectOptional.isEmpty()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
@@ -95,38 +105,45 @@ public class ProjectGridController {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        ProjectGrid projectGrid = projectGridService.create(projectGridMapper.toProjectGridEntity(gridRequestDto, project));
+        ProjectGrid projectGrid =
+            projectGridService.create(projectGridMapper.toProjectGridEntity(gridRequestDto, project));
 
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectGridMapper.toProjectGridDTO(projectGrid));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectGridMapper.toProjectGridDto(projectGrid));
     }
 
     /**
-     * Update an existing project
-     * @param connectedUser      The connected user
-     * @param projectToken       The project token to update
-     * @param projectRequestDto  The project grids information to update
+     * Update an existing project.
+     *
+     * @param connectedUser     The connected user
+     * @param projectToken      The project token to update
+     * @param projectRequestDto The project grids information to update
      * @return The project updated
      */
     @Operation(summary = "Update an existing project by the project token")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Project updated"),
-            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "404", description = "Project not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "404", description = "Grid not found for the project", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "204", description = "Project updated"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "Project not found", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "Grid not found for the project", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectGrids(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
-                                                   @Parameter(name = "projectToken", description = "The project token", required = true)
-                                                   @PathVariable("projectToken") String projectToken,
-                                                   @Parameter(name = "projectResponseDto", description = "The project information", required = true)
-                                                   @RequestBody ProjectGridRequestDto projectRequestDto) {
+    public ResponseEntity<Void> updateProjectGrids(
+        @Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
+        @Parameter(name = "projectToken", description = "The project token", required = true)
+        @PathVariable("projectToken") String projectToken,
+        @Parameter(name = "projectResponseDto", description = "The project information", required = true)
+        @RequestBody ProjectGridRequestDto projectRequestDto) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
-        if (!projectOptional.isPresent()) {
+        if (projectOptional.isEmpty()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
@@ -148,29 +165,35 @@ public class ProjectGridController {
     }
 
     /**
-     * Delete a given grid of a project
-     * @param connectedUser  The connected user
-     * @param projectToken   The project token to delete
-     * @param gridId         The grid id
+     * Delete a given grid of a project.
+     *
+     * @param connectedUser The connected user
+     * @param projectToken  The project token to delete
+     * @param gridId        The grid id
      * @return A void response entity
      */
     @Operation(summary = "Delete a grid by the grid id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Project deleted"),
-            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "404", description = "Project not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "404", description = "Grid not found for the project", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "204", description = "Project deleted"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "Project not found", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "Grid not found for the project", content = {
+            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @DeleteMapping(value = "/v1/projectGrids/{projectToken}/{gridId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteGridById(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
-                                               @Parameter(name = "projectToken", description = "The project token", required = true)
-                                               @PathVariable("projectToken") String projectToken,
-                                               @Parameter(name = "gridId", description = "The grid id", required = true, example = "1")
-                                               @PathVariable("gridId") Long gridId) {
+    public ResponseEntity<Void> deleteGridById(
+        @Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
+        @Parameter(name = "projectToken", description = "The project token", required = true)
+        @PathVariable("projectToken") String projectToken,
+        @Parameter(name = "gridId", description = "The grid id", required = true, example = "1")
+        @PathVariable("gridId") Long gridId) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
-        if (!projectOptional.isPresent()) {
+        if (projectOptional.isEmpty()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 

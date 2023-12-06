@@ -16,17 +16,20 @@
 
 package com.michelin.suricate.utils;
 
+import java.util.Collection;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collection;
-
+/**
+ * Utils class used to hide widget properties from logs.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ToStringUtils {
-    private ToStringUtils() { }
-
     /**
-     * Hide the widget properties from the given logs
+     * Hide the widget properties from the given logs.
      *
-     * @param outputLogs The logs to clear
+     * @param outputLogs             The logs to clear
      * @param widgetPropertiesValues The widget properties values to hide
      * @return The cleared logs without widget properties
      */
@@ -37,7 +40,7 @@ public final class ToStringUtils {
             for (String widgetPropertiesValue : widgetPropertiesValues) {
                 if (widgetPropertiesValue != null) {
                     clearedLogs = clearedLogs.replaceAll(widgetPropertiesValue,
-                            StringUtils.leftPad(StringUtils.EMPTY, widgetPropertiesValue.length(), "*"));
+                        StringUtils.leftPad(StringUtils.EMPTY, widgetPropertiesValue.length(), "*"));
                 }
             }
         }

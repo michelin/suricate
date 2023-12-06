@@ -4,20 +4,23 @@ import com.michelin.suricate.model.entities.PersonalAccessToken;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.repositories.PersonalAccessTokenRepository;
 import com.michelin.suricate.security.LocalUser;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Personal access token service.
+ */
 @Service
 public class PersonalAccessTokenService {
     @Autowired
     private PersonalAccessTokenRepository personalAccessTokenRepository;
 
     /**
-     * Get all user tokens
+     * Get all user tokens.
+     *
      * @param user The user
      * @return The user tokens
      */
@@ -27,7 +30,8 @@ public class PersonalAccessTokenService {
     }
 
     /**
-     * Find a token by given name and user
+     * Find a token by given name and user.
+     *
      * @param name The token name
      * @param user The user
      * @return The token
@@ -38,7 +42,8 @@ public class PersonalAccessTokenService {
     }
 
     /**
-     * Find a token by given checksum
+     * Find a token by given checksum.
+     *
      * @param checksum The token checksum
      * @return The token
      */
@@ -48,9 +53,10 @@ public class PersonalAccessTokenService {
     }
 
     /**
-     * Create a JWT token
-     * @param tokenName The token name
-     * @param checksum The token checksum
+     * Create a JWT token.
+     *
+     * @param tokenName     The token name
+     * @param checksum      The token checksum
      * @param connectedUser The authenticated user
      */
     @Transactional
@@ -64,7 +70,8 @@ public class PersonalAccessTokenService {
     }
 
     /**
-     * Delete a token by id
+     * Delete a token by id.
+     *
      * @param id The token id
      */
     public void deleteById(Long id) {

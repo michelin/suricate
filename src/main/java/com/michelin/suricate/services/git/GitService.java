@@ -17,18 +17,22 @@
 package com.michelin.suricate.services.git;
 
 import com.michelin.suricate.model.entities.Category;
-import com.michelin.suricate.properties.ApplicationProperties;
-import com.michelin.suricate.services.api.LibraryService;
-import com.michelin.suricate.services.cache.CacheService;
-import com.michelin.suricate.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
-import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.model.entities.Library;
 import com.michelin.suricate.model.entities.Repository;
 import com.michelin.suricate.model.enums.RepositoryTypeEnum;
+import com.michelin.suricate.properties.ApplicationProperties;
 import com.michelin.suricate.services.api.CategoryService;
+import com.michelin.suricate.services.api.LibraryService;
 import com.michelin.suricate.services.api.RepositoryService;
 import com.michelin.suricate.services.api.WidgetService;
+import com.michelin.suricate.services.cache.CacheService;
+import com.michelin.suricate.services.js.scheduler.JsExecutionScheduler;
+import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.utils.WidgetUtils;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,17 +45,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Git repository service.
+ */
 @Slf4j
 @Service
 public class GitService {
     @Autowired
-    private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+    private JsExecutionScheduler jsExecutionScheduler;
 
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -75,7 +76,7 @@ public class GitService {
     private CacheService cacheService;
 
     /**
-     * Update widgets from the full list of git repositories asynchronously
+     * Update widgets from the full list of git repositories asynchronously.
      */
     @Async
     @Transactional
@@ -88,7 +89,7 @@ public class GitService {
     }
 
     /**
-     * Update widgets from the full list of git repositories
+     * Update widgets from the full list of git repositories.
      */
     @Transactional
     public void updateWidgetFromEnabledGitRepositories() throws GitAPIException, IOException {
@@ -99,8 +100,9 @@ public class GitService {
             return;
         }
 
-        Optional<List<Repository>> optionalRepositories = repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
-        if (!optionalRepositories.isPresent()) {
+        Optional<List<Repository>> optionalRepositories =
+            repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        if (optionalRepositories.isEmpty()) {
             log.info("No remote or local repository found");
             return;
         }
@@ -109,7 +111,7 @@ public class GitService {
     }
 
     /**
-     * Clone and update the widgets from the given list of repositories
+     * Clone and update the widgets from the given list of repositories.
      */
     @Transactional
     public void readWidgetRepositories(final List<Repository> repositories) throws GitAPIException, IOException {
@@ -121,13 +123,13 @@ public class GitService {
                     updateWidgetsFromRepositoryFolder(new File(repository.getLocalPath()), true, repository);
                 } else {
                     File remoteFolder = cloneRemoteRepository(repository.getUrl(), repository.getBranch(),
-                            repository.getLogin(), repository.getPassword());
+                        repository.getLogin(), repository.getPassword());
 
                     updateWidgetsFromRepositoryFolder(remoteFolder, false, repository);
                 }
             }
         } finally {
-            nashornWidgetScheduler.init();
+            jsExecutionScheduler.init();
             dashboardWebSocketService.reloadAllConnectedClientsToAllProjects();
         }
     }
@@ -141,10 +143,12 @@ public class GitService {
      * @param password The password of the git repo
      * @return File object on local repo
      */
-    public File cloneRemoteRepository(String url, String branch, String login, String password) throws IOException, GitAPIException {
+    public File cloneRemoteRepository(String url, String branch, String login, String password)
+        throws IOException, GitAPIException {
         log.info("Cloning the branch {} of the remote repository {}", branch, url);
 
-        File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()), new File(applicationProperties.getWidgets().getCloneDir()));
+        File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()),
+            new File(applicationProperties.getWidgets().getCloneDir()));
 
         if (localRepository.exists()) {
             FileUtils.deleteQuietly(localRepository);
@@ -152,9 +156,8 @@ public class GitService {
 
         localRepository.mkdirs();
 
-        String remoteRepository = new URL(url).toExternalForm();
         CloneCommand cloneCmd = Git.cloneRepository()
-            .setURI(remoteRepository)
+            .setURI(url)
             .setBranch(branch)
             .setDirectory(localRepository);
 
@@ -163,9 +166,11 @@ public class GitService {
         }
 
         try (Git git = cloneCmd.call()) {
-            log.info("The branch {} from the remote repository {} was successfully cloned", git.getRepository().getBranch(), url);
+            log.info("The branch {} from the remote repository {} was successfully cloned",
+                git.getRepository().getBranch(), url);
         } catch (Exception e) {
-            log.error("An error has occurred while trying to clone the branch {} of the remote repository {}", branch, url, e);
+            log.error("An error has occurred while trying to clone the branch {} of the remote repository {}", branch,
+                url, e);
             FileUtils.deleteQuietly(localRepository);
             throw e;
         }
@@ -174,28 +179,29 @@ public class GitService {
     }
 
     /**
-     * Update the widget in database from cloned folder
+     * Update the widget in database from cloned folder.
      *
      * @param folder            The folder to process
      * @param isLocalRepository True if the folder come from local repository, false if it's a remote repo
      * @param repository        The repository
      */
-    private void updateWidgetsFromRepositoryFolder(File folder, boolean isLocalRepository, final Repository repository) throws IOException {
+    private void updateWidgetsFromRepositoryFolder(File folder, boolean isLocalRepository, final Repository repository)
+        throws IOException {
         if (folder != null) {
             try {
                 List<Library> libraries = WidgetUtils
-                        .parseLibraryFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
-                                + File.separator
-                                + "libraries"
-                                + File.separator));
+                    .parseLibraryFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
+                        + File.separator
+                        + "libraries"
+                        + File.separator));
 
                 final List<Library> allLibraries = libraryService.createUpdateLibraries(libraries);
 
                 List<Category> categories = WidgetUtils
-                        .parseCategoriesFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
-                                + File.separator
-                                + "content"
-                                + File.separator));
+                    .parseCategoriesFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
+                        + File.separator
+                        + "content"
+                        + File.separator));
 
                 categories.forEach(category -> {
                     categoryService.addOrUpdateCategory(category);

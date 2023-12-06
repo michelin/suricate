@@ -55,7 +55,7 @@ export interface AccessTokenDecoded {
   /**
    * The list of roles of the user
    */
-  authorities: RoleEnum[];
+  roles: RoleEnum[];
 
   /**
    * The expiration date as long

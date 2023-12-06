@@ -121,7 +121,7 @@ export class AuthenticationService {
    */
   public static isAdmin(): boolean {
     const token = AuthenticationService.decodeAccessToken();
-    return token.authorities && token.authorities.includes(RoleEnum.ROLE_ADMIN);
+    return token.roles && token.roles.includes(RoleEnum.ROLE_ADMIN);
   }
 
   /**
@@ -145,8 +145,8 @@ export class AuthenticationService {
     user.avatarUrl = decodedToken.avatar_url;
     user.mode = decodedToken.mode;
 
-    if (decodedToken.authorities) {
-      user.roles = decodedToken.authorities.map((roleEnum: RoleEnum) => {
+    if (decodedToken.roles) {
+      user.roles = decodedToken.roles.map((roleEnum: RoleEnum) => {
         const role = new Role();
         role.name = roleEnum;
         return role;

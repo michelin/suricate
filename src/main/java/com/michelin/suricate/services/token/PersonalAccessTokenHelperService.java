@@ -2,14 +2,16 @@ package com.michelin.suricate.services.token;
 
 import com.michelin.suricate.properties.ApplicationProperties;
 import io.seruco.encoding.base62.Base62;
+import java.security.SecureRandom;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
-
+/**
+ * Personal access token helper service.
+ */
 @Slf4j
 @Service
 public class PersonalAccessTokenHelperService {
@@ -17,7 +19,8 @@ public class PersonalAccessTokenHelperService {
     private ApplicationProperties applicationProperties;
 
     /**
-     * Create personal access token
+     * Create personal access token.
+     *
      * @return A random string
      */
     public String createPersonalAccessToken() {
@@ -32,27 +35,30 @@ public class PersonalAccessTokenHelperService {
     }
 
     /**
-     * Compute the checksum of the personal access token
+     * Compute the checksum of the personal access token.
+     *
      * @param personalAccessToken The personal access token
      * @return The checksum
      */
     public Long computePersonAccessTokenChecksum(String personalAccessToken) {
         Checksum crc32 = new CRC32();
         crc32.update(applicationProperties.getAuthentication().getPat().getChecksumSecret().getBytes(),
-                0, applicationProperties.getAuthentication().getPat().getChecksumSecret().length());
+            0, applicationProperties.getAuthentication().getPat().getChecksumSecret().length());
 
         crc32.update(personalAccessToken.getBytes(), 0, personalAccessToken.length());
         return crc32.getValue();
     }
 
     /**
-     * Validate a given personal access token
+     * Validate a given personal access token.
+     *
      * @param personalAccessToken The personal access token
      * @return true if it is valid
      */
     public boolean validateToken(String personalAccessToken) {
         String[] splitPersonalAccessToken = personalAccessToken.split("_");
-        if (splitPersonalAccessToken.length != 2 || !splitPersonalAccessToken[0].equals(applicationProperties.getAuthentication().getPat().getPrefix())) {
+        if (splitPersonalAccessToken.length != 2
+            || !splitPersonalAccessToken[0].equals(applicationProperties.getAuthentication().getPat().getPrefix())) {
             log.error("Invalid personal access token format");
             return false;
         }
