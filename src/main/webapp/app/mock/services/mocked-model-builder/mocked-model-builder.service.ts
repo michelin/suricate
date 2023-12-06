@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../../shared/models/frontend/wizard/wizard-configuration';
 import { FormStep } from '../../../shared/models/frontend/form/form-step';
 import { IconEnum } from '../../../shared/enums/icon.enum';
@@ -10,8 +10,8 @@ import { GridProperties } from '../../../shared/models/backend/project/grid-prop
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetPosition } from '../../../shared/models/backend/project-widget/project-widget-position';
 import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
-import { NgGridItemConfig } from 'angular2-grid';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
+import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class MockedModelBuilderService {
    *
    * @param formBuilder The form builder
    */
-  constructor(private readonly formBuilder: FormBuilder) {}
+  constructor(private readonly formBuilder: UntypedFormBuilder) {}
 
   /**
    * Build a mocked project object for the unit tests
@@ -74,11 +74,11 @@ export class MockedModelBuilderService {
    *
    * @param type The type of the field to control
    */
-  public buildMockedFormGroup(type: DataTypeEnum): FormGroup {
+  public buildMockedFormGroup(type: DataTypeEnum): UntypedFormGroup {
     const customField = this.buildMockedFormField(type);
 
-    const formGroup: FormGroup = this.formBuilder.group({});
-    formGroup.addControl(customField.key, new FormControl(customField.value));
+    const formGroup: UntypedFormGroup = this.formBuilder.group({});
+    formGroup.addControl(customField.key, new UntypedFormControl(customField.value));
 
     return formGroup;
   }
@@ -88,8 +88,8 @@ export class MockedModelBuilderService {
    *
    * @param type The type of the field to control
    */
-  public buildMockedFormArray(type: DataTypeEnum): FormArray {
-    return this.buildMockedFormGroup(type).controls[this.buildMockedFormField(type).key] as FormArray;
+  public buildMockedFormArray(type: DataTypeEnum): UntypedFormArray {
+    return this.buildMockedFormGroup(type).controls[this.buildMockedFormField(type).key] as UntypedFormArray;
   }
 
   /**
@@ -141,14 +141,16 @@ export class MockedModelBuilderService {
   }
 
   /**
-   * Build a mocked gridItemConfig for the unit tests
+   * Build a mocked gridOptions for the unit tests
    */
-  public buildGridStackItem(): NgGridItemConfig {
+  public buildGridOptions(): GridOptions {
     return {
-      col: 0,
-      row: 0,
-      sizey: 50,
-      sizex: 50
-    };
+      cols: 5,
+      rowHeight: 300,
+      gap: 10,
+      draggable: true,
+      resizable: true,
+      compactType: 'vertical'
+    }
   }
 }

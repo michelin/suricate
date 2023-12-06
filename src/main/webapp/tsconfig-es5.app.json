@@ -1,7 +1,0 @@
-{
-  "extends": "../../../tsconfig.json",
-  "compilerOptions": {
-    "target": "es5"
-  },
-  "include": ["src/main/webapp/**/*.d.ts"]
-}

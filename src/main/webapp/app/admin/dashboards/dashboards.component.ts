@@ -22,8 +22,12 @@ import { HttpProjectService } from '../../shared/services/backend/http-project/h
 import { ProjectRequest } from '../../shared/models/backend/project/project-request';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { FormField } from '../../shared/models/frontend/form/form-field';
-import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import {
+  ProjectFormFieldsService
+} from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
+import {
+  ProjectUsersFormFieldsService
+} from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -109,18 +113,21 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
           icon: IconEnum.USERS,
           tooltip: { message: 'user.edit' },
           color: 'primary',
+          variant: 'miniFab',
           callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project)
         },
         {
           icon: IconEnum.EDIT,
           tooltip: { message: 'dashboard.edit' },
           color: 'primary',
+          variant: 'miniFab',
           callback: (event: Event, project: Project) => this.openFormSidenav(event, project)
         },
         {
           icon: IconEnum.DELETE,
           tooltip: { message: 'dashboard.delete' },
           color: 'warn',
+          variant: 'miniFab',
           callback: (event: Event, project: Project) => this.deleteProject(event, project)
         }
       ]

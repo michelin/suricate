@@ -16,9 +16,9 @@
 
 import { WidgetHtmlDirective } from './widget-html.directive';
 import { TestBed } from '@angular/core/testing';
-import { MockModule } from '../../mock/mock.module';
+import { MockModule } from '../../../mock/mock.module';
 
-describe('WidgetJsScriptsDirective', () => {
+describe('WidgetHtmlDirective', () => {
   let directive: WidgetHtmlDirective;
 
   beforeEach(() => {

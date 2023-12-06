@@ -15,9 +15,9 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, flatMap } from 'rxjs/operators';
+import { catchError, mergeMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
@@ -30,9 +30,13 @@ import { FormService } from '../../../shared/services/frontend/form/form.service
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
-import { RegisterFormFieldsService } from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
+import {
+  RegisterFormFieldsService
+} from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import {
+  HttpConfigurationService
+} from '../../../shared/services/backend/http-configuration/http-configuration.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 /**
@@ -47,7 +51,7 @@ export class RegisterComponent implements OnInit {
   /**
    * The register form
    */
-  public registerForm: FormGroup;
+  public registerForm: UntypedFormGroup;
 
   /**
    * The description of the form
@@ -115,21 +119,21 @@ export class RegisterComponent implements OnInit {
       this.authenticationService
         .signup(userRequest)
         .pipe(
-          flatMap(() => {
+          mergeMap(() => {
             const credentials: Credentials = { username: userRequest.username, password: userRequest.password };
             return this.authenticationService.authenticate(credentials);
           }),
           catchError(error => {
-            return throwError(error);
+            return throwError(() => error);
           })
         )
-        .subscribe(
-          () => this.navigateToHomePage(),
-          (error: HttpErrorResponse) => {
-            this.loading = false;
-            this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
-          }
-        );
+        .subscribe({
+            next: () => this.navigateToHomePage(),
+            error: (error: HttpErrorResponse) => {
+              this.loading = false;
+              this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
+            }
+      });
     } else {
       this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);
     }

@@ -17,11 +17,13 @@
 import { Injectable } from '@angular/core';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
 import { FormService } from '../../form/form.service';
-import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import {
+  ProjectWidgetFormStepsService
+} from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { CategoryParameter } from '../../../../models/backend/category-parameters/category-parameter';
 
 /**
@@ -102,7 +104,7 @@ export class WidgetConfigurationFormFieldsService {
         type: configuration.dataType,
         value: backendConfigValue ? backendConfigValue : configuration.value,
         iconPrefix: IconEnum.VALUE,
-        iconSuffix: IconEnum.SHOW_PASSWORD,
+        iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
         validators: [Validators.required]
       });
     });
@@ -122,7 +124,7 @@ export class WidgetConfigurationFormFieldsService {
   public addOrRemoveCategoryParametersFormFields(
     categorySettings: CategoryParameter[],
     checked: boolean,
-    formGroup: FormGroup,
+    formGroup: UntypedFormGroup,
     fields: FormField[],
     widgetBackendConfig?: string
   ): void {

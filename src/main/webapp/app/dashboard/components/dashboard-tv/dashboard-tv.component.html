@@ -2,16 +2,14 @@
   <div
     *ngIf="!project || !projectWidgetsByGrid; else dashboardScreen"
     class="container without-header"
-    fxLayout="column"
-    fxLayoutAlign="center center"
   >
-    <div class="wrapper mat-elevation-z12" fxLayout="column" fxLayoutAlign="center center" fxFlex="400px">
+    <div class="wrapper mat-elevation-z12">
       <div class="brand-image">
         <img src="../../../../../assets/images/logo.png" alt="brand image" />
       </div>
 
       <suricate-spinner *ngIf="isDashboardLoading" color="accent"></suricate-spinner>
-      <div *ngIf="!isDashboardLoading" id="screen-code-wrapper" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+      <div *ngIf="!isDashboardLoading" id="screen-code-wrapper">
         {{ screenCode }}
       </div>
     </div>
@@ -20,7 +18,8 @@
   <ng-template #dashboardScreen>
     <suricate-dashboard-screen
       *ngFor="let entry of projectWidgetsByGrid | keyvalue; let i = index"
-      [fxHide]="entry.key !== project.grids[rotationIndex].id"
+      hideAfterInit
+      [hide]="entry.key !== project.grids[rotationIndex].id"
       [project]="project"
       [projectWidgets]="entry.value"
       [screenCode]="screenCode"

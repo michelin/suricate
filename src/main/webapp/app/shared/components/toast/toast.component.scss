@@ -102,12 +102,19 @@
 
 .notification-body {
   & {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     height: 100%;
     font-size: 0.8em;
   }
 
   & > .icon-wrapper {
     & {
+      display: flex;
+      flex: 1 1 30%;
+      align-items: center;
+      justify-content: center;
       height: 100%;
       margin-right: 15px;
     }
@@ -121,6 +128,7 @@
 }
 
 .notification-content {
+  flex: 1 1 100%;
   justify-content: center;
 }
 

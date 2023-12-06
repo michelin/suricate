@@ -15,7 +15,7 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
+@use '@angular/material' as mat;
 
 .add-widget-grid {
   color: inherit;
@@ -45,20 +45,20 @@
     display: flex;
     list-style: none;
     width: 500px;
-    margin: 10px auto;
+    margin: 15px auto;
     justify-content: center;
 
     li {
-      background-color: mat-color($primary, 200);
+      background-color: mat.get-color-from-palette($primary, 200);
       cursor: pointer;
       width: 30px;
-      height: 3px;
-      margin-right: 3px;
-      margin-left: 3px;
+      height: 4px;
+      margin-right: 4px;
+      margin-left: 4px;
     }
 
     .indicator-selected {
-      background-color: mat-color($primary, 900);
+      background-color: mat.get-color-from-palette($primary, 900);
     }
   }
 }

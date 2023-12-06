@@ -1,4 +1,4 @@
-<div fxLayout="column wrap" class="input-wrapper" *ngIf="field.type !== dataType.FIELDS">
+<div class="input-wrapper" *ngIf="field.type !== dataType.FIELDS">
   <!------------------------------------------------------------------------------------------------------->
   <!---                        MAT FORM FIELDS/ERROR                                                    --->
   <!------------------------------------------------------------------------------------------------------->
@@ -47,7 +47,7 @@
     </ng-container>
 
     <!-- TEXT AREA INPUT -->
-    <ng-container *ngIf="field.type == dataType.TEXTAREA">
+    <ng-container *ngIf="field.type === dataType.TEXTAREA">
       <textarea
         matInput
         [id]="field.key"
@@ -55,7 +55,8 @@
         [formControl]="$any(getFormControl())"
         [required]="isRequired()"
         [readonly]="field.readOnly"
-        (input)="emitValueChange('inputChange')"></textarea>
+        (input)="emitValueChange('inputChange')"
+      ></textarea>
     </ng-container>
 
     <!-- SELECT INPUT -->
@@ -67,7 +68,7 @@
       [required]="isRequired()"
       (selectionChange)="emitValueChange('optionSelected')"
     >
-      <mat-option *ngIf="!isRequired() && field.type == dataType.COMBO" [value]="">None</mat-option>
+      <mat-option *ngIf="!isRequired() && field.type === dataType.COMBO" [value]="">None</mat-option>
       <mat-option *ngFor="let option of options" [value]="option.value">
         {{ option.label }}
       </mat-option>

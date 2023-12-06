@@ -1,7 +1,7 @@
-<div class="container without-header" fxLayout="column" fxLayoutAlign="center center">
-  <div class="wrapper mat-elevation-z12" fxLayout="column" fxLayoutAlign="center center">
+<div class="container without-header">
+  <div class="wrapper mat-elevation-z12">
     <div class="brand-image">
-      <img src="../../../../../assets/images/logo.png" alt="brand image" />
+      <img src='../../../../../assets/images/logo.png' alt="brand image" />
     </div>
 
     <suricate-spinner *ngIf="loading"></suricate-spinner>
@@ -9,13 +9,11 @@
     <form
       *ngIf="!loading && (isDatabaseAuthenticationActivated() || isLdapAuthenticationActivated())"
       class="login-form"
-      fxLayout="column"
-      fxLayoutAlign="center"
       [formGroup]="loginForm"
       (submit)="login()"
     >
       <suricate-input *ngFor="let field of formFields" [formGroup]="loginForm" [field]="field"> </suricate-input>
-      <suricate-buttons [configurations]="buttonConfigurations" fxLayout="row" fxLayoutAlign="center center"></suricate-buttons>
+      <suricate-buttons [configurations]="buttonConfigurations"></suricate-buttons>
       <p *ngIf="isDatabaseAuthenticationActivated()">
         {{ 'no.account.yet' | translate }}
         <a class="register-link" [routerLink]="['/register']">

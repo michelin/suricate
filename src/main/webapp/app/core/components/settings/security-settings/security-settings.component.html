@@ -1,18 +1,12 @@
-<div *ngIf="createdToken" class="created-token-container settings-container">
+<div *ngIf="createdToken" class="security-settings-container">
   <mat-card class="token-created">
-    <mat-card-title fxLayout="row">
-      <div fxLayout="row" fxLayoutGap="10px" fxFlex="100">
+    <mat-card-title>
         <mat-icon>done</mat-icon>
         <div>{{ 'settings.security.token.created.title' | translate: { tokenName: createdToken.name } }}</div>
-      </div>
     </mat-card-title>
 
     <mat-card-content>
-      <mat-card class="token-value-container">
-        <mat-card-content>
-          {{ createdToken.value }}
-        </mat-card-content>
-      </mat-card>
+      {{ createdToken.value }}
     </mat-card-content>
 
     <mat-card-actions>
@@ -24,10 +18,10 @@
   </mat-card>
 </div>
 
-<div *ngIf="formGroup" class="form-container settings-container" fxLayout="column">
+<div *ngIf="formGroup" class="form-container security-settings-container">
   <h2 class="little">{{ 'settings.security.generate.tokens.title' | translate }}</h2>
-  <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100">
-    <div fxLayout="column">
+  <div>
+    <div>
       <suricate-input *ngFor="let field of formFields" [formGroup]="formGroup" [field]="field"> </suricate-input>
     </div>
 
@@ -37,7 +31,7 @@
   </div>
 </div>
 
-<div class="settings-container">
+<div class="security-settings-container">
   <table mat-table [dataSource]="tokens" class="mat-elevation-z8">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>{{ 'settings.security.token.table.header.name' | translate }}</th>

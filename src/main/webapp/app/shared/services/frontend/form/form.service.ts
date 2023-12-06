@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 
 import { FormField } from '../../../models/frontend/form/form-field';
 import { FormStep } from '../../../models/frontend/form/form-step';
@@ -33,20 +33,20 @@ export class FormService {
    *
    * @param formBuilder The form builder service
    */
-  constructor(private readonly formBuilder: FormBuilder) {}
+  constructor(private readonly formBuilder: UntypedFormBuilder) {}
 
   /**
    * Validate the form
    *
    * @param formGroup The form to validate
    */
-  public validate(formGroup: FormGroup): void {
+  public validate(formGroup: UntypedFormGroup): void {
     Object.keys(formGroup.controls).forEach(field => {
       const control = formGroup.get(field);
 
-      if (control instanceof FormControl) {
+      if (control instanceof UntypedFormControl) {
         control.markAsTouched({ onlySelf: true });
-      } else if (control instanceof FormGroup) {
+      } else if (control instanceof UntypedFormGroup) {
         this.validate(control);
       }
     });
@@ -58,7 +58,7 @@ export class FormService {
    * @param steps The form steps to instantiate
    * @return The generated form group for the list of steps give in argument
    */
-  public generateFormGroupForSteps(steps: FormStep[]): FormGroup {
+  public generateFormGroupForSteps(steps: FormStep[]): UntypedFormGroup {
     const formGroup = this.formBuilder.group({});
 
     steps.forEach((step: FormStep) => {
@@ -74,7 +74,7 @@ export class FormService {
    * @param fields The form fields to instantiate
    * @return The generated form group for the list of fields give in argument
    */
-  public generateFormGroupForFields(fields: FormField[]): FormGroup {
+  public generateFormGroupForFields(fields: FormField[]): UntypedFormGroup {
     const formGroup = this.formBuilder.group({});
 
     if (fields) {
@@ -96,7 +96,7 @@ export class FormService {
    * @param form The form from which add the controls
    * @param fields The form fields to instantiate
    */
-  public addControlsToFormGroupForFields(form: FormGroup, fields: FormField[]): void {
+  public addControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
     if (fields) {
       fields.forEach(field => {
         if (field.type === DataTypeEnum.FIELDS) {
@@ -114,7 +114,7 @@ export class FormService {
    * @param form The form from which remove the controls
    * @param fields The form fields for which we want to remove the controls
    */
-  public removeControlsToFormGroupForFields(form: FormGroup, fields: FormField[]): void {
+  public removeControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
     if (fields) {
       fields.forEach(field => {
         form.removeControl(field.key);
@@ -127,7 +127,7 @@ export class FormService {
    *
    * @param field The parent field (with type equals to dataType.fields)
    */
-  private generateFormArrayForField(field: FormField): FormArray {
+  private generateFormArrayForField(field: FormField): UntypedFormArray {
     const formArray = this.formBuilder.array([]);
 
     if (field && field.fields && field.values) {
@@ -153,7 +153,7 @@ export class FormService {
    * @param value if we want to force the value
    * @return The form control that represent the field
    */
-  private generateFormControl(field: FormField, value?: string | number): FormControl {
+  private generateFormControl(field: FormField, value?: string | number): UntypedFormControl {
     return this.formBuilder.control(
       { value: value ? value : field.value, disabled: field.disabled },
       field.validators,

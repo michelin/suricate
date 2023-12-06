@@ -1,12 +1,12 @@
 <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
-<section class="container" fxLayout="column">
-  <div class="search-div" fxLayout="row">
-    <suricate-input [field]="searchBarConfig" [formGroup]="formGroup" (valueChangeEvent)="researchChangedEvent($event)" fxFlex="100%">
+<section class="container">
+  <div class="search-div">
+    <suricate-input [field]="searchBarConfig" [formGroup]="formGroup" (valueChangeEvent)="researchChangedEvent($event)">
     </suricate-input>
   </div>
 
-  <div class="list-wrapper" fxLayout="column">
+  <div class="list-wrapper">
     <ng-container *ngIf="isLoading">
       <suricate-spinner></suricate-spinner>
     </ng-container>
@@ -16,7 +16,6 @@
         cdkDropList
         [cdkDropListDisabled]="dragAndDropDisabled"
         class="list-container"
-        fxFlex="1 1 100%"
         (cdkDropListDropped)="onDropEvent($event)"
       >
         <div
@@ -24,23 +23,20 @@
           *ngFor="let object of objectsPaged.content"
           [ngClass]="{ 'list-item-show': listConfiguration.enableShowBean, 'drag-drop-item': !dragAndDropDisabled }"
           class="list-item"
-          fxLayout="row wrap"
           cdkDrag
           cdkDragBoundary=".list-container"
         >
-          <div *ngIf="getObjectImageURL(object)" class="list-image" fxFlex="20%" fxLayoutAlign="center center">
-            <img [src]="getObjectImageURL(object)" alt="Object image" fxFlex="0" fxGrow="0" />
+          <div *ngIf="getObjectImageURL(object)" class="list-image">
+            <img [src]="getObjectImageURL(object)" alt="Object image" />
           </div>
 
-          <div [fxFlex]="getDetailBlockSize(object)" class="list-detail" fxLayout="column wrap" fxLayoutAlign="center start">
+          <div class="list-detail">
             <h1>{{ getFirstLabel(object) }}</h1>
             <h2>{{ getSecondLabel(object) }}</h2>
             <h3>{{ getThirdLabel(object) }}</h3>
           </div>
 
-          <div *ngIf="listConfiguration.buttons" class="list-buttons" fxFlex="20%" fxLayout="row" fxLayoutAlign="end center">
-            <suricate-buttons [configurations]="listConfiguration.buttons" [object]="object"></suricate-buttons>
-          </div>
+          <suricate-buttons *ngIf="listConfiguration.buttons" class="list-buttons" [configurations]="listConfiguration.buttons" [object]="object"></suricate-buttons>
         </div>
       </div>
 

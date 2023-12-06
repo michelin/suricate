@@ -18,8 +18,12 @@
 
 :host {
   min-height: 100%;
+  display: flex;
 
   .form-sidenav-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 100%;
     padding: 15px 35px 35px 35px;
 
     h1 {
@@ -28,7 +32,19 @@
     }
 
     .settings-main-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 100%;
       margin-top: 20px;
+
+      div:first-child {
+        flex: 1 1 100%;
+      }
+    }
+
+    .sidenav-buttons {
+      display: flex;
+      gap: 10px;
     }
   }
 }

@@ -16,11 +16,13 @@
  *
  */
 
-import { Component, Injector, Input } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
-import { FormArray, FormGroup } from '@angular/forms';
-import { FormField } from '../../../models/frontend/form/form-field';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { IconEnum } from '../../../enums/icon.enum';
+import { ButtonConfiguration } from '../../../models/frontend/button/button-configuration';
 
 /**
  * Used to display fields of type Fields
@@ -30,14 +32,10 @@ import { DataTypeEnum } from '../../../enums/data-type.enum';
   templateUrl: './fields.component.html',
   styleUrls: ['./fields.component.scss']
 })
-export class FieldsComponent extends InputComponent {
-  /**
-   * The form array
-   * @type {FormArray}
-   * @public
-   */
+export class FieldsComponent extends InputComponent implements OnInit{
   @Input()
-  public formArray: FormArray;
+  public formArray: UntypedFormArray;
+  public deleteRowConfig: ButtonConfiguration<any>[];
 
   /**
    * Constructor
@@ -46,6 +44,17 @@ export class FieldsComponent extends InputComponent {
    */
   constructor(protected injector: Injector) {
     super(injector);
+  }
+
+  /**
+   * Called when the component is init
+   */
+  public ngOnInit(): void {
+    super.ngOnInit()
+
+    if (this.field.deleteRow) {
+      this.initDeleteRowConfiguration();
+    }
   }
 
   /**
@@ -68,9 +77,20 @@ export class FieldsComponent extends InputComponent {
    * @param innerFormGroup The form group that reflect the row
    * @param index The index of a the row in the parent form
    */
-  public deleteRow(innerFormGroup: FormGroup, index: number): void {
+  public deleteRow(innerFormGroup: UntypedFormGroup, index: number): void {
     this.field.deleteRow.callback(innerFormGroup.value[this.field.deleteRow.attribute]).subscribe(() => {
       this.formArray.removeAt(index);
     });
+  }
+
+  private initDeleteRowConfiguration(): void {
+    this.deleteRowConfig = [{
+        icon: IconEnum.DELETE,
+        color: 'warn',
+        variant: 'miniFab',
+        callback: (event: Event, object: { formGroup: UntypedFormGroup; index: number }) => {
+          this.deleteRow(object.formGroup, object.index)
+        }
+    }];
   }
 }

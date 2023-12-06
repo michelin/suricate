@@ -75,7 +75,7 @@ export class CatalogComponent extends ListComponent<Widget | WidgetRequest> {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'widget.list'
+      title: 'catalog'
     };
   }
 

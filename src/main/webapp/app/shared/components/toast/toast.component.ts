@@ -121,9 +121,9 @@ export class ToastComponent implements OnInit, OnDestroy {
   public message: ToastMessage;
 
   /**
-   * The current timer for @function {hideWithinTimeout} function
+   * The current timer timeout
    */
-  private hideTimer: NodeJS.Timer;
+  private timeout: NodeJS.Timeout;
 
   /**
    * The list of icons
@@ -186,13 +186,13 @@ export class ToastComponent implements OnInit, OnDestroy {
    * Hide the toast notification with timer
    */
   private hideWithinTimeout(): void {
-    this.hideTimer = global.setTimeout(() => this.hideToast(), 4000);
+    this.timeout = setTimeout(() => this.hideToast(), 4000);
   }
 
   /**
    * Clear the timer
    */
   private clearTimeout(): void {
-    clearTimeout(this.hideTimer);
+    clearTimeout(this.timeout);
   }
 }

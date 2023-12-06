@@ -18,14 +18,15 @@ import { Routes } from '@angular/router';
 
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
-import { AuthGuard } from '../shared/guards/auth/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { authGuard } from '../shared/guards/auth/auth.guard';
 
 export const coreRoutes: Routes = [
   {
     path: 'home',
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     component: HomeComponent
   },
   {
@@ -38,7 +39,8 @@ export const coreRoutes: Routes = [
   },
   {
     path: 'settings',
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     component: SettingsComponent
   }
 ];

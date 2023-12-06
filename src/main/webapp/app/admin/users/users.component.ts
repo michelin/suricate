@@ -21,7 +21,9 @@ import { Role } from '../../shared/models/backend/role/role';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { TitleCasePipe } from '@angular/common';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
-import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
+import {
+  UserFormFieldsService
+} from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
 
@@ -81,12 +83,14 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
           icon: IconEnum.EDIT,
           tooltip: { message: 'user.edit' },
           color: 'primary',
+          variant: 'miniFab',
           callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser.bind(this))
         },
         {
           icon: IconEnum.DELETE,
           tooltip: { message: 'user.delete' },
           color: 'warn',
+          variant: 'miniFab',
           callback: (event: Event, user: User) => this.deleteUser(event, user)
         }
       ]

@@ -14,37 +14,43 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
-import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
-import * as Stomp from '@stomp/stompjs';
 import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav.service';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
-import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import {
+  ProjectWidgetFormStepsService
+} from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
-import { WidgetConfigurationFormFieldsService } from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import { FormGroup } from '@angular/forms';
+import {
+  WidgetConfigurationFormFieldsService
+} from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { UntypedFormGroup } from '@angular/forms';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { Widget } from '../../../../shared/models/backend/widget/widget';
 import { WidgetStateEnum } from '../../../../shared/enums/widget-sate.enum';
 import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget.service';
-import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import {
+  HttpProjectWidgetService
+} from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket.service';
 import { LibraryService } from '../../../services/library/library.service';
-import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
+import {
+  SlideToggleButtonConfiguration
+} from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
+import { IMessage } from '@stomp/rx-stomp';
 
 /**
  * Display the grid stack widgets
@@ -62,13 +68,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public projectWidget: ProjectWidget;
 
   /**
-   * The grid item config
-   */
-  @Input()
-  public gridStackItem: NgGridItemConfig;
-
-  /**
-   * Tell if we are on
+   * Tell if the screen is in read only mode
    */
   @Input()
   public readOnly: boolean;
@@ -95,11 +95,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public widgetStateEnum = WidgetStateEnum;
 
   /**
-   * The configuration of this project widget on the grid
-   */
-  private startGridStackItem: NgGridItemConfig;
-
-  /**
    * Is the widget loading or not
    */
   public loading = true;
@@ -122,7 +117,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Constructor
    *
-   * @param elementRef A reference to the current element
    * @param translateService Front-End service used to manage translations
    * @param httpWidgetService Back-End service used to manage http calls for widgets
    * @param httpProjectWidgetService Back-End service used to manage http calls for project widgets
@@ -135,7 +129,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param libraryService Front-End service used to manage the libraries
    */
   constructor(
-    private readonly elementRef: ElementRef,
     private readonly translateService: TranslateService,
     private readonly httpWidgetService: HttpWidgetService,
     private readonly httpProjectWidgetService: HttpProjectWidgetService,
@@ -153,7 +146,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.initWebsocketConnectionForProjectWidget();
-    this.startGridStackItem = { ...this.gridStackItem };
 
     this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
       this.widget = widget;
@@ -181,7 +173,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     this.websocketService
       .watch(projectWidgetSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe((stompMessage: Stomp.Message) => {
+      .subscribe((stompMessage: IMessage) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         if (updateEvent.type === WebsocketUpdateTypeEnum.REFRESH_WIDGET) {
@@ -197,30 +189,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
       this.projectWidget = projectWidget;
     });
-  }
-
-  /**
-   * Register the new position of the element
-   *
-   * Keep track of the position to prevent the click when moving it
-   *
-   * @param gridItemEvent The grid item event
-   */
-  public registerNewPosition(gridItemEvent: NgGridItemEvent): void {
-    this.gridStackItem.col = gridItemEvent.col;
-    this.gridStackItem.row = gridItemEvent.row;
-    this.gridStackItem.sizey = gridItemEvent.sizey;
-    this.gridStackItem.sizex = gridItemEvent.sizex;
-  }
-
-  /**
-   * Disable click event if the item have been moved
-   * @param event The click event
-   */
-  public preventDefault(event: MouseEvent): void {
-    if (GridItemUtils.isItemHaveBeenMoved(this.startGridStackItem, this.gridStackItem)) {
-      event.preventDefault();
-    }
   }
 
   /**
@@ -289,7 +257,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
         categoryParameters.filter(categorySetting =>
           this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(categorySetting.key, this.projectWidget.backendConfig)
         ).length > 0,
-      slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
+      slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: UntypedFormGroup, formFields: FormField[]) =>
         this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
           categoryParameters,
           event.checked,

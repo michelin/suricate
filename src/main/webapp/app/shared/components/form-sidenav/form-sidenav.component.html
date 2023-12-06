@@ -1,4 +1,4 @@
-<div *ngIf="formGroup" class="form-sidenav-container" fxLayout="column" fxFlex="100%">
+<div *ngIf="formGroup" class="form-sidenav-container">
   <h1>{{ configuration.title | translate | uppercase }}</h1>
 
   <p *ngIf="configuration.noFieldsMessage && configuration.formFields.length === 0">{{ configuration.noFieldsMessage | translate }}</p>
@@ -11,8 +11,8 @@
   >
   </suricate-slide-toggle>
 
-  <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100" class="settings-main-container">
-    <div fxLayout="column">
+  <div class="settings-main-container">
+    <div>
       <suricate-input
         *ngFor="let field of configuration.formFields"
         [formGroup]="formGroup"
@@ -23,8 +23,6 @@
       </suricate-input>
     </div>
 
-    <div>
-      <suricate-buttons [configurations]="buttons"> </suricate-buttons>
-    </div>
+    <suricate-buttons class="sidenav-buttons" [configurations]="buttons"> </suricate-buttons>
   </div>
 </div>

@@ -15,7 +15,7 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
+@use '@angular/material' as mat;
 
 .communication-dialog-wrapper {
   height: 100%;
@@ -40,6 +40,6 @@
   $warn: map-get($theme, warn);
 
   .communication-dialog-wrapper .mat-dialog-content.communication-dialog-error {
-    color: mat-color($warn, 500);
+    color: mat.get-color-from-palette($warn, 500);
   }
 }

@@ -1,13 +1,9 @@
 <div
-  class="widget mat-elevation-z4"
+  class="widget"
   [ngClass]="widget?.technicalName + ' widget-' + projectWidget.id"
   [class.widget-disable-move-cursor]="readOnly"
-  [ngGridItem]="gridStackItem"
-  (onDragStop)="registerNewPosition($event)"
-  (click)="preventDefault($event)"
   (mouseenter)="displayButtons = true"
-  (mouseleave)="displayButtons = false"
->
+  (mouseleave)="displayButtons = false">
   <suricate-spinner *ngIf="loading" color="accent"></suricate-spinner>
 
   <ng-container *ngIf="!loading">
@@ -89,3 +85,4 @@
     </span>
   </ng-container>
 </div>
+

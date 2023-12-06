@@ -21,21 +21,29 @@
     padding-top: 10px;
   }
 
-  .titles {
-    display: inline-block;
-  }
+  .header-sub-container {
+    display: flex;
+    align-items: center;
 
-  .actions {
-    display: inline-block;
-    float: right;
+    .header-info {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
   }
 
   h2.header {
     font-weight: 300;
     font-variant: all-small-caps;
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     line-height: 1.4rem;
+    letter-spacing: 2px;
   }
 
   mat-divider {

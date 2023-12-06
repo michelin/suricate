@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
@@ -24,7 +24,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
   templateUrl: './slide-toggle.component.html',
   styleUrls: ['./slide-toggle.component.scss']
 })
-export class SlideToggleComponent implements OnInit {
+export class SlideToggleComponent {
   /**
    * The label of the slide toggle
    */
@@ -47,11 +47,6 @@ export class SlideToggleComponent implements OnInit {
    * Constructor
    */
   constructor() {}
-
-  /**
-   * Initialize the component
-   */
-  ngOnInit() {}
 
   /**
    * Trigger the event emitter when the slide toggle button is pressed

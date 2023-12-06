@@ -16,7 +16,7 @@
 
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
 import { FormService } from '../../services/frontend/form/form.service';
 import { FormStep } from '../../models/frontend/form/form-step';
@@ -93,7 +93,7 @@ export class WizardComponent implements OnInit {
   /**
    * Form group of the stepper
    */
-  private stepperFormGroup: FormGroup;
+  private stepperFormGroup: UntypedFormGroup;
 
   /**
    * The list of material icons
@@ -175,7 +175,7 @@ export class WizardComponent implements OnInit {
 
     if (this.currentStep && this.currentStep.asyncFields) {
       this.currentStep
-        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
+        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as UntypedFormGroup, this.currentStep)
         .subscribe((formFields: FormField[]) => {
           this.currentStep.fields = formFields;
           this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
@@ -203,7 +203,7 @@ export class WizardComponent implements OnInit {
     this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
       this.currentStep.category.categoryParameters,
       event.checked,
-      this.stepperFormGroup.controls[this.currentStep.key] as FormGroup,
+      this.stepperFormGroup.controls[this.currentStep.key] as UntypedFormGroup,
       this.currentStep.fields
     );
   }
@@ -255,8 +255,8 @@ export class WizardComponent implements OnInit {
    *
    * @param step The step
    */
-  public getFormGroupOfStep(step: FormStep): FormGroup {
-    return this.stepperFormGroup.controls[step.key] as FormGroup;
+  public getFormGroupOfStep(step: FormStep): UntypedFormGroup {
+    return this.stepperFormGroup.controls[step.key] as UntypedFormGroup;
   }
 
   /**

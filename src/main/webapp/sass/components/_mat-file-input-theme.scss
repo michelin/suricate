@@ -1,4 +1,4 @@
-/*
+/*!
  *  /*
  *  * Copyright 2012-2021 the original author or authors.
  *  *
@@ -15,21 +15,16 @@
  *  * limitations under the License.
  *
  */
+@use '../../../../../node_modules/@angular/material/index' as mat;
 
-/**
- * Hold the server application properties
- */
-export interface ApplicationProperties {
-  /**
-   * The key
-   */
-  key: string;
-  /**
-   * The value
-   */
-  value: string;
-  /**
-   * The description of the configuration
-   */
-  description: string;
+@mixin custom-file-input-component-theme($theme) {
+  $warn: map-get($theme, warn);
+
+  .file-input-button-error {
+    color: mat.get-color-from-palette($warn, 500) !important;
+  }
+
+  .file-input-error {
+    color: mat.get-color-from-palette($warn, 500);
+  }
 }

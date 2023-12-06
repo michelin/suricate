@@ -15,8 +15,6 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
-
 .input-wrapper {
   & {
     height: max-content;
@@ -44,12 +42,4 @@
 
 ::ng-deep .icon-prefix-tooltip {
   font-size: 12px;
-}
-
-@mixin file-component-theme($theme) {
-  $warn: map-get($theme, warn);
-
-  .input-error {
-    color: mat-color($warn, 500);
-  }
 }

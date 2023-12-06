@@ -18,8 +18,12 @@ import { Component, Injector } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
-import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
+import {
+  WidgetConfigurationFormFieldsService
+} from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import {
+  HttpCategoryParametersService
+} from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
 import { DataTypeEnum } from '../../shared/enums/data-type.enum';
 
@@ -31,11 +35,6 @@ import { DataTypeEnum } from '../../shared/enums/data-type.enum';
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
 export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
-  /**
-   * The item selected on the list
-   */
-  private configurationSelected: CategoryParameter;
-
   /**
    * Constructor
    *
@@ -97,6 +96,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
           icon: IconEnum.SHOW_PASSWORD,
           tooltip: { message: 'configuration.show.password' },
           color: 'primary',
+          variant: 'miniFab',
           hidden: (configuration: CategoryParameter) =>
             !configuration.value || configuration.dataType !== DataTypeEnum.PASSWORD || configuration.showValue,
           callback: (event: Event, configuration: CategoryParameter) => (configuration.showValue = true)
@@ -105,6 +105,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
           icon: IconEnum.HIDE_PASSWORD,
           tooltip: { message: 'configuration.hide.password' },
           color: 'primary',
+          variant: 'miniFab',
           hidden: (configuration: CategoryParameter) =>
             !configuration.value || configuration.dataType !== DataTypeEnum.PASSWORD || !configuration.showValue,
           callback: (event: Event, configuration: CategoryParameter) => (configuration.showValue = false)
@@ -113,6 +114,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
           icon: IconEnum.EDIT,
           tooltip: { message: 'configuration.edit' },
           color: 'primary',
+          variant: 'miniFab',
           callback: (event: Event, configuration: CategoryParameter) =>
             this.openFormSidenav(event, configuration, this.updateConfiguration.bind(this))
         },
@@ -120,6 +122,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
           icon: IconEnum.DELETE,
           tooltip: { message: 'configuration.delete' },
           color: 'warn',
+          variant: 'miniFab',
           callback: (event: Event, configuration: CategoryParameter) => this.deleteConfiguration(event, configuration)
         }
       ]
@@ -141,8 +144,6 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
    * @param saveCallback The function to call when save button is clicked
    */
   private openFormSidenav(event: Event, configuration: CategoryParameter, saveCallback: (configuration: CategoryParameter) => void): void {
-    this.configurationSelected = configuration ? Object.assign({}, configuration) : new CategoryParameter();
-
     this.sidenavService.openFormSidenav({
       title: 'configuration.edit',
       formFields: this.widgetConfigurationFormFieldsService.generateFormFields(configuration),

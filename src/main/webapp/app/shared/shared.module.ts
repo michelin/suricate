@@ -15,10 +15,8 @@
  */
 
 import { CommonModule, DatePipe } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NgGridModule } from 'angular2-grid';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,7 +33,6 @@ import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
 import { ToastComponent } from './components/toast/toast.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { TranslateModule } from '@ngx-translate/core';
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { ListComponent } from './components/list/list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ButtonsComponent } from './components/buttons/buttons.component';
@@ -47,95 +44,87 @@ import { FieldsComponent } from './components/inputs/fields/fields.component';
 import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
-import { WidgetHtmlDirective } from './directives/widget-html.directive';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { WidgetHtmlDirective } from './directives/widget-html/widget-html.directive';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
-import { ClipboardModule } from '@angular/cdk/clipboard';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { KtdGridModule } from '@katoid/angular-grid-layout';
+import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-init.directive';
 
 @NgModule({
-  imports: [
-    BrowserAnimationsModule,
-    BrowserModule,
-    CommonModule,
-    FlexLayoutModule,
-    FormsModule,
-    HttpClientModule,
-    MaterialCDKModule,
-    MaterialModule,
-    NgGridModule,
-    ReactiveFormsModule,
-    RouterModule,
-    TranslateModule,
-    ColorPickerModule,
-    ClipboardModule,
-    DragDropModule
-  ],
-  declarations: [
-    CommunicationDialogComponent,
-    ConfirmDialogComponent,
-    FileInputComponent,
-    InputComponent,
-    CheckboxComponent,
-    WidgetHtmlDirective,
-    SafeHtmlPipe,
-    ToastComponent,
-    ListComponent,
-    SpinnerComponent,
-    ButtonsComponent,
-    FormSidenavComponent,
-    WizardComponent,
-    ColorPickerComponent,
-    FieldsComponent,
-    MosaicComponent,
-    PaginatorComponent,
-    SlideToggleComponent,
-    ProgressBarComponent,
-    ActionsDialogComponent
-  ],
-  exports: [
-    BrowserAnimationsModule,
-    BrowserModule,
-    CheckboxComponent,
-    CommonModule,
-    CommunicationDialogComponent,
-    ConfirmDialogComponent,
-    FileInputComponent,
-    FlexLayoutModule,
-    FormsModule,
-    HttpClientModule,
-    HttpClientModule,
-    InputComponent,
-    MaterialCDKModule,
-    MaterialModule,
-    NgGridModule,
-    DragDropModule,
-    ReactiveFormsModule,
-    RouterModule,
-    WidgetHtmlDirective,
-    SafeHtmlPipe,
-    ToastComponent,
-    TranslateModule,
-    SpinnerComponent,
-    ButtonsComponent,
-    FormSidenavComponent,
-    ListComponent,
-    WizardComponent,
-    ColorPickerComponent,
-    PaginatorComponent,
-    SlideToggleComponent,
-    MatBadgeModule,
-    MatProgressBarModule,
-    ProgressBarComponent
-  ],
-  entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: RxStompService },
-    DatePipe
-  ]
+    imports: [
+        BrowserAnimationsModule,
+        BrowserModule,
+        CommonModule,
+        FormsModule,
+        HttpClientModule,
+        MaterialCDKModule,
+        MaterialModule,
+        KtdGridModule,
+        ReactiveFormsModule,
+        RouterModule,
+        TranslateModule,
+        ColorPickerModule
+    ],
+    declarations: [
+        CommunicationDialogComponent,
+        ConfirmDialogComponent,
+        FileInputComponent,
+        InputComponent,
+        CheckboxComponent,
+        WidgetHtmlDirective,
+        HideAfterInitDirective,
+        SafeHtmlPipe,
+        ToastComponent,
+        ListComponent,
+        SpinnerComponent,
+        ButtonsComponent,
+        FormSidenavComponent,
+        WizardComponent,
+        ColorPickerComponent,
+        FieldsComponent,
+        MosaicComponent,
+        PaginatorComponent,
+        SlideToggleComponent,
+        ProgressBarComponent,
+        ActionsDialogComponent
+    ],
+    exports: [
+        BrowserAnimationsModule,
+        BrowserModule,
+        CheckboxComponent,
+        CommonModule,
+        CommunicationDialogComponent,
+        ConfirmDialogComponent,
+        FileInputComponent,
+        FormsModule,
+        HttpClientModule,
+        HttpClientModule,
+        InputComponent,
+        MaterialCDKModule,
+        MaterialModule,
+        KtdGridModule,
+        ReactiveFormsModule,
+        RouterModule,
+        WidgetHtmlDirective,
+        HideAfterInitDirective,
+        SafeHtmlPipe,
+        ToastComponent,
+        TranslateModule,
+        SpinnerComponent,
+        ButtonsComponent,
+        FormSidenavComponent,
+        ListComponent,
+        WizardComponent,
+        ColorPickerComponent,
+        PaginatorComponent,
+        SlideToggleComponent,
+        ProgressBarComponent,
+        ColorPickerModule
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        DatePipe
+    ]
 })
 export class SharedModule {}

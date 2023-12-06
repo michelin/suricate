@@ -16,42 +16,69 @@
  *
  */
 
-.mat-dialog-content {
-  margin-top: 20px;
+h1 {
+  text-align: center;
+  font-size: 30px !important;
+  padding: 0;
+}
 
-  .mat-divider {
-    margin: 10px 0 15px 0;
+.mat-mdc-dialog-content {
+  padding: 0 24px;
+
+  h2 {
+    padding: 10px 0;
   }
 
   .input-wrapper {
-    suricate-buttons {
-      margin-top: 5px;
+    display: flex;
+    gap: 20px;
 
-      ::ng-deep .button {
-        height: 52px;
-      }
+    .screen-code-input {
+      flex-grow: 1;
+    }
+
+    .enroll-screen-button {
+      width: auto;
+      padding-top: 8px;
     }
   }
 
   #connected-screen-container {
+    padding: 16px 0;
+
     .screen-icon {
+      flex: 0 1 12%;
       font-size: 40px;
       width: 40px;
       height: 40px;
     }
 
     .screen-code {
+      flex-grow: 1;
       font-size: 1.5em;
       font-variant: all-small-caps;
+    }
+
+    .connected-screens {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
     }
   }
 
   #display-code-link {
-    margin-top: 40px;
+    margin-top: 10px;
 
     a {
       text-decoration: none;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
   }
+}
+
+.mat-mdc-dialog-actions {
+  padding: 24px;
 }

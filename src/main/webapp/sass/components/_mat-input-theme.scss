@@ -15,34 +15,12 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
+@use '../../../../../node_modules/@angular/material/index' as mat;
 
-/**
- * Component for that modify the theme of Angular Material mat-icon
- */
-@mixin custom-mat-icon-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
+@mixin custom-input-component-theme($theme) {
   $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
 
-  // Custom colors
-  $sidenav-text: #cfd2da;
-
-  .mat-icon {
-    & {
-      font-variant: none;
-    }
-
-    &.mat-primary {
-      color: mat-color($primary, A700);
-    }
-
-    &.mat-default {
-      color: $sidenav-text;
-    }
+  .input-error {
+    color: mat.get-color-from-palette($warn, 500);
   }
 }

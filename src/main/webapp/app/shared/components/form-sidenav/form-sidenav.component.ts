@@ -18,7 +18,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { IconEnum } from '../../enums/icon.enum';
@@ -40,13 +40,13 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * Send an event to the parent component used to open the sidebar
    */
   @Output()
-  public open: EventEmitter<void> = new EventEmitter<void>();
+  public openFormSidenav: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * Send an event to the parent component used to close the sidebar
    */
   @Output()
-  public close: EventEmitter<void> = new EventEmitter<void>();
+  public closeFormSidenav: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * The configuration of the sidenav
@@ -56,7 +56,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   /**
    * The form displayed by the sidenav
    */
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
@@ -134,14 +134,14 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * Used to open the sidenav
    */
   private openSidenav(): void {
-    this.open.emit();
+    this.openFormSidenav.emit();
   }
 
   /**
    * Used to close the sidenav
    */
   private closeSidenav(): void {
-    this.close.emit();
+    this.closeFormSidenav.emit();
   }
 
   /**

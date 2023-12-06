@@ -30,7 +30,11 @@
   }
 
   .wrapper {
-    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
     padding: 2% 8%;
     background-color: #424242;
 

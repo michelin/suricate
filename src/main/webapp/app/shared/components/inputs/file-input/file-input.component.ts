@@ -20,7 +20,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FileUtils } from '../../../utils/file.utils';
-import * as html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas';
 
 /**
  * Component that manage the file input
@@ -118,12 +118,14 @@ export class FileInputComponent extends InputComponent implements OnInit {
   /**
    * Take a screenshot of the dashboard
    */
-  public takeScreenshot(): void {
+  public screenshot(): void {
     html2canvas(this.belongingComponent['nativeElement'], {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
+      foreignObjectRendering: true,
+      scrollX: -190,
+      scrollY: -80
     }).then((htmlCanvasElement: HTMLCanvasElement) => {
       const b64: string = htmlCanvasElement.toDataURL('image/png');
-
       this.setBase64File(b64);
       super.getFormControl().setValue(b64);
       super.getFormControl().markAsDirty();

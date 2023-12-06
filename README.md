@@ -108,28 +108,54 @@ structure (tables, constraints, etc.) and the minimum required functional data.
 
 Suricate provides multiple types of authentication that can be activated or deactivated based on your requirements.
 
-#### LDAP vs Database
-
-You can log in to Suricate using either LDAP or a database after the sign-up step. You can specify these authentication
-modes using the following YAML property:
+All the authentication modes deliver a JWT token that is used to authenticate the user on the Back-End.
+You can configure the JWT token using the following properties:
 
 ```yaml
-application.authentication.provider: ### Provider should be 'database' or 'ldap'
+application.authentication.jwt.signingKey: 'changeitchangeitchangeitchangeit'
+application.authentication.jwt.tokenValidityMs: 86400000
 ```
 
-If you choose the `database` authentication mode, it is ready to use without any additional configuration. However, if
-you choose the ldap mode, you must specify the following additional properties:
+The signing key should be at least 256 bits long and should be changed for each environment.
+
+#### Database
+
+You can log in to Suricate using the database after the sign-up step.
+
+You can choose this authentication mode using the following YAML property:
 
 ```yaml
-application.authentication.ldap.url=
-application.authentication.ldap.userSearchFilter=
-application.authentication.ldap.firstNameAttributeName=
-application.authentication.ldap.lastNameAttributeName=
-application.authentication.ldap.mailAttributeName=
-application.authentication.ldap.username=
-application.authentication.ldap.password=
-application.authentication.ldap.userSearchBase=
-application.authentication.ldap.userDnPatterns=
+application.authentication.provider: 'database'
+```
+
+If you choose the database authentication mode, you must change the encryption password:
+
+```yaml
+jasypt.encryptor.password: 'changeitchangeitchangeitchangeit'
+```
+
+#### LDAP
+
+You can log in to Suricate an LDAP. 
+
+You can choose this authentication mode using the following YAML property:
+
+```yaml
+application.authentication.provider: 'ldap'
+```
+
+If you choose the ldap authentication mode, you must specify the following additional properties:
+
+```yaml
+application.authentication.ldap.url:
+application.authentication.ldap.userSearchFilter:
+application.authentication.ldap.firstNameAttributeName:
+application.authentication.ldap.lastNameAttributeName:
+application.authentication.ldap.mailAttributeName:
+application.authentication.ldap.username:
+application.authentication.ldap.password:
+application.authentication.ldap.userSearchBase:
+application.authentication.ldap.userDnPatterns:
 ```
 
 #### Social Login
@@ -142,7 +168,7 @@ When you activate social login, you can activate or deactivate a social login mo
 property:
 
 ```yaml
-application.authentication.socialProviders=gitlab,github
+application.authentication.socialProviders: gitlab,github
 ```
 
 ##### GitHub
@@ -150,8 +176,8 @@ application.authentication.socialProviders=gitlab,github
 To log in using GitHub, you must specify the following properties:
 
 ```yaml
-spring.security.oauth2.client.registration.github.client-id=<github_client_id>
-spring.security.oauth2.client.registration.github.client-secret=<github_client_id>
+spring.security.oauth2.client.registration.github.client-id: <github_client_id>
+spring.security.oauth2.client.registration.github.client-secret: <github_client_id>
 ```
 
 ##### GitLab
@@ -159,25 +185,25 @@ spring.security.oauth2.client.registration.github.client-secret=<github_client_i
 To log in using GitLab with OIDC, you must specify the following properties:
 
 ```yaml
-spring.security.oauth2.client.registration.gitlab.client-id=<gitlab_client_id>
-spring.security.oauth2.client.registration.gitlab.client-secret=<gitlab_client_secret>
-spring.security.oauth2.client.registration.gitlab.authorization-grant-type=authorization_code
-spring.security.oauth2.client.registration.gitlab.redirect-uri=http://localhost:8080/login/oauth2/code/gitlab
-spring.security.oauth2.client.provider.gitlab.issuer-uri=https://gitlab.com
-spring.security.oauth2.client.registration.gitlab.scope=read_user,openid,profile,email
+spring.security.oauth2.client.registration.gitlab.client-id: <gitlab_client_id>
+spring.security.oauth2.client.registration.gitlab.client-secret: <gitlab_client_secret>
+spring.security.oauth2.client.registration.gitlab.authorization-grant-type: authorization_code
+spring.security.oauth2.client.registration.gitlab.redirect-uri: http://localhost:8080/login/oauth2/code/gitlab
+spring.security.oauth2.client.provider.gitlab.issuer-uri: https://gitlab.com
+spring.security.oauth2.client.registration.gitlab.scope: read_user,openid,profile,email
 ```
 
 To log in using GitLab with OAuth2, you must specify the following properties:
 
 ```yaml
-spring.security.oauth2.client.registration.gitlab.client-id=<gitlab_client_id>
-spring.security.oauth2.client.registration.gitlab.client-secret=<gitlab_client_secret>
-spring.security.oauth2.client.registration.gitlab.authorization-grant-type=authorization_code
-spring.security.oauth2.client.registration.gitlab.redirect-uri=http://localhost:8080/login/oauth2/code/gitlab
-spring.security.oauth2.client.provider.gitlab.issuer-uri=https://gitlab.com
-spring.security.oauth2.client.registration.gitlab.scope=read_user
-spring.security.oauth2.client.provider.gitlab.user-info-uri=https://gitlab.com/api/v4/user
-spring.security.oauth2.client.provider.gitlab.user-name-attribute=username
+spring.security.oauth2.client.registration.gitlab.client-id: <gitlab_client_id>
+spring.security.oauth2.client.registration.gitlab.client-secret: <gitlab_client_secret>
+spring.security.oauth2.client.registration.gitlab.authorization-grant-type: authorization_code
+spring.security.oauth2.client.registration.gitlab.redirect-uri: http://localhost:8080/login/oauth2/code/gitlab
+spring.security.oauth2.client.provider.gitlab.issuer-uri: https://gitlab.com
+spring.security.oauth2.client.registration.gitlab.scope: read_user
+spring.security.oauth2.client.provider.gitlab.user-info-uri: https://gitlab.com/api/v4/user
+spring.security.oauth2.client.provider.gitlab.user-name-attribute: username
 ```
 
 ##### Redirection to Front-End
@@ -188,7 +214,8 @@ with a social network, the Back-End redirects to the Front-End.
 The Back-End uses the following methods to redirect to the Front-End in this order:
 
 - A given _redirect_uri_ query parameter provided by the Front-End to the Back-End in the authorization request (
-  e.g., http://localhost:8080/api/oauth2/authorization/github?redirect_uri=localhost:4200/login).
+  e.g., http://localhost:8080/api/oauth2/authorization/github?redirect_uri=/login). 
+  The host can even be different (e.g., http://localhost:8080/api/oauth2/authorization/github?redirect_uri=http://localhost:4200/login)
 - The referer in this authorization, but it can be hidden or lost after a redirection to the ID provider.
 - A default target URL defined in the Back-End.
 
@@ -197,8 +224,8 @@ The first option is currently used.
 The other options are defined by the following properties:
 
 ```yaml
-application.authentication.oauth2.defaultTargetUrl=http://localhost:4200/login
-application.authentication.oauth2.useReferer=false
+application.authentication.oauth2.defaultTargetUrl: http://localhost:4200/login
+application.authentication.oauth2.useReferer: false
 ```
 
 ##### Name Parsing Strategy
@@ -208,7 +235,7 @@ Lastname". However, you can also configure Suricate to parse the first name and 
 upper/lower) using the following property:
 
 ```yaml
-application.authentication.socialProvidersConfig.<provider>.nameCaseParse=true
+application.authentication.socialProvidersConfig.<provider>.nameCaseParse: true
 ```
 
 Simply replace `<provider>` with the appropriate social provider, such as `github` or `gitlab`.
@@ -219,8 +246,8 @@ The application allows for the generation of personal access tokens, which can b
 properties are used for token generation and verification:
 
 ```yaml
-application.authentication.pat.prefix=sup
-application.authentication.pat.checksumSecret=changeit
+application.authentication.pat.prefix: sup
+application.authentication.pat.checksumSecret: changeit
 ```
 
 It is recommended to update the _checksumSecret_ with a different secret for each environment, to enhance security.

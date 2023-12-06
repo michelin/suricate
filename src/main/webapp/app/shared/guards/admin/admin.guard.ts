@@ -14,39 +14,17 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
-import { CanActivate, CanActivateChild, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../services/frontend/authentication/authentication.service';
 
-/**
- * The admin guard
- */
-@Injectable({ providedIn: 'root' })
-export class AdminGuard implements CanActivate, CanActivateChild {
-  /**
-   * The constructor
-   * @param router The router
-   */
-  constructor(private readonly router: Router) {}
-
-  /**
-   * Can admin routes be activated or not ?
-   */
-  public canActivate(): Observable<boolean> {
-    if (AuthenticationService.isAdmin()) {
-      return of(true);
-    }
-
-    this.router.navigate(['/home']);
-    return of(false);
+export const adminGuard: CanActivateFn = (route, state) => {
+  const router = inject(Router);
+  if (AuthenticationService.isAdmin()) {
+    return true;
   }
 
-  /**
-   * Can child admin routes be activated or not ?
-   */
-  public canActivateChild(): Observable<boolean> {
-    return this.canActivate();
-  }
-}
+  router.navigate(['/home']);
+  return false;
+};

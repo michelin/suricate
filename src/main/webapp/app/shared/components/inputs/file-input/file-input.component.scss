@@ -15,13 +15,12 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
 
 .file-upload-wrapper {
-  & {
-    margin-bottom: 20px;
-    place-content: baseline !important;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 20px;
 
   img {
     max-width: 100%;
@@ -29,16 +28,15 @@
   }
 
   .upload-button-wrapper {
-    margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 
     .upload-button {
-      .mat-icon {
-        margin-right: 10px;
-      }
-    }
-
-    .take-screenshot-button {
-      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1 1 100%;
     }
   }
 
@@ -54,21 +52,4 @@
   width: 100%;
   overflow: hidden;
   font-size: 75%;
-}
-
-.uploaded-file {
-  min-height: 290px;
-  max-height: 290px;
-}
-
-@mixin file-input-component-theme($theme) {
-  $warn: map-get($theme, warn);
-
-  .file-input-button-error {
-    color: mat-color($warn, 500) !important;
-  }
-
-  .file-input-error {
-    color: mat-color($warn, 500);
-  }
 }

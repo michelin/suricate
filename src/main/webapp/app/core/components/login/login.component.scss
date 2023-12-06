@@ -17,7 +17,10 @@
  */
 
 .wrapper {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   max-width: 550px;
   padding: 10px 6%;
 
@@ -97,17 +100,10 @@
     width: 100%;
     height: 100%;
 
+
     suricate-buttons {
-      width: 100%;
-
-      ::ng-deep .button {
-        margin: auto;
-        width: 48%;
-
-        &:only-child {
-          width: 100%;
-        }
-      }
+      display: flex;
+      justify-content: center;
     }
 
     .register-link:hover {

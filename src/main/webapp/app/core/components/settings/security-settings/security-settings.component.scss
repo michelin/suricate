@@ -16,11 +16,18 @@
  *
  */
 
-.settings-container {
-  padding: 15px 35px 0 35px;
-}
 
-.created-token-container {
+.security-settings-container {
+  padding: 35px 35px 0;
+
+  h2 {
+    margin: 0 0 15px;
+  }
+
+  .save-security-settings-button {
+    margin: auto;
+  }
+
   .token-created {
     .mat-card-title {
       align-items: center;
@@ -30,36 +37,17 @@
       }
     }
 
-    .mat-card-actions {
-      text-align: center;
-
-      .copy-token-button {
-        margin: 0;
-      }
-    }
-
-    .token-value-container {
-      .mat-card-content {
-        overflow: scroll;
-        white-space: nowrap;
-      }
-
-      ::-webkit-scrollbar {
-        width: 0;
-        height: 0;
-        background: transparent;
-      }
+    .mat-mdc-card-actions {
+      padding: 16px;
     }
   }
-}
 
-.form-container {
-  h2 {
-    margin: 10px 0;
-  }
-
-  .save-security-settings-button {
-    margin: auto;
+  .mat-mdc-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 15px 0;
   }
 }
 

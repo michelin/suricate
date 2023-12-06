@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { takeUntil } from 'rxjs/operators';
 

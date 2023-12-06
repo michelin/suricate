@@ -30,6 +30,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "Describe a user")
 public class UserResponseDto extends AbstractDto {
+    @Schema(description = "The id of the user", example = "1")
+    private Long id;
+
     @Schema(description = "The firstname of the user")
     private String firstname;
 

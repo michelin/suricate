@@ -15,6 +15,7 @@
  *  * limitations under the License.
  *
  */
+
 .suricate-menu {
   min-height: 100vh;
   display: flex;
@@ -24,10 +25,34 @@
 
 .sidenav-section-container {
   flex-grow: 1;
+
+  .home-tv-menu {
+    display: flex;
+
+    a {
+      flex-grow: 1;
+    }
+
+    .common-icon-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.mdc-list {
+  padding: 0;
+}
+
+.submenu-item {
+  display: flex;
+  align-items: center;
 }
 
 .mat-expansion-panel-header {
   padding: 0;
+  height: 64px;
 
   .mat-expansion-panel-header-title {
     margin: 0;
@@ -35,7 +60,7 @@
     min-width: 22px;
 
     .names-idp-container {
-      font-size: 12px;
+      font-size: 16px;
       text-align: center;
       margin: auto;
       align-items: center;
@@ -53,12 +78,24 @@
       }
 
       .firstname-lastname {
-        font-weight: bold;
+        font-weight: 600;
       }
     }
   }
 
   .mat-expansion-panel-header-description {
     margin: 0;
+  }
+}
+
+.sidenav-menu-section {
+  & {
+    margin-bottom: 0 !important;
+  }
+
+  .menu-title {
+    padding: 0 16px;
+    font-size: 16px;
+    letter-spacing: 2px;
   }
 }

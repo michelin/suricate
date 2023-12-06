@@ -15,12 +15,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { InjectableRxStompConfig, RxStompService } from '@stomp/ng2-stompjs';
 import { Observable } from 'rxjs';
 import { EnvironmentService } from '../environment/environment.service';
-
-import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import { IMessage, RxStompConfig } from '@stomp/rx-stomp';
+import { RxStompService } from '../rx-stomp/rx-stomp.service';
 
 /**
  * Service that manage the web sockets connections
@@ -39,18 +38,15 @@ export class WebsocketService {
    */
   constructor(private readonly rxStompService: RxStompService) {}
 
-  /* ****************************************************************** */
-  /*                    WebSocket Management                            */
-  /* ****************************************************************** */
-
   /**
    * Get the websocket config
    *
    * @returns The config
    */
-  private getWebsocketConfig(): InjectableRxStompConfig {
-    const configuration = new InjectableRxStompConfig();
+  private getWebsocketConfig(): RxStompConfig {
+    const configuration = new RxStompConfig();
     configuration.webSocketFactory = () => new SockJS(WebsocketService.baseWsEndpoint);
+    configuration.brokerURL = WebsocketService.baseWsEndpoint;
     configuration.heartbeatIncoming = EnvironmentService.wsHeartbeatIncoming;
     configuration.heartbeatOutgoing = EnvironmentService.wsHeartbeatOutgoing;
     configuration.reconnectDelay = EnvironmentService.wsReconnectDelay;
@@ -72,7 +68,7 @@ export class WebsocketService {
    *
    * @param {string} destination The subscription url
    */
-  public watch(destination: string): Observable<Stomp.Message> {
+  public watch(destination: string): Observable<IMessage> {
     return this.rxStompService.watch(destination);
   }
 
@@ -80,6 +76,6 @@ export class WebsocketService {
    * Disconnect the client
    */
   public disconnect() {
-    this.rxStompService.deactivate();
+    this.rxStompService.deactivate().then();
   }
 }

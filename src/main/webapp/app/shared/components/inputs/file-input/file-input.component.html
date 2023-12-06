@@ -1,35 +1,35 @@
-<div class="file-upload-wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxFlex="100">
+<div class="file-upload-wrapper">
   <!-- Button visible -->
-  <div fxFlex="48" fxLayout="row wrap" class="upload-button-wrapper">
-    <button
-      mat-raised-button
-      type="button"
-      fxFlex="100"
-      class="upload-button"
-      color="primary"
-      [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
-      (click)="file.click()"
-    >
-      <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
-      <span class="sentence"> {{ field.label | translate }} </span>
-    </button>
+  <div >
+    <div class="upload-button-wrapper">
+      <button
+        mat-raised-button
+        type="button"
+        class="upload-button"
+        color="primary"
+        [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
+        (click)="file.click()"
+      >
+        <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
+        <span> {{ field.label | translate }} </span>
+      </button>
 
-    <button
-      *ngIf="belongingComponent"
-      mat-raised-button
-      type="button"
-      fxFlex="100"
-      class="take-screenshot-button"
-      color="primary"
-      [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
-      (click)="takeScreenshot()"
-    >
-      <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
-      <span class="sentence"> {{ 'dashboard.take.screenshot' | translate }} </span>
-    </button>
+      <button
+        *ngIf="belongingComponent"
+        mat-raised-button
+        type="button"
+        class="upload-button"
+        color="primary"
+        [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
+        (click)="screenshot()"
+      >
+        <mat-icon> {{ materialIconRecords[iconEnum.SCREENSHOT] }} </mat-icon>
+        <span> {{ 'dashboard.take.screenshot' | translate }} </span>
+      </button>
+    </div>
 
     <!-- Error Message for file input -->
-    <div *ngIf="isInputFieldOnError()" [@animationError] class="file-input-error" fxFlex="100">
+    <div *ngIf="isInputFieldOnError()" [@animationError] class="file-input-error">
       <div>
         {{ getInputErrors() | translate }}
       </div>
@@ -37,9 +37,9 @@
   </div>
 
   <!-- Image uploaded -->
-  <img *ngIf="imgBase64" [src]="imgBase64" class="uploaded-file" alt="Uploaded file" fxFlex="290px" />
+  <img *ngIf="imgBase64" [src]="imgBase64" class="uploaded-file" alt="Uploaded file" />
 
-  <div *ngIf="filename" fxFlex="49">
+  <div *ngIf="filename">
     {{ filename }}
   </div>
 

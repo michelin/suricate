@@ -17,7 +17,9 @@
  */
 
 .form-container {
-  padding: 15px 35px 35px 35px;
+  display: flex;
+  flex-direction: column;
+  padding: 35px 35px 0;
 
   .save-ux-settings-button {
     margin: auto;

@@ -14,11 +14,23 @@
  * limitations under the License.
  */
 
-/**
- * The library representation
- */
-export interface Library {
-  id: string;
-  technicalName: string;
-  assetToken: string;
-}
+import { TestBed } from '@angular/core/testing';
+import { MockModule } from '../../../mock/mock.module';
+import { HideAfterInitDirective } from './hide-after-init.directive';
+
+describe('HideAfterInit', () => {
+  let directive: HideAfterInitDirective;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      providers: [HideAfterInitDirective]
+    });
+
+    directive = TestBed.inject(HideAfterInitDirective);
+  });
+
+  it('should create', () => {
+    expect(directive).toBeTruthy();
+  });
+});

@@ -17,7 +17,6 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -29,21 +28,23 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
-import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
+import {
+  ProjectWidgetPositionRequest
+} from '../../../shared/models/backend/project-widget/project-widget-position-request';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { LibraryService } from '../../services/library/library.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { IMessage } from '@stomp/rx-stomp';
+import { KtdGridLayout } from '@katoid/angular-grid-layout/lib/grid.definitions';
+import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
 
 /**
  * Display the grid stack widgets
@@ -58,7 +59,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Reference on the span containing all the required JS libraries
    */
   @ViewChild('externalJsLibraries')
-  public externalJsLibrariesSpan: ElementRef<HTMLSpanElement>;
+  public externalJsLibrariesSpan: any;
 
   /**
    * The project to display
@@ -109,19 +110,14 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private unsubscribeProjectWebSocket: Subject<void> = new Subject<void>();
 
   /**
-   * The options for the plugin angular2-grid
+   * The grid options
    */
-  public gridOptions: NgGridConfig = {};
+  public gridOptions: GridOptions;
 
   /**
    * All the grids of the dashboard
    */
-  public currentGrid: NgGridItemConfig[] = [];
-
-  /**
-   * All the initial grids of the dashboard, before any modification
-   */
-  public startGrid: NgGridItemConfig[] = [];
+  public currentGrid: KtdGridLayout = [];
 
   /**
    * Tell if we should display the screen code
@@ -143,14 +139,12 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    *
    * @param renderer The renderer Angular entity
    * @param httpProjectService Back-End service used to manage the project
-   * @param dashboardService Front-End service used to manage the dashboard
    * @param websocketService Front-End service used to manage the web sockets
    * @param libraryService Front-End service used to manage the libraries
    */
   constructor(
     private renderer: Renderer2,
     private readonly httpProjectService: HttpProjectService,
-    private readonly dashboardService: DashboardService,
     private readonly websocketService: WebsocketService,
     private readonly libraryService: LibraryService
   ) {}
@@ -191,7 +185,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     }
 
     if (changes.projectWidgets) {
-      this.initGridItems();
+      this.initGrid();
     }
   }
 
@@ -254,14 +248,12 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private initGridStackOptions(): void {
     if (this.project) {
       this.gridOptions = {
-        max_cols: this.project.gridProperties.maxColumn,
-        min_cols: 1,
-        row_height: this.project.gridProperties.widgetHeight,
-        min_rows: 1,
-        margins: [4],
-        auto_resize: true,
+        cols: this.project.gridProperties.maxColumn,
+        rowHeight: this.project.gridProperties.widgetHeight,
+        gap: 5,
         draggable: false,
-        resizable: false
+        resizable: false,
+        compactType: undefined
       };
 
       if (!this.readOnly) {
@@ -277,35 +269,32 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**
    * Create the list of grid items used to display widgets on the grids
    */
-  private initGridItems(): void {
-    this.startGrid = [];
-
+  private initGrid(): void {
     if (this.projectWidgets) {
-      this.startGrid = this.getGridItemsFromProjectWidgets();
-
-      // Make a copy with a new reference
-      this.currentGrid = JSON.parse(JSON.stringify(this.startGrid));
+      this.currentGrid = this.getGridLayoutFromProjectWidgets();
     }
   }
 
   /**
    * Get the list of GridItemConfigs from project widget
    */
-  private getGridItemsFromProjectWidgets(): NgGridItemConfig[] {
-    const gridStackItemsConfig: NgGridItemConfig[] = [];
+  private getGridLayoutFromProjectWidgets(): KtdGridLayout {
+    const layout: KtdGridLayout = [];
 
     this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
-      gridStackItemsConfig.push({
-        col: projectWidget.widgetPosition.gridColumn,
-        row: projectWidget.widgetPosition.gridRow,
-        sizey: projectWidget.widgetPosition.height,
-        sizex: projectWidget.widgetPosition.width,
-        payload: projectWidget
-      });
+      layout.push({
+        id: String(projectWidget.id),
+        x: projectWidget.widgetPosition.gridColumn - 1,
+        y: projectWidget.widgetPosition.gridRow - 1,
+        w: projectWidget.widgetPosition.width,
+        h: projectWidget.widgetPosition.height
+      })
     });
 
-    return gridStackItemsConfig;
+    return layout;
   }
+
+
 
   /**********************************************************************************************************/
   /*                                      WEBSOCKET MANAGEMENT                                              */
@@ -356,7 +345,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     this.websocketService
       .watch(projectSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribeProjectWebSocket))
-      .subscribe((stompMessage: Stomp.Message) => {
+      .subscribe((stompMessage: IMessage) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         switch (updateEvent.type) {
@@ -388,7 +377,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     this.websocketService
       .watch(screenSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribeProjectWebSocket))
-      .subscribe((stompMessage: Stomp.Message) => {
+      .subscribe((stompMessage: IMessage) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
@@ -399,18 +388,21 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**
-   * Update the project widget position
+   * When the layout is updated
+   * @param layout The new layout
    */
-  public updateProjectWidgetsPosition(): void {
-    if (this.isGridItemsHasMoved()) {
+  public onLayoutUpdated(layout: KtdGridLayout) {
+    if (this.isGridItemsHasMoved(layout)) {
+      this.currentGrid = layout;
+
       const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
-      this.currentGrid.forEach(gridStackItem => {
+      this.currentGrid.forEach(gridItem => {
         projectWidgetPositionRequests.push({
-          projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
-          gridColumn: gridStackItem.col,
-          gridRow: gridStackItem.row,
-          height: gridStackItem.sizey,
-          width: gridStackItem.sizex
+          projectWidgetId: Number(gridItem.id),
+          gridColumn: gridItem.x + 1,
+          gridRow: gridItem.y + 1,
+          height: gridItem.h,
+          width: gridItem.w
         });
       });
 
@@ -419,21 +411,31 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**
-   * Checks if the grid elements have been moved
+   * Tell if the grid items have moved
+   * @param layout The new layout
+   * @private
    */
-  private isGridItemsHasMoved(): boolean {
+  private isGridItemsHasMoved(layout: KtdGridLayout): boolean {
     let itemHaveBeenMoved = false;
 
-    this.startGrid.forEach(startGridItem => {
-      const gridItemFound = this.currentGrid.find(currentGridItem => {
-        return (currentGridItem.payload as ProjectWidget).id === (startGridItem.payload as ProjectWidget).id;
+    this.currentGrid.forEach(currentGridItem => {
+      const gridItemFound = layout.find(newGridItem => {
+        return currentGridItem.id === newGridItem.id;
       });
 
-      if (gridItemFound && GridItemUtils.isItemHaveBeenMoved(startGridItem, gridItemFound)) {
+      if (gridItemFound && GridItemUtils.isItemHaveBeenMoved(currentGridItem, gridItemFound)) {
         itemHaveBeenMoved = true;
       }
     });
 
     return itemHaveBeenMoved;
+  }
+
+  /**
+   * Get the project widget by its id
+   * @param id The id of the project widget
+   */
+  public getProjectWidgetById(id: any): ProjectWidget {
+    return this.projectWidgets.find(projectWidget => projectWidget.id === Number(id));
   }
 }

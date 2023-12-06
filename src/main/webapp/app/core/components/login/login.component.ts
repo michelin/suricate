@@ -15,7 +15,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
@@ -23,13 +23,15 @@ import { AuthenticationProvider } from '../../../shared/enums/authentication-pro
 import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { LoginFormFieldsService } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
+import {
+  LoginFormFieldsService
+} from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { SettingsService } from '../../services/settings.service';
-import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import {
+  HttpConfigurationService
+} from '../../../shared/services/backend/http-configuration/http-configuration.service';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
-import { TranslateService } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 /**
@@ -44,7 +46,7 @@ export class LoginComponent implements OnInit {
   /**
    * The login form
    */
-  public loginForm: FormGroup;
+  public loginForm: UntypedFormGroup;
 
   /**
    * Fields used to describe/create the form
@@ -83,9 +85,7 @@ export class LoginComponent implements OnInit {
    * @param httpConfigurationService Service used to manage http calls for configurations
    * @param authenticationService Service used to manage authentications
    * @param formService Front-End service used to manage forms
-   * @param settingsService Front-End service used to manage the user's settings
    * @param toastService The toast service
-   * @param translateService The translate service
    */
   constructor(
     private readonly router: Router,
@@ -93,9 +93,7 @@ export class LoginComponent implements OnInit {
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
-    private readonly settingsService: SettingsService,
     private readonly toastService: ToastService,
-    private readonly translateService: TranslateService
   ) {}
 
   /**
@@ -134,13 +132,13 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.loading = true;
 
-      this.authenticationService.authenticate(this.loginForm.value).subscribe(
-        () => this.navigateToHomePage(),
-        (error: HttpErrorResponse) => {
+      this.authenticationService.authenticate(this.loginForm.value).subscribe({
+        next: () => this.navigateToHomePage(),
+        error: (error: HttpErrorResponse) => {
           this.loading = false;
           this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
         }
-      );
+      });
     }
   }
 

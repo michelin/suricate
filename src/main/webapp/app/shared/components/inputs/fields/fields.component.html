@@ -1,23 +1,19 @@
-<div fxLayout="col wrap" class="input-wrapper inner-form-group">
-  <h1 fxFlex="100%">{{ field.label | translate }}</h1>
+<div class="input-wrapper inner-form-group">
+  <h1>{{ field.label | translate }}</h1>
 
   <ng-container *ngFor="let innerFormGroup of $any(formArray.controls); let index = index">
-    <div fxLayout="row wrap" fxLayoutGap="10px" fxFlex="100%">
+    <div class="fields-container">
       <ng-container *ngFor="let innerField of field.fields">
         <suricate-input
           *ngIf="innerField.type !== dataType.HIDDEN"
+          [style.width.%]="getInnerFormSize()"
           [field]="innerField"
           [formGroup]="innerFormGroup"
-          [fxFlex]="getInnerFormSize()"
         >
         </suricate-input>
       </ng-container>
 
-      <div fxFlex="5" fxLayoutAlign="center center" *ngIf="field.deleteRow">
-        <mat-icon class="trash-icon" fxFlexAlign="center center" (click)="deleteRow(innerFormGroup, index)">
-          {{ materialIconRecords[iconEnum.DELETE] }}
-        </mat-icon>
-      </div>
+      <suricate-buttons *ngIf="field.deleteRow" class="delete-row" [configurations]="deleteRowConfig" [object]='{ formGroup: innerFormGroup, index: index}'> </suricate-buttons>
     </div>
   </ng-container>
 </div>

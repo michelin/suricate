@@ -1,14 +1,14 @@
-<div class="container without-header" fxLayout="column" fxLayoutAlign="center center">
-  <div class="wrapper mat-elevation-z12" fxLayout="column" fxLayoutAlign="center center">
+<div class="container without-header">
+  <div class="wrapper mat-elevation-z12">
     <div class="brand-image">
       <img src="../../../../../assets/images/logo.png" alt="brand image" />
     </div>
 
     <suricate-spinner *ngIf="loading"></suricate-spinner>
 
-    <form *ngIf="!loading" class="register-form" fxLayout="column" fxLayoutAlign="center" [formGroup]="registerForm" (ngSubmit)="signUp()">
+    <form *ngIf="!loading" class="register-form" [formGroup]="registerForm" (ngSubmit)="signUp()">
       <suricate-input *ngFor="let field of formFields" [formGroup]="registerForm" [field]="field"> </suricate-input>
-      <suricate-buttons [configurations]="buttonConfigurations" fxLayout="row" fxLayoutAlign="center center"></suricate-buttons>
+      <suricate-buttons [configurations]="buttonConfigurations"></suricate-buttons>
     </form>
   </div>
 </div>

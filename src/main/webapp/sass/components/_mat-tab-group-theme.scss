@@ -15,13 +15,11 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
 
 /**
- * Component for that modify the theme of Angular Material mat-button
+ * Component for that modify the theme of Angular Material mat-tab-group
  */
-@mixin custom-mat-button-theme($theme) {
-  // Angular Material colors
+@mixin custom-mat-tab-group-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
@@ -29,30 +27,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-raised-button,
-  .mat-mini-fab {
-    &.mat-primary {
-      background-color: mat-color($primary, A700);
-    }
-  }
-
-  .mat-button,
-  .mat-icon-button {
-    &.mat-primary {
-      color: mat-color($primary, A700);
-
-      .mat-button-focus-overlay {
-        background-color: mat-color($primary, A700);
-      }
-    }
-  }
-
-  .mat-stroked-button {
-    &.mat-warn {
-      border: 1px solid mat-color($warn, 500);
-    }
-    &.mat-primary {
-      border: 1px solid mat-color($primary, 500);
-    }
+  .mat-mdc-tab {
+    font-size: 1.2rem;
+    font-variant: all-small-caps;
   }
 }

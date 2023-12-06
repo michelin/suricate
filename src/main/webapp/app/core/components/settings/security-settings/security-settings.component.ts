@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
 import { FormService } from '../../../../shared/services/frontend/form/form.service';
@@ -12,7 +12,9 @@ import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { PersonalAccessTokenRequest } from '../../../../shared/models/backend/personal-access-token/personal-access-token-request';
+import {
+  PersonalAccessTokenRequest
+} from '../../../../shared/models/backend/personal-access-token/personal-access-token-request';
 import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
 
@@ -40,7 +42,7 @@ export class SecuritySettingsComponent implements OnInit {
   /**
    * The form group for UX settings
    */
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   /**
    * The form fields for UX settings
@@ -143,12 +145,12 @@ export class SecuritySettingsComponent implements OnInit {
 
     if (this.formGroup.valid) {
       const tokenRequest: PersonalAccessTokenRequest = this.formGroup.value;
-      this.httpUserService.createToken(tokenRequest).subscribe(
-        (token: PersonalAccessToken) => {
+      this.httpUserService.createToken(tokenRequest).subscribe({
+        next: (token: PersonalAccessToken) => {
           this.createdToken = token;
           this.reloadTokens();
         },
-        (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           if (error.status === 400) {
             this.toastService.sendMessage(
               this.translateService.instant('settings.security.token.created.duplicated.name', { tokenName: tokenRequest.name }),
@@ -156,7 +158,7 @@ export class SecuritySettingsComponent implements OnInit {
             );
           }
         }
-      );
+      });
     }
   }
 
