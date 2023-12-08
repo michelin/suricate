@@ -20,7 +20,7 @@ services:
       SPRING_PROFILES_ACTIVE: postgresql
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/postgres?currentSchema=suricate'
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_USER:-changeme}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
     networks:
       - suricate
     ports:

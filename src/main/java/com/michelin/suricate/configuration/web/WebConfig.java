@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,6 +70,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    @Value("${spring.h2.console.enabled:false}")
+    private boolean h2Enabled;
+
     /**
      * The view resolver.
      *
@@ -97,7 +101,7 @@ public class WebConfig implements WebMvcConfigurer {
      * @param authFailureEntryPoint   The authentication failure entry point
      * @param oauth2RequestRepository The auth request repository
      * @param userService             The user service
-     * @param openIdcUserService         The oidc user service
+     * @param openIdcUserService      The oidc user service
      * @param oauth2SuccessHandler    The oauth2 authentication success handler
      * @param oauth2FailureHandler    The oauth2 authentication failure handler
      * @return The security filter chain
@@ -125,36 +129,42 @@ public class WebConfig implements WebMvcConfigurer {
                 .accessDeniedHandler(authFailureEntryPoint))
             .headers(headersConfigurer -> headersConfigurer
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-            .authorizeHttpRequests(authorizeRequestsConfigurer -> authorizeRequestsConfigurer
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                // Make H2 console served by the Jakarta servlet
-                .requestMatchers(PathRequest.toH2Console()).permitAll()
-                // Make other MVC requests served by the DispatcherServlet
-                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.OPTIONS, "/**")).permitAll()
-                // Actuator
-                .requestMatchers(mvcMatcherBuilder.pattern("/actuator/**")).permitAll()
-                // Swagger
-                .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui.html")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/v3/api-docs/**")).permitAll()
-                // Suricate API
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/auth/signin")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/users/signup")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/configurations/authentication-providers"))
-                .permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projects/{projectToken}")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectToken}/projectWidgets"))
-                .permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectWidgetId}")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/widgets/{widgetId}")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/settings")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/*/assets/**")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/ws/**")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/oauth2/authorization/**")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
-                // Front-End
-                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/**")).permitAll()
-            )
+            .authorizeHttpRequests(authorizeRequestsConfigurer -> {
+                authorizeRequestsConfigurer
+                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                    // Make other MVC requests served by the DispatcherServlet
+                    .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.OPTIONS, "/**")).permitAll()
+                    // Actuator
+                    .requestMatchers(mvcMatcherBuilder.pattern("/actuator/**")).permitAll()
+                    // Swagger
+                    .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui.html")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/v3/api-docs/**")).permitAll()
+                    // Suricate API
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/auth/signin")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/users/signup")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/configurations/authentication-providers"))
+                    .permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projects/{projectToken}")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder
+                        .pattern("/api/*/projectWidgets/{projectToken}/projectWidgets"))
+                    .permitAll()
+                    .requestMatchers(mvcMatcherBuilder
+                        .pattern("/api/*/projectWidgets/{projectWidgetId}")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/widgets/{widgetId}")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/settings")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/assets/**")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/ws/**")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/oauth2/authorization/**")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
+                    // Front-End
+                    .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/**")).permitAll();
+
+                if (h2Enabled) {
+                    // Make H2 console served by the Jakarta servlet if enabled
+                    authorizeRequestsConfigurer.requestMatchers(PathRequest.toH2Console()).permitAll();
+                }
+            })
             .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
