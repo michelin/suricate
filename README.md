@@ -37,7 +37,9 @@ This repository contains the source code of the Suricate application.
 ## Download
 
 You can download Suricate as a fat jar from the project's releases page on GitHub
-at https://github.com/michelin/suricate/releases. Please note that Java 21 is required.
+at https://github.com/michelin/suricate/releases. 
+
+Please note that Java 21 is required starting from Suricate 2.8.0 (Java 8 before).
 
 Additionally, a Docker image of the solution is available at https://hub.docker.com/repository/docker/michelin/suricate.
 
