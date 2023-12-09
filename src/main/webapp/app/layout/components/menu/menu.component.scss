@@ -60,6 +60,8 @@
     min-width: 22px;
 
     .names-idp-container {
+      display: flex;
+      gap: 5px;
       font-size: 16px;
       text-align: center;
       margin: auto;
