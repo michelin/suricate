@@ -23,14 +23,16 @@ This repository contains the source code of the Suricate application.
     * [Default Configuration](#default-configuration)
     * [Database](#database)
     * [Authentication](#authentication)
-        * [LDAP vs Database](#ldap-vs-database)
-        * [Social Login](#social-login)
-            * [GitHub](#github)
-            * [GitLab](#gitlab)
-            * [Redirection to Front-End](#redirection-to-front-end)
-            * [Name Parsing Strategy](#name-parsing-strategy)
-        * [Personal Access Token](#personal-access-token)
-    * [Repositories](#repositories)
+      * [LDAP vs Database](#ldap-vs-database)
+      * [Social Login](#social-login)
+        * [GitHub](#github)
+        * [GitLab](#gitlab)
+        * [Redirection to Front-End](#redirection-to-front-end)
+        * [Name Parsing Strategy](#name-parsing-strategy)
+      * [Personal Access Token](#personal-access-token)
+    * [Widgets](#widgets)
+      * [Encryption](#encryption)
+      * [Repositories](#repositories)
 * [Swagger UI](#swagger-ui)
 * [Contribution](#contribution)
 
@@ -118,7 +120,7 @@ application.authentication.jwt.signingKey: 'changeitchangeitchangeitchangeit'
 application.authentication.jwt.tokenValidityMs: 86400000
 ```
 
-The signing key should be at least 256 bits long and should be changed for each environment.
+The signing key should be at least 256 bits long (since Suricate v2.8.0) and should be changed for each environment.
 
 #### Database
 
@@ -128,12 +130,6 @@ You can choose this authentication mode using the following YAML property:
 
 ```yaml
 application.authentication.provider: 'database'
-```
-
-If you choose the database authentication mode, you must change the encryption password:
-
-```yaml
-jasypt.encryptor.password: 'changeitchangeitchangeitchangeit'
 ```
 
 #### LDAP
@@ -256,7 +252,20 @@ It is recommended to update the _checksumSecret_ with a different secret for eac
 
 The _prefix_ is used by the application to identify the token type and parse it.
 
-### Repositories
+### Widgets
+
+Here is given the guidelines to configure the widgets.
+
+#### Encryption
+
+Sensitive widget parameters such as passwords or tokens are encrypted in the database. 
+You must change the encryption key for each environment using the following property: 
+
+```yaml
+jasypt.encryptor.password: changeitchangeitchangeitchangeit
+```
+
+#### Repositories
 
 The first time you start the application, you'll need to configure a repository of widgets. To do this, navigate to the
 repositories tab and add a new repository. You can choose to add either a local or remote repository (such as GitLab or
