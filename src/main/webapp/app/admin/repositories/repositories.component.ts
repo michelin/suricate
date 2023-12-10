@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector } from '@angular/core';
+import { Component } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { Repository } from '../../shared/models/backend/repository/repository';
@@ -55,15 +55,13 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param httpRepositoryService The HTTP repository service
    * @param repositoryFormFieldsService The repository form fields service
    * @param datePipe The date pipe
-   * @param injector The injector
    */
   constructor(
     private readonly httpRepositoryService: HttpRepositoryService,
     private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
-    private readonly datePipe: DatePipe,
-    protected injector: Injector
+    private readonly datePipe: DatePipe
   ) {
-    super(httpRepositoryService, injector);
+    super(httpRepositoryService);
     this.initListConfiguration();
     this.initFilter();
   }

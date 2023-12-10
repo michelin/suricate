@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector } from '@angular/core';
+import { Component } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { Widget } from '../../shared/models/backend/widget/widget';
 import { WidgetRequest } from '../../shared/models/backend/widget/widget-request';
@@ -33,10 +33,9 @@ export class CatalogComponent extends ListComponent<Widget | WidgetRequest> {
    * Constructor
    *
    * @param httpWidgetService Suricate service used to manage the http calls for widgets
-   * @param injector Angular Service used to manage the injection of services
    */
-  constructor(private readonly httpWidgetService: HttpWidgetService, protected injector: Injector) {
-    super(httpWidgetService, injector);
+  constructor(private readonly httpWidgetService: HttpWidgetService) {
+    super(httpWidgetService);
 
     this.initHeaderConfiguration();
     this.initFilter();
