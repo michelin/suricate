@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Api error dto.
+ * Api error DTO.
  */
 @Data
 @NoArgsConstructor
@@ -59,6 +59,12 @@ public class ApiErrorDto extends AbstractDto {
         this.status = apiErrorEnum.getStatus().value();
     }
 
+    /**
+     * Constructor.
+     *
+     * @param message  The error message
+     * @param apiError The API error enum
+     */
     public ApiErrorDto(String message, ApiErrorEnum apiError) {
         this(apiError);
         this.message = StringUtils.isBlank(message) ? apiError.getMessage() : message;
