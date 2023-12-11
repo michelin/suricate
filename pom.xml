@@ -43,7 +43,7 @@
         <mustache.version>0.9.11</mustache.version>
         <packaging.type>jar</packaging.type>
         <testcontainers.version>1.19.3</testcontainers.version>
-        <springdoc.version>2.2.0</springdoc.version>
+        <springdoc.version>2.3.0</springdoc.version>
         <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>michelin</sonar.organization>
