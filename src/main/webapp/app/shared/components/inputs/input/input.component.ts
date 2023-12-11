@@ -16,8 +16,8 @@
  *
  */
 
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Component, EventEmitter, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { AbstractControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
@@ -103,11 +103,9 @@ export class InputComponent implements OnInit {
 
   /**
    * Constructor
-   *
-   * @param injector Manage services injection
    */
-  constructor(protected injector: Injector) {
-    this.translateService = injector.get(TranslateService);
+  constructor() {
+    this.translateService = inject(TranslateService);
   }
 
   /**

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector } from '@angular/core';
+import { Component } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { Project } from '../../shared/models/backend/project/project';
@@ -49,15 +49,13 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param httpProjectService Manage the http calls for a project
    * @param projectFormFieldsService Build form fields for a project
    * @param projectUsersFormFieldsService Build form fields for projects users
-   * @param injector Manage the injection of services
    */
   constructor(
     private readonly httpProjectService: HttpProjectService,
     private readonly projectFormFieldsService: ProjectFormFieldsService,
-    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
-    protected injector: Injector
+    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService
   ) {
-    super(httpProjectService, injector);
+    super(httpProjectService);
 
     this.initHeaderConfiguration();
     this.initListConfiguration();

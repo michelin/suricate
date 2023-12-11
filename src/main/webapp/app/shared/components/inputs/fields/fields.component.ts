@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
@@ -39,11 +39,9 @@ export class FieldsComponent extends InputComponent implements OnInit{
 
   /**
    * Constructor
-   *
-   * @param injector Manage services injection
    */
-  constructor(protected injector: Injector) {
-    super(injector);
+  constructor() {
+    super();
   }
 
   /**

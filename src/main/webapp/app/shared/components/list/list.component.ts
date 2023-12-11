@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
@@ -146,15 +146,14 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    * Constructor
    *
    * @param childService The child http service
-   * @param injector Manage services injection
    */
-  constructor(private readonly childService: AbstractHttpService<T>, protected injector: Injector) {
-    this.dialogService = injector.get(DialogService);
-    this.sidenavService = injector.get(SidenavService);
-    this.translateService = injector.get(TranslateService);
-    this.toastService = injector.get(ToastService);
-    this.router = injector.get(Router);
-    this.formService = injector.get(FormService);
+  constructor(private readonly childService: AbstractHttpService<T>) {
+    this.dialogService = inject(DialogService);
+    this.sidenavService = inject(SidenavService);
+    this.translateService = inject(TranslateService);
+    this.toastService = inject(ToastService);
+    this.router = inject(Router);
+    this.formService = inject(FormService);
   }
 
   /**

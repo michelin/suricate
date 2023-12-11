@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector } from '@angular/core';
+import { Component } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
@@ -40,14 +40,12 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
    *
    * @param httpCategoryParametersService Suricate service used to manage http calls for category parameters
    * @param widgetConfigurationFormFieldsService Frontend service used to build form fields for project configuration
-   * @param injector Angular Service used to manage the injection of services
    */
   constructor(
     private readonly httpCategoryParametersService: HttpCategoryParametersService,
-    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
-    protected injector: Injector
+    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService
   ) {
-    super(httpCategoryParametersService, injector);
+    super(httpCategoryParametersService);
 
     this.initHeaderConfiguration();
     this.initListConfiguration();

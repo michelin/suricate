@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FileUtils } from '../../../utils/file.utils';
@@ -51,11 +51,9 @@ export class FileInputComponent extends InputComponent implements OnInit {
 
   /**
    * Constructor
-   *
-   * @param injector Manage services injection
    */
-  constructor(protected injector: Injector) {
-    super(injector);
+  constructor() {
+    super();
   }
 
   /**

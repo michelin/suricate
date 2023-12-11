@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { User } from '../../shared/models/backend/user/user';
 import { Role } from '../../shared/models/backend/role/role';
@@ -45,14 +45,12 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    *
    * @param httpAdminUserService Manage the http calls for users as admin
    * @param userFormFieldsService Build the form fields for a user
-   * @param injector Manage the injection of services
    */
   constructor(
     private readonly httpAdminUserService: HttpAdminUserService,
     private readonly userFormFieldsService: UserFormFieldsService,
-    protected injector: Injector
   ) {
-    super(httpAdminUserService, injector);
+    super(httpAdminUserService);
 
     this.initHeaderConfiguration();
     this.initListConfiguration();

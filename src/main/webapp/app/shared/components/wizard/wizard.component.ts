@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { UntypedFormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
@@ -27,9 +27,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
-import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import {
+  WidgetConfigurationFormFieldsService
+} from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import {
+  ProjectWidgetFormStepsService
+} from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 
 /**
  * Generic component used to display wizards
@@ -107,14 +111,12 @@ export class WizardComponent implements OnInit {
 
   /**
    * Constructor
-   *
-   * @param injector Angular service used to manage injection of service
    */
-  constructor(protected readonly injector: Injector) {
-    this.formService = injector.get(FormService);
-    this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
-    this.activatedRoute = injector.get(ActivatedRoute);
-    this.router = injector.get(Router);
+  constructor() {
+    this.formService = inject(FormService);
+    this.widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
+    this.activatedRoute = inject(ActivatedRoute);
+    this.router = inject(Router);
   }
 
   /**

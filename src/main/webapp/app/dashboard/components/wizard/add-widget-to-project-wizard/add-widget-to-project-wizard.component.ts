@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
-import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import {
+  ProjectWidgetFormStepsService
+} from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { FormStep } from '../../../../shared/models/frontend/form/form-step';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
-import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import {
+  HttpProjectWidgetService
+} from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
 import { Project } from '../../../../shared/models/backend/project/project';
@@ -33,18 +37,18 @@ import { Project } from '../../../../shared/models/backend/project/project';
 export class AddWidgetToProjectWizardComponent extends WizardComponent implements OnInit {
   /**
    * Constructor
-   * @param injector Angular Service used to manage the injection of services
-   * @param projectWidgetFormStepsService Frontend service used to build steps for project widget object
-   * @param toastService Frontend service used to display message
+   * @param projectWidgetFormStepsService The project widget form steps service
+   * @param httpProjectWidgetsService The http project widget service
+   * @param httpProjectService The http project service
+   * @param toastService The toast service
    */
   constructor(
-    protected injector: Injector,
     private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
     private readonly httpProjectWidgetsService: HttpProjectWidgetService,
     private readonly httpProjectService: HttpProjectService,
     private readonly toastService: ToastService
   ) {
-    super(injector);
+    super();
     this.initHeaderConfiguration();
   }
 
