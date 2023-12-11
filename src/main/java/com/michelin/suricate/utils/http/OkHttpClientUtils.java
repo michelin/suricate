@@ -82,7 +82,7 @@ public final class OkHttpClientUtils {
         } catch (NoSuchAlgorithmException e) {
             log.error("An error occurred during the OKHttpClient configuration: TLS algorithm not found", e);
         } catch (KeyManagementException e) {
-            log.error("An error occurred during the OKHttpClient configuration: Cannot init the SSL context", e);
+            log.error("An error occurred during the OKHttpClient configuration: Cannot init the TLS context", e);
         }
 
         return null;

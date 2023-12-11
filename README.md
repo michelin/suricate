@@ -8,7 +8,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/michelin/suricate?label=Pulls&logo=docker&style=for-the-badge)](https://hub.docker.com/r/michelin/suricate/tags)
 [![Docker Stars](https://img.shields.io/docker/stars/michelin/suricate?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/michelin/suricate)
 [![SonarCloud Coverage](https://img.shields.io/sonar/coverage/michelin_suricate?logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/component_measures?id=michelin_suricate&metric=coverage&view=list)
-[![SonarCloud Tests](https://img.shields.io/sonar/tests/michelin_suricate/master?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge&logo=sonarcloud)](https://sonarcloud.io/component_measures?metric=tests&view=list&id=michelin_kstreamplify)
+[![SonarCloud Tests](https://img.shields.io/sonar/tests/michelin_suricate/master?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge&logo=sonarcloud)](https://sonarcloud.io/component_measures?metric=tests&view=list&id=michelin_suricate)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache&style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)
 
 This repository contains the source code of the Suricate application.
@@ -23,14 +23,16 @@ This repository contains the source code of the Suricate application.
     * [Default Configuration](#default-configuration)
     * [Database](#database)
     * [Authentication](#authentication)
-        * [LDAP vs Database](#ldap-vs-database)
-        * [Social Login](#social-login)
-            * [GitHub](#github)
-            * [GitLab](#gitlab)
-            * [Redirection to Front-End](#redirection-to-front-end)
-            * [Name Parsing Strategy](#name-parsing-strategy)
-        * [Personal Access Token](#personal-access-token)
-    * [Repositories](#repositories)
+      * [LDAP vs Database](#ldap-vs-database)
+      * [Social Login](#social-login)
+        * [GitHub](#github)
+        * [GitLab](#gitlab)
+        * [Redirection to Front-End](#redirection-to-front-end)
+        * [Name Parsing Strategy](#name-parsing-strategy)
+      * [Personal Access Token](#personal-access-token)
+    * [Widgets](#widgets)
+      * [Encryption](#encryption)
+      * [Repositories](#repositories)
 * [Swagger UI](#swagger-ui)
 * [Contribution](#contribution)
 
@@ -68,7 +70,7 @@ default properties:
 docker-compose up -d
 ```
 
-Both Front-End and Back-End will be served on port 8080 by default.
+After running the command, the application will be accessible on http://localhost:8080/.
 
 ## Configuration
 
@@ -118,7 +120,7 @@ application.authentication.jwt.signingKey: 'changeitchangeitchangeitchangeit'
 application.authentication.jwt.tokenValidityMs: 86400000
 ```
 
-The signing key should be at least 256 bits long and should be changed for each environment.
+The signing key should be at least 256 bits long (since Suricate v2.8.0) and should be changed for each environment.
 
 #### Database
 
@@ -128,12 +130,6 @@ You can choose this authentication mode using the following YAML property:
 
 ```yaml
 application.authentication.provider: 'database'
-```
-
-If you choose the database authentication mode, you must change the encryption password:
-
-```yaml
-jasypt.encryptor.password: 'changeitchangeitchangeitchangeit'
 ```
 
 #### LDAP
@@ -256,7 +252,20 @@ It is recommended to update the _checksumSecret_ with a different secret for eac
 
 The _prefix_ is used by the application to identify the token type and parse it.
 
-### Repositories
+### Widgets
+
+Here is given the guidelines to configure the widgets.
+
+#### Encryption
+
+Sensitive widget parameters such as passwords or tokens are encrypted in the database. 
+You must change the encryption key for each environment using the following property: 
+
+```yaml
+jasypt.encryptor.password: changeitchangeitchangeitchangeit
+```
+
+#### Repositories
 
 The first time you start the application, you'll need to configure a repository of widgets. To do this, navigate to the
 repositories tab and add a new repository. You can choose to add either a local or remote repository (such as GitLab or

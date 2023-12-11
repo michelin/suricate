@@ -52,7 +52,7 @@ public class ApiException extends RuntimeException {
     /**
      * Method used to retrieve the error.
      *
-     * @return the APi error
+     * @return the API error
      */
     public ApiErrorDto getError() {
         return error.toResponse(getMessage());

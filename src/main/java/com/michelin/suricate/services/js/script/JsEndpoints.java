@@ -16,6 +16,8 @@
 
 package com.michelin.suricate.services.js.script;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import com.michelin.suricate.utils.exceptions.js.FatalException;
 import com.michelin.suricate.utils.exceptions.js.RemoteException;
 import com.michelin.suricate.utils.exceptions.js.RequestException;
@@ -63,7 +65,7 @@ public final class JsEndpoints {
 
         if (StringUtils.isNotBlank(body)) {
             builder.post(
-                RequestBody.create(body, MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE)));
+                RequestBody.create(body, MediaType.parse(APPLICATION_JSON_VALUE)));
         }
 
         Request request = builder.build();
