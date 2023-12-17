@@ -55,7 +55,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
   /**
    * Called when the component is init
    */
-  public ngOnInit(): void {
+  public override ngOnInit(): void {
     this.projectWidgetFormStepsService.generateGlobalSteps().subscribe((formSteps: FormStep[]) => {
       this.wizardConfiguration = { steps: formSteps };
 
@@ -75,14 +75,14 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
   /**
    * {@inheritDoc}
    */
-  protected closeWizard(): void {
+  protected override closeWizard(): void {
     this.redirectToDashboard();
   }
 
   /**
    * {@inheritDoc}
    */
-  protected saveWizard(formData: FormData): void {
+  protected override saveWizard(formData: FormData): void {
     this.httpProjectService.getById(this.dashboardToken).subscribe((project: Project) => {
       this.httpProjectWidgetsService.getAllByProjectToken(this.dashboardToken).subscribe((widgets: ProjectWidget[]) => {
         let row = 1;

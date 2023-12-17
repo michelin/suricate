@@ -28,7 +28,7 @@ export class HideAfterInitDirective implements OnChanges, AfterViewInit {
    * @param changes
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hide.previousValue != undefined && changes.hide) {
+    if (changes['hide'].previousValue != undefined && changes['hide']) {
       this.elementRef.nativeElement.style.display = this.hide ? 'none' : 'block';
     }
   }

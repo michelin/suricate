@@ -57,7 +57,7 @@ export class SecuritySettingsComponent implements OnInit {
   /**
    * The revoke button
    */
-  public revokeButton: ButtonConfiguration<unknown>;
+  public revokeButton: ButtonConfiguration<PersonalAccessToken>;
 
   /**
    * The created token

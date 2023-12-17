@@ -29,10 +29,9 @@ import { Page } from '../../../models/backend/page';
  * Manage the Http widget calls
  */
 @Injectable({ providedIn: 'root' })
-export class HttpWidgetService extends AbstractHttpService<Widget> {
+export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest> {
   /**
    * Global endpoint for Widgets
-   * @type {string}
    */
   private static readonly widgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/widgets`;
 
@@ -72,7 +71,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    *
    * @param widget The object that we want to create
    */
-  public create(widget: Widget): Observable<Widget> {
+  public create(widget: WidgetRequest): Observable<Widget> {
     return EMPTY;
   }
 

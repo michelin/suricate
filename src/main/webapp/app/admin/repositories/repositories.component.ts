@@ -38,7 +38,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class RepositoriesComponent extends ListComponent<Repository> {
+export class RepositoriesComponent extends ListComponent<Repository, RepositoryRequest> {
   /**
    * The repository being built
    */
@@ -69,21 +69,21 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(repository: Repository): string {
+  protected override getFirstLabel(repository: Repository): string {
     return repository.name;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(repository: Repository): string {
+  protected override getSecondLabel(repository: Repository): string {
     return repository.type === RepositoryTypeEnum.REMOTE ? repository.url : repository.localPath;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getThirdLabel(repository: Repository): string {
+  protected override getThirdLabel(repository: Repository): string {
     return this.translateService.instant('repository.third.label', {
       type: repository.type,
       priority: repository.priority,
@@ -148,7 +148,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * {@inheritDoc}
    */
-  protected onItemsLoaded() {
+  protected override onItemsLoaded() {
     this.initHeaderConfiguration();
     this.dragAndDropDisabled = !this.objectsPaged.content || this.objectsPaged.content.length <= 1;
   }
@@ -287,7 +287,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * Update repositories priority when dropped and save them
    */
-  public drop(): void {
+  public override drop(): void {
     this.objectsPaged.content.forEach(repository => {
       repository.priority = this.objectsPaged.content.indexOf(repository) + 1;
     });

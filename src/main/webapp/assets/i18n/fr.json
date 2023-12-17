@@ -51,7 +51,7 @@
   "field.error.email.format": "Format d'email non valide",
   "field.error.gt0": "Ce champ requiert un nombre supérieur à 0",
   "field.error.length": "La longueur du champ est incorrect",
-  "field.error.password.mismatch": "Le mot de passe et sa confirmation doivent correspondre",
+  "field.error.password.mismatch": "Les mots de passes ne correspondent pas",
   "field.error.pattern": "Le champ ne correspond pas au bon format",
   "field.error.required": "Ce champ est obligatoire",
   "field.error.repository.unique.priority": "Un autre dépôt possède déjà cette priorité",

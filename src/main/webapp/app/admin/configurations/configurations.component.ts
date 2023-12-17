@@ -26,6 +26,9 @@ import {
 } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
 import { DataTypeEnum } from '../../shared/enums/data-type.enum';
+import {
+  WidgetConfigurationRequest
+} from '../../shared/models/backend/widget-configuration/widget-configuration-request';
 
 /**
  * Component used to display the list of widgets
@@ -34,7 +37,7 @@ import { DataTypeEnum } from '../../shared/enums/data-type.enum';
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
+export class ConfigurationsComponent extends ListComponent<CategoryParameter, WidgetConfigurationRequest> {
   /**
    * Constructor
    *
@@ -55,14 +58,14 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(configuration: CategoryParameter): string {
+  protected override getFirstLabel(configuration: CategoryParameter): string {
     return configuration.description;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(configuration: CategoryParameter): string {
+  protected override getSecondLabel(configuration: CategoryParameter): string {
     return configuration.value && configuration.dataType === DataTypeEnum.PASSWORD && !configuration.showValue
       ? '•'.repeat(configuration.value.length)
       : configuration.value;
@@ -71,7 +74,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
   /**
    * {@inheritDoc}
    */
-  protected getThirdLabel(configuration: CategoryParameter): string {
+  protected override getThirdLabel(configuration: CategoryParameter): string {
     return configuration.category.name;
   }
 

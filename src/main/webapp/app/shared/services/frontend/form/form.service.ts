@@ -17,7 +17,14 @@
  */
 
 import { Injectable } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidatorFn
+} from '@angular/forms';
 
 import { FormField } from '../../../models/frontend/form/form-field';
 import { FormStep } from '../../../models/frontend/form/form-step';
@@ -131,8 +138,8 @@ export class FormService {
     const formArray = this.formBuilder.array([]);
 
     if (field && field.fields && field.values) {
-      field.values.subscribe((values: unknown[]) => {
-        values.forEach((value: unknown) => {
+      field.values.subscribe((values: any[]) => {
+        values.forEach((value: any) => {
           const formGroup = this.formBuilder.group({});
           field.fields.forEach((innerField: FormField) => {
             formGroup.addControl(innerField.key, this.generateFormControl(innerField, value[innerField.key] ? value[innerField.key] : ''));

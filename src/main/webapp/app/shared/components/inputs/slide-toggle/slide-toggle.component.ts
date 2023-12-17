@@ -29,7 +29,7 @@ export class SlideToggleComponent {
    * The label of the slide toggle
    */
   @Input()
-  public label: String;
+  public label: string;
 
   /**
    * Is the toggle button checked or not

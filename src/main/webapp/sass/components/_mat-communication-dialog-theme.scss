@@ -15,25 +15,12 @@
  *  * limitations under the License.
  *
  */
+@use '../../../../../node_modules/@angular/material/index' as mat;
 
-.communication-dialog-wrapper {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+@mixin custom-communication-dialog-component-theme($theme) {
+  $warn: map-get($theme, warn);
 
-  .mat-mdc-dialog-content {
-    & {
-      background-color: #cfd2da42;
-      margin: auto 24px;
-      padding: 20px;
-    }
-
-    &.spacer {
-      flex-grow: 1;
-    }
-  }
-
-  .mat-mdc-dialog-actions {
-    padding: 14px 24px;
+  .communication-dialog-wrapper .mat-mdc-dialog-content.communication-dialog-error {
+    color: mat.get-color-from-palette($warn, 500);
   }
 }

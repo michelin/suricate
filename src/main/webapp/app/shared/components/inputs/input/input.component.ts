@@ -140,37 +140,39 @@ export class InputComponent implements OnInit {
    * Return the string code of the error to display it.
    */
   public getInputErrors(): string {
-    if (this.getFormControl()['errors']?.required) {
+    if (this.getFormControl()['errors']?.['required']) {
       return 'field.error.required';
     }
 
-    if (this.getFormControl()['errors']?.minlength) {
+    if (this.getFormControl()['errors']?.['minlength']) {
       return 'field.error.length';
     }
 
-    if (this.getFormControl()['errors']?.email) {
+    if (this.getFormControl()['errors']?.['email']) {
       return 'field.error.email.format';
     }
 
-    if (this.getFormControl()['errors']?.passwordMismatch) {
+    if (this.getFormControl()['errors']?.['passwordMismatch']) {
       return 'field.error.password.mismatch';
     }
 
-    if (this.getFormControl()['errors']?.pattern) {
+    if (this.getFormControl()['errors']?.['pattern']) {
       return 'field.error.pattern';
     }
 
-    if (this.getFormControl()['errors']?.digits) {
+    if (this.getFormControl()['errors']?.['digits']) {
       return 'field.error.digits';
     }
 
-    if (this.getFormControl()['errors']?.gt0) {
+    if (this.getFormControl()['errors']?.['gt0']) {
       return 'field.error.gt0';
     }
 
-    if (this.getFormControl()['errors']?.uniquePriority) {
+    if (this.getFormControl()['errors']?.['uniquePriority']) {
       return 'field.error.repository.unique.priority';
     }
+
+    return undefined;
   }
 
   /**

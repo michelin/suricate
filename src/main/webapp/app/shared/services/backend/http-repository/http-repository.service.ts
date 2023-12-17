@@ -32,10 +32,9 @@ import { Page } from '../../../models/backend/page';
  * Service that manage HTTP repository calls
  */
 @Injectable({ providedIn: 'root' })
-export class HttpRepositoryService implements AbstractHttpService<Repository | RepositoryRequest> {
+export class HttpRepositoryService implements AbstractHttpService<Repository, RepositoryRequest> {
   /**
    * Global repositories endpoint
-   * @type {string}
    */
   private static readonly repositoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/repositories`;
 

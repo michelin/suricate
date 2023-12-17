@@ -27,7 +27,7 @@ import { UserRequest } from '../../../models/backend/user/user-request';
 import { HttpUserService } from '../http-user/http-user.service';
 
 @Injectable({ providedIn: 'root' })
-export class HttpAdminUserService implements AbstractHttpService<User | UserRequest> {
+export class HttpAdminUserService implements AbstractHttpService<User, UserRequest> {
   public static readonly adminUsersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/admin/users`;
 
   /**

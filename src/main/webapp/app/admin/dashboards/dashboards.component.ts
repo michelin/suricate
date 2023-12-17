@@ -37,7 +37,7 @@ import { CssService } from '../../shared/services/frontend/css/css.service';
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class DashboardsComponent extends ListComponent<Project | ProjectRequest> {
+export class DashboardsComponent extends ListComponent<Project, ProjectRequest> {
   /**
    * Project selected in the list for modifications
    */
@@ -75,21 +75,21 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(project: Project): string {
+  protected override getFirstLabel(project: Project): string {
     return project.name;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(project: Project): string {
+  protected override getSecondLabel(project: Project): string {
     return project.token;
   }
 
   /**
    * {@inheritDoc}
    */
-  public redirectToBean(project: Project): void {
+  public override redirectToBean(project: Project): void {
     this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
   }
 
