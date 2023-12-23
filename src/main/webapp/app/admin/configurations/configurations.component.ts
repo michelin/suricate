@@ -29,6 +29,7 @@ import { DataTypeEnum } from '../../shared/enums/data-type.enum';
 import {
   WidgetConfigurationRequest
 } from '../../shared/models/backend/widget-configuration/widget-configuration-request';
+import { UntypedFormGroup } from '@angular/forms';
 
 /**
  * Component used to display the list of widgets
@@ -144,11 +145,11 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter, Wi
    * @param configuration The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, configuration: CategoryParameter, saveCallback: (configuration: CategoryParameter) => void): void {
+  private openFormSidenav(event: Event, configuration: CategoryParameter, saveCallback: (formGroup: UntypedFormGroup) => void): void {
     this.sidenavService.openFormSidenav({
       title: 'configuration.edit',
       formFields: this.widgetConfigurationFormFieldsService.generateFormFields(configuration),
-      save: (configurationRequest: CategoryParameter) => saveCallback(configurationRequest)
+      save: (formGroup: UntypedFormGroup) => saveCallback(formGroup)
     });
   }
 
@@ -174,10 +175,10 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter, Wi
   /**
    * Update a configuration
    *
-   * @param configuration The configuration to update
+   * @param formGroup The form group
    */
-  private updateConfiguration(configuration: CategoryParameter): void {
-    this.httpCategoryParametersService.update(configuration.key, configuration).subscribe(() => {
+  private updateConfiguration(formGroup: UntypedFormGroup): void {
+    this.httpCategoryParametersService.update(formGroup.value.key, formGroup.value).subscribe(() => {
       this.refreshList();
       this.toastService.sendMessage('configuration.update.success', ToastTypeEnum.SUCCESS);
     });

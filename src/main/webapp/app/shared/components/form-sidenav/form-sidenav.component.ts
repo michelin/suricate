@@ -151,7 +151,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
     this.formService.validate(this.formGroup);
 
     if (this.formGroup.valid) {
-      this.configuration.save(this.formGroup.value);
+      this.configuration.save(this.formGroup);
       this.closeSidenav();
     }
   }

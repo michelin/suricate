@@ -54,6 +54,7 @@ import {
 import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
+import { UntypedFormGroup } from '@angular/forms';
 
 /**
  * Component used to display a specific dashboard
@@ -378,7 +379,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       title: 'dashboard.edit',
       formFields: this.projectFormFieldsService.generateProjectFormFields(this.project),
       belongingComponent: this.dashboardScreen,
-      save: (formData: ProjectRequest) => this.editDashboard(formData)
+      save: (formGroup: UntypedFormGroup) => this.editDashboard(formGroup)
     });
   }
 
@@ -389,7 +390,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.sidenavService.openFormSidenav({
       title: 'grid.add',
       formFields: this.projectFormFieldsService.generateAddGridFormField(),
-      save: (formData: GridRequest) => this.addNewGrid(formData)
+      save: (formGroup: UntypedFormGroup) => this.addNewGrid(formGroup)
     });
   }
 
@@ -400,16 +401,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.grid.management',
       formFields: this.projectFormFieldsService.generateGridsManagementFormFields(this.project),
-      save: (formData: ProjectGridRequest) => this.editGrids(formData)
+      save: (formGroup: UntypedFormGroup) => this.editGrids(formGroup)
     });
   }
 
   /**
    * Execute the action edit the dashboard when the sidenav has been saved
    *
-   * @param formData The data retrieve from the form sidenav
+   * @param formGroup The form group
    */
-  private editDashboard(formData: ProjectRequest): void {
+  private editDashboard(formGroup: UntypedFormGroup): void {
+    const formData: ProjectRequest = formGroup.value;
     formData.cssStyle = `.grid { background-color: ${formData.gridBackgroundColor}; }`;
 
     this.httpProjectService.update(this.project.token, formData).subscribe(() => {
@@ -438,7 +440,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param formData The data retrieved from the side nav
    */
-  private addNewGrid(formData: GridRequest): void {
+  private addNewGrid(formGroup: UntypedFormGroup): void {
+    const formData: GridRequest = formGroup.value;
     this.httpProjectGridsService.create(this.project.token, formData).subscribe((createdProjectGrid: ProjectGrid) => {
       this.router.navigate(['/dashboards', this.dashboardToken, createdProjectGrid.id]);
     });
@@ -449,7 +452,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param formData The data retrieve from the form sidenav
    */
-  private editGrids(formData: ProjectGridRequest): void {
+  private editGrids(formGroup: UntypedFormGroup): void {
+    const formData: ProjectGridRequest = formGroup.value;
     const newTimes = Object.keys(formData)
       .filter(key => key.includes(ProjectFormFieldsService.timeFormFieldKey))
       .map(key => formData[key]);

@@ -26,6 +26,7 @@ import {
 } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
+import { UntypedFormGroup } from '@angular/forms';
 
 /**
  * Component used to display the list of users
@@ -130,21 +131,22 @@ export class UsersComponent extends ListComponent<User, UserRequest> implements 
    * @param user The user clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, user: User, saveCallback: (userRequest: UserRequest) => void): void {
+  private openFormSidenav(event: Event, user: User, saveCallback: (formGroup: UntypedFormGroup) => void): void {
     this.userSelected = user;
 
     this.sidenavService.openFormSidenav({
       title: user ? 'user.edit' : 'user.add',
       formFields: this.userFormFieldsService.generateFormFields(user),
-      save: (userRequest: UserRequest) => saveCallback(userRequest)
+      save: (formGroup: UntypedFormGroup) => saveCallback(formGroup)
     });
   }
 
   /**
    * Edit a user
-   * @param userRequest The user request to make
+   * @param formGroup The form group
    */
-  private editUser(userRequest: UserRequest): void {
+  private editUser(formGroup: UntypedFormGroup): void {
+    const userRequest: UserRequest = formGroup.value;
     this.httpAdminUserService.update(this.userSelected.id, userRequest).subscribe(() => {
       super.refreshList();
     });

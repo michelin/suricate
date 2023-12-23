@@ -91,28 +91,26 @@ export class UxSettingsComponent implements OnInit {
     this.formService.validate(this.formGroup);
 
     if (this.formGroup.valid) {
-      this.saveSettings(this.formGroup.value);
+      this.saveSettings();
     }
   }
 
   /**
    * Save the selected settings
-   *
-   * @param formData The selected settings from the form
    */
-  private saveSettings(formData: FormData): void {
+  private saveSettings(): void {
     from(this.userSettings.map(userSetting => userSetting.setting))
       .pipe(
         mergeMap((setting: Setting) => {
           const userSettingRequest = new UserSettingRequest();
           if (setting.constrained && setting.allowedSettingValues) {
             const selectedAllowedSetting = setting.allowedSettingValues.find((allowedSettingValue: AllowedSettingValue) => {
-              return allowedSettingValue.value === formData[setting.type];
+              return allowedSettingValue.value === this.formGroup.get(setting.type).value;
             });
 
             userSettingRequest.allowedSettingValueId = selectedAllowedSetting.id;
           } else {
-            userSettingRequest.unconstrainedValue = formData[setting.type];
+            userSettingRequest.unconstrainedValue = this.formGroup.get(setting.type).value;
           }
 
           return this.httpUserService.updateUserSetting(AuthenticationService.getConnectedUser().username, setting.id, userSettingRequest);
