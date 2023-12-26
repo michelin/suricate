@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -26,7 +26,6 @@ import { FormOption } from '../../../models/frontend/form/form-option';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../enums/icon.enum';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
-import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
 import { TranslateService } from '@ngx-translate/core';
 
 /**
@@ -48,10 +47,10 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class InputComponent implements OnInit {
   /**
-   * The form created in which we have to create the input
+   * A reference to a component. Used to take screenshot
    */
   @Input()
-  public belongingComponent: DashboardScreenComponent;
+  public componentRef: ElementRef;
 
   /**
    * The form created in which we have to create the input

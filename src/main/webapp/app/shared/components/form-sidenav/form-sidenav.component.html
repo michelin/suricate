@@ -16,7 +16,7 @@
       <suricate-input
         *ngFor="let field of configuration.formFields"
         [formGroup]="formGroup"
-        [belongingComponent]="configuration.belongingComponent"
+        [componentRef]="configuration.componentRef"
         [field]="field"
         (valueChangeEvent)="valueChanged($event)"
       >

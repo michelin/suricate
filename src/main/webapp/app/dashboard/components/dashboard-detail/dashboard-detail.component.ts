@@ -36,7 +36,6 @@ import {
 } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
@@ -66,14 +65,15 @@ import { UntypedFormGroup } from '@angular/forms';
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
+   * The dashboard screen
+   */
+  @ViewChild('dashboardScreen', { read: ElementRef })
+  public dashboardScreen: ElementRef;
+
+  /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
   private unsubscribe: Subject<void> = new Subject<void>();
-
-  /**
-   * The dashboard html (as HTML Element)
-   */
-  public dashboardScreen: DashboardScreenComponent;
 
   /**
    * Hold the configuration of the header component
@@ -378,7 +378,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.edit',
       formFields: this.projectFormFieldsService.generateProjectFormFields(this.project),
-      belongingComponent: this.dashboardScreen,
+      componentRef: this.dashboardScreen,
       save: (formGroup: UntypedFormGroup) => this.editDashboard(formGroup)
     });
   }
@@ -557,16 +557,5 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   public handlingDashboardDisconnect(): void {
     this.router.navigate(['/home']);
-  }
-
-  /**
-   * Set the dashboard screen component
-   * @param content The dashboard screen component
-   */
-  @ViewChild('dashboardScreen', { read: ElementRef })
-  public set content(content: DashboardScreenComponent) {
-    if (content) {
-      this.dashboardScreen = content;
-    }
   }
 }
