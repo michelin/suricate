@@ -33,7 +33,7 @@ export abstract class AbstractHttpService<TRet, TReq> {
   /**
    * Function used to retrieve the list of Objects
    */
-  abstract getAll(filter?: HttpFilter): Observable<TRet[] | Page<TRet>>;
+  abstract getAll(filter?: HttpFilter): Observable<Page<TRet>>;
 
   /**
    * Function used to retrieve an Object of type T
