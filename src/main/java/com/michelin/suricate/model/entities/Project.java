@@ -29,20 +29,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.validation.constraints.NotBlank;
-import java.sql.Types;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.YesNoConverter;
 
 /**
@@ -72,8 +69,7 @@ public class Project extends AbstractAuditingEntity<Long> {
     @Column
     private Integer maxColumn;
 
-    @Lob
-    @JdbcTypeCode(Types.LONGNVARCHAR)
+    @Column
     private String cssStyle;
 
     @Column(nullable = false)

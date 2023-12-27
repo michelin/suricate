@@ -25,12 +25,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.sql.Types;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * Asset entity.
@@ -46,7 +44,6 @@ public class Asset extends AbstractAuditingEntity<Long> {
     private Long id;
 
     @ToString.Exclude
-    @JdbcTypeCode(Types.BINARY)
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private byte[] content;

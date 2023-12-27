@@ -27,16 +27,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
-import java.sql.Types;
 import java.util.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * Project widget entity.
@@ -52,8 +49,6 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private Long id;
 
     @Column
-    @Lob
-    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String data;
 
     @Column
@@ -68,16 +63,13 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     @Column
     private int height;
 
-    @Lob
-    @JdbcTypeCode(Types.LONGNVARCHAR)
+    @Column
     private String customStyle;
 
-    @Lob
-    @JdbcTypeCode(Types.LONGNVARCHAR)
+    @Column
     private String backendConfig;
 
-    @Lob
-    @JdbcTypeCode(Types.LONGNVARCHAR)
+    @Column
     private String log;
 
     @Column

@@ -30,13 +30,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
-import java.sql.Types;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -44,7 +42,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * Widget entity.
@@ -68,16 +65,13 @@ public class Widget extends AbstractAuditingEntity<Long> {
     @Column(unique = true)
     private String technicalName;
 
-    @Lob
-    @JdbcTypeCode(Types.LONGNVARCHAR)
+    @Column
     private String htmlContent;
 
-    @Lob
-    @JdbcTypeCode(Types.LONGNVARCHAR)
+    @Column
     private String cssContent;
 
-    @Lob
-    @JdbcTypeCode(Types.LONGNVARCHAR)
+    @Column
     private String backendJs;
 
     @Column
