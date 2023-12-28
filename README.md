@@ -1,5 +1,9 @@
 # Suricate
 
+<div align="center">
+  <img src="src/main/webapp/assets/images/logo.png" height="100"  alt="suricate logo"/>
+</div>
+
 [![GitHub Build](https://img.shields.io/github/actions/workflow/status/michelin/suricate/continuous_integration.yml?branch=master&logo=github&style=for-the-badge)](https://img.shields.io/github/actions/workflow/status/michelin/suricate/continuous_integration.yml)
 [![GitHub release](https://img.shields.io/github/v/release/michelin/suricate?logo=github&style=for-the-badge)](https://github.com/michelin/suricate/releases)
 [![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/michelin/suricate/latest?logo=github&style=for-the-badge)](https://github.com/michelin/suricate/commits/master)
@@ -13,7 +17,7 @@
 
 This repository contains the source code of the Suricate application.
 
-![Suricate dashboard developer environment](src/main/webapp/assets/images/dashboard.png)
+![Suricate dashboard developer environment](.readme/dashboard.gif)
 
 ## Table of Contents
 
