@@ -29,7 +29,7 @@ describe('AbstractHttpService', () => {
     });
   });
 
-  it('should create', inject([AbstractHttpService], (service: AbstractHttpService<any>) => {
+  it('should create', inject([AbstractHttpService], (service: AbstractHttpService<any, any>) => {
     expect(service).toBeTruthy();
   }));
 });
