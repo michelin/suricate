@@ -46,7 +46,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   template: '',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent<T> implements OnInit, OnDestroy {
+export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   /**
    * Key for the research field
    */
@@ -100,7 +100,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   /**
    * The configuration of the list component
    */
-  public listConfiguration = new ListConfiguration<T>();
+  public listConfiguration = new ListConfiguration<TRet>();
 
   /**
    * Is drag & drop disabled
@@ -110,7 +110,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   /**
    * The object list to display
    */
-  public objectsPaged: Page<T>;
+  public objectsPaged: Page<TRet>;
 
   /**
    * Display the loader when it's true, end hide when it's false
@@ -147,7 +147,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    *
    * @param childService The child http service
    */
-  constructor(private readonly childService: AbstractHttpService<T>) {
+  constructor(private readonly childService: AbstractHttpService<TRet, TReq>) {
     this.dialogService = inject(DialogService);
     this.sidenavService = inject(SidenavService);
     this.translateService = inject(TranslateService);
@@ -193,7 +193,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   protected refreshList(): void {
     this.displayLoader();
 
-    this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<T>) => {
+    this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<TRet>) => {
       this.objectsPaged = objectsPaged;
       this.hideLoader();
       this.onItemsLoaded();
@@ -231,7 +231,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    *
    * @param object The object of the list
    */
-  protected getFirstLabel(object: T): string {
+  protected getFirstLabel(object: TRet): string {
     return '';
   }
 
@@ -241,7 +241,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    *
    * @param object The object of the list
    */
-  protected getSecondLabel(object: T): string {
+  protected getSecondLabel(object: TRet): string {
     return '';
   }
 
@@ -251,7 +251,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    *
    * @param object The object of the list
    */
-  protected getThirdLabel(object: T): string {
+  protected getThirdLabel(object: TRet): string {
     return '';
   }
 
@@ -261,7 +261,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    *
    * @param object The object of the list
    */
-  public getObjectImageURL(object: T): string {
+  public getObjectImageURL(object: TRet): string {
     return null;
   }
 
@@ -271,7 +271,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    *
    * @param object The object used for the redirection
    */
-  public redirectToBean(object: T): void {}
+  public redirectToBean(object: TRet): void {}
 
   /**
    * Perform actions after items have been loaded

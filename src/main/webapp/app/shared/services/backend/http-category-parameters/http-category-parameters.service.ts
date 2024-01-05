@@ -30,7 +30,7 @@ import { CategoryParameter } from '../../../models/backend/category-parameters/c
  * Configuration services manage http calls
  */
 @Injectable({ providedIn: 'root' })
-export class HttpCategoryParametersService extends AbstractHttpService<CategoryParameter> {
+export class HttpCategoryParametersService extends AbstractHttpService<CategoryParameter, WidgetConfigurationRequest> {
   /**
    * Global configurations endpoint
    */
@@ -72,7 +72,7 @@ export class HttpCategoryParametersService extends AbstractHttpService<CategoryP
    *
    * @param configuration The configuration that we want to create
    */
-  public create(configuration: CategoryParameter): Observable<CategoryParameter> {
+  public create(configuration: WidgetConfigurationRequest): Observable<CategoryParameter> {
     return EMPTY;
   }
 

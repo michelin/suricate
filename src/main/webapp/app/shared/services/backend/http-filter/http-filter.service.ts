@@ -83,7 +83,7 @@ export class HttpFilterService {
     Object.keys(httpFilter).forEach(filterKey => {
       if (httpFilter[filterKey]) {
         if (httpFilter[filterKey] instanceof Array) {
-          httpFilter[filterKey].forEach(filterKeyValue => {
+          httpFilter[filterKey].forEach((filterKeyValue: string) => {
             url += `&${filterKey}=${encodeURIComponent(filterKeyValue)}`;
           });
         } else {

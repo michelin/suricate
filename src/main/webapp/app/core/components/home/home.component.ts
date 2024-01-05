@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
+import {
+  ProjectFormFieldsService
+} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { CssService } from '../../../shared/services/frontend/css/css.service';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -15,6 +17,7 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'suricate-my-dashboards',
@@ -102,16 +105,17 @@ export class HomeComponent implements OnInit {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.create',
       formFields: this.projectFormFieldsService.generateProjectFormFields(),
-      save: (formData: ProjectRequest) => this.saveDashboard(formData)
+      save: (formGroup: UntypedFormGroup) => this.saveDashboard(formGroup)
     });
   }
 
   /**
    * Create a new dashboard
    *
-   * @param formData The data retrieved from the form
+   * @param formGroup The form group
    */
-  private saveDashboard(formData: ProjectRequest): void {
+  private saveDashboard(formGroup: UntypedFormGroup): void {
+    const formData: ProjectRequest = formGroup.value;
     formData.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(formData.gridBackgroundColor)]);
 
     this.httpProjectService.create(formData).subscribe((project: Project) => {

@@ -51,7 +51,7 @@
   "field.error.email.format": "Invalid email format",
   "field.error.gt0": "This field requires a number greater than 0",
   "field.error.length": "This field has an invalid length",
-  "field.error.password.mismatch": "The confirmation password and the password should match",
+  "field.error.password.mismatch": "Passwords do not match",
   "field.error.pattern": "The field do not respect the required format",
   "field.error.required": "This field is required",
   "field.error.repository.unique.priority": "Another repository already has this priority",

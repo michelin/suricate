@@ -214,7 +214,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
         this.widget.params,
         this.projectWidget.backendConfig
       ),
-      save: (formData: FormData) => this.saveWidget(formData),
+      save: (formGroup: UntypedFormGroup) => this.saveWidget(formGroup),
       slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
     });
   }
@@ -222,17 +222,17 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Save the widget modifications
    *
-   * @param formData The form data
+   * @param formGroup The form group
    */
-  public saveWidget(formData: FormData) {
+  public saveWidget(formGroup: UntypedFormGroup) {
     this.loading = true;
 
     const projectWidgetRequest: ProjectWidgetRequest = {
       widgetId: this.projectWidget.widgetId,
       customStyle: this.projectWidget.customStyle,
-      backendConfig: Object.keys(formData)
-        .filter((key: string) => formData[key] != null && String(formData[key]).trim() !== '')
-        .map((key: string) => `${key}=${String(formData[key]).replace(/\n/g, '\\n')}`)
+      backendConfig: Object.keys(formGroup.value)
+        .filter((key: string) => formGroup.get(key).value != null && String(formGroup.get(key).value).trim() !== '')
+        .map((key: string) => `${key}=${String(formGroup.get(key).value).replace(/\n/g, '\\n')}`)
         .join('\n')
     };
 

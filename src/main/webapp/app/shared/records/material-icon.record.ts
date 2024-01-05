@@ -21,7 +21,11 @@ import { IconEnum } from '../enums/icon.enum';
 /**
  * Records used to store related material icons from https://material.io/resources/icons
  */
-export const MaterialIconRecords: Record<IconEnum, string> = {
+type MaterialIcon = {
+  [key: string]: string;
+};
+
+export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.ACCESS_TIME]: 'access_time',
   [IconEnum.ADD]: 'add',
   [IconEnum.ARROW_DOWN]: 'keyboard_arrow_right',

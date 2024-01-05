@@ -32,6 +32,7 @@ export class CustomValidator {
       if ((passwordControl.dirty || passwordControl.touched) && (confirmPasswordControl.dirty || confirmPasswordControl.touched)) {
         return passwordControl.value !== confirmPasswordControl.value ? { passwordMismatch: true } : null;
       }
+      return null;
     };
   }
 
@@ -41,9 +42,11 @@ export class CustomValidator {
    * @param control The field control
    */
   public static isDigits(control: AbstractControl) {
-    if (control.value) {
-      return String(control.value).match(new RegExp('^-?[0-9]\\d*(\\.\\d+)?$')) ? null : { digits: true };
+    if (!control.value) {
+      return null;
     }
+
+    return String(control.value).match(new RegExp('^-?[0-9]\\d*(\\.\\d+)?$')) ? null : { digits: true };
   }
 
   /**

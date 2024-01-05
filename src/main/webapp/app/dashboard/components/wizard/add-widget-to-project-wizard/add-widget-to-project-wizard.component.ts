@@ -29,6 +29,7 @@ import {
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
 import { Project } from '../../../../shared/models/backend/project/project';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   templateUrl: '../../../../shared/components/wizard/wizard.component.html',
@@ -55,7 +56,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
   /**
    * Called when the component is init
    */
-  public ngOnInit(): void {
+  public override ngOnInit(): void {
     this.projectWidgetFormStepsService.generateGlobalSteps().subscribe((formSteps: FormStep[]) => {
       this.wizardConfiguration = { steps: formSteps };
 
@@ -75,14 +76,14 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
   /**
    * {@inheritDoc}
    */
-  protected closeWizard(): void {
+  protected override closeWizard(): void {
     this.redirectToDashboard();
   }
 
   /**
    * {@inheritDoc}
    */
-  protected saveWizard(formData: FormData): void {
+  protected override saveWizard(formGroup: UntypedFormGroup): void {
     this.httpProjectService.getById(this.dashboardToken).subscribe((project: Project) => {
       this.httpProjectWidgetsService.getAllByProjectToken(this.dashboardToken).subscribe((widgets: ProjectWidget[]) => {
         let row = 1;
@@ -103,15 +104,15 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
         }
 
         const projectWidgetRequest: ProjectWidgetRequest = {
-          widgetId: formData[ProjectWidgetFormStepsService.selectWidgetStepKey][ProjectWidgetFormStepsService.widgetIdFieldKey],
-          backendConfig: Object.keys(formData[ProjectWidgetFormStepsService.configureWidgetStepKey])
+          widgetId: formGroup.get(ProjectWidgetFormStepsService.selectWidgetStepKey).value[ProjectWidgetFormStepsService.widgetIdFieldKey],
+          backendConfig: Object.keys(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value)
             .filter(
               (key: string) =>
-                formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
-                String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).trim() !== ''
+                formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key] != null &&
+                String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).trim() !== ''
             )
             .map(
-              (key: string) => `${key}=${String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).replace(/\n/g, '\\n')}`
+              (key: string) => `${key}=${String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).replace(/\n/g, '\\n')}`
             )
             .join('\n'),
           gridColumn: column,

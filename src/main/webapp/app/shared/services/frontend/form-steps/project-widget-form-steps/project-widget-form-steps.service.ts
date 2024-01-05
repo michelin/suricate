@@ -143,7 +143,7 @@ export class ProjectWidgetFormStepsService {
    * @param widgetConfig The configuration already set
    */
   public generateWidgetParametersFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
-    const formFields = [];
+    const formFields: FormField[] = [];
 
     widgetParams.forEach((widgetParam: WidgetParam) => {
       let configValue = null;

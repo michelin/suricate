@@ -30,6 +30,7 @@ import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject, EMPTY, forkJoin, of } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { UntypedFormGroup } from '@angular/forms';
 
 /**
  * Component used to display the list of git repositories
@@ -38,7 +39,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class RepositoriesComponent extends ListComponent<Repository> {
+export class RepositoriesComponent extends ListComponent<Repository, RepositoryRequest> {
   /**
    * The repository being built
    */
@@ -69,21 +70,21 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(repository: Repository): string {
+  protected override getFirstLabel(repository: Repository): string {
     return repository.name;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(repository: Repository): string {
+  protected override getSecondLabel(repository: Repository): string {
     return repository.type === RepositoryTypeEnum.REMOTE ? repository.url : repository.localPath;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getThirdLabel(repository: Repository): string {
+  protected override getThirdLabel(repository: Repository): string {
     return this.translateService.instant('repository.third.label', {
       type: repository.type,
       priority: repository.priority,
@@ -148,7 +149,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * {@inheritDoc}
    */
-  protected onItemsLoaded() {
+  protected override onItemsLoaded() {
     this.initHeaderConfiguration();
     this.dragAndDropDisabled = !this.objectsPaged.content || this.objectsPaged.content.length <= 1;
   }
@@ -160,13 +161,13 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repository The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, repository: Repository, saveCallback: (repositoryRequest: RepositoryRequest) => void): void {
+  private openFormSidenav(event: Event, repository: Repository, saveCallback: (formGroup: UntypedFormGroup) => void): void {
     this.repository = repository ? Object.assign({}, repository) : new Repository();
 
     this.sidenavService.openFormSidenav({
       title: repository ? 'repository.edit' : 'repository.add',
       formFields: this.repositoryFormFieldsService.generateFormFields(repository),
-      save: (repositoryRequest: RepositoryRequest) => saveCallback(repositoryRequest),
+      save: (formGroup: UntypedFormGroup) => saveCallback(formGroup),
       onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
     });
   }
@@ -211,9 +212,10 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * Update a repository
    * If the repository is enabled, all the repositories will be resynchronized in priority order
-   * @param repositoryRequest The new repository with the modification made on the form
+   * @param formGroup The form group
    */
-  private updateRepository(repositoryRequest: RepositoryRequest): void {
+  private updateRepository(formGroup: UntypedFormGroup): void {
+    const repositoryRequest: RepositoryRequest = formGroup.value;
     if (repositoryRequest.login.trim().length === 0) {
       repositoryRequest.login = null;
     }
@@ -239,7 +241,8 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * Function used to add a repository
    * @param repositoryRequest The new repository to add with the modification made on the form
    */
-  private addRepository(repositoryRequest: RepositoryRequest): void {
+  private addRepository(fromGroup: UntypedFormGroup): void {
+    const repositoryRequest: RepositoryRequest = fromGroup.value;
     this.disableAllReposSync.next(true);
     this.dragAndDropDisabled = true;
     if (repositoryRequest.enabled) {
@@ -287,7 +290,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * Update repositories priority when dropped and save them
    */
-  public drop(): void {
+  public override drop(): void {
     this.objectsPaged.content.forEach(repository => {
       repository.priority = this.objectsPaged.content.indexOf(repository) + 1;
     });

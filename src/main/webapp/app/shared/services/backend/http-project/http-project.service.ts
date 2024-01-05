@@ -31,7 +31,7 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
 
 @Injectable({ providedIn: 'root' })
-export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
+export class HttpProjectService implements AbstractHttpService<Project, ProjectRequest> {
   /**
    * Global endpoint for projects
    */

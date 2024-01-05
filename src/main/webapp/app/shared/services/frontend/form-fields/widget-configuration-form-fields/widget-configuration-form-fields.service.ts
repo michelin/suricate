@@ -131,7 +131,7 @@ export class WidgetConfigurationFormFieldsService {
     const categorySettingsFormFields = this.generateCategoryParametersFormFields(categorySettings, widgetBackendConfig);
 
     if (checked) {
-      fields.push(...categorySettingsFormFields);
+      fields.unshift(...categorySettingsFormFields);
       this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
     } else {
       for (const categoryField of categorySettingsFormFields) {

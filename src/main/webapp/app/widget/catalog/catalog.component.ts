@@ -28,7 +28,7 @@ import { HttpAssetService } from '../../shared/services/backend/http-asset/http-
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class CatalogComponent extends ListComponent<Widget | WidgetRequest> {
+export class CatalogComponent extends ListComponent<Widget, WidgetRequest> {
   /**
    * Constructor
    *
@@ -44,28 +44,28 @@ export class CatalogComponent extends ListComponent<Widget | WidgetRequest> {
   /**
    * {@inheritDoc}
    */
-  public getFirstLabel(widget: Widget): string {
+  public override getFirstLabel(widget: Widget): string {
     return widget.name;
   }
 
   /**
    * {@inheritDoc}
    */
-  public getSecondLabel(widget: Widget): string {
+  public override getSecondLabel(widget: Widget): string {
     return widget.description;
   }
 
   /**
    * {@inheritDoc}
    */
-  public getThirdLabel(widget: Widget): string {
+  public override getThirdLabel(widget: Widget): string {
     return widget.category.name;
   }
 
   /**
    * {@inheritDoc}
    */
-  public getObjectImageURL(widget: Widget): string {
+  public override getObjectImageURL(widget: Widget): string {
     return HttpAssetService.getContentUrl(widget.imageToken);
   }
 

@@ -20,6 +20,8 @@
  * Class that represent a filter request
  */
 export class HttpFilter {
+  [key: string]: any;
+
   /**
    * Search value
    */

@@ -47,7 +47,7 @@ export class FieldsComponent extends InputComponent implements OnInit{
   /**
    * Called when the component is init
    */
-  public ngOnInit(): void {
+  public override ngOnInit(): void {
     super.ngOnInit()
 
     if (this.field.deleteRow) {

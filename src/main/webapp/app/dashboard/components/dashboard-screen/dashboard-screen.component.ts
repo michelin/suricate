@@ -155,36 +155,36 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * @param changes The change event
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.project) {
-      if (!changes.project.previousValue) {
+    if (changes['project']) {
+      if (!changes['project'].previousValue) {
         // Inject this variable in the window scope because some widgets use it to init the js
         (window as any).page_loaded = true;
       }
 
-      if (changes.project.currentValue) {
+      if (changes['project'].currentValue) {
         this.initGridStackOptions();
 
         // Do not add libs in the DOM at first view init
         // Let the after view init method handle the first initialization
-        if (!changes.project.firstChange) {
+        if (!changes['project'].firstChange) {
           this.addExternalJSLibrariesToTheDOM();
         }
 
-        if (!changes.project.previousValue) {
+        if (!changes['project'].previousValue) {
           this.initProjectWebsockets();
         } else {
-          if (changes.project.previousValue.token !== changes.project.currentValue.token) {
+          if (changes['project'].previousValue.token !== changes['project'].currentValue.token) {
             this.resetProjectWebsockets();
           }
         }
       }
     }
 
-    if (changes.readOnly) {
+    if (changes['readOnly']) {
       this.initGridStackOptions();
     }
 
-    if (changes.projectWidgets) {
+    if (changes['projectWidgets']) {
       this.initGrid();
     }
   }

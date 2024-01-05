@@ -22,63 +22,18 @@ import { RepositoryTypeEnum } from '../../../enums/repository-type.enum';
  * Repository class
  */
 export class Repository {
-  /**
-   * The repository id
-   */
+  [key: string]: any;
   id: number;
-
-  /**
-   * The repository name
-   */
   name: string;
-
-  /**
-   * The repository url
-   */
   url: string;
-
-  /**
-   * The repository branch to clone
-   */
   branch: string;
-
-  /**
-   * The login to use for the connection to the remote repository
-   */
   login: string;
-
-  /**
-   * The password to use for the connection to the remote repository
-   */
   password: string;
-
-  /**
-   * The path of the repository in case of a local folder
-   */
   localPath: string;
-
-  /**
-   * The type of repository
-   */
   type: RepositoryTypeEnum;
-
-  /**
-   * If the repository is enabled or not
-   */
   enabled: boolean;
-
-  /**
-   * The priority order
-   */
   priority: number;
-
-  /**
-   * The repository created date
-   */
   createdDate: Date;
 
-  /**
-   * Constructor
-   */
   constructor() {}
 }

@@ -26,7 +26,7 @@
 @import 'sass/components/mat-list-theme';
 @import 'sass/components/mat-input-theme';
 @import 'sass/components/mat-file-input-theme';
-@import 'app/shared/components/communication-dialog/communication-dialog.component';
+@import 'sass/components/mat-communication-dialog-theme';
 @import 'app/dashboard/components/dashboard-detail/dashboard-detail.component';
 
 /**
@@ -44,6 +44,6 @@
   @include custom-list-component-theme($theme);
   @include custom-input-component-theme($theme);
   @include custom-file-input-component-theme($theme);
-  @include communication-dialog-component-theme($theme);
+  @include custom-communication-dialog-component-theme($theme);
   @include dashboard-detail-component-theme($theme);
 }

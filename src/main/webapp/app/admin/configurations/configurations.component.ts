@@ -26,6 +26,10 @@ import {
 } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
 import { DataTypeEnum } from '../../shared/enums/data-type.enum';
+import {
+  WidgetConfigurationRequest
+} from '../../shared/models/backend/widget-configuration/widget-configuration-request';
+import { UntypedFormGroup } from '@angular/forms';
 
 /**
  * Component used to display the list of widgets
@@ -34,7 +38,7 @@ import { DataTypeEnum } from '../../shared/enums/data-type.enum';
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
+export class ConfigurationsComponent extends ListComponent<CategoryParameter, WidgetConfigurationRequest> {
   /**
    * Constructor
    *
@@ -55,14 +59,14 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(configuration: CategoryParameter): string {
+  protected override getFirstLabel(configuration: CategoryParameter): string {
     return configuration.description;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(configuration: CategoryParameter): string {
+  protected override getSecondLabel(configuration: CategoryParameter): string {
     return configuration.value && configuration.dataType === DataTypeEnum.PASSWORD && !configuration.showValue
       ? '•'.repeat(configuration.value.length)
       : configuration.value;
@@ -71,7 +75,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
   /**
    * {@inheritDoc}
    */
-  protected getThirdLabel(configuration: CategoryParameter): string {
+  protected override getThirdLabel(configuration: CategoryParameter): string {
     return configuration.category.name;
   }
 
@@ -141,11 +145,11 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
    * @param configuration The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, configuration: CategoryParameter, saveCallback: (configuration: CategoryParameter) => void): void {
+  private openFormSidenav(event: Event, configuration: CategoryParameter, saveCallback: (formGroup: UntypedFormGroup) => void): void {
     this.sidenavService.openFormSidenav({
       title: 'configuration.edit',
       formFields: this.widgetConfigurationFormFieldsService.generateFormFields(configuration),
-      save: (configurationRequest: CategoryParameter) => saveCallback(configurationRequest)
+      save: (formGroup: UntypedFormGroup) => saveCallback(formGroup)
     });
   }
 
@@ -171,10 +175,10 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
   /**
    * Update a configuration
    *
-   * @param configuration The configuration to update
+   * @param formGroup The form group
    */
-  private updateConfiguration(configuration: CategoryParameter): void {
-    this.httpCategoryParametersService.update(configuration.key, configuration).subscribe(() => {
+  private updateConfiguration(formGroup: UntypedFormGroup): void {
+    this.httpCategoryParametersService.update(formGroup.value.key, formGroup.value).subscribe(() => {
       this.refreshList();
       this.toastService.sendMessage('configuration.update.success', ToastTypeEnum.SUCCESS);
     });

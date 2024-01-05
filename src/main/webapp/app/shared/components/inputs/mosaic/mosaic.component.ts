@@ -49,7 +49,7 @@ export class MosaicComponent extends InputComponent implements OnInit {
   /**
    * Called when the component is init
    */
-  public ngOnInit(): void {
+  public override ngOnInit(): void {
     if (this.field.mosaicOptions) {
       this.field.mosaicOptions(this.formGroup).subscribe((mosaicOptions: MosaicFormOption[]) => {
         this.mosaicOptions = mosaicOptions;

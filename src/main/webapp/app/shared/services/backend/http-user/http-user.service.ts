@@ -26,14 +26,16 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { Page } from '../../../models/backend/page';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { PersonalAccessTokenRequest } from '../../../models/backend/personal-access-token/personal-access-token-request';
+import {
+  PersonalAccessTokenRequest
+} from '../../../models/backend/personal-access-token/personal-access-token-request';
 import { PersonalAccessToken } from '../../../models/backend/personal-access-token/personal-access-token';
 
 /**
  * Manage the http user calls
  */
 @Injectable({ providedIn: 'root' })
-export class HttpUserService implements AbstractHttpService<User | UserRequest> {
+export class HttpUserService implements AbstractHttpService<User, UserRequest> {
   public static readonly usersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/users`;
 
   /**
@@ -66,16 +68,16 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * Function used to create a new user
    * @param entity The user to create
    */
-  public create(entity: User | UserRequest): Observable<User> {
+  public create(entity: UserRequest): Observable<User> {
     return EMPTY;
   }
 
   /**
    * Update a user
-   * @param {number} id The userId to update
+   * @param id The userId to update
    * @param entity The user request
    */
-  public update(id: number, entity: User | UserRequest): Observable<void> {
+  public update(id: number, entity: UserRequest): Observable<void> {
     const url = `${HttpUserService.usersApiEndpoint}/${id}`;
 
     return this.httpClient.put<void>(url, entity);

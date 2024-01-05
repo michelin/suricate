@@ -20,7 +20,8 @@ import { FormField } from '../form/form-field';
 import { ValueChangedEvent } from '../form/value-changed-event';
 import { Observable } from 'rxjs';
 import { SlideToggleButtonConfiguration } from '../button/slide-toggle/slide-toggle-button-configuration';
-import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
+import { UntypedFormGroup } from '@angular/forms';
+import { ElementRef } from '@angular/core';
 
 /**
  * Configuration used by the form sidenav
@@ -44,7 +45,7 @@ export interface FormSidenavConfiguration {
   /**
    * The function to call when the form should be sent
    */
-  save?: (object: unknown) => void;
+  save?: (formGroup: UntypedFormGroup) => void;
 
   /**
    * Function to call when a value of a field has changed
@@ -62,7 +63,7 @@ export interface FormSidenavConfiguration {
   slideToggleButtonConfiguration?: SlideToggleButtonConfiguration;
 
   /**
-   * Reference on the belonging component
+   * A reference to a component. Used to take screenshot
    */
-  belongingComponent?: DashboardScreenComponent;
+  componentRef?: ElementRef;
 }

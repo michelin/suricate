@@ -274,9 +274,9 @@ export class WizardComponent implements OnInit {
    * Hook used to save the wizard
    * Implemented by child component
    *
-   * @param formData The value of the form
+   * @param formGroup The form group
    */
-  protected saveWizard(formData: FormData): void {}
+  protected saveWizard(formGroup: UntypedFormGroup): void {}
 
   /**
    * Check if the stepper form is valid before saving the data
@@ -285,7 +285,7 @@ export class WizardComponent implements OnInit {
     this.formService.validate(this.stepperFormGroup);
 
     if (this.stepperFormGroup.valid) {
-      this.saveWizard(this.stepperFormGroup.value);
+      this.saveWizard(this.stepperFormGroup);
     }
   }
 }

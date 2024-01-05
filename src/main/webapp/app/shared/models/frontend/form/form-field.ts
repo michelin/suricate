@@ -114,12 +114,12 @@ export class FormField {
   /**
    * The list of values to used in the array
    */
-  values?: Observable<unknown[]>;
+  values?: Observable<any[]>;
 
   /**
    * Function used to delete a row
    */
-  deleteRow?: { attribute: string; callback: (object: unknown) => Observable<unknown> };
+  deleteRow?: { attribute: string; callback: (object: any) => Observable<any> };
 
   /* ***************************************************************************************************************** */
   /*                        Mosaic Field                                                                                */

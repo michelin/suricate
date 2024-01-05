@@ -26,6 +26,7 @@ import {
 } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
+import { UntypedFormGroup } from '@angular/forms';
 
 /**
  * Component used to display the list of users
@@ -34,7 +35,7 @@ import { HttpAdminUserService } from '../../shared/services/backend/http-admin-u
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class UsersComponent extends ListComponent<User> implements OnInit {
+export class UsersComponent extends ListComponent<User, UserRequest> implements OnInit {
   /**
    * User selected in the list for modification
    */
@@ -60,7 +61,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
   /**
    * Called when the component is init
    */
-  public ngOnInit(): void {
+  public override ngOnInit(): void {
     super.ngOnInit();
   }
 
@@ -105,21 +106,21 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(user: User): string {
+  protected override getFirstLabel(user: User): string {
     return `${user.firstname} ${user.lastname} (${user.username})`;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(user: User): string {
+  protected override getSecondLabel(user: User): string {
     return user.email;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getThirdLabel(user: User): string {
+  protected override getThirdLabel(user: User): string {
     return user.roles.map((role: Role) => role.name).join(', ');
   }
 
@@ -130,21 +131,22 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    * @param user The user clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, user: User, saveCallback: (userRequest: UserRequest) => void): void {
+  private openFormSidenav(event: Event, user: User, saveCallback: (formGroup: UntypedFormGroup) => void): void {
     this.userSelected = user;
 
     this.sidenavService.openFormSidenav({
       title: user ? 'user.edit' : 'user.add',
       formFields: this.userFormFieldsService.generateFormFields(user),
-      save: (userRequest: UserRequest) => saveCallback(userRequest)
+      save: (formGroup: UntypedFormGroup) => saveCallback(formGroup)
     });
   }
 
   /**
    * Edit a user
-   * @param userRequest The user request to make
+   * @param formGroup The form group
    */
-  private editUser(userRequest: UserRequest): void {
+  private editUser(formGroup: UntypedFormGroup): void {
+    const userRequest: UserRequest = formGroup.value;
     this.httpAdminUserService.update(this.userSelected.id, userRequest).subscribe(() => {
       super.refreshList();
     });

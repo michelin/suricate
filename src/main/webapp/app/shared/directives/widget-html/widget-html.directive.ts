@@ -26,7 +26,7 @@ export class WidgetHtmlDirective implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     // When the widget changes, reapply the JS scripts
-    if (changes.projectWidget) {
+    if (changes['projectWidget']) {
       this.reapplyJSScripts();
     }
   }

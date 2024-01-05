@@ -18,7 +18,7 @@ import { Injectable } from '@angular/core';
 import { CssSelector } from '../../../models/frontend/css-parser/css-selector';
 import { CssRule } from '../../../models/frontend/css-parser/css-rule';
 
-import * as CSSParser from 'jotform-css.js/css.js';
+import * as CSSParser from 'jotform-css.js';
 
 /**
  * The dashboard service
@@ -31,18 +31,6 @@ export class CssService {
   constructor() {}
 
   /**
-   * Used to parse the css from a string file
-   *
-   * @param cssContent The css file
-   */
-  public static getParsedCss(cssContent: string): CssSelector[] {
-    if (cssContent) {
-      const parser = new CSSParser.cssjs();
-      return parser.parseCSS(cssContent);
-    }
-  }
-
-  /**
    * Extract the value of a property from the css file
    *
    * @param cssContent The css content
@@ -50,21 +38,21 @@ export class CssService {
    * @param propertyName The property that we should use to retrieve the value
    */
   public static extractCssValue(cssContent: string, cssSelector: string, propertyName: string): string {
-    let propertyValue = null;
-
     if (cssContent && cssSelector && propertyName) {
-      const cssParsed: CssSelector[] = CssService.getParsedCss(cssContent);
+      const parser = new CSSParser.cssjs();
+      const parsedCss = parser.parseCSS(cssContent) as unknown as Array<CssSelector>;
 
-      if (cssParsed) {
-        const cssSelectorFound: CssSelector = cssParsed.find((currCssSelector: CssSelector) => currCssSelector.selector === cssSelector);
+      if (parsedCss) {
+        const cssSelectorFound: CssSelector = parsedCss.find((currCssSelector: CssSelector) => currCssSelector.selector === cssSelector);
 
         if (cssSelectorFound) {
           const cssRule: CssRule = cssSelectorFound.rules.find((currCssRule: CssRule) => currCssRule.directive === propertyName);
-          propertyValue = cssRule ? cssRule.value : null;
+          return cssRule ? cssRule.value : null;
         }
       }
     }
-    return propertyValue;
+
+    return null;
   }
 
   /**

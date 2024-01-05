@@ -59,7 +59,7 @@ export class FileInputComponent extends InputComponent implements OnInit {
   /**
    * When the component is init
    */
-  public ngOnInit(): void {
+  public override ngOnInit(): void {
     this.setBase64File(this.field.value);
   }
 
@@ -117,11 +117,11 @@ export class FileInputComponent extends InputComponent implements OnInit {
    * Take a screenshot of the dashboard
    */
   public screenshot(): void {
-    html2canvas(this.belongingComponent['nativeElement'], {
+    html2canvas(this.componentRef.nativeElement, {
       backgroundColor: 'transparent',
       foreignObjectRendering: true,
       scrollX: -190,
-      scrollY: -80
+      scrollY: -100
     }).then((htmlCanvasElement: HTMLCanvasElement) => {
       const b64: string = htmlCanvasElement.toDataURL('image/png');
       this.setBase64File(b64);

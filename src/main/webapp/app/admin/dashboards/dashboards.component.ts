@@ -32,12 +32,13 @@ import { ValueChangedEvent } from '../../shared/models/frontend/form/value-chang
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CssService } from '../../shared/services/frontend/css/css.service';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class DashboardsComponent extends ListComponent<Project | ProjectRequest> {
+export class DashboardsComponent extends ListComponent<Project, ProjectRequest> {
   /**
    * Project selected in the list for modifications
    */
@@ -75,21 +76,21 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(project: Project): string {
+  protected override getFirstLabel(project: Project): string {
     return project.name;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(project: Project): string {
+  protected override getSecondLabel(project: Project): string {
     return project.token;
   }
 
   /**
    * {@inheritDoc}
    */
-  public redirectToBean(project: Project): void {
+  public override redirectToBean(project: Project): void {
     this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
   }
 
@@ -152,16 +153,17 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     this.sidenavService.openFormSidenav({
       title: project ? 'dashboard.edit' : 'dashboard.create',
       formFields: this.projectFormFieldsService.generateProjectFormFields(project),
-      save: (projectRequest: ProjectRequest) => this.editProject(projectRequest)
+      save: (formGroup: UntypedFormGroup) => this.editProject(formGroup)
     });
   }
 
   /**
    * Redirect on the edit page
    *
-   * @param projectRequest The project clicked on the list
+   * @param formGroup The form group
    */
-  private editProject(projectRequest: ProjectRequest): void {
+  private editProject(formGroup: UntypedFormGroup): void {
+    const projectRequest: ProjectRequest = formGroup.value;
     projectRequest.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(projectRequest.gridBackgroundColor)]);
 
     this.httpProjectService.update(this.projectSelected.token, projectRequest).subscribe(() => {
