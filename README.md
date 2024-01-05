@@ -26,6 +26,8 @@ This repository contains the source code of the Suricate application.
 * [Configuration](#configuration)
     * [Default Configuration](#default-configuration)
     * [Database](#database)
+      * [H2 vs PostgreSQL](#h2-vs-postgresql)
+      * [Initialization with Flyway](#initialization-with-flyway)
     * [Authentication](#authentication)
       * [LDAP vs Database](#ldap-vs-database)
       * [Social Login](#social-login)
@@ -87,7 +89,9 @@ By default, Suricate:
 
 ### Database
 
-Suricate supports running on different DBMS. Currently, the following DBMS are supported:
+#### H2 vs PostgreSQL
+
+Suricate supports running on different database management systems (DBMS):
 
 - H2
 - PostgreSQL
@@ -99,9 +103,9 @@ parameter:
 spring.profiles.active: ### Provider should be 'h2' or 'postgresql'
 ```
 
-The matching `application-DBMS.properties` file will be picked up.
+It will activate the default `application-DBMS.properties` configuration file with the required properties for the chosen DBMS.
 
-In the matching `application-DBMS.properties`, fill in the datasource properties:
+You will still need to define your database connection properties in the `application.properties` file:
 
 ```yaml
 spring.datasource.url:
@@ -111,6 +115,27 @@ spring.datasource.password:
 
 Please note that the `application-DBMS.properties` files activate Flyway to automatically set up the database
 structure (tables, constraints, etc.) and the minimum required functional data.
+
+#### Initialization with Flyway
+
+Suricate uses [Flyway](https://docs.spring.io/spring-boot/docs/2.0.0.M5/reference/html/howto-database-initialization.html) to manage the database initialization.
+It is enabled by default to automatically set up the database structure (tables, constraints, etc.) and the minimum
+required functional data at the first start of the application.
+
+Depending on the database management system you use, Flyway will use the appropriate scripts located in the
+`src/main/resources/flyway` folder.
+
+Flyway stores the current version of the database in a table named `schema_version` defined by the following property:
+
+```yaml
+spring.flyway.table: schema_version
+```
+
+Flyway can be deactivated by setting the following property to `false`:
+
+```yaml
+spring.flyway.enabled: false
+```
 
 ### Authentication
 

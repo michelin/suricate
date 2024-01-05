@@ -50,7 +50,7 @@
   .mat-stepper-horizontal,
   .mat-stepper-vertical {
     min-height: 90%;
-    background-color: mat.get-color-from-palette($background, background);
+    --mat-stepper-container-color: mat.get-color-from-palette($background, background);
 
     .mat-step-header {
       .mat-step-icon {
