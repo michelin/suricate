@@ -66,4 +66,4 @@ jobs:
         run: npm run lint
 
       - name: Test
-        run: npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
+        run: npm run test-ci
