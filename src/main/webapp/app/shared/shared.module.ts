@@ -98,7 +98,6 @@ import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-
         FileInputComponent,
         FormsModule,
         HttpClientModule,
-        HttpClientModule,
         InputComponent,
         MaterialCDKModule,
         MaterialModule,

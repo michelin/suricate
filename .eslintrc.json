@@ -31,7 +31,6 @@
         "@angular-eslint/directive-selector": [
           "error",
           {
-            "prefix": "suricate",
             "style": "camelCase",
             "type": "attribute"
           }
