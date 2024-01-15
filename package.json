@@ -35,7 +35,8 @@
     "html2canvas": "1.4.1",
     "intl": "^1.2.5",
     "jotform-css.js": "^1.0.1",
-    "jquery": "^3.5.0",
+    "jquery": "^3.7.1",
+
     "lodash": "^4.17.21",
     "moment": "^2.22.1",
     "ngx-color-picker": "^16.0.0",
