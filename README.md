@@ -62,12 +62,8 @@ For example, you can create a custom  `/config/application.properties` or set th
 property when running the fat jar file:
 
 ```console
-java -Dpolyglotimpl.DisableClassPathIsolation=true -jar suricate.jar --spring.config.location=classpath:\,file:C:\myCustomLocation\
+java -jar suricate.jar --spring.config.location=classpath:\,file:C:\myCustomLocation\
 ```
-
-The `-Dpolyglotimpl.DisableClassPathIsolation=true` option is required to
-run [Polyglot]((https://www.graalvm.org/jdk21/reference-manual/embed-languages/))
-properly ([more details](https://github.com/oracle/graal/issues/7625)).
 
 Alternatively, you can use the provided docker-compose file to run the application and use a volume to override the
 default properties:
