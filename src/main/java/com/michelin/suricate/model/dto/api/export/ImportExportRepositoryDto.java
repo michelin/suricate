@@ -1,7 +1,7 @@
 package com.michelin.suricate.model.dto.api.export;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.RepositoryTypeEnum;
+import com.michelin.suricate.model.enumeration.RepositoryTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Date;
 import lombok.Data;

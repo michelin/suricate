@@ -2,9 +2,9 @@ package com.michelin.suricate.security.oauth2;
 
 import static com.michelin.suricate.security.oauth2.HttpCookieOauth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
-import com.michelin.suricate.properties.ApplicationProperties;
-import com.michelin.suricate.services.token.JwtHelperService;
-import com.michelin.suricate.utils.web.CookieUtils;
+import com.michelin.suricate.property.ApplicationProperties;
+import com.michelin.suricate.service.token.JwtHelperService;
+import com.michelin.suricate.util.web.CookieUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

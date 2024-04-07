@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.dto.api.role;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.UserRoleEnum;
+import com.michelin.suricate.model.enumeration.UserRoleEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

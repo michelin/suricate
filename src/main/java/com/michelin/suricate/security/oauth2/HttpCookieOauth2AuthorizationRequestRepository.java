@@ -1,6 +1,6 @@
 package com.michelin.suricate.security.oauth2;
 
-import com.michelin.suricate.utils.web.CookieUtils;
+import com.michelin.suricate.util.web.CookieUtils;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -16,7 +16,7 @@
 
 package com.michelin.suricate.configuration.web;
 
-import com.michelin.suricate.properties.ApplicationProperties;
+import com.michelin.suricate.property.ApplicationProperties;
 import com.michelin.suricate.security.AuthenticationFailureEntryPoint;
 import com.michelin.suricate.security.filter.JwtTokenFilter;
 import com.michelin.suricate.security.filter.PersonalAccessTokenFilter;

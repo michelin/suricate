@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -63,7 +63,8 @@ import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-
         ReactiveFormsModule,
         RouterModule,
         TranslateModule,
-        ColorPickerModule
+        ColorPickerModule,
+        NgOptimizedImage
     ],
     declarations: [
         CommunicationDialogComponent,
@@ -118,7 +119,8 @@ import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-
         PaginatorComponent,
         SlideToggleComponent,
         ProgressBarComponent,
-        ColorPickerModule
+        ColorPickerModule,
+        NgOptimizedImage
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

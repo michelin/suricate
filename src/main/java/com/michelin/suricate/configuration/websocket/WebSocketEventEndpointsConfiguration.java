@@ -17,9 +17,9 @@
 package com.michelin.suricate.configuration.websocket;
 
 import com.michelin.suricate.model.dto.websocket.WebsocketClient;
-import com.michelin.suricate.model.entities.Project;
-import com.michelin.suricate.services.api.ProjectService;
-import com.michelin.suricate.services.websocket.DashboardWebSocketService;
+import com.michelin.suricate.model.entity.Project;
+import com.michelin.suricate.service.api.ProjectService;
+import com.michelin.suricate.service.websocket.DashboardWebSocketService;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

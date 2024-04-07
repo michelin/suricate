@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.dto.websocket;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.UpdateType;
+import com.michelin.suricate.model.enumeration.UpdateType;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;

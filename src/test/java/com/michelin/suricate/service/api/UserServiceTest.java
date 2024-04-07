@@ -1,0 +1,652 @@
+package com.michelin.suricate.service.api;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.michelin.suricate.model.entity.Project;
+import com.michelin.suricate.model.entity.Role;
+import com.michelin.suricate.model.entity.User;
+import com.michelin.suricate.model.entity.UserSetting;
+import com.michelin.suricate.model.enumeration.AuthenticationProvider;
+import com.michelin.suricate.model.enumeration.UserRoleEnum;
+import com.michelin.suricate.repository.UserRepository;
+import com.michelin.suricate.service.mapper.UserMapper;
+import com.michelin.suricate.service.specification.UserSearchSpecification;
+import com.michelin.suricate.util.exception.ObjectNotFoundException;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
+    @Mock
+    private UserRepository userRepository;
+
+    @Spy
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+
+    @Mock
+    private RoleService roleService;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private UserSettingService userSettingService;
+
+    @InjectMocks
+    private UserService userService;
+
+    @Test
+    void shouldCreateAdminUser() {
+        UserSetting userSetting = new UserSetting();
+        userSetting.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.count())
+            .thenReturn(0L);
+        when(roleService.getRoleByName(any()))
+            .thenReturn(Optional.of(role));
+        when(userRepository.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingService.createDefaultSettingsForUser(any()))
+            .thenReturn(Collections.singletonList(userSetting));
+
+        User actual = userService.create(user);
+
+        assertThat(actual.getRoles())
+            .contains(role);
+        assertThat(actual.getUserSettings())
+            .contains(userSetting);
+
+        verify(userRepository)
+            .count();
+        verify(roleService)
+            .getRoleByName(UserRoleEnum.ROLE_ADMIN.name());
+        verify(userRepository)
+            .save(user);
+        verify(userSettingService)
+            .createDefaultSettingsForUser(user);
+    }
+
+    @Test
+    void shouldCreateUser() {
+        UserSetting userSetting = new UserSetting();
+        userSetting.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.count())
+            .thenReturn(15L);
+        when(roleService.getRoleByName(any()))
+            .thenReturn(Optional.of(role));
+        when(userRepository.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingService.createDefaultSettingsForUser(any()))
+            .thenReturn(Collections.singletonList(userSetting));
+
+        User actual = userService.create(user);
+
+        assertThat(actual.getRoles())
+            .contains(role);
+        assertThat(actual.getUserSettings())
+            .contains(userSetting);
+
+        verify(userRepository)
+            .count();
+        verify(roleService)
+            .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository)
+            .save(user);
+        verify(userSettingService)
+            .createDefaultSettingsForUser(user);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCreateUser() {
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.count())
+            .thenReturn(15L);
+        when(roleService.getRoleByName(any()))
+            .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userService.create(user))
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Role 'ROLE_USER' not found");
+
+        verify(userRepository)
+            .count();
+        verify(roleService)
+            .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository, times(0))
+            .save(any());
+        verify(userSettingService, times(0))
+            .createDefaultSettingsForUser(any());
+    }
+
+    @Test
+    void shouldRegisterUser() {
+        UserSetting userSetting = new UserSetting();
+        userSetting.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.findByEmailIgnoreCase(any()))
+            .thenReturn(Optional.empty());
+        when(userRepository.existsByUsername(any()))
+            .thenReturn(false);
+        when(userRepository.count())
+            .thenReturn(15L);
+        when(roleService.getRoleByName(any()))
+            .thenReturn(Optional.of(role));
+        when(userRepository.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingService.createDefaultSettingsForUser(any()))
+            .thenReturn(Collections.singletonList(userSetting));
+
+        User actual = userService.registerUser("username", "firstname", "lastname", "email",
+            "avatar", AuthenticationProvider.LDAP);
+
+        assertThat(actual.getUsername())
+            .isEqualTo("username");
+        assertThat(actual.getFirstname())
+            .isEqualTo("firstname");
+        assertThat(actual.getLastname())
+            .isEqualTo("lastname");
+        assertThat(actual.getEmail())
+            .isEqualTo("email");
+        assertThat(actual.getAvatarUrl())
+            .isEqualTo("avatar");
+        Assertions.assertThat(actual.getAuthenticationMethod())
+            .isEqualTo(AuthenticationProvider.LDAP);
+        assertThat(actual.getRoles())
+            .contains(role);
+        assertThat(actual.getUserSettings())
+            .contains(userSetting);
+
+        verify(userRepository)
+            .findByEmailIgnoreCase("email");
+        verify(userRepository)
+            .existsByUsername("username");
+        verify(userRepository)
+            .count();
+        verify(roleService)
+            .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository)
+            .save(argThat(createdUser ->
+                createdUser.getUsername().equals("username")
+                    && createdUser.getFirstname().equals("firstname")
+                    && createdUser.getLastname().equals("lastname")
+                    && createdUser.getEmail().equals("email")
+                    && createdUser.getAvatarUrl().equals("avatar")
+                    && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+        verify(userSettingService)
+            .createDefaultSettingsForUser(any(User.class));
+    }
+
+    @Test
+    void shouldRegisterUserUsernameAlreadyTaken() {
+        UserSetting userSetting = new UserSetting();
+        userSetting.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.findByEmailIgnoreCase(any()))
+            .thenReturn(Optional.empty());
+        when(userRepository.existsByUsername(any()))
+            .thenReturn(true)
+            .thenReturn(true)
+            .thenReturn(true)
+            .thenReturn(false);
+        when(userRepository.count())
+            .thenReturn(15L);
+        when(roleService.getRoleByName(any()))
+            .thenReturn(Optional.of(role));
+        when(userRepository.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingService.createDefaultSettingsForUser(any()))
+            .thenReturn(Collections.singletonList(userSetting));
+
+        User actual = userService.registerUser("username", "firstname", "lastname", "email",
+            "avatar", AuthenticationProvider.LDAP);
+
+        assertThat(actual.getUsername())
+            .isEqualTo("username3");
+        assertThat(actual.getFirstname())
+            .isEqualTo("firstname");
+        assertThat(actual.getLastname())
+            .isEqualTo("lastname");
+        assertThat(actual.getEmail())
+            .isEqualTo("email");
+        assertThat(actual.getAvatarUrl())
+            .isEqualTo("avatar");
+        Assertions.assertThat(actual.getAuthenticationMethod())
+            .isEqualTo(AuthenticationProvider.LDAP);
+        assertThat(actual.getRoles())
+            .contains(role);
+        assertThat(actual.getUserSettings())
+            .contains(userSetting);
+
+        verify(userRepository)
+            .findByEmailIgnoreCase("email");
+        verify(userRepository)
+            .existsByUsername("username");
+        verify(userRepository)
+            .existsByUsername("username1");
+        verify(userRepository)
+            .existsByUsername("username2");
+        verify(userRepository)
+            .existsByUsername("username3");
+        verify(userRepository)
+            .count();
+        verify(roleService)
+            .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository)
+            .save(argThat(createdUser ->
+                createdUser.getUsername().equals("username3")
+                    && createdUser.getFirstname().equals("firstname")
+                    && createdUser.getLastname().equals("lastname")
+                    && createdUser.getEmail().equals("email")
+                    && createdUser.getAvatarUrl().equals("avatar")
+                    && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+        verify(userSettingService)
+            .createDefaultSettingsForUser(any(User.class));
+    }
+
+    @Test
+    void shouldUpdateRegisteredUser() {
+        Project project = new Project();
+        project.setId(1L);
+
+        UserSetting userSetting = new UserSetting();
+        userSetting.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("existingUsername");
+        user.setRoles(Collections.singleton(role));
+        user.setUserSettings(Collections.singleton(userSetting));
+        user.setProjects(Collections.singleton(project));
+
+        when(userRepository.findByEmailIgnoreCase(any()))
+            .thenReturn(Optional.of(user));
+        when(userRepository.save(any()))
+            .thenReturn(user);
+
+        User actual = userService.registerUser("username", "firstname", "lastname", "email",
+            "avatar", AuthenticationProvider.LDAP);
+
+        assertThat(actual.getId())
+            .isEqualTo(1L);
+        assertThat(actual.getUsername())
+            .isEqualTo("existingUsername");
+        assertThat(actual.getFirstname())
+            .isEqualTo("firstname");
+        assertThat(actual.getLastname())
+            .isEqualTo("lastname");
+        assertThat(actual.getEmail())
+            .isEqualTo("email");
+        assertThat(actual.getAvatarUrl())
+            .isEqualTo("avatar");
+        Assertions.assertThat(actual.getAuthenticationMethod())
+            .isEqualTo(AuthenticationProvider.LDAP);
+        assertThat(actual.getRoles())
+            .contains(role);
+        assertThat(actual.getUserSettings())
+            .contains(userSetting);
+        assertThat(actual.getProjects())
+            .contains(project);
+
+        verify(userRepository)
+            .findByEmailIgnoreCase("email");
+        verify(userRepository)
+            .save(argThat(createdUser ->
+                createdUser.getUsername().equals("existingUsername")
+                    && createdUser.getFirstname().equals("firstname")
+                    && createdUser.getLastname().equals("lastname")
+                    && createdUser.getEmail().equals("email")
+                    && createdUser.getAvatarUrl().equals("avatar")
+                    && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+    }
+
+    @Test
+    void shouldUpdate() {
+        Project project = new Project();
+        project.setId(1L);
+
+        UserSetting userSetting = new UserSetting();
+        userSetting.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("existingUsername");
+        user.setRoles(Collections.singleton(role));
+        user.setUserSettings(Collections.singleton(userSetting));
+        user.setProjects(Collections.singleton(project));
+
+        when(userRepository.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+
+        User actual = userService.update(user, user.getUsername(), "firstname", "lastname", "email",
+            "avatar", AuthenticationProvider.LDAP);
+
+        assertThat(actual.getId())
+            .isEqualTo(1L);
+        assertThat(actual.getUsername())
+            .isEqualTo("existingUsername");
+        assertThat(actual.getFirstname())
+            .isEqualTo("firstname");
+        assertThat(actual.getLastname())
+            .isEqualTo("lastname");
+        assertThat(actual.getEmail())
+            .isEqualTo("email");
+        assertThat(actual.getAvatarUrl())
+            .isEqualTo("avatar");
+        Assertions.assertThat(actual.getAuthenticationMethod())
+            .isEqualTo(AuthenticationProvider.LDAP);
+        assertThat(actual.getRoles())
+            .contains(role);
+        assertThat(actual.getUserSettings())
+            .contains(userSetting);
+        assertThat(actual.getProjects())
+            .contains(project);
+
+        verify(userRepository)
+            .save(argThat(createdUser ->
+                createdUser.getId().equals(1L)
+                    && createdUser.getUsername().equals("existingUsername")
+                    && createdUser.getFirstname().equals("firstname")
+                    && createdUser.getLastname().equals("lastname")
+                    && createdUser.getEmail().equals("email")
+                    && createdUser.getAvatarUrl().equals("avatar")
+                    && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+    }
+
+    @Test
+    void shouldGetOne() {
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.findById(any()))
+            .thenReturn(Optional.of(user));
+
+        Optional<User> actual = userService.getOne(1L);
+
+        assertThat(actual)
+            .isPresent()
+            .contains(user);
+
+        verify(userRepository)
+            .findById(1L);
+    }
+
+    @Test
+    void shouldGetOneByUsername() {
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.findByUsernameIgnoreCase(any()))
+            .thenReturn(Optional.of(user));
+
+        Optional<User> actual = userService.getOneByUsername("username");
+
+        assertThat(actual)
+            .isPresent()
+            .contains(user);
+
+        verify(userRepository)
+            .findByUsernameIgnoreCase("username");
+    }
+
+    @Test
+    void shouldGetOneByEmail() {
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.findByEmailIgnoreCase(any()))
+            .thenReturn(Optional.of(user));
+
+        Optional<User> actual = userService.getOneByEmail("email");
+
+        assertThat(actual)
+            .isPresent()
+            .contains(user);
+
+        verify(userRepository)
+            .findByEmailIgnoreCase("email");
+    }
+
+    @Test
+    void shouldExistsByUsername() {
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.existsByUsername(any()))
+            .thenReturn(true);
+
+        boolean actual = userService.existsByUsername("username");
+
+        assertThat(actual)
+            .isTrue();
+
+        verify(userRepository)
+            .existsByUsername("username");
+    }
+
+    @Test
+    void shouldGetAll() {
+        User user = new User();
+        user.setId(1L);
+
+        when(userRepository.findAll(any(UserSearchSpecification.class), any(Pageable.class)))
+            .thenReturn(new PageImpl<>(Collections.singletonList(user)));
+
+        Page<User> actual = userService.getAll("search", Pageable.unpaged());
+
+        assertThat(actual)
+            .isNotEmpty()
+            .contains(user);
+
+        verify(userRepository)
+            .findAll(
+                Mockito.<UserSearchSpecification>argThat(specification -> specification.getSearch().equals("search")
+                    && specification.getAttributes().isEmpty()),
+                Mockito.argThat(pageable -> pageable.equals(Pageable.unpaged())));
+    }
+
+    @Test
+    void shouldDeleteUserByUserId() {
+        Project project = new Project();
+        project.setId(1L);
+        Set<Project> projects = Collections.singleton(project);
+
+        User user = new User();
+        user.setId(1L);
+        user.setProjects(projects);
+
+        userService.deleteUserByUserId(user);
+
+        verify(projectService)
+            .deleteUserFromProject(user, project);
+        verify(userRepository)
+            .delete(user);
+    }
+
+    @Test
+    void shouldUpdateUser() {
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+
+        when(userRepository.findById(any()))
+            .thenReturn(Optional.of(user));
+        when(roleService.getRoleByName(any()))
+            .thenReturn(Optional.of(role));
+        when(userRepository.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+
+        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
+            "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
+
+        assertThat(actual)
+            .isPresent();
+        assertThat(actual.get().getUsername())
+            .isEqualTo("username");
+        assertThat(actual.get().getFirstname())
+            .isEqualTo("firstname");
+        assertThat(actual.get().getLastname())
+            .isEqualTo("lastname");
+        assertThat(actual.get().getEmail())
+            .isEqualTo("email");
+        assertThat(actual.get().getRoles())
+            .contains(role);
+
+        verify(userRepository)
+            .findById(1L);
+        verify(roleService)
+            .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository)
+            .save(user);
+    }
+
+    @Test
+    void shouldUpdateUserRoleNotFound() {
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+
+        when(userRepository.findById(any()))
+            .thenReturn(Optional.of(user));
+        when(roleService.getRoleByName(any()))
+            .thenReturn(Optional.empty());
+        when(userRepository.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+
+        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
+            "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
+
+        assertThat(actual)
+            .isPresent();
+        assertThat(actual.get().getUsername())
+            .isEqualTo("username");
+        assertThat(actual.get().getFirstname())
+            .isEqualTo("firstname");
+        assertThat(actual.get().getLastname())
+            .isEqualTo("lastname");
+        assertThat(actual.get().getEmail())
+            .isEqualTo("email");
+        assertThat(actual.get().getRoles())
+            .contains((Role) null);
+
+        verify(userRepository)
+            .findById(1L);
+        verify(roleService)
+            .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository)
+            .save(user);
+    }
+
+    @Test
+    void shouldUpdateUserWhenNullInputs() {
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+
+        when(userRepository.findById(any()))
+            .thenReturn(Optional.of(user));
+        when(userRepository.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+
+        Optional<User> actual = userService.updateUser(1L, null, null, null, null, Collections.emptyList());
+
+        assertThat(actual)
+            .isPresent();
+        assertThat(actual.get().getUsername())
+            .isNull();
+        assertThat(actual.get().getFirstname())
+            .isNull();
+        assertThat(actual.get().getLastname())
+            .isNull();
+        assertThat(actual.get().getEmail())
+            .isNull();
+        assertThat(actual.get().getRoles())
+            .isEmpty();
+
+        verify(userRepository)
+            .findById(1L);
+        verify(userRepository)
+            .save(user);
+    }
+
+    @Test
+    void shouldNotUpdateUserWhenNotFound() {
+        Role role = new Role();
+        role.setId(1L);
+
+        when(userRepository.findById(any()))
+            .thenReturn(Optional.empty());
+
+        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
+            "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
+
+        assertThat(actual)
+            .isNotPresent();
+
+        verify(userRepository)
+            .findById(1L);
+        verify(roleService, times(0))
+            .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository, times(0))
+            .save(argThat(user -> user.getId().equals(1L)
+                && user.getUsername().equals("username")
+                && user.getFirstname().equals("firstname")
+                && user.getLastname().equals("lastname")
+                && user.getEmail().equals("email")
+                && user.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+    }
+}

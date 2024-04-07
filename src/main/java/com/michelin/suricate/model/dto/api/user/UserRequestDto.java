@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.dto.api.user;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.UserRoleEnum;
+import com.michelin.suricate.model.enumeration.UserRoleEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;

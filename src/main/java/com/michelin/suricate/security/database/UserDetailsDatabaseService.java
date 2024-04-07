@@ -16,9 +16,9 @@
 
 package com.michelin.suricate.security.database;
 
-import com.michelin.suricate.model.entities.User;
+import com.michelin.suricate.model.entity.User;
 import com.michelin.suricate.security.LocalUser;
-import com.michelin.suricate.services.api.UserService;
+import com.michelin.suricate.service.api.UserService;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;

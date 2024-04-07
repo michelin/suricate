@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.dto.js;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.WidgetStateEnum;
+import com.michelin.suricate.model.enumeration.WidgetStateEnum;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

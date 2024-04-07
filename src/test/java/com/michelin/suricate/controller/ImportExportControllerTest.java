@@ -1,0 +1,145 @@
+package com.michelin.suricate.controller;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.michelin.suricate.model.dto.api.export.ImportExportDto;
+import com.michelin.suricate.model.dto.api.export.ImportExportProjectDto;
+import com.michelin.suricate.model.dto.api.export.ImportExportRepositoryDto;
+import com.michelin.suricate.model.entity.Project;
+import com.michelin.suricate.model.entity.Repository;
+import com.michelin.suricate.model.entity.Role;
+import com.michelin.suricate.model.entity.User;
+import com.michelin.suricate.security.LocalUser;
+import com.michelin.suricate.service.api.ProjectService;
+import com.michelin.suricate.service.api.RepositoryService;
+import com.michelin.suricate.service.git.GitService;
+import com.michelin.suricate.service.mapper.ProjectMapper;
+import com.michelin.suricate.service.mapper.RepositoryMapper;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+@ExtendWith(MockitoExtension.class)
+class ImportExportControllerTest {
+    @Mock
+    private RepositoryService repositoryService;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private GitService gitService;
+
+    @Mock
+    private RepositoryMapper repositoryMapper;
+
+    @Mock
+    private ProjectMapper projectMapper;
+
+    @InjectMocks
+    private ImportExportController importExportController;
+
+    @Test
+    void shouldExports() {
+        Repository repository = new Repository();
+        repository.setId(1L);
+
+        ImportExportRepositoryDto importExportRepositoryDto = new ImportExportRepositoryDto();
+        importExportRepositoryDto.setName("name");
+
+        Project project = new Project();
+        project.setId(1L);
+
+        ImportExportProjectDto importExportProjectDto = new ImportExportProjectDto();
+        importExportProjectDto.setName("name");
+
+        when(repositoryService.getAll(any(), any()))
+            .thenReturn(new PageImpl<>(Collections.singletonList(repository)));
+        when(repositoryMapper.toImportExportRepositoryDto(any()))
+            .thenReturn(importExportRepositoryDto);
+        when(projectService.getAll(any(), any()))
+            .thenReturn(new PageImpl<>(Collections.singletonList(project)));
+        when(projectMapper.toImportExportProjectDto(any()))
+            .thenReturn(importExportProjectDto);
+
+        ResponseEntity<ImportExportDto> actual = importExportController.exports();
+
+        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getBody()).isNotNull();
+        assertThat(actual.getBody().getRepositories().get(0)).isEqualTo(importExportRepositoryDto);
+        assertThat(actual.getBody().getProjects().get(0)).isEqualTo(importExportProjectDto);
+    }
+
+    @Test
+    void shouldImports() throws GitAPIException, IOException {
+        ImportExportRepositoryDto importExportRepositoryDto = new ImportExportRepositoryDto();
+        importExportRepositoryDto.setName("name");
+
+        ImportExportProjectDto importExportProjectDto = new ImportExportProjectDto();
+        importExportProjectDto.setName("name");
+
+        ImportExportDto importExportDto = new ImportExportDto();
+        importExportDto.setRepositories(Collections.singletonList(importExportRepositoryDto));
+        importExportDto.setProjects(Collections.singletonList(importExportProjectDto));
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        Repository repository = new Repository();
+        repository.setName("name");
+
+        Project project = new Project();
+
+        when(repositoryMapper.toRepositoryEntity(any()))
+            .thenReturn(repository);
+        when(repositoryService.findByName(any()))
+            .thenReturn(Optional.of(repository));
+        when(projectMapper.toProjectEntity(any(ImportExportProjectDto.class)))
+            .thenReturn(project);
+        when(projectService.createUpdateProjects(any(), any()))
+            .thenReturn(Collections.emptyList());
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        ResponseEntity<Void> actual = importExportController.imports(localUser, importExportDto);
+
+        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getBody()).isNull();
+
+        verify(repositoryMapper)
+            .toRepositoryEntity(importExportRepositoryDto);
+        verify(repositoryService)
+            .findByName("name");
+        verify(repositoryService)
+            .addOrUpdateRepositories(argThat(repositories -> repositories.contains(repository)));
+        verify(projectMapper)
+            .toProjectEntity(importExportProjectDto);
+        verify(projectService)
+            .createUpdateProjects(argThat(projects -> projects.contains(project)),
+                eq(user));
+    }
+}

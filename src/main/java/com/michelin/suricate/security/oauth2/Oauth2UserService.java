@@ -2,12 +2,12 @@ package com.michelin.suricate.security.oauth2;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
-import com.michelin.suricate.model.entities.User;
-import com.michelin.suricate.model.enums.AuthenticationProvider;
-import com.michelin.suricate.properties.ApplicationProperties;
+import com.michelin.suricate.model.entity.User;
+import com.michelin.suricate.model.enumeration.AuthenticationProvider;
+import com.michelin.suricate.property.ApplicationProperties;
 import com.michelin.suricate.security.LocalUser;
-import com.michelin.suricate.services.api.UserService;
-import com.michelin.suricate.utils.exceptions.Oauth2AuthenticationProcessingException;
+import com.michelin.suricate.service.api.UserService;
+import com.michelin.suricate.util.exception.Oauth2AuthenticationProcessingException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

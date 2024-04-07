@@ -16,9 +16,9 @@
 
 package com.michelin.suricate;
 
-import com.michelin.suricate.properties.ApplicationProperties;
-import com.michelin.suricate.properties.ProxyProperties;
-import com.michelin.suricate.services.git.GitService;
+import com.michelin.suricate.property.ApplicationProperties;
+import com.michelin.suricate.property.ProxyProperties;
+import com.michelin.suricate.service.git.GitService;
 import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;

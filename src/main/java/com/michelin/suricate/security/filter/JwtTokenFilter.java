@@ -1,10 +1,10 @@
 package com.michelin.suricate.security.filter;
 
-import com.michelin.suricate.model.entities.User;
-import com.michelin.suricate.model.enums.ApiErrorEnum;
+import com.michelin.suricate.model.entity.User;
+import com.michelin.suricate.model.enumeration.ApiErrorEnum;
 import com.michelin.suricate.security.LocalUser;
-import com.michelin.suricate.services.api.UserService;
-import com.michelin.suricate.services.token.JwtHelperService;
+import com.michelin.suricate.service.api.UserService;
+import com.michelin.suricate.service.token.JwtHelperService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -17,8 +17,8 @@
 package com.michelin.suricate.model.dto.js;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.JsExecutionErrorTypeEnum;
-import com.michelin.suricate.utils.JsonUtils;
+import com.michelin.suricate.model.enumeration.JsExecutionErrorTypeEnum;
+import com.michelin.suricate.util.JsonUtils;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

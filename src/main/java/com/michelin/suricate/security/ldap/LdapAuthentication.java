@@ -16,11 +16,11 @@
 
 package com.michelin.suricate.security.ldap;
 
-import com.michelin.suricate.model.entities.User;
-import com.michelin.suricate.properties.ApplicationProperties;
+import com.michelin.suricate.model.entity.User;
+import com.michelin.suricate.property.ApplicationProperties;
 import com.michelin.suricate.security.LocalUser;
-import com.michelin.suricate.services.api.UserService;
-import com.michelin.suricate.utils.exceptions.ConfigurationException;
+import com.michelin.suricate.service.api.UserService;
+import com.michelin.suricate.util.exception.ConfigurationException;
 import jakarta.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.Optional;

@@ -11,7 +11,9 @@
   >
     <div class="grid-tile-content-wrapper">
       <div class="grid-tile-body">
-        <img *ngIf="mosaicOption.imageUrl" [src]="mosaicOption.imageUrl" alt="Mosaic entry image" />
+        <div class="grid-tile-body-image">
+          <img *ngIf="mosaicOption.imageUrl" [ngSrc]="mosaicOption.imageUrl" fill="true" priority="true" alt="Mosaic entry image" />
+        </div>
         <mat-icon *ngIf="!mosaicOption.imageUrl" color="primary">
           {{ materialIconRecords[mosaicOption.icon] }}
         </mat-icon>

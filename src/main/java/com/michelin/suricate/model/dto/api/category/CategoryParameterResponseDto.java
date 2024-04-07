@@ -1,7 +1,7 @@
 package com.michelin.suricate.model.dto.api.category;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.DataTypeEnum;
+import com.michelin.suricate.model.enumeration.DataTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
