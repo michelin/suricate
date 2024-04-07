@@ -21,7 +21,7 @@ package com.michelin.suricate.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
-import com.michelin.suricate.model.enums.ApiErrorEnum;
+import com.michelin.suricate.model.enumeration.ApiErrorEnum;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

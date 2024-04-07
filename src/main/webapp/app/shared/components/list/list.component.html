@@ -27,7 +27,9 @@
           cdkDragBoundary=".list-container"
         >
           <div *ngIf="getObjectImageURL(object)" class="list-image">
-            <img [src]="getObjectImageURL(object)" alt="Object image" />
+            <div class="image-container">
+              <img [ngSrc]="getObjectImageURL(object)" fill="true" priority="true" alt="Object image" />
+            </div>
           </div>
 
           <div class="list-detail">

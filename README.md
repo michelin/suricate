@@ -199,8 +199,8 @@ application.authentication.socialProviders: gitlab,github
 To log in using GitHub, you must specify the following properties:
 
 ```yaml
-spring.security.oauth2.client.registration.github.client-id: <github_client_id>
-spring.security.oauth2.client.registration.github.client-secret: <github_client_id>
+spring.security.oauth2.client.registration.github.client-id: <github-client-id>
+spring.security.oauth2.client.registration.github.client-secret: <github-client-id>
 ```
 
 ##### GitLab
@@ -208,8 +208,8 @@ spring.security.oauth2.client.registration.github.client-secret: <github_client_
 To log in using GitLab with OIDC, you must specify the following properties:
 
 ```yaml
-spring.security.oauth2.client.registration.gitlab.client-id: <gitlab_client_id>
-spring.security.oauth2.client.registration.gitlab.client-secret: <gitlab_client_secret>
+spring.security.oauth2.client.registration.gitlab.client-id: <gitlab-client-id>
+spring.security.oauth2.client.registration.gitlab.client-secret: <gitlab-client-secret>
 spring.security.oauth2.client.registration.gitlab.authorization-grant-type: authorization_code
 spring.security.oauth2.client.registration.gitlab.redirect-uri: http://localhost:8080/login/oauth2/code/gitlab
 spring.security.oauth2.client.provider.gitlab.issuer-uri: https://gitlab.com
@@ -219,8 +219,8 @@ spring.security.oauth2.client.registration.gitlab.scope: read_user,openid,profil
 To log in using GitLab with OAuth2, you must specify the following properties:
 
 ```yaml
-spring.security.oauth2.client.registration.gitlab.client-id: <gitlab_client_id>
-spring.security.oauth2.client.registration.gitlab.client-secret: <gitlab_client_secret>
+spring.security.oauth2.client.registration.gitlab.client-id: <gitlab-client-id>
+spring.security.oauth2.client.registration.gitlab.client-secret: <gitlab-client-secret>
 spring.security.oauth2.client.registration.gitlab.authorization-grant-type: authorization_code
 spring.security.oauth2.client.registration.gitlab.redirect-uri: http://localhost:8080/login/oauth2/code/gitlab
 spring.security.oauth2.client.provider.gitlab.issuer-uri: https://gitlab.com
@@ -297,7 +297,7 @@ repositories tab and add a new repository. You can choose to add either a local 
 GitHub).
 
 If you don't have a repository yet, you can create your own widgets repository by following the instructions provided
-in [the official open-source widgets GitHub repository](https://github.com/michelin/suricate-widgets), or use this
+in the [official open-source widgets GitHub repository](https://github.com/michelin/suricate-widgets), or use this
 repository directly.
 
 To configure this repository in Suricate, use the following settings:

@@ -51,9 +51,14 @@
     align-items: center;
     justify-content: center;
 
-    img {
-      max-height: 300px;
-      max-width: 300px;
+    .image-container {
+      position: relative;
+      width: 360px;
+      height: 180px;
+
+      img {
+        object-fit: contain;
+      }
     }
   }
 

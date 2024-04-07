@@ -16,7 +16,7 @@
 
 package com.michelin.suricate.configuration.swagger;
 
-import com.michelin.suricate.properties.ApplicationProperties;
+import com.michelin.suricate.property.ApplicationProperties;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;

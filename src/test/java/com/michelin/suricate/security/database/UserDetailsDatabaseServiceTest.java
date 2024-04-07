@@ -23,10 +23,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.michelin.suricate.model.entities.Role;
-import com.michelin.suricate.model.entities.User;
+import com.michelin.suricate.model.entity.Role;
+import com.michelin.suricate.model.entity.User;
 import com.michelin.suricate.security.LocalUser;
-import com.michelin.suricate.services.api.UserService;
+import com.michelin.suricate.service.api.UserService;
 import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;

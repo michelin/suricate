@@ -3,7 +3,7 @@
   <div id="user-section" class="sidenav-section">
     <div class="avatar-container">
       <div class="avatar">
-        <img *ngIf="connectedUser.avatarUrl" src="{{ connectedUser.avatarUrl }}" alt="avatar"/>
+        <img *ngIf="connectedUser.avatarUrl" ngSrc="{{ connectedUser.avatarUrl }}" width="70" height="70" alt="avatar"/>
         <span *ngIf="!connectedUser.avatarUrl">{{ getInitials() }}</span>
       </div>
     </div>
@@ -17,9 +17,9 @@
                 <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
                 <div>{{ connectedUser.username }}</div>
               </div>
-              <div *ngIf="isConnectedByIdp()" class="idp-icon">
-                <img *ngIf="isConnectedWithGithub()" src="../../../../../assets/images/github-white.svg" alt='GitHub'/>
-                <img *ngIf="isConnectedWithGitlab()" src="../../../../../assets/images/gitlab.svg" alt='GitLab'/>
+              <div *ngIf="isConnectedByIdp()">
+                <img *ngIf="isConnectedWithGithub()" ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub" />
+                <img *ngIf="isConnectedWithGitlab()" ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
               </div>
             </div>
           </mat-panel-title>

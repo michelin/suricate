@@ -18,7 +18,7 @@ package com.michelin.suricate.model.dto.api.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.ApiErrorEnum;
+import com.michelin.suricate.model.enumeration.ApiErrorEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Date;
 import lombok.Data;

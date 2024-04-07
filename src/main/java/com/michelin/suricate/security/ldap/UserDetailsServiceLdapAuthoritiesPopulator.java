@@ -16,10 +16,10 @@
 
 package com.michelin.suricate.security.ldap;
 
-import com.michelin.suricate.model.entities.User;
-import com.michelin.suricate.model.enums.AuthenticationProvider;
-import com.michelin.suricate.properties.ApplicationProperties;
-import com.michelin.suricate.services.api.UserService;
+import com.michelin.suricate.model.entity.User;
+import com.michelin.suricate.model.enumeration.AuthenticationProvider;
+import com.michelin.suricate.property.ApplicationProperties;
+import com.michelin.suricate.service.api.UserService;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

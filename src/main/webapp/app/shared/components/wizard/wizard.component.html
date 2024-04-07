@@ -24,7 +24,9 @@
               *ngIf="step.imageLink || step.description || step.information || step.category"
               class="step-detail"
             >
-              <img *ngIf="step.imageLink" [src]="step.imageLink.link" alt="form image" />
+              <div class="step-image-link">
+                <img *ngIf="step.imageLink" [ngSrc]="step.imageLink.link" fill="true" priority="true" alt="form image" />
+              </div>
 
               <div class="desc-info">
                 <div *ngIf="step.description">

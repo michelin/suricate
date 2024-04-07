@@ -17,7 +17,7 @@
 package com.michelin.suricate.model.dto.js;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.DataTypeEnum;
+import com.michelin.suricate.model.enumeration.DataTypeEnum;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

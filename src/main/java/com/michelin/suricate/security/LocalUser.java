@@ -38,7 +38,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
     /**
      * The user.
      */
-    private com.michelin.suricate.model.entities.User user;
+    private com.michelin.suricate.model.entity.User user;
 
     /**
      * The OAuth2/OIDC attributes.
@@ -61,7 +61,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
      * @param user       The user entity
      * @param attributes The OAuth2 attributes
      */
-    public LocalUser(com.michelin.suricate.model.entities.User user, Map<String, Object> attributes) {
+    public LocalUser(com.michelin.suricate.model.entity.User user, Map<String, Object> attributes) {
         super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true,
             true,
             user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName()))
@@ -76,7 +76,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
      * @param user       The user entity
      * @param attributes The OAuth2 attributes
      */
-    public LocalUser(com.michelin.suricate.model.entities.User user, Map<String, Object> attributes,
+    public LocalUser(com.michelin.suricate.model.entity.User user, Map<String, Object> attributes,
                      OidcIdToken idToken, OidcUserInfo userInfo) {
         super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true,
             true,

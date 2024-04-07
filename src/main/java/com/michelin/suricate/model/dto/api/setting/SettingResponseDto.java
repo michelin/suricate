@@ -17,8 +17,8 @@
 package com.michelin.suricate.model.dto.api.setting;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.DataTypeEnum;
-import com.michelin.suricate.model.enums.SettingType;
+import com.michelin.suricate.model.enumeration.DataTypeEnum;
+import com.michelin.suricate.model.enumeration.SettingType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;

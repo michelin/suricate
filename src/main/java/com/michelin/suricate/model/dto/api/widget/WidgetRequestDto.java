@@ -1,7 +1,7 @@
 package com.michelin.suricate.model.dto.api.widget;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
-import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
+import com.michelin.suricate.model.enumeration.WidgetAvailabilityEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

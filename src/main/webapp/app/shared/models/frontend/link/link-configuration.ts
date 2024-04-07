@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { Params } from '@angular/router';
-
 /**
  * Hold the information used to define an angular router link
  */
@@ -24,14 +22,7 @@ export class LinkConfiguration {
    * The redirection link
    */
   link: string | string[];
-  /**
-   * Query params associated to the link (use in case of internal links thru [routerLink])
-   */
-  queryParams?: Params;
-  /**
-   * If it's a link that not redirect in D4X app
-   */
-  externalApp?: boolean;
+
   /**
    * The link target if needed (blank, ...)
    */
