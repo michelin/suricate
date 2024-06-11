@@ -37,7 +37,7 @@
         <jgit.version>6.7.0.202309050840-r</jgit.version>
         <lombok.version>1.18.32</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <maven-checkstyle-plugin>3.3.1</maven-checkstyle-plugin>
+        <maven-checkstyle-plugin>3.4.0</maven-checkstyle-plugin>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <mockito.version>4.11.0</mockito.version>
         <mustache.version>0.9.13</mustache.version>
