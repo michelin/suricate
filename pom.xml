@@ -40,7 +40,7 @@
         <maven-checkstyle-plugin>3.4.0</maven-checkstyle-plugin>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <mockito.version>4.11.0</mockito.version>
-        <mustache.version>0.9.13</mustache.version>
+        <mustache.version>0.9.14</mustache.version>
         <packaging.type>jar</packaging.type>
         <testcontainers.version>1.19.8</testcontainers.version>
         <springdoc.version>2.6.0</springdoc.version>
