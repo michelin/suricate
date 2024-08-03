@@ -13,7 +13,6 @@ import com.michelin.suricate.model.entity.User;
 import com.michelin.suricate.model.entity.UserSetting;
 import java.util.Collections;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +50,7 @@ class UserSettingMapperTest {
         assertThat(actual.getUserId()).isEqualTo(1L);
         assertThat(actual.getUnconstrainedValue()).isEqualTo("value");
         assertThat(actual.getSetting()).isEqualTo(settingResponseDto);
-        Assertions.assertThat(actual.getSettingValue()).isEqualTo(allowedSettingValueResponseDto);
+        assertThat(actual.getSettingValue()).isEqualTo(allowedSettingValueResponseDto);
     }
 
     @Test
@@ -74,7 +73,7 @@ class UserSettingMapperTest {
         assertThat(actual.get(0).getUserId()).isEqualTo(1L);
         assertThat(actual.get(0).getUnconstrainedValue()).isEqualTo("value");
         assertThat(actual.get(0).getSetting()).isEqualTo(settingResponseDto);
-        Assertions.assertThat(actual.get(0).getSettingValue()).isEqualTo(allowedSettingValueResponseDto);
+        assertThat(actual.get(0).getSettingValue()).isEqualTo(allowedSettingValueResponseDto);
     }
 
     @NotNull

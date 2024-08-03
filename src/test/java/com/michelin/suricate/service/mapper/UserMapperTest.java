@@ -14,7 +14,6 @@ import com.michelin.suricate.model.enumeration.AuthenticationProvider;
 import com.michelin.suricate.model.enumeration.UserRoleEnum;
 import java.util.Collections;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -61,7 +60,7 @@ class UserMapperTest {
         assertThat(actual.getFirstname()).isEqualTo("firstname");
         assertThat(actual.getLastname()).isEqualTo("lastname");
         assertThat(actual.getUsername()).isEqualTo("username");
-        Assertions.assertThat(actual.getRoles().get(0)).isEqualTo(roleResponseDto);
+        assertThat(actual.getRoles().get(0)).isEqualTo(roleResponseDto);
     }
 
     @Test

@@ -21,7 +21,6 @@ import com.michelin.suricate.util.IdUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -125,12 +124,12 @@ class ProjectMapperTest {
             assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
             assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
             assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
-            Assertions.assertThat(actual.getImage().getId()).isEqualTo(1L);
-            Assertions.assertThat(actual.getImage().getContent()).isEqualTo(new byte[10]);
-            Assertions.assertThat(actual.getImage().getSize()).isEqualTo(10);
-            Assertions.assertThat(actual.getImage().getContentType()).isEqualTo("contentType");
-            Assertions.assertThat(actual.getGrids().get(0).getId()).isEqualTo(1L);
-            Assertions.assertThat(actual.getGrids().get(0).getTime()).isEqualTo(10);
+            assertThat(actual.getImage().getId()).isEqualTo(1L);
+            assertThat(actual.getImage().getContent()).isEqualTo(new byte[10]);
+            assertThat(actual.getImage().getSize()).isEqualTo(10);
+            assertThat(actual.getImage().getContentType()).isEqualTo("contentType");
+            assertThat(actual.getGrids().get(0).getId()).isEqualTo(1L);
+            assertThat(actual.getGrids().get(0).getTime()).isEqualTo(10);
         }
     }
 
@@ -182,12 +181,12 @@ class ProjectMapperTest {
             assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
             assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
             assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
-            Assertions.assertThat(actual.getImage().getId()).isEqualTo(1L);
-            Assertions.assertThat(actual.getImage().getContent()).isEqualTo(new byte[10]);
-            Assertions.assertThat(actual.getImage().getSize()).isEqualTo(10);
-            Assertions.assertThat(actual.getImage().getContentType()).isEqualTo("contentType");
-            Assertions.assertThat(actual.getGrids().get(0).getId()).isEqualTo(1L);
-            Assertions.assertThat(actual.getGrids().get(0).getTime()).isEqualTo(10);
+            assertThat(actual.getImage().getId()).isEqualTo(1L);
+            assertThat(actual.getImage().getContent()).isEqualTo(new byte[10]);
+            assertThat(actual.getImage().getSize()).isEqualTo(10);
+            assertThat(actual.getImage().getContentType()).isEqualTo("contentType");
+            assertThat(actual.getGrids().get(0).getId()).isEqualTo(1L);
+            assertThat(actual.getGrids().get(0).getTime()).isEqualTo(10);
         }
     }
 
@@ -228,7 +227,7 @@ class ProjectMapperTest {
         assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
         assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
         assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
-        Assertions.assertThat(actual.getImage()).isNull();
+        assertThat(actual.getImage()).isNull();
     }
 
     @Test
@@ -279,12 +278,12 @@ class ProjectMapperTest {
             assertThat(actual.get(0).getGridProperties().getMaxColumn()).isEqualTo(1);
             assertThat(actual.get(0).getGridProperties().getWidgetHeight()).isEqualTo(1);
             assertThat(actual.get(0).getGridProperties().getCssStyle()).isEqualTo("style");
-            Assertions.assertThat(actual.get(0).getImage().getId()).isEqualTo(1L);
-            Assertions.assertThat(actual.get(0).getImage().getContent()).isEqualTo(new byte[10]);
-            Assertions.assertThat(actual.get(0).getImage().getSize()).isEqualTo(10);
-            Assertions.assertThat(actual.get(0).getImage().getContentType()).isEqualTo("contentType");
-            Assertions.assertThat(actual.get(0).getGrids().get(0).getId()).isEqualTo(1L);
-            Assertions.assertThat(actual.get(0).getGrids().get(0).getTime()).isEqualTo(10);
+            assertThat(actual.get(0).getImage().getId()).isEqualTo(1L);
+            assertThat(actual.get(0).getImage().getContent()).isEqualTo(new byte[10]);
+            assertThat(actual.get(0).getImage().getSize()).isEqualTo(10);
+            assertThat(actual.get(0).getImage().getContentType()).isEqualTo("contentType");
+            assertThat(actual.get(0).getGrids().get(0).getId()).isEqualTo(1L);
+            assertThat(actual.get(0).getGrids().get(0).getTime()).isEqualTo(10);
         }
     }
 
@@ -344,9 +343,9 @@ class ProjectMapperTest {
         assertThat(actual.getName()).isEqualTo("name");
         assertThat(actual.getToken()).isEqualTo("token");
         assertThat(actual.isDisplayProgressBar()).isTrue();
-        Assertions.assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
-        Assertions.assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
-        Assertions.assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
+        assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
+        assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
+        assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
         assertThat(actual.getImage().getContent()).isEqualTo(new byte[10]);
         assertThat(actual.getImage().getContentType()).isEqualTo("contentType");
         assertThat(actual.getImage().getSize()).isEqualTo(10);

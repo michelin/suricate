@@ -12,7 +12,6 @@ import com.michelin.suricate.model.entity.Widget;
 import com.michelin.suricate.model.enumeration.DataTypeEnum;
 import com.michelin.suricate.util.IdUtils;
 import java.util.Collections;
-import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -103,7 +102,7 @@ class CategoryMapperTest {
 
             assertThat(actual.getKey()).isEqualTo("key");
             assertThat(actual.getValue()).isEqualTo("value");
-            Assertions.assertThat(actual.getDataType()).isEqualTo(DataTypeEnum.TEXT);
+            assertThat(actual.getDataType()).isEqualTo(DataTypeEnum.TEXT);
             assertThat(actual.isExport()).isTrue();
             assertThat(actual.getDescription()).isEqualTo("description");
 
@@ -129,7 +128,7 @@ class CategoryMapperTest {
 
             assertThat(actual.getKey()).isEqualTo("key");
             assertThat(actual.getValue()).isEqualTo("value");
-            Assertions.assertThat(actual.getDataType()).isEqualTo(DataTypeEnum.TEXT);
+            assertThat(actual.getDataType()).isEqualTo(DataTypeEnum.TEXT);
             assertThat(actual.isExport()).isTrue();
             assertThat(actual.getDescription()).isEqualTo("description");
             assertThat(actual.getCategory()).isNull();

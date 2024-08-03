@@ -16,7 +16,6 @@ import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -236,7 +235,7 @@ class CategoryParametersServiceTest {
 
         assertThat(widgetParam.getName()).isEqualTo("key");
         assertThat(widgetParam.getDefaultValue()).isEqualTo("value");
-        Assertions.assertThat(widgetParam.getType()).isEqualTo(DataTypeEnum.TEXT);
+        assertThat(widgetParam.getType()).isEqualTo(DataTypeEnum.TEXT);
         assertThat(widgetParam.getDescription()).isEqualTo("key");
         assertThat(widgetParam.isRequired()).isTrue();
     }
