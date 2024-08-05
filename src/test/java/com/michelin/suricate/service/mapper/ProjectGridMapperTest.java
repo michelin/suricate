@@ -16,7 +16,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,10 +55,10 @@ class ProjectGridMapperTest {
 
         assertThat(actual.getTime()).isEqualTo(60);
         assertThat(actual.getProject()).isEqualTo(project);
-        Assertions.assertThat(actual.getCreatedBy()).isEqualTo("createdBy");
-        Assertions.assertThat(actual.getCreatedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
-        Assertions.assertThat(actual.getLastModifiedBy()).isEqualTo("lastModifiedBy");
-        Assertions.assertThat(actual.getLastModifiedDate())
+        assertThat(actual.getCreatedBy()).isEqualTo("createdBy");
+        assertThat(actual.getCreatedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
+        assertThat(actual.getLastModifiedBy()).isEqualTo("lastModifiedBy");
+        assertThat(actual.getLastModifiedDate())
             .isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
     }
 
@@ -100,10 +99,10 @@ class ProjectGridMapperTest {
         assertThat(actual.getTime()).isEqualTo(10);
         assertThat(actual.getWidgets().get(0).getWidgetTechnicalName()).isEqualTo("technicalName");
         assertThat(actual.getWidgets().get(0).getBackendConfig()).isEqualTo("key=value");
-        Assertions.assertThat(actual.getWidgets().get(0).getWidgetPosition().getGridColumn()).isEqualTo(1);
-        Assertions.assertThat(actual.getWidgets().get(0).getWidgetPosition().getGridRow()).isEqualTo(1);
-        Assertions.assertThat(actual.getWidgets().get(0).getWidgetPosition().getHeight()).isEqualTo(1);
-        Assertions.assertThat(actual.getWidgets().get(0).getWidgetPosition().getWidth()).isEqualTo(1);
+        assertThat(actual.getWidgets().get(0).getWidgetPosition().getGridColumn()).isEqualTo(1);
+        assertThat(actual.getWidgets().get(0).getWidgetPosition().getGridRow()).isEqualTo(1);
+        assertThat(actual.getWidgets().get(0).getWidgetPosition().getHeight()).isEqualTo(1);
+        assertThat(actual.getWidgets().get(0).getWidgetPosition().getWidth()).isEqualTo(1);
     }
 
     @Test

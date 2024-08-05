@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -296,7 +295,7 @@ class ProjectWidgetServiceTest {
 
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, 1L);
 
-        Assertions.assertThat(projectWidget.getState())
+        assertThat(projectWidget.getState())
             .isEqualTo(WidgetStateEnum.STOPPED);
 
         verify(projectWidgetRepository)
@@ -334,7 +333,7 @@ class ProjectWidgetServiceTest {
         Date now = Date.from(Instant.parse("2000-01-01T01:00:00.00Z"));
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, 1L, now);
 
-        Assertions.assertThat(projectWidget.getState())
+        assertThat(projectWidget.getState())
             .isEqualTo(WidgetStateEnum.STOPPED);
         assertThat(projectWidget.getLastExecutionDate())
             .isEqualTo(now);

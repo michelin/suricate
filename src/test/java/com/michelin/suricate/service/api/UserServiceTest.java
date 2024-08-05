@@ -21,7 +21,6 @@ import com.michelin.suricate.util.exception.ObjectNotFoundException;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -189,7 +188,7 @@ class UserServiceTest {
             .isEqualTo("email");
         assertThat(actual.getAvatarUrl())
             .isEqualTo("avatar");
-        Assertions.assertThat(actual.getAuthenticationMethod())
+        assertThat(actual.getAuthenticationMethod())
             .isEqualTo(AuthenticationProvider.LDAP);
         assertThat(actual.getRoles())
             .contains(role);
@@ -256,7 +255,7 @@ class UserServiceTest {
             .isEqualTo("email");
         assertThat(actual.getAvatarUrl())
             .isEqualTo("avatar");
-        Assertions.assertThat(actual.getAuthenticationMethod())
+        assertThat(actual.getAuthenticationMethod())
             .isEqualTo(AuthenticationProvider.LDAP);
         assertThat(actual.getRoles())
             .contains(role);
@@ -327,7 +326,7 @@ class UserServiceTest {
             .isEqualTo("email");
         assertThat(actual.getAvatarUrl())
             .isEqualTo("avatar");
-        Assertions.assertThat(actual.getAuthenticationMethod())
+        assertThat(actual.getAuthenticationMethod())
             .isEqualTo(AuthenticationProvider.LDAP);
         assertThat(actual.getRoles())
             .contains(role);
@@ -384,7 +383,7 @@ class UserServiceTest {
             .isEqualTo("email");
         assertThat(actual.getAvatarUrl())
             .isEqualTo("avatar");
-        Assertions.assertThat(actual.getAuthenticationMethod())
+        assertThat(actual.getAuthenticationMethod())
             .isEqualTo(AuthenticationProvider.LDAP);
         assertThat(actual.getRoles())
             .contains(role);

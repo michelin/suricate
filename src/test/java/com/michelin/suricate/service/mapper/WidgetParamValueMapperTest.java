@@ -17,7 +17,7 @@ class WidgetParamValueMapperTest {
     private WidgetParamValueMapperImpl widgetParamValueMapper;
 
     @Test
-    void shouldtoWidgetParameterValueDto() {
+    void shouldConvertToWidgetParameterValueDto() {
         WidgetParamValue widgetParamValue = new WidgetParamValue();
         widgetParamValue.setId(1L);
         widgetParamValue.setJsKey("key");
@@ -30,7 +30,7 @@ class WidgetParamValueMapperTest {
     }
 
     @Test
-    void shouldtoWidgetParameterValuesDtos() {
+    void shouldConvertToWidgetParameterValuesDtos() {
         WidgetParamValue widgetParamValue = new WidgetParamValue();
         widgetParamValue.setId(1L);
         widgetParamValue.setJsKey("key");

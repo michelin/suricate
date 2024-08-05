@@ -17,7 +17,6 @@ import com.michelin.suricate.model.enumeration.WidgetAvailabilityEnum;
 import com.michelin.suricate.util.IdUtils;
 import java.util.Collections;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,7 +36,7 @@ class WidgetMapperTest {
     private WidgetMapperImpl widgetMapper;
 
     @Test
-    void shouldtoWidgetDto() {
+    void shouldConvertToWidgetDto() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             Asset asset = new Asset();
             asset.setId(1L);
@@ -91,16 +90,16 @@ class WidgetMapperTest {
             assertThat(actual.getTimeout()).isEqualTo(1L);
             assertThat(actual.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
             assertThat(actual.getImageToken()).isEqualTo("encrypted");
-            Assertions.assertThat(actual.getImage()).isNull();
+            assertThat(actual.getImage()).isNull();
             assertThat(actual.getLibraryTechnicalNames()).isNull();
-            Assertions.assertThat(actual.getCategory()).isEqualTo(categoryResponseDto);
+            assertThat(actual.getCategory()).isEqualTo(categoryResponseDto);
             assertThat(actual.getRepositoryId()).isEqualTo(1L);
             assertThat(actual.getParams().get(0)).isEqualTo(widgetParamResponseDto);
         }
     }
 
     @Test
-    void shouldtoWidgetWithoutCategoryParametersDto() {
+    void shouldConvertToWidgetWithoutCategoryParametersDto() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             Asset asset = new Asset();
             asset.setId(1L);
@@ -154,16 +153,16 @@ class WidgetMapperTest {
             assertThat(actual.getTimeout()).isEqualTo(1L);
             assertThat(actual.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
             assertThat(actual.getImageToken()).isEqualTo("encrypted");
-            Assertions.assertThat(actual.getImage()).isNull();
+            assertThat(actual.getImage()).isNull();
             assertThat(actual.getLibraryTechnicalNames()).isNull();
-            Assertions.assertThat(actual.getCategory()).isEqualTo(categoryResponseDto);
+            assertThat(actual.getCategory()).isEqualTo(categoryResponseDto);
             assertThat(actual.getRepositoryId()).isEqualTo(1L);
             assertThat(actual.getParams().get(0)).isEqualTo(widgetParamResponseDto);
         }
     }
 
     @Test
-    void shouldtoWidgetsDtos() {
+    void shouldConvertToWidgetsDtos() {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             Asset asset = new Asset();
             asset.setId(1L);
@@ -217,9 +216,9 @@ class WidgetMapperTest {
             assertThat(actual.get(0).getTimeout()).isEqualTo(1L);
             assertThat(actual.get(0).getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
             assertThat(actual.get(0).getImageToken()).isEqualTo("encrypted");
-            Assertions.assertThat(actual.get(0).getImage()).isNull();
+            assertThat(actual.get(0).getImage()).isNull();
             assertThat(actual.get(0).getLibraryTechnicalNames()).isNull();
-            Assertions.assertThat(actual.get(0).getCategory()).isEqualTo(categoryResponseDto);
+            assertThat(actual.get(0).getCategory()).isEqualTo(categoryResponseDto);
             assertThat(actual.get(0).getRepositoryId()).isEqualTo(1L);
             assertThat(actual.get(0).getParams().get(0)).isEqualTo(widgetParamResponseDto);
         }

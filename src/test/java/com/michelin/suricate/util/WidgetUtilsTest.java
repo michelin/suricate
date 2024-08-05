@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class WidgetUtilsTest {
@@ -78,7 +77,7 @@ class WidgetUtilsTest {
         assertThat(gitHubConfig.get(0).getId()).isEqualTo("WIDGET_CONFIG_GITHUB_TOKEN");
         assertThat(gitHubConfig.get(0).getValue()).isNull();
         assertThat(gitHubConfig.get(0).getDescription()).isEqualTo("Token for the GitHub API");
-        Assertions.assertThat(gitHubConfig.get(0).getDataType()).isEqualTo(DataTypeEnum.PASSWORD);
+        assertThat(gitHubConfig.get(0).getDataType()).isEqualTo(DataTypeEnum.PASSWORD);
     }
 
     @Test
@@ -171,24 +170,24 @@ class WidgetUtilsTest {
         assertThat(gitHubConfig.get(0).getId()).isEqualTo("WIDGET_CONFIG_GITHUB_TOKEN");
         assertThat(gitHubConfig.get(0).getValue()).isNull();
         assertThat(gitHubConfig.get(0).getDescription()).isEqualTo("Token for the GitHub API");
-        Assertions.assertThat(gitHubConfig.get(0).getDataType()).isEqualTo(DataTypeEnum.PASSWORD);
+        assertThat(gitHubConfig.get(0).getDataType()).isEqualTo(DataTypeEnum.PASSWORD);
     }
 
     @Test
     void shouldGetWidgetNull() throws IOException {
-        Assertions.assertThat(WidgetUtils.getWidget(null)).isNull();
+        assertThat(WidgetUtils.getWidget(null)).isNull();
     }
 
     @Test
     void shouldGetWidgetNoDelay() throws IOException {
-        Assertions.assertThat(WidgetUtils.getWidget(
+        assertThat(WidgetUtils.getWidget(
                 new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-delay")))
             .isNull();
     }
 
     @Test
     void shouldGetWidgetDelayButNoScript() throws IOException {
-        Assertions.assertThat(WidgetUtils.getWidget(
+        assertThat(WidgetUtils.getWidget(
                 new File("src/test/resources/specific-repository/content/"
                     + "specific-widgets/widgets/delay-but-no-script")))
             .isNull();
@@ -196,7 +195,7 @@ class WidgetUtilsTest {
 
     @Test
     void shouldGetWidgetNoTechnicalName() throws IOException {
-        Assertions.assertThat(WidgetUtils.getWidget(
+        assertThat(WidgetUtils.getWidget(
                 new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-technical-name")))
             .isNull();
     }
