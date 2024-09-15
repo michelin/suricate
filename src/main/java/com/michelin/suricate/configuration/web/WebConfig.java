@@ -257,7 +257,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Define local language
+     * Define local language.
      * Used in "jakarta.validation" messages
      *
      * @return The local language

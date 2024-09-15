@@ -46,7 +46,7 @@ public class ConfigurationController {
     private ApplicationProperties applicationProperties;
 
     /**
-     * Get the authentication providers defined in the backend (database, ldap, social providers, ...)
+     * Get the authentication providers defined in the backend (database, ldap, social providers, ...).
      *
      * @return The authentication provider
      */
