@@ -39,7 +39,7 @@
         <mapstruct.version>1.6.2</mapstruct.version>
         <maven-checkstyle-plugin>3.5.0</maven-checkstyle-plugin>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <mockito.version>4.11.0</mockito.version>
+        <mockito.version>5.0.0</mockito.version>
         <mustache.version>0.9.14</mustache.version>
         <packaging.type>jar</packaging.type>
         <testcontainers.version>1.20.2</testcontainers.version>
