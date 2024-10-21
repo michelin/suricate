@@ -27,7 +27,7 @@
         <commons-io.version>2.17.0</commons-io.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
-        <graalvm.version>24.1.0</graalvm.version>
+        <graalvm.version>24.1.1</graalvm.version>
         <guava.version>33.3.1-jre</guava.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <jasypt.version>3.0.5</jasypt.version>
