@@ -26,8 +26,10 @@ jobs:
           CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           LATEST_VERSION=$(git tag -l --sort=-version:refname | head -1 | cut -d 'v' -f 2)
           if [ "$LATEST_VERSION" == "$CURRENT_VERSION" ]; then
+            echo "Latest version is $LATEST_VERSION. Current version is $CURRENT_VERSION. Pushing latest tag."
             mvn clean package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN -Djib.to.tags=latest
           else
+            echo "Latest version is $LATEST_VERSION. Current version is $CURRENT_VERSION. Pushing latest tag."
             mvn clean package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
           fi
         env:
