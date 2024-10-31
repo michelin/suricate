@@ -1,8 +1,9 @@
-name: Continuous integration
+name: Push Master
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - 'master'
 
 jobs:
   back-end:
@@ -20,7 +21,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Check Style
+      - name: Check style
         run: mvn checkstyle:check
 
       - name: Build

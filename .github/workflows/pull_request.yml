@@ -2,7 +2,9 @@ name: Pull request
 
 on:
   pull_request:
-    branches: [ master ]
+    branches:
+      - 'master'
+      - 'hotfix/v*.*.*'
 
 jobs:
   back-end:
@@ -20,7 +22,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Check Style
+      - name: Check style
         run: mvn checkstyle:check
 
       - name: Build
