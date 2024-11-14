@@ -36,7 +36,7 @@
         <jjwt.version>0.12.6</jjwt.version>
         <jgit.version>7.0.0.202409031743-r</jgit.version>
         <lombok.version>1.18.34</lombok.version>
-        <mapstruct.version>1.6.2</mapstruct.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <maven-checkstyle-plugin>3.6.0</maven-checkstyle-plugin>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <mockito.version>5.0.0</mockito.version>
