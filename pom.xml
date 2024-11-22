@@ -35,7 +35,7 @@
         <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
         <jjwt.version>0.12.6</jjwt.version>
         <jgit.version>7.0.0.202409031743-r</jgit.version>
-        <lombok.version>1.18.34</lombok.version>
+        <lombok.version>1.18.36</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <maven-checkstyle-plugin>3.6.0</maven-checkstyle-plugin>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
