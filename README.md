@@ -24,32 +24,29 @@ This repository contains the source code of the Suricate application.
 * [Download](#download)
 * [Install](#install)
 * [Configuration](#configuration)
-    * [Default Configuration](#default-configuration)
-    * [Database](#database)
-      * [H2 vs PostgreSQL](#h2-vs-postgresql)
-      * [Initialization with Flyway](#initialization-with-flyway)
-    * [Authentication](#authentication)
-      * [LDAP vs Database](#ldap-vs-database)
-      * [Social Login](#social-login)
-        * [GitHub](#github)
-        * [GitLab](#gitlab)
-        * [Redirection to Front-End](#redirection-to-front-end)
-        * [Name Parsing Strategy](#name-parsing-strategy)
-      * [Personal Access Token](#personal-access-token)
-    * [Widgets](#widgets)
-      * [Encryption](#encryption)
-      * [Repositories](#repositories)
-* [Swagger UI](#swagger-ui)
+  * [Default Configuration](#default-configuration)
+  * [Database](#database)
+    * [H2 vs PostgreSQL](#h2-vs-postgresql)
+    * [Initialization with Flyway](#initialization-with-flyway)
+  * [Authentication](#authentication)
+    * [LDAP vs Database](#ldap-vs-database)
+    * [Social Login](#social-login)
+      * [GitHub](#github)
+      * [GitLab](#gitlab)
+      * [Redirection to Front-End](#redirection-to-front-end)
+      * [Name Parsing Strategy](#name-parsing-strategy)
+    * [Personal Access Token](#personal-access-token)
+  * [Widgets](#widgets)
+    * [Encryption](#encryption)
+    * [Repositories](#repositories)
+* [Swagger](#swagger)
 * [Contribution](#contribution)
 
 ## Download
 
-You can download Suricate as a fat jar from the project's releases page on GitHub
-at https://github.com/michelin/suricate/releases. 
+You can download Suricate as a fat jar from the [GitHub releases page](https://github.com/michelin/suricate/release) (requires Java 21).
 
-Please note that Java 21 is required starting from Suricate 2.8.0 (Java 8 before).
-
-Additionally, a Docker image of the solution is available at https://hub.docker.com/repository/docker/michelin/suricate.
+Additionally, a Docker image is available at https://hub.docker.com/repository/docker/michelin/suricate.
 
 ## Install
 
@@ -57,7 +54,7 @@ Suricate is built on the [Spring Boot framework](https://spring.io/) and can be 
 configuration file, which includes a sample file located at `src/main/resources/application.properties`.
 
 If necessary, you can override the properties from the default `application.properties` file by following
-the [Spring Boot externalized configuration guide](https://docs.spring.io/spring-boot/docs/1.4.1.RELEASE/reference/html/boot-features-external-config.html).
+the [Spring Boot externalized configuration guide](https://docs.spring.io/spring-boot/reference/features/external-config.html).
 For example, you can create a custom  `/config/application.properties` or set the `--spring.config.location` system
 property when running the fat jar file:
 
@@ -310,9 +307,15 @@ login: [ Your GitHub login ]
 password: [ Your GitHub password ]
 ```
 
-## Swagger UI
+### Swagger
 
-Suricate provides a Swagger UI to test the API. You can access it at http://localhost:8080/swagger-ui/index.html.
+Suricate uses [Springdoc](https://springdoc.org/) to generate an API documentation.
+
+By default:
+- The Swagger UI page is available at http://localhost:8080/swagger-ui/index.html.
+- The OpenAPI description is available at http://localhost:8080/v3/api-docs.
+
+Both can be customized by using the [Springdoc properties](https://springdoc.org/#properties).
 
 You can authenticate using the `POST /api/v1/auth/signin` endpoint and then use the `Authorize` button to add the
 JWT token in the `Authorization` header.
