@@ -1,8 +1,8 @@
-# Suricate
-
 <div align="center">
-  <img src="src/main/webapp/assets/images/logo.png" height="100"  alt="suricate logo"/>
+  <img src="src/main/webapp/assets/images/logo.png" height="200"  alt="suricate logo"/>
 </div>
+
+# Suricate
 
 [![GitHub Build](https://img.shields.io/github/actions/workflow/status/michelin/suricate/push_master.yml?branch=master&logo=github&style=for-the-badge)](https://img.shields.io/github/actions/workflow/status/michelin/suricate/push_master.yml)
 [![GitHub release](https://img.shields.io/github/v/release/michelin/suricate?logo=github&style=for-the-badge)](https://github.com/michelin/suricate/releases)
@@ -29,7 +29,8 @@ This repository contains the source code of the Suricate application.
     * [H2 vs PostgreSQL](#h2-vs-postgresql)
     * [Initialization with Flyway](#initialization-with-flyway)
   * [Authentication](#authentication)
-    * [LDAP vs Database](#ldap-vs-database)
+    * [Database](#database-1)
+    * [LDAP](#ldap)
     * [Social Login](#social-login)
       * [GitHub](#github)
       * [GitLab](#gitlab)
