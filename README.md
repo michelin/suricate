@@ -1,6 +1,6 @@
 <div align="center">
   
-<img src="src/main/webapp/assets/images/logo.png" height="150" alt="suricate logo"/>
+<img src=".readme/logo.png" height="150" alt="suricate logo"/>
 
 # Suricate
 
