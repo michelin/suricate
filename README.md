@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="src/main/webapp/assets/images/logo.png" height="150"  alt="suricate logo"/>
-</div>
+  
+<img src="src/main/webapp/assets/images/logo.png" height="150" alt="suricate logo"/>
 
 # Suricate
 
@@ -15,9 +15,16 @@
 [![SonarCloud Tests](https://img.shields.io/sonar/tests/michelin_suricate/master?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge&logo=sonarcloud)](https://sonarcloud.io/component_measures?metric=tests&view=list&id=michelin_suricate)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache&style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)
 
-This repository contains the source code of the Suricate application.
+[Install](#install) • [Widgets](https://github.com/michelin/suricate-widgets) • [DevTool](https://github.com/michelin/suricate-widget-tester)
+
+Visualize IT platforms data within a single, centralized monitoring system.
+
+Build customizable dashboards using various widgets, sourcing data from IT platform REST APIs. 
+Suricate uses WebSockets to control and update dashboards on external displays.
 
 ![Suricate dashboard developer environment](.readme/dashboard.gif)
+
+</div>
 
 ## Table of Contents
 
