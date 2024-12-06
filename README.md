@@ -1,6 +1,6 @@
 <div align="center">
   
-<img src=".readme/logo.png" alt="Suricate"/>
+<img src=".readme/logo.png" height="200" alt="Suricate"/>
 
 # Suricate
 
