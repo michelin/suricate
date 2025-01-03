@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
@@ -80,21 +81,21 @@ class WidgetMapperTest {
 
             WidgetResponseDto actual = widgetMapper.toWidgetDto(widget);
 
-            assertThat(actual.getId()).isEqualTo(1L);
-            assertThat(actual.getName()).isEqualTo("name");
-            assertThat(actual.getDescription()).isEqualTo("description");
-            assertThat(actual.getTechnicalName()).isEqualTo("technicalName");
-            assertThat(actual.getInfo()).isEqualTo("info");
-            assertThat(actual.getDelay()).isEqualTo(1L);
-            assertThat(actual.getCssContent()).isEqualTo("css");
-            assertThat(actual.getTimeout()).isEqualTo(1L);
-            assertThat(actual.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
-            assertThat(actual.getImageToken()).isEqualTo("encrypted");
-            assertThat(actual.getImage()).isNull();
-            assertThat(actual.getLibraryTechnicalNames()).isNull();
-            assertThat(actual.getCategory()).isEqualTo(categoryResponseDto);
-            assertThat(actual.getRepositoryId()).isEqualTo(1L);
-            assertThat(actual.getParams().get(0)).isEqualTo(widgetParamResponseDto);
+            assertEquals(1L, actual.getId());
+            assertEquals("name", actual.getName());
+            assertEquals("description", actual.getDescription());
+            assertEquals("technicalName", actual.getTechnicalName());
+            assertEquals("info", actual.getInfo());
+            assertEquals(1L, actual.getDelay());
+            assertEquals("css", actual.getCssContent());
+            assertEquals(1L, actual.getTimeout());
+            assertEquals(WidgetAvailabilityEnum.ACTIVATED, actual.getWidgetAvailability());
+            assertEquals("encrypted", actual.getImageToken());
+            assertNull(actual.getImage());
+            assertNull(actual.getLibraryTechnicalNames());
+            assertEquals(categoryResponseDto, actual.getCategory());
+            assertEquals(1L, actual.getRepositoryId());
+            assertEquals(widgetParamResponseDto, actual.getParams().getFirst());
         }
     }
 
@@ -143,21 +144,21 @@ class WidgetMapperTest {
 
             WidgetResponseDto actual = widgetMapper.toWidgetWithoutCategoryParametersDto(widget);
 
-            assertThat(actual.getId()).isEqualTo(1L);
-            assertThat(actual.getName()).isEqualTo("name");
-            assertThat(actual.getDescription()).isEqualTo("description");
-            assertThat(actual.getTechnicalName()).isEqualTo("technicalName");
-            assertThat(actual.getInfo()).isEqualTo("info");
-            assertThat(actual.getDelay()).isEqualTo(1L);
-            assertThat(actual.getCssContent()).isEqualTo("css");
-            assertThat(actual.getTimeout()).isEqualTo(1L);
-            assertThat(actual.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
-            assertThat(actual.getImageToken()).isEqualTo("encrypted");
-            assertThat(actual.getImage()).isNull();
-            assertThat(actual.getLibraryTechnicalNames()).isNull();
-            assertThat(actual.getCategory()).isEqualTo(categoryResponseDto);
-            assertThat(actual.getRepositoryId()).isEqualTo(1L);
-            assertThat(actual.getParams().get(0)).isEqualTo(widgetParamResponseDto);
+            assertEquals(1L, actual.getId());
+            assertEquals("name", actual.getName());
+            assertEquals("description", actual.getDescription());
+            assertEquals("technicalName", actual.getTechnicalName());
+            assertEquals("info", actual.getInfo());
+            assertEquals(1L, actual.getDelay());
+            assertEquals("css", actual.getCssContent());
+            assertEquals(1L, actual.getTimeout());
+            assertEquals(WidgetAvailabilityEnum.ACTIVATED, actual.getWidgetAvailability());
+            assertEquals("encrypted", actual.getImageToken());
+            assertNull(actual.getImage());
+            assertNull(actual.getLibraryTechnicalNames());
+            assertEquals(categoryResponseDto, actual.getCategory());
+            assertEquals(1L, actual.getRepositoryId());
+            assertEquals(widgetParamResponseDto, actual.getParams().getFirst());
         }
     }
 
@@ -206,21 +207,21 @@ class WidgetMapperTest {
 
             List<WidgetResponseDto> actual = widgetMapper.toWidgetsDtos(Collections.singletonList(widget));
 
-            assertThat(actual.get(0).getId()).isEqualTo(1L);
-            assertThat(actual.get(0).getName()).isEqualTo("name");
-            assertThat(actual.get(0).getDescription()).isEqualTo("description");
-            assertThat(actual.get(0).getTechnicalName()).isEqualTo("technicalName");
-            assertThat(actual.get(0).getInfo()).isEqualTo("info");
-            assertThat(actual.get(0).getDelay()).isEqualTo(1L);
-            assertThat(actual.get(0).getCssContent()).isEqualTo("css");
-            assertThat(actual.get(0).getTimeout()).isEqualTo(1L);
-            assertThat(actual.get(0).getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
-            assertThat(actual.get(0).getImageToken()).isEqualTo("encrypted");
-            assertThat(actual.get(0).getImage()).isNull();
-            assertThat(actual.get(0).getLibraryTechnicalNames()).isNull();
-            assertThat(actual.get(0).getCategory()).isEqualTo(categoryResponseDto);
-            assertThat(actual.get(0).getRepositoryId()).isEqualTo(1L);
-            assertThat(actual.get(0).getParams().get(0)).isEqualTo(widgetParamResponseDto);
+            assertEquals(1L, actual.getFirst().getId());
+            assertEquals("name", actual.getFirst().getName());
+            assertEquals("description", actual.getFirst().getDescription());
+            assertEquals("technicalName", actual.getFirst().getTechnicalName());
+            assertEquals("info", actual.getFirst().getInfo());
+            assertEquals(1L, actual.getFirst().getDelay());
+            assertEquals("css", actual.getFirst().getCssContent());
+            assertEquals(1L, actual.getFirst().getTimeout());
+            assertEquals(WidgetAvailabilityEnum.ACTIVATED, actual.getFirst().getWidgetAvailability());
+            assertEquals("encrypted", actual.getFirst().getImageToken());
+            assertNull(actual.getFirst().getImage());
+            assertNull(actual.getFirst().getLibraryTechnicalNames());
+            assertEquals(categoryResponseDto, actual.getFirst().getCategory());
+            assertEquals(1L, actual.getFirst().getRepositoryId());
+            assertEquals(widgetParamResponseDto, actual.getFirst().getParams().getFirst());
         }
     }
 }

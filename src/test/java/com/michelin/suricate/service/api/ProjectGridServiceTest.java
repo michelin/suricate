@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
@@ -57,9 +58,8 @@ class ProjectGridServiceTest {
 
         Optional<ProjectGrid> actual = projectGridService.getOneById(1L);
 
-        assertThat(actual)
-            .isPresent()
-            .contains(projectGrid);
+        assertTrue(actual.isPresent());
+        assertEquals(projectGrid, actual.get());
 
         verify(projectGridRepository)
             .findById(1L);
@@ -75,9 +75,8 @@ class ProjectGridServiceTest {
 
         Optional<ProjectGrid> actual = projectGridService.findByIdAndProjectToken(1L, "token");
 
-        assertThat(actual)
-            .isPresent()
-            .contains(projectGrid);
+        assertTrue(actual.isPresent());
+        assertEquals(projectGrid, actual.get());
 
         verify(projectGridRepository)
             .findByIdAndProjectToken(1L, "token");
@@ -93,8 +92,7 @@ class ProjectGridServiceTest {
 
         ProjectGrid actual = projectGridService.create(projectGrid);
 
-        assertThat(actual)
-            .isEqualTo(projectGrid);
+        assertEquals(projectGrid, actual);
 
         verify(projectGridRepository)
             .save(projectGrid);
@@ -122,8 +120,7 @@ class ProjectGridServiceTest {
 
         projectGridService.updateAll(project, projectGridRequestDto);
 
-        assertThat(new ArrayList<>(project.getGrids()).get(0).getTime())
-            .isEqualTo(10);
+        assertEquals(10, new ArrayList<>(project.getGrids()).getFirst().getTime());
 
         verify(projectRepository)
             .save(project);

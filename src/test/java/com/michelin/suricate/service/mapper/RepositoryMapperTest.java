@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.michelin.suricate.model.dto.api.export.ImportExportRepositoryDto;
 import com.michelin.suricate.model.dto.api.repository.RepositoryRequestDto;
@@ -36,17 +37,17 @@ class RepositoryMapperTest {
 
         RepositoryResponseDto actual = repositoryMapper.toRepositoryDtoNoWidgets(repository);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getUrl()).isEqualTo("url");
-        assertThat(actual.getLogin()).isEqualTo("login");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getType()).isEqualTo(RepositoryTypeEnum.LOCAL);
-        assertThat(actual.getLocalPath()).isEqualTo("localPath");
-        assertThat(actual.getPriority()).isEqualTo(1);
-        assertThat(actual.getBranch()).isEqualTo("branch");
-        assertThat(actual.isEnabled()).isFalse();
-        assertThat(actual.getCreatedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
+        assertEquals(1L, actual.getId());
+        assertEquals("name", actual.getName());
+        assertEquals("url", actual.getUrl());
+        assertEquals("login", actual.getLogin());
+        assertEquals("password", actual.getPassword());
+        assertEquals(RepositoryTypeEnum.LOCAL, actual.getType());
+        assertEquals("localPath", actual.getLocalPath());
+        assertEquals(1, actual.getPriority());
+        assertEquals("branch", actual.getBranch());
+        assertFalse(actual.isEnabled());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getCreatedDate());
     }
 
     @Test
@@ -66,14 +67,16 @@ class RepositoryMapperTest {
 
         ImportExportRepositoryDto actual = repositoryMapper.toImportExportRepositoryDto(repository);
 
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getUrl()).isEqualTo("url");
-        assertThat(actual.getLogin()).isEqualTo("login");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getType()).isEqualTo(RepositoryTypeEnum.LOCAL);
-        assertThat(actual.getLocalPath()).isEqualTo("localPath");
-        assertThat(actual.getBranch()).isEqualTo("branch");
-        assertThat(actual.isEnabled()).isFalse();
+        assertEquals("name", actual.getName());
+        assertEquals("url", actual.getUrl());
+        assertEquals("login", actual.getLogin());
+        assertEquals("password", actual.getPassword());
+        assertEquals(RepositoryTypeEnum.LOCAL, actual.getType());
+        assertEquals("localPath", actual.getLocalPath());
+        assertEquals(1, actual.getPriority());
+        assertEquals("branch", actual.getBranch());
+        assertFalse(actual.isEnabled());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getCreatedDate());
     }
 
     @Test
@@ -91,15 +94,15 @@ class RepositoryMapperTest {
 
         Repository actual = repositoryMapper.toRepositoryEntity(1L, repository);
 
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getUrl()).isEqualTo("url");
-        assertThat(actual.getLogin()).isEqualTo("login");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getType()).isEqualTo(RepositoryTypeEnum.LOCAL);
-        assertThat(actual.getLocalPath()).isEqualTo("localPath");
-        assertThat(actual.getPriority()).isEqualTo(1);
-        assertThat(actual.getBranch()).isEqualTo("branch");
-        assertThat(actual.isEnabled()).isFalse();
+        assertEquals("name", actual.getName());
+        assertEquals("url", actual.getUrl());
+        assertEquals("login", actual.getLogin());
+        assertEquals("password", actual.getPassword());
+        assertEquals(RepositoryTypeEnum.LOCAL, actual.getType());
+        assertEquals("localPath", actual.getLocalPath());
+        assertEquals(1, actual.getPriority());
+        assertEquals("branch", actual.getBranch());
+        assertFalse(actual.isEnabled());
     }
 
     @Test
@@ -116,13 +119,13 @@ class RepositoryMapperTest {
 
         Repository actual = repositoryMapper.toRepositoryEntity(repository);
 
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getUrl()).isEqualTo("url");
-        assertThat(actual.getLogin()).isEqualTo("login");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getType()).isEqualTo(RepositoryTypeEnum.LOCAL);
-        assertThat(actual.getLocalPath()).isEqualTo("localPath");
-        assertThat(actual.getBranch()).isEqualTo("branch");
-        assertThat(actual.isEnabled()).isFalse();
+        assertEquals("name", actual.getName());
+        assertEquals("url", actual.getUrl());
+        assertEquals("login", actual.getLogin());
+        assertEquals("password", actual.getPassword());
+        assertEquals(RepositoryTypeEnum.LOCAL, actual.getType());
+        assertEquals("localPath", actual.getLocalPath());
+        assertEquals("branch", actual.getBranch());
+        assertFalse(actual.isEnabled());
     }
 }

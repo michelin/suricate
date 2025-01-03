@@ -1,7 +1,9 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.verify;
@@ -62,14 +64,10 @@ class UserSettingServiceTest {
 
         List<UserSetting> actual = userSettingService.createDefaultSettingsForUser(user);
 
-        assertThat(actual)
-            .isNotEmpty();
-        assertThat(actual.get(0).getUser())
-            .isEqualTo(user);
-        assertThat(actual.get(0).getSetting())
-            .isEqualTo(setting);
-        assertThat(actual.get(0).getSettingValue())
-            .isEqualTo(allowedSettingValue);
+        assertFalse(actual.isEmpty());
+        assertEquals(user, actual.getFirst().getUser());
+        assertEquals(setting, actual.getFirst().getSetting());
+        assertEquals(allowedSettingValue, actual.getFirst().getSettingValue());
 
         verify(settingService)
             .getAll();
@@ -98,12 +96,9 @@ class UserSettingServiceTest {
 
         UserSetting actual = userSettingService.createUserSettingFromAllowedSettingValue(allowedSettingValue, user);
 
-        assertThat(actual.getUser())
-            .isEqualTo(user);
-        assertThat(actual.getSetting())
-            .isEqualTo(setting);
-        assertThat(actual.getSettingValue())
-            .isEqualTo(allowedSettingValue);
+        assertEquals(user, actual.getUser());
+        assertEquals(setting, actual.getSetting());
+        assertEquals(allowedSettingValue, actual.getSettingValue());
     }
 
     @Test
@@ -116,9 +111,8 @@ class UserSettingServiceTest {
 
         Optional<UserSetting> actual = userSettingService.getUserSetting("username", 1L);
 
-        assertThat(actual)
-            .isPresent()
-            .contains(userSetting);
+        assertTrue(actual.isPresent());
+        assertEquals(userSetting, actual.get());
 
         verify(userSettingRepository)
             .findByUserUsernameAndSettingId("username", 1L);
@@ -135,10 +129,8 @@ class UserSettingServiceTest {
 
         Optional<List<UserSetting>> actual = userSettingService.getUserSettingsByUsername("username");
 
-        assertThat(actual).isPresent();
-        assertThat(actual.get())
-            .isNotEmpty()
-            .contains(userSetting);
+        assertTrue(actual.isPresent());
+        assertEquals(userSetting, actual.get().getFirst());
 
         verify(userSettingRepository)
             .findAllByUserUsernameIgnoreCase("username");
@@ -170,8 +162,7 @@ class UserSettingServiceTest {
 
         userSettingService.updateUserSetting("username", 1L, userSettingRequestDto);
 
-        assertThat(userSetting.getSettingValue())
-            .isEqualTo(allowedSettingValue);
+        assertEquals(allowedSettingValue, userSetting.getSettingValue());
 
         verify(userSettingRepository)
             .findByUserUsernameAndSettingId("username", 1L);
@@ -205,8 +196,7 @@ class UserSettingServiceTest {
 
         userSettingService.updateUserSetting("username", 1L, userSettingRequestDto);
 
-        assertThat(userSetting.getUnconstrainedValue())
-            .isEqualTo("value");
+        assertEquals("value", userSetting.getUnconstrainedValue());
 
         verify(userSettingRepository)
             .findByUserUsernameAndSettingId("username", 1L);
@@ -223,9 +213,12 @@ class UserSettingServiceTest {
         when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userSettingService.updateUserSetting("username", 1L, userSettingRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("UserSetting 'user: username, settingId: 1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> userSettingService.updateUserSetting("username", 1L, userSettingRequestDto)
+        );
+
+        assertEquals("UserSetting 'user: username, settingId: 1' not found", exception.getMessage());
 
         verify(userSettingRepository)
             .findByUserUsernameAndSettingId("username", 1L);

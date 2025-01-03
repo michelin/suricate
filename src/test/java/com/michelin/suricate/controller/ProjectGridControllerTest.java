@@ -1,7 +1,8 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -62,9 +63,12 @@ class ProjectGridControllerTest {
         when(projectService.getOneByToken(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> projectGridController.create(localUser, "token", gridRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Project 'token' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> projectGridController.create(localUser, "token", gridRequestDto)
+        );
+
+        assertEquals("Project 'token' not found", exception.getMessage());
     }
 
     @Test
@@ -92,9 +96,12 @@ class ProjectGridControllerTest {
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
             .thenReturn(false);
 
-        assertThatThrownBy(() -> projectGridController.create(localUser, "token", gridRequestDto))
-            .isInstanceOf(ApiException.class)
-            .hasMessage("The user is not allowed to modify this project");
+        ApiException exception = assertThrows(
+            ApiException.class,
+            () -> projectGridController.create(localUser, "token", gridRequestDto)
+        );
+
+        assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
 
     @Test
@@ -137,8 +144,8 @@ class ProjectGridControllerTest {
         ResponseEntity<ProjectGridResponseDto> actual =
             projectGridController.create(localUser, "token", gridRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(projectGridResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(projectGridResponseDto, actual.getBody());
     }
 
     @Test
@@ -160,9 +167,12 @@ class ProjectGridControllerTest {
 
         ProjectGridRequestDto projectGridRequestDto = new ProjectGridRequestDto();
 
-        assertThatThrownBy(() -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Project 'token' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto)
+        );
+
+        assertEquals("Project 'token' not found", exception.getMessage());
     }
 
     @Test
@@ -189,9 +199,12 @@ class ProjectGridControllerTest {
 
         ProjectGridRequestDto projectGridRequestDto = new ProjectGridRequestDto();
 
-        assertThatThrownBy(() -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto))
-            .isInstanceOf(ApiException.class)
-            .hasMessage("The user is not allowed to modify this project");
+        ApiException exception = assertThrows(
+            ApiException.class,
+            () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto)
+        );
+
+        assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
 
     @Test
@@ -226,9 +239,12 @@ class ProjectGridControllerTest {
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
             .thenReturn(true);
 
-        assertThatThrownBy(() -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto))
-            .isInstanceOf(GridNotFoundException.class)
-            .hasMessage("Grid '2' not found for project token");
+        GridNotFoundException exception = assertThrows(
+            GridNotFoundException.class,
+            () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto)
+        );
+
+        assertEquals("Grid '2' not found for project token", exception.getMessage());
     }
 
     @Test
@@ -266,8 +282,8 @@ class ProjectGridControllerTest {
         ResponseEntity<Void> actual =
             projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 
     @Test
@@ -287,9 +303,12 @@ class ProjectGridControllerTest {
         when(projectService.getOneByToken(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> projectGridController.deleteGridById(localUser, "token", 1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Project 'token' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> projectGridController.deleteGridById(localUser, "token", 1L)
+        );
+
+        assertEquals("Project 'token' not found", exception.getMessage());
     }
 
     @Test
@@ -314,9 +333,12 @@ class ProjectGridControllerTest {
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
             .thenReturn(false);
 
-        assertThatThrownBy(() -> projectGridController.deleteGridById(localUser, "token", 1L))
-            .isInstanceOf(ApiException.class)
-            .hasMessage("The user is not allowed to modify this project");
+        ApiException exception = assertThrows(
+            ApiException.class,
+            () -> projectGridController.deleteGridById(localUser, "token", 1L)
+        );
+
+        assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
 
     @Test
@@ -345,9 +367,12 @@ class ProjectGridControllerTest {
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
             .thenReturn(true);
 
-        assertThatThrownBy(() -> projectGridController.deleteGridById(localUser, "token", 1L))
-            .isInstanceOf(GridNotFoundException.class)
-            .hasMessage("Grid '1' not found for project token");
+        GridNotFoundException exception = assertThrows(
+            GridNotFoundException.class,
+            () -> projectGridController.deleteGridById(localUser, "token", 1L)
+        );
+
+        assertEquals("Grid '1' not found for project token", exception.getMessage());
     }
 
     @Test
@@ -378,7 +403,7 @@ class ProjectGridControllerTest {
 
         ResponseEntity<Void> actual = projectGridController.deleteGridById(localUser, "token", 1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 }

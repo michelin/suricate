@@ -1,9 +1,10 @@
 package com.michelin.suricate.service.js.script;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.mockStatic;
@@ -60,7 +61,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.get("https://mocked.com");
 
-            assertThat(actual).isEqualTo("response");
+            assertEquals("response", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -86,10 +87,13 @@ class JsEndpointsTest {
             when(client.newCall(any())).thenReturn(call);
             when(call.execute()).thenReturn(response);
 
-            assertThatThrownBy(() -> JsEndpoints.get("https://mocked.com"))
-                .isInstanceOf(RemoteException.class)
-                .hasMessage(
-                    "A server error occurred during the execution of the request /GET https://mocked.com/ (code 500).");
+            RemoteException exception = assertThrows(
+                RemoteException.class,
+                () -> JsEndpoints.get("https://mocked.com")
+            );
+
+            assertEquals("A server error occurred during the execution of the request /GET https://mocked.com/ (code 500).",
+                exception.getMessage());
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -115,10 +119,14 @@ class JsEndpointsTest {
             when(client.newCall(any())).thenReturn(call);
             when(call.execute()).thenReturn(response);
 
-            assertThatThrownBy(() -> JsEndpoints.get("https://mocked.com"))
-                .isInstanceOf(RequestException.class)
-                .hasMessage(
-                    "A request error occurred during the execution of the request /GET https://mocked.com/ (code 403). Error body details: response");
+            RequestException exception = assertThrows(
+                RequestException.class,
+                () -> JsEndpoints.get("https://mocked.com")
+            );
+
+            assertEquals("A request error occurred during the execution of the request /GET https://mocked.com/ "
+                    + "(code 403). Error body details: response",
+                exception.getMessage());
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -142,10 +150,13 @@ class JsEndpointsTest {
             when(client.newCall(any())).thenReturn(call);
             when(call.execute()).thenReturn(response);
 
-            assertThatThrownBy(() -> JsEndpoints.get("https://mocked.com"))
-                .isInstanceOf(RequestException.class)
-                .hasMessage(
-                    "A request error occurred during the execution of the request /GET https://mocked.com/ (code 403). Error body details: Empty body");
+            RequestException exception = assertThrows(
+                RequestException.class,
+                () -> JsEndpoints.get("https://mocked.com")
+            );
+
+            assertEquals("A request error occurred during the execution of the request /GET https://mocked.com/ "
+                + "(code 403). Error body details: Empty body", exception.getMessage());
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -173,7 +184,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.get("https://mocked.com", true);
 
-            assertThat(actual).isEqualTo("200");
+            assertEquals("200", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -201,7 +212,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.get("https://mocked.com", "header", "headerValue");
 
-            assertThat(actual).isEqualTo("response");
+            assertEquals("response", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -230,7 +241,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.get("https://mocked.com", "header", "headerValue", true);
 
-            assertThat(actual).isEqualTo("200");
+            assertEquals("200", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -260,7 +271,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.get("https://mocked.com", "header", "headerValue", "headerToReturn");
 
-            assertThat(actual).isEqualTo("valueToReturn");
+            assertEquals("valueToReturn", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -289,7 +300,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.post("https://mocked.com", "{\"key\": \"value\"}");
 
-            assertThat(actual).isEqualTo("response");
+            assertEquals("response", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -320,7 +331,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.post("https://mocked.com", EMPTY);
 
-            assertThat(actual).isEqualTo("response");
+            assertEquals("response", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -351,7 +362,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.post("https://mocked.com", "{\"key\": \"value\"}", true);
 
-            assertThat(actual).isEqualTo("200");
+            assertEquals("200", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -382,7 +393,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.post("https://mocked.com", EMPTY, true);
 
-            assertThat(actual).isEqualTo("200");
+            assertEquals("200", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -413,7 +424,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.post("https://mocked.com", "{\"key\": \"value\"}", "header", "headerValue");
 
-            assertThat(actual).isEqualTo("response");
+            assertEquals("response", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -445,7 +456,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.post("https://mocked.com", EMPTY, "header", "headerValue");
 
-            assertThat(actual).isEqualTo("response");
+            assertEquals("response", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -478,7 +489,7 @@ class JsEndpointsTest {
             String actual =
                 JsEndpoints.post("https://mocked.com", "{\"key\": \"value\"}", "header", "headerValue", true);
 
-            assertThat(actual).isEqualTo("200");
+            assertEquals("200", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -510,7 +521,7 @@ class JsEndpointsTest {
 
             String actual = JsEndpoints.post("https://mocked.com", EMPTY, "header", "headerValue", true);
 
-            assertThat(actual).isEqualTo("200");
+            assertEquals("200", actual);
 
             verify(client)
                 .newCall(argThat(request -> request.url().toString().equals("https://mocked.com/")
@@ -525,52 +536,65 @@ class JsEndpointsTest {
     @Test
     void shouldCheckInterrupted() {
         Thread.currentThread().interrupt();
-        assertThatThrownBy(JsEndpoints::checkInterrupted)
-            .isInstanceOf(InterruptedException.class)
-            .hasMessage("Script Interrupted");
+
+        InterruptedException exception = assertThrows(
+            InterruptedException.class,
+            JsEndpoints::checkInterrupted
+        );
+
+        assertEquals("Script Interrupted", exception.getMessage());
     }
 
     @Test
     void shouldCheckInterruptedNotThrowException() {
-        assertThatCode(JsEndpoints::checkInterrupted).doesNotThrowAnyException();
+        assertDoesNotThrow(JsEndpoints::checkInterrupted);
     }
 
     @Test
     void shouldBtoaNull() {
         String actual = JsEndpoints.btoa(null);
-        assertThat(actual).isNull();
+        assertNull(actual);
     }
 
     @Test
     void shouldBtoaEmpty() {
         String actual = JsEndpoints.btoa(EMPTY);
-        assertThat(actual).isNull();
+        assertNull(actual);
     }
 
     @Test
     void shouldBtoa() {
         String actual = JsEndpoints.btoa("test");
-        assertThat(actual).isEqualTo("dGVzdA==");
+        assertEquals("dGVzdA==", actual);
     }
 
     @Test
     void shouldThrowError() {
-        assertThatThrownBy(JsEndpoints::throwError)
-            .isInstanceOf(RemoteException.class)
-            .hasMessage("Error");
+        RemoteException exception = assertThrows(
+            RemoteException.class,
+            JsEndpoints::throwError
+        );
+
+        assertEquals("Error", exception.getMessage());
     }
 
     @Test
     void shouldThrowFatalError() {
-        assertThatThrownBy(() -> JsEndpoints.throwFatalError("Error"))
-            .isInstanceOf(FatalException.class)
-            .hasMessage("Error");
+        FatalException exception = assertThrows(
+            FatalException.class,
+            () -> JsEndpoints.throwFatalError("Error")
+        );
+
+        assertEquals("Error", exception.getMessage());
     }
 
     @Test
     void shouldThrowTimeout() {
-        assertThatThrownBy(JsEndpoints::throwTimeout)
-            .isInstanceOf(TimeoutException.class)
-            .hasMessage("Timeout");
+        TimeoutException exception = assertThrows(
+            TimeoutException.class,
+            JsEndpoints::throwTimeout
+        );
+
+        assertEquals("Timeout", exception.getMessage());
     }
 }

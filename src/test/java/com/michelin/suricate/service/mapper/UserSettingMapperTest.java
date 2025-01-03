@@ -1,6 +1,6 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -46,11 +46,11 @@ class UserSettingMapperTest {
 
         UserSettingResponseDto actual = userSettingMapper.toUserSettingDto(getUserSetting());
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getUserId()).isEqualTo(1L);
-        assertThat(actual.getUnconstrainedValue()).isEqualTo("value");
-        assertThat(actual.getSetting()).isEqualTo(settingResponseDto);
-        assertThat(actual.getSettingValue()).isEqualTo(allowedSettingValueResponseDto);
+        assertEquals(1L, actual.getId());
+        assertEquals(1L, actual.getUserId());
+        assertEquals("value", actual.getUnconstrainedValue());
+        assertEquals(settingResponseDto, actual.getSetting());
+        assertEquals(allowedSettingValueResponseDto, actual.getSettingValue());
     }
 
     @Test
@@ -69,11 +69,11 @@ class UserSettingMapperTest {
         List<UserSettingResponseDto> actual =
             userSettingMapper.toUserSettingsDtos(Collections.singletonList(getUserSetting()));
 
-        assertThat(actual.get(0).getId()).isEqualTo(1L);
-        assertThat(actual.get(0).getUserId()).isEqualTo(1L);
-        assertThat(actual.get(0).getUnconstrainedValue()).isEqualTo("value");
-        assertThat(actual.get(0).getSetting()).isEqualTo(settingResponseDto);
-        assertThat(actual.get(0).getSettingValue()).isEqualTo(allowedSettingValueResponseDto);
+        assertEquals(1L, actual.getFirst().getId());
+        assertEquals(1L, actual.getFirst().getUserId());
+        assertEquals("value", actual.getFirst().getUnconstrainedValue());
+        assertEquals(settingResponseDto, actual.getFirst().getSetting());
+        assertEquals(allowedSettingValueResponseDto, actual.getFirst().getSettingValue());
     }
 
     @NotNull

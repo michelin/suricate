@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -55,12 +56,12 @@ class UserMapperTest {
 
         AdminUserResponseDto actual = userMapper.toAdminUserDto(user);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getEmail()).isEqualTo("email");
-        assertThat(actual.getFirstname()).isEqualTo("firstname");
-        assertThat(actual.getLastname()).isEqualTo("lastname");
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getRoles().get(0)).isEqualTo(roleResponseDto);
+        assertEquals(1L, actual.getId());
+        assertEquals("email", actual.getEmail());
+        assertEquals("firstname", actual.getFirstname());
+        assertEquals("lastname", actual.getLastname());
+        assertEquals("username", actual.getUsername());
+        assertEquals(roleResponseDto, actual.getRoles().getFirst());
     }
 
     @Test
@@ -78,9 +79,9 @@ class UserMapperTest {
 
         UserResponseDto actual = userMapper.toUserDto(user);
 
-        assertThat(actual.getFirstname()).isEqualTo("firstname");
-        assertThat(actual.getLastname()).isEqualTo("lastname");
-        assertThat(actual.getUsername()).isEqualTo("username");
+        assertEquals("firstname", actual.getFirstname());
+        assertEquals("lastname", actual.getLastname());
+        assertEquals("username", actual.getUsername());
     }
 
     @Test
@@ -98,23 +99,29 @@ class UserMapperTest {
 
         List<UserResponseDto> actual = userMapper.toUsersDtos(Collections.singletonList(user));
 
-        assertThat(actual.get(0).getFirstname()).isEqualTo("firstname");
-        assertThat(actual.get(0).getLastname()).isEqualTo("lastname");
-        assertThat(actual.get(0).getUsername()).isEqualTo("username");
+        assertEquals("firstname", actual.getFirst().getFirstname());
+        assertEquals("lastname", actual.getFirst().getLastname());
+        assertEquals("username", actual.getFirst().getUsername());
     }
 
     @Test
     void shouldConnectedUserToUserEntity() {
-        User actual = userMapper.connectedUserToUserEntity("username", "firstname", "lastname", "email", "url",
-            AuthenticationProvider.GITLAB);
+        User actual = userMapper.connectedUserToUserEntity(
+            "username",
+            "firstname",
+            "lastname",
+            "email",
+            "url",
+            AuthenticationProvider.GITLAB
+        );
 
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getFirstname()).isEqualTo("firstname");
-        assertThat(actual.getLastname()).isEqualTo("lastname");
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getEmail()).isEqualTo("email");
-        assertThat(actual.getAvatarUrl()).isEqualTo("url");
-        assertThat(actual.getAuthenticationMethod()).isEqualTo(AuthenticationProvider.GITLAB);
+        assertEquals("username", actual.getUsername());
+        assertEquals("firstname", actual.getFirstname());
+        assertEquals("lastname", actual.getLastname());
+        assertEquals("username", actual.getUsername());
+        assertEquals("email", actual.getEmail());
+        assertEquals("url", actual.getAvatarUrl());
+        assertEquals(AuthenticationProvider.GITLAB, actual.getAuthenticationMethod());
     }
 
     @Test
@@ -133,13 +140,13 @@ class UserMapperTest {
 
         User actual = userMapper.toUserEntity(userRequestDto, AuthenticationProvider.GITHUB);
 
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getFirstname()).isEqualTo("firstname");
-        assertThat(actual.getLastname()).isEqualTo("lastname");
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getEmail()).isEqualTo("email");
-        assertThat(actual.getPassword()).isEqualTo("encoded");
-        assertThat(actual.getAuthenticationMethod()).isEqualTo(AuthenticationProvider.GITHUB);
-        assertThat(actual.getRoles()).isEmpty();
+        assertEquals("username", actual.getUsername());
+        assertEquals("firstname", actual.getFirstname());
+        assertEquals("lastname", actual.getLastname());
+        assertEquals("username", actual.getUsername());
+        assertEquals("email", actual.getEmail());
+        assertEquals("encoded", actual.getPassword());
+        assertEquals(AuthenticationProvider.GITHUB, actual.getAuthenticationMethod());
+        assertTrue(actual.getRoles().isEmpty());
     }
 }

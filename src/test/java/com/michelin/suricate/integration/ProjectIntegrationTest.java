@@ -1,6 +1,7 @@
 package com.michelin.suricate.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
@@ -55,11 +56,11 @@ class ProjectIntegrationTest {
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/auth/signin",
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
                 POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
 
-        assertThat(signInResponse.getBody()).isNotNull();
+        assertNotNull(signInResponse.getBody());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(signInResponse.getBody().getAccessToken());
@@ -70,13 +71,13 @@ class ProjectIntegrationTest {
         noNameProjectRequestDto.setCssStyle("css");
 
         // Create project with no name
-        ResponseEntity<ApiErrorDto> noNameProjectResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/projects",
+        ResponseEntity<ApiErrorDto> noNameProjectResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/projects",
                 POST, new HttpEntity<>(noNameProjectRequestDto, headers), ApiErrorDto.class);
 
-        assertThat(noNameProjectResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(noNameProjectResponse.getBody()).isNotNull();
-        assertThat(noNameProjectResponse.getBody().getMessage()).isEqualTo("Name must not be blank");
+        assertEquals(HttpStatus.BAD_REQUEST, noNameProjectResponse.getStatusCode());
+        assertNotNull(noNameProjectResponse.getBody());
+        assertEquals("Name must not be blank", noNameProjectResponse.getBody().getMessage());
 
         ProjectRequestDto projectRequestDto = new ProjectRequestDto();
         projectRequestDto.setName("name");
@@ -85,12 +86,12 @@ class ProjectIntegrationTest {
         projectRequestDto.setCssStyle("css");
 
         // Create project
-        ResponseEntity<ProjectResponseDto> projectResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/projects",
+        ResponseEntity<ProjectResponseDto> projectResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/projects",
                 POST, new HttpEntity<>(projectRequestDto, headers), ProjectResponseDto.class);
 
-        assertThat(projectResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(projectResponse.getBody()).isNotNull();
+        assertEquals(HttpStatus.CREATED, projectResponse.getStatusCode());
+        assertNotNull(projectResponse.getBody());
     }
 
     @Test
@@ -112,11 +113,11 @@ class ProjectIntegrationTest {
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/auth/signin",
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
                 POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
 
-        assertThat(signInResponse.getBody()).isNotNull();
+        assertNotNull(signInResponse.getBody());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(signInResponse.getBody().getAccessToken());
@@ -128,24 +129,24 @@ class ProjectIntegrationTest {
         projectRequestDto.setCssStyle("css");
 
         // Create project
-        ResponseEntity<ProjectResponseDto> projectResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/projects",
+        ResponseEntity<ProjectResponseDto> projectResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/projects",
                 POST, new HttpEntity<>(projectRequestDto, headers), ProjectResponseDto.class);
 
-        assertThat(projectResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(projectResponse.getBody()).isNotNull();
+        assertEquals(HttpStatus.CREATED, projectResponse.getStatusCode());
+        assertNotNull(projectResponse.getBody());
 
         // Get project users
-        ResponseEntity<List<UserResponseDto>> projectUsersResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/projects/"
+        ResponseEntity<List<UserResponseDto>> projectUsersResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/projects/"
                     + projectResponse.getBody().getToken() + "/users",
                 GET, new HttpEntity<>(headers), new ParameterizedTypeReference<>() {});
 
-        assertThat(projectUsersResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(projectUsersResponse.getBody()).isNotNull();
-        assertThat(projectUsersResponse.getBody().get(0).getId()).isNotNull();
-        assertThat(projectUsersResponse.getBody().get(0).getUsername()).isEqualTo("username");
-        assertThat(projectUsersResponse.getBody().get(0).getFirstname()).isEqualTo("firstName");
-        assertThat(projectUsersResponse.getBody().get(0).getLastname()).isEqualTo("lastName");
+        assertEquals(HttpStatus.OK, projectUsersResponse.getStatusCode());
+        assertNotNull(projectUsersResponse.getBody());
+        assertNotNull(projectUsersResponse.getBody().getFirst().getId());
+        assertEquals("username", projectUsersResponse.getBody().getFirst().getUsername());
+        assertEquals("firstName", projectUsersResponse.getBody().getFirst().getFirstname());
+        assertEquals("lastName", projectUsersResponse.getBody().getFirst().getLastname());
     }
 }

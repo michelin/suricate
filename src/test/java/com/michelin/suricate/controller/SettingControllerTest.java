@@ -1,7 +1,9 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -37,9 +39,12 @@ class SettingControllerTest {
         when(settingService.getAll())
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> settingController.getAll())
-            .isInstanceOf(NoContentException.class)
-            .hasMessage("No resource for the class 'Setting'");
+        NoContentException exception = assertThrows(
+            NoContentException.class,
+            () -> settingController.getAll()
+        );
+
+        assertEquals("No resource for the class 'Setting'", exception.getMessage());
     }
 
     @Test
@@ -57,7 +62,8 @@ class SettingControllerTest {
 
         ResponseEntity<List<SettingResponseDto>> actual = settingController.getAll();
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).contains(settingResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertTrue(actual.getBody().contains(settingResponseDto));
     }
 }

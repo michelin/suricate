@@ -1,7 +1,10 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -51,9 +54,12 @@ class ProjectWidgetControllerTest {
         when(projectWidgetService.getOne(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> projectWidgetController.getById(1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("ProjectWidget '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> projectWidgetController.getById(1L)
+        );
+
+        assertEquals("ProjectWidget '1' not found", exception.getMessage());
     }
 
     @Test
@@ -71,8 +77,8 @@ class ProjectWidgetControllerTest {
 
         ResponseEntity<ProjectWidgetResponseDto> actual = projectWidgetController.getById(1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(projectWidgetResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(projectWidgetResponseDto, actual.getBody());
     }
 
     @Test
@@ -80,9 +86,12 @@ class ProjectWidgetControllerTest {
         when(projectService.getOneByToken(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> projectWidgetController.getByProject("token"))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Project 'token' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> projectWidgetController.getByProject("token")
+        );
+
+        assertEquals("Project 'token' not found", exception.getMessage());
     }
 
     @Test
@@ -95,8 +104,8 @@ class ProjectWidgetControllerTest {
 
         ResponseEntity<List<ProjectWidgetResponseDto>> actual = projectWidgetController.getByProject("token");
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 
     @Test
@@ -122,8 +131,9 @@ class ProjectWidgetControllerTest {
 
         ResponseEntity<List<ProjectWidgetResponseDto>> actual = projectWidgetController.getByProject("token");
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).contains(projectWidgetResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertTrue(actual.getBody().contains(projectWidgetResponseDto));
     }
 
     @Test
@@ -146,9 +156,12 @@ class ProjectWidgetControllerTest {
         when(projectWidgetService.getOne(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> projectWidgetController.editByProject(localUser, 1L, projectWidgetRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("ProjectWidget '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> projectWidgetController.editByProject(localUser, 1L, projectWidgetRequestDto)
+        );
+
+        assertEquals("ProjectWidget '1' not found", exception.getMessage());
     }
 
     @Test
@@ -184,9 +197,12 @@ class ProjectWidgetControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        assertThatThrownBy(() -> projectWidgetController.editByProject(localUser, 1L, projectWidgetRequestDto))
-            .isInstanceOf(ApiException.class)
-            .hasMessage("The user is not allowed to modify this project");
+        ApiException exception = assertThrows(
+            ApiException.class,
+            () -> projectWidgetController.editByProject(localUser, 1L, projectWidgetRequestDto)
+        );
+
+        assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
 
     @Test
@@ -230,8 +246,8 @@ class ProjectWidgetControllerTest {
         ResponseEntity<ProjectWidgetResponseDto> actual =
             projectWidgetController.editByProject(localUser, 1L, projectWidgetRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(projectWidgetResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(projectWidgetResponseDto, actual.getBody());
     }
 
     @Test
@@ -254,10 +270,12 @@ class ProjectWidgetControllerTest {
         when(projectService.getOneByToken(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-            () -> projectWidgetController.addProjectWidgetToProject(localUser, "token", 1L, projectWidgetRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Project 'token' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> projectWidgetController.addProjectWidgetToProject(localUser, "token", 1L, projectWidgetRequestDto)
+        );
+
+        assertEquals("Project 'token' not found", exception.getMessage());
     }
 
     @Test
@@ -285,10 +303,12 @@ class ProjectWidgetControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        assertThatThrownBy(
-            () -> projectWidgetController.addProjectWidgetToProject(localUser, "token", 1L, projectWidgetRequestDto))
-            .isInstanceOf(ApiException.class)
-            .hasMessage("The user is not allowed to modify this project");
+        ApiException exception = assertThrows(
+            ApiException.class,
+            () -> projectWidgetController.addProjectWidgetToProject(localUser, "token", 1L, projectWidgetRequestDto)
+        );
+
+        assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
 
     @Test
@@ -316,10 +336,12 @@ class ProjectWidgetControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        assertThatThrownBy(
-            () -> projectWidgetController.addProjectWidgetToProject(localUser, "token", 1L, projectWidgetRequestDto))
-            .isInstanceOf(ApiException.class)
-            .hasMessage("Grid '1' not found for project token");
+        ApiException exception = assertThrows(
+            ApiException.class,
+            () -> projectWidgetController.addProjectWidgetToProject(localUser, "token", 1L, projectWidgetRequestDto)
+        );
+
+        assertEquals("Grid '1' not found for project token", exception.getMessage());
     }
 
     @Test
@@ -365,8 +387,8 @@ class ProjectWidgetControllerTest {
         ResponseEntity<ProjectWidgetResponseDto> actual =
             projectWidgetController.addProjectWidgetToProject(localUser, "token", 1L, projectWidgetRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(actual.getBody()).isEqualTo(projectWidgetResponseDto);
+        assertEquals(HttpStatus.CREATED, actual.getStatusCode());
+        assertEquals(projectWidgetResponseDto, actual.getBody());
     }
 
     @Test
@@ -386,9 +408,12 @@ class ProjectWidgetControllerTest {
         when(projectWidgetService.getOne(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> projectWidgetController.deleteById(localUser, 1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("ProjectWidget '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> projectWidgetController.deleteById(localUser, 1L)
+        );
+
+        assertEquals("ProjectWidget '1' not found", exception.getMessage());
     }
 
     @Test
@@ -421,9 +446,12 @@ class ProjectWidgetControllerTest {
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
             .thenReturn(false);
 
-        assertThatThrownBy(() -> projectWidgetController.deleteById(localUser, 1L))
-            .isInstanceOf(ApiException.class)
-            .hasMessage("The user is not allowed to modify this project");
+        ApiException exception = assertThrows(
+            ApiException.class,
+            () -> projectWidgetController.deleteById(localUser, 1L)
+        );
+
+        assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
 
     @Test
@@ -458,6 +486,6 @@ class ProjectWidgetControllerTest {
 
         ResponseEntity<Void> actual = projectWidgetController.deleteById(localUser, 1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
     }
 }

@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -38,8 +39,8 @@ class ProjectGridMapperTest {
 
         ProjectGridResponseDto actual = projectGridMapper.toProjectGridDto(projectGrid);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getTime()).isEqualTo(10);
+        assertEquals(1L, actual.getId());
+        assertEquals(10, actual.getTime());
     }
 
     @Test
@@ -53,13 +54,12 @@ class ProjectGridMapperTest {
 
         ProjectGrid actual = projectGridMapper.toProjectGridEntity(project);
 
-        assertThat(actual.getTime()).isEqualTo(60);
-        assertThat(actual.getProject()).isEqualTo(project);
-        assertThat(actual.getCreatedBy()).isEqualTo("createdBy");
-        assertThat(actual.getCreatedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
-        assertThat(actual.getLastModifiedBy()).isEqualTo("lastModifiedBy");
-        assertThat(actual.getLastModifiedDate())
-            .isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
+        assertEquals(60, actual.getTime());
+        assertEquals(project, actual.getProject());
+        assertEquals("createdBy", actual.getCreatedBy());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getCreatedDate());
+        assertEquals("lastModifiedBy", actual.getLastModifiedBy());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getLastModifiedDate());
     }
 
     @Test
@@ -95,14 +95,14 @@ class ProjectGridMapperTest {
         ImportExportProjectDto.ImportExportProjectGridDto actual =
             projectGridMapper.toImportExportProjectGridDto(projectGrid);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getTime()).isEqualTo(10);
-        assertThat(actual.getWidgets().get(0).getWidgetTechnicalName()).isEqualTo("technicalName");
-        assertThat(actual.getWidgets().get(0).getBackendConfig()).isEqualTo("key=value");
-        assertThat(actual.getWidgets().get(0).getWidgetPosition().getGridColumn()).isEqualTo(1);
-        assertThat(actual.getWidgets().get(0).getWidgetPosition().getGridRow()).isEqualTo(1);
-        assertThat(actual.getWidgets().get(0).getWidgetPosition().getHeight()).isEqualTo(1);
-        assertThat(actual.getWidgets().get(0).getWidgetPosition().getWidth()).isEqualTo(1);
+        assertEquals(1L, actual.getId());
+        assertEquals(10, actual.getTime());
+        assertEquals("technicalName", actual.getWidgets().getFirst().getWidgetTechnicalName());
+        assertEquals("key=value", actual.getWidgets().getFirst().getBackendConfig());
+        assertEquals(1, actual.getWidgets().getFirst().getWidgetPosition().getGridColumn());
+        assertEquals(1, actual.getWidgets().getFirst().getWidgetPosition().getGridRow());
+        assertEquals(1, actual.getWidgets().getFirst().getWidgetPosition().getHeight());
+        assertEquals(1, actual.getWidgets().getFirst().getWidgetPosition().getWidth());
     }
 
     @Test
@@ -116,9 +116,9 @@ class ProjectGridMapperTest {
 
         ProjectGrid actual = projectGridMapper.toProjectGridEntity(projectGridRequestDto, project);
 
-        assertThat(actual.getId()).isNull();
-        assertThat(actual.getTime()).isEqualTo(10);
-        assertThat(actual.getProject()).isEqualTo(project);
+        assertNull(actual.getId());
+        assertEquals(10, actual.getTime());
+        assertEquals(project, actual.getProject());
     }
 
     @Test
@@ -149,9 +149,9 @@ class ProjectGridMapperTest {
 
         ProjectGrid actual = projectGridMapper.toProjectGridEntity(importExportProjectGridDto);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getTime()).isEqualTo(10);
-        assertThat(actual.getProject()).isNull();
-        assertThat(new ArrayList<>(actual.getWidgets()).get(0)).isEqualTo(projectWidget);
+        assertEquals(1L, actual.getId());
+        assertEquals(10, actual.getTime());
+        assertNull(actual.getProject());
+        assertEquals(projectWidget, new ArrayList<>(actual.getWidgets()).getFirst());
     }
 }

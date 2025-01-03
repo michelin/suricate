@@ -1,6 +1,8 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,9 +45,8 @@ class RoleServiceTest {
 
         Optional<Role> actual = roleService.getRoleByName("name");
 
-        assertThat(actual)
-            .isPresent()
-            .contains(role);
+        assertTrue(actual.isPresent());
+        assertEquals(role, actual.get());
 
         verify(roleRepository)
             .findByName("name");
@@ -62,9 +63,8 @@ class RoleServiceTest {
 
         Page<Role> actual = roleService.getRoles("search", Pageable.unpaged());
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(role);
+        assertFalse(actual.isEmpty());
+        assertEquals(role, actual.get().toList().getFirst());
 
         verify(roleRepository)
             .findAll(
@@ -83,9 +83,8 @@ class RoleServiceTest {
 
         Optional<Role> actual = roleService.getOneById(1L);
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(role);
+        assertTrue(actual.isPresent());
+        assertEquals(role, actual.get());
 
         verify(roleRepository)
             .findById(1L);

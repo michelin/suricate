@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -76,22 +77,22 @@ class ProjectWidgetMapperTest {
 
         ProjectWidgetResponseDto actual = projectWidgetMapper.toProjectWidgetDto(projectWidget);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getWidgetId()).isEqualTo(1L);
-        assertThat(actual.getBackendConfig()).isEqualTo("backendConfig");
-        assertThat(actual.getData()).isEqualTo("data");
-        assertThat(actual.getCustomStyle()).isEqualTo("style");
-        assertThat(actual.getInstantiateHtml()).isEqualTo("html");
-        assertThat(actual.getGridId()).isEqualTo(1);
-        assertThat(actual.getLastExecutionDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
-        assertThat(actual.getLastSuccessDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
-        assertThat(actual.getProjectToken()).isEqualTo("token");
-        assertThat(actual.getLog()).isEqualTo("log");
-        assertThat(actual.getWidgetPosition().getWidth()).isEqualTo(1);
-        assertThat(actual.getWidgetPosition().getHeight()).isEqualTo(1);
-        assertThat(actual.getWidgetPosition().getGridRow()).isEqualTo(1);
-        assertThat(actual.getWidgetPosition().getGridColumn()).isEqualTo(1);
-        assertThat(actual.getWidgetTechnicalName()).isNull();
+        assertEquals(1L, actual.getId());
+        assertEquals(1L, actual.getWidgetId());
+        assertEquals("backendConfig", actual.getBackendConfig());
+        assertEquals("data", actual.getData());
+        assertEquals("style", actual.getCustomStyle());
+        assertEquals("html", actual.getInstantiateHtml());
+        assertEquals(1, actual.getGridId());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getLastExecutionDate());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getLastSuccessDate());
+        assertEquals("token", actual.getProjectToken());
+        assertEquals("log", actual.getLog());
+        assertEquals(1, actual.getWidgetPosition().getWidth());
+        assertEquals(1, actual.getWidgetPosition().getHeight());
+        assertEquals(1, actual.getWidgetPosition().getGridRow());
+        assertEquals(1, actual.getWidgetPosition().getGridColumn());
+        assertNull(actual.getWidgetTechnicalName());
     }
 
     @Test
@@ -130,22 +131,22 @@ class ProjectWidgetMapperTest {
         List<ProjectWidgetResponseDto> actual =
             projectWidgetMapper.toProjectWidgetsDtos(Collections.singleton(projectWidget));
 
-        assertThat(actual.get(0).getId()).isEqualTo(1L);
-        assertThat(actual.get(0).getWidgetId()).isEqualTo(1L);
-        assertThat(actual.get(0).getBackendConfig()).isEqualTo("backendConfig");
-        assertThat(actual.get(0).getData()).isEqualTo("data");
-        assertThat(actual.get(0).getCustomStyle()).isEqualTo("style");
-        assertThat(actual.get(0).getInstantiateHtml()).isEqualTo("html");
-        assertThat(actual.get(0).getGridId()).isEqualTo(1);
-        assertThat(actual.get(0).getLastExecutionDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
-        assertThat(actual.get(0).getLastSuccessDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
-        assertThat(actual.get(0).getProjectToken()).isEqualTo("token");
-        assertThat(actual.get(0).getLog()).isEqualTo("log");
-        assertThat(actual.get(0).getWidgetPosition().getWidth()).isEqualTo(1);
-        assertThat(actual.get(0).getWidgetPosition().getHeight()).isEqualTo(1);
-        assertThat(actual.get(0).getWidgetPosition().getGridRow()).isEqualTo(1);
-        assertThat(actual.get(0).getWidgetPosition().getGridColumn()).isEqualTo(1);
-        assertThat(actual.get(0).getWidgetTechnicalName()).isNull();
+        assertEquals(1L, actual.getFirst().getId());
+        assertEquals(1L, actual.getFirst().getWidgetId());
+        assertEquals("backendConfig", actual.getFirst().getBackendConfig());
+        assertEquals("data", actual.getFirst().getData());
+        assertEquals("style", actual.getFirst().getCustomStyle());
+        assertEquals("html", actual.getFirst().getInstantiateHtml());
+        assertEquals(1, actual.getFirst().getGridId());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getFirst().getLastExecutionDate());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getFirst().getLastSuccessDate());
+        assertEquals("token", actual.getFirst().getProjectToken());
+        assertEquals("log", actual.getFirst().getLog());
+        assertEquals(1, actual.getFirst().getWidgetPosition().getWidth());
+        assertEquals(1, actual.getFirst().getWidgetPosition().getHeight());
+        assertEquals(1, actual.getFirst().getWidgetPosition().getGridRow());
+        assertEquals(1, actual.getFirst().getWidgetPosition().getGridColumn());
+        assertNull(actual.getFirst().getWidgetTechnicalName());
     }
 
     @Test
@@ -173,16 +174,16 @@ class ProjectWidgetMapperTest {
 
         ProjectWidget actual = projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, 1L);
 
-        assertThat(actual.getId()).isNull();
-        assertThat(actual.getBackendConfig()).isEqualTo("backendConfig");
-        assertThat(actual.getData()).isEqualTo("data");
-        assertThat(actual.getGridColumn()).isEqualTo(1);
-        assertThat(actual.getGridRow()).isEqualTo(1);
-        assertThat(actual.getHeight()).isEqualTo(1);
-        assertThat(actual.getWidth()).isEqualTo(1);
-        assertThat(actual.getCustomStyle()).isEqualTo("style");
-        assertThat(actual.getProjectGrid()).isEqualTo(projectGrid);
-        assertThat(actual.getWidget()).isEqualTo(widget);
+        assertNull(actual.getId());
+        assertEquals("backendConfig", actual.getBackendConfig());
+        assertEquals("data", actual.getData());
+        assertEquals(1, actual.getGridColumn());
+        assertEquals(1, actual.getGridRow());
+        assertEquals(1, actual.getHeight());
+        assertEquals(1, actual.getWidth());
+        assertEquals("style", actual.getCustomStyle());
+        assertEquals(projectGrid, actual.getProjectGrid());
+        assertEquals(widget, actual.getWidget());
     }
 
     @Test
@@ -207,16 +208,16 @@ class ProjectWidgetMapperTest {
 
         ProjectWidget actual = projectWidgetMapper.toProjectWidgetEntity(importExportProjectWidgetDto);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getBackendConfig()).isEqualTo("backendConfig");
-        assertThat(actual.getData()).isEqualTo("{}");
-        assertThat(actual.getGridColumn()).isEqualTo(1);
-        assertThat(actual.getGridRow()).isEqualTo(1);
-        assertThat(actual.getHeight()).isEqualTo(1);
-        assertThat(actual.getWidth()).isEqualTo(1);
-        assertThat(actual.getCustomStyle()).isNull();
-        assertThat(actual.getProjectGrid()).isNull();
-        assertThat(actual.getWidget()).isEqualTo(widget);
+        assertEquals(1L, actual.getId());
+        assertEquals("backendConfig", actual.getBackendConfig());
+        assertEquals("{}", actual.getData());
+        assertEquals(1, actual.getGridColumn());
+        assertEquals(1, actual.getGridRow());
+        assertEquals(1, actual.getHeight());
+        assertEquals(1, actual.getWidth());
+        assertNull(actual.getCustomStyle());
+        assertNull(actual.getProjectGrid());
+        assertEquals(widget, actual.getWidget());
     }
 
     @Test
@@ -246,12 +247,12 @@ class ProjectWidgetMapperTest {
         ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto actual =
             projectWidgetMapper.toImportExportProjectWidgetDto(projectWidget);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getBackendConfig()).isEqualTo("backendConfig");
-        assertThat(actual.getWidgetTechnicalName()).isEqualTo("technicalName");
-        assertThat(actual.getWidgetPosition().getWidth()).isEqualTo(1);
-        assertThat(actual.getWidgetPosition().getHeight()).isEqualTo(1);
-        assertThat(actual.getWidgetPosition().getGridRow()).isEqualTo(1);
-        assertThat(actual.getWidgetPosition().getGridColumn()).isEqualTo(1);
+        assertEquals(1L, actual.getId());
+        assertEquals("backendConfig", actual.getBackendConfig());
+        assertEquals("technicalName", actual.getWidgetTechnicalName());
+        assertEquals(1, actual.getWidgetPosition().getWidth());
+        assertEquals(1, actual.getWidgetPosition().getHeight());
+        assertEquals(1, actual.getWidgetPosition().getGridRow());
+        assertEquals(1, actual.getWidgetPosition().getGridColumn());
     }
 }

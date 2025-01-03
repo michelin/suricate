@@ -1,6 +1,8 @@
 package com.michelin.suricate.service.js;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -70,15 +72,15 @@ class JsExecutionServiceTest {
 
         List<JsExecutionDto> actual = jsExecutionService.getJsExecutionsByProject(project);
 
-        assertThat(actual.get(0).getProperties()).isEqualTo("key=value\ncategoryKey=categoryValue\n");
-        assertThat(actual.get(0).getScript()).isEqualTo("backendJs");
-        assertThat(actual.get(0).getPreviousData()).isEqualTo("data");
-        assertThat(actual.get(0).getProjectId()).isEqualTo(1L);
-        assertThat(actual.get(0).getProjectWidgetId()).isEqualTo(1L);
-        assertThat(actual.get(0).getDelay()).isEqualTo(10L);
-        assertThat(actual.get(0).getTimeout()).isEqualTo(15L);
-        assertThat(actual.get(0).getWidgetState()).isEqualTo(WidgetStateEnum.RUNNING);
-        assertThat(actual.get(0).isAlreadySuccess()).isTrue();
+        assertEquals("key=value\ncategoryKey=categoryValue\n", actual.getFirst().getProperties());
+        assertEquals("backendJs", actual.getFirst().getScript());
+        assertEquals("data", actual.getFirst().getPreviousData());
+        assertEquals(1L, actual.getFirst().getProjectId());
+        assertEquals(1L, actual.getFirst().getProjectWidgetId());
+        assertEquals(10L, actual.getFirst().getDelay());
+        assertEquals(15L, actual.getFirst().getTimeout());
+        assertEquals(WidgetStateEnum.RUNNING, actual.getFirst().getWidgetState());
+        assertTrue(actual.getFirst().isAlreadySuccess());
     }
 
     @Test
@@ -124,15 +126,15 @@ class JsExecutionServiceTest {
 
         JsExecutionDto actual = jsExecutionService.getJsExecutionByProjectWidgetId(1L);
 
-        assertThat(actual.getProperties()).isEqualTo("key=value\ncategoryKey=categoryValue\n");
-        assertThat(actual.getScript()).isEqualTo("backendJs");
-        assertThat(actual.getPreviousData()).isEqualTo("data");
-        assertThat(actual.getProjectId()).isEqualTo(1L);
-        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
-        assertThat(actual.getDelay()).isEqualTo(10L);
-        assertThat(actual.getTimeout()).isEqualTo(15L);
-        assertThat(actual.getWidgetState()).isEqualTo(WidgetStateEnum.RUNNING);
-        assertThat(actual.isAlreadySuccess()).isTrue();
+        assertEquals("key=value\ncategoryKey=categoryValue\n", actual.getProperties());
+        assertEquals("backendJs", actual.getScript());
+        assertEquals("data", actual.getPreviousData());
+        assertEquals(1L, actual.getProjectId());
+        assertEquals(1L, actual.getProjectWidgetId());
+        assertEquals(10L, actual.getDelay());
+        assertEquals(15L, actual.getTimeout());
+        assertEquals(WidgetStateEnum.RUNNING, actual.getWidgetState());
+        assertTrue(actual.isAlreadySuccess());
     }
 
     @Test
@@ -169,15 +171,15 @@ class JsExecutionServiceTest {
 
         JsExecutionDto actual = jsExecutionService.getJsExecutionByProjectWidgetId(1L);
 
-        assertThat(actual.getProperties()).isEqualTo("key=value");
-        assertThat(actual.getScript()).isEqualTo("backendJs");
-        assertThat(actual.getPreviousData()).isEqualTo("data");
-        assertThat(actual.getProjectId()).isEqualTo(1L);
-        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
-        assertThat(actual.getDelay()).isEqualTo(10L);
-        assertThat(actual.getTimeout()).isEqualTo(15L);
-        assertThat(actual.getWidgetState()).isEqualTo(WidgetStateEnum.RUNNING);
-        assertThat(actual.isAlreadySuccess()).isTrue();
+        assertEquals("key=value", actual.getProperties());
+        assertEquals("backendJs", actual.getScript());
+        assertEquals("data", actual.getPreviousData());
+        assertEquals(1L, actual.getProjectId());
+        assertEquals(1L, actual.getProjectWidgetId());
+        assertEquals(10L, actual.getDelay());
+        assertEquals(15L, actual.getTimeout());
+        assertEquals(WidgetStateEnum.RUNNING, actual.getWidgetState());
+        assertTrue(actual.isAlreadySuccess());
     }
 
     @Test
@@ -187,7 +189,7 @@ class JsExecutionServiceTest {
 
         boolean actual = jsExecutionService.isJsExecutable(jsExecutionDto);
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -199,7 +201,7 @@ class JsExecutionServiceTest {
 
         boolean actual = jsExecutionService.isJsExecutable(jsExecutionDto);
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -211,7 +213,7 @@ class JsExecutionServiceTest {
 
         boolean actual = jsExecutionService.isJsExecutable(jsExecutionDto);
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -224,7 +226,7 @@ class JsExecutionServiceTest {
 
         boolean actual = jsExecutionService.isJsExecutable(jsExecutionDto);
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -237,6 +239,6 @@ class JsExecutionServiceTest {
 
         boolean actual = jsExecutionService.isJsExecutable(jsExecutionDto);
 
-        assertThat(actual).isTrue();
+        assertTrue(actual);
     }
 }

@@ -1,6 +1,9 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.michelin.suricate.model.enumeration.AuthenticationProvider;
@@ -34,13 +37,11 @@ class ConfigurationControllerTest {
 
         ResponseEntity<List<AuthenticationProvider>> actual = configurationController.getAuthenticationProviders();
 
-        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isNotNull();
-        assertThat(actual.getBody()).hasSize(2);
-        assertThat(actual.getBody())
-            .contains(AuthenticationProvider.LDAP)
-            .contains(AuthenticationProvider.GITHUB);
+        assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertEquals(2, actual.getBody().size());
+        assertIterableEquals(List.of(AuthenticationProvider.LDAP, AuthenticationProvider.GITHUB), actual.getBody());
     }
 
     @Test
@@ -51,9 +52,9 @@ class ConfigurationControllerTest {
 
         ResponseEntity<List<AuthenticationProvider>> actual = configurationController.getAuthenticationProviders();
 
-        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isNotNull();
-        assertThat(actual.getBody()).isEmpty();
+        assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertTrue(actual.getBody().isEmpty());
     }
 }

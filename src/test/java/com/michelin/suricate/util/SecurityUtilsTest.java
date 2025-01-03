@@ -1,6 +1,7 @@
 package com.michelin.suricate.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.michelin.suricate.model.entity.Role;
 import com.michelin.suricate.model.entity.User;
@@ -24,7 +25,7 @@ class SecurityUtilsTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         boolean actual = SecurityUtils.isAdmin(localUser);
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -41,12 +42,12 @@ class SecurityUtilsTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         boolean actual = SecurityUtils.isAdmin(localUser);
-        assertThat(actual).isTrue();
+        assertTrue(actual);
     }
 
     @Test
     void shouldHasRoleNullUser() {
-        assertThat(SecurityUtils.hasRole(null, UserRoleEnum.ROLE_USER.name())).isFalse();
+        assertFalse(SecurityUtils.hasRole(null, UserRoleEnum.ROLE_USER.name()));
     }
 
     @Test
@@ -63,7 +64,7 @@ class SecurityUtilsTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         boolean actual = SecurityUtils.hasRole(localUser, UserRoleEnum.ROLE_USER.name());
-        assertThat(actual).isTrue();
+        assertTrue(actual);
     }
 
     @Test
@@ -80,6 +81,6 @@ class SecurityUtilsTest {
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         boolean actual = SecurityUtils.hasRole(localUser, UserRoleEnum.ROLE_ADMIN.name());
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 }

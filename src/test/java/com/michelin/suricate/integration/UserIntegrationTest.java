@@ -1,6 +1,8 @@
 package com.michelin.suricate.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
@@ -55,43 +57,43 @@ class UserIntegrationTest {
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/auth/signin",
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
                 POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
 
-        assertThat(signInResponse.getBody()).isNotNull();
+        assertNotNull(signInResponse.getBody());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(signInResponse.getBody().getAccessToken());
 
         // Get user that does not exist
-        ResponseEntity<ApiErrorDto> userNotFoundResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/users/2",
+        ResponseEntity<ApiErrorDto> userNotFoundResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/users/2",
                 GET, new HttpEntity<>(headers), ApiErrorDto.class);
 
-        assertThat(userNotFoundResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(userNotFoundResponse.getBody()).isNotNull();
-        assertThat(userNotFoundResponse.getBody().getMessage()).isEqualTo("User '2' not found");
+        assertEquals(HttpStatus.NOT_FOUND, userNotFoundResponse.getStatusCode());
+        assertNotNull(userNotFoundResponse.getBody());
+        assertEquals("User '2' not found", userNotFoundResponse.getBody().getMessage());
 
         // Get user with bad parameter type
-        ResponseEntity<ApiErrorDto> badParameterResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/users/badParameter",
+        ResponseEntity<ApiErrorDto> badParameterResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/users/badParameter",
                 GET, new HttpEntity<>(headers), ApiErrorDto.class);
 
-        assertThat(badParameterResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(badParameterResponse.getBody()).isNotNull();
-        assertThat(badParameterResponse.getBody().getMessage()).isEqualTo("Bad request");
+        assertEquals(HttpStatus.BAD_REQUEST, badParameterResponse.getStatusCode());
+        assertNotNull(badParameterResponse.getBody());
+        assertEquals("Bad request", badParameterResponse.getBody().getMessage());
 
         // Get user that exist
-        ResponseEntity<UserResponseDto> userFoundResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/users/1",
+        ResponseEntity<UserResponseDto> userFoundResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/users/1",
                 GET, new HttpEntity<>(headers), UserResponseDto.class);
 
-        assertThat(userFoundResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(userFoundResponse.getBody()).isNotNull();
-        assertThat(userFoundResponse.getBody().getUsername()).isEqualTo("username");
-        assertThat(userFoundResponse.getBody().getFirstname()).isEqualTo("firstName");
-        assertThat(userFoundResponse.getBody().getLastname()).isEqualTo("lastName");
+        assertEquals(HttpStatus.OK, userFoundResponse.getStatusCode());
+        assertNotNull(userFoundResponse.getBody());
+        assertEquals("username", userFoundResponse.getBody().getUsername());
+        assertEquals("firstName", userFoundResponse.getBody().getFirstname());
+        assertEquals("lastName", userFoundResponse.getBody().getLastname());
     }
 
     @Test
@@ -125,11 +127,11 @@ class UserIntegrationTest {
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/auth/signin",
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
                 POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
 
-        assertThat(signInResponse.getBody()).isNotNull();
+        assertNotNull(signInResponse.getBody());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(signInResponse.getBody().getAccessToken());
@@ -139,21 +141,21 @@ class UserIntegrationTest {
         userSettingRequestDto.setUnconstrainedValue("value");
 
         // Should fail to update settings of another user
-        ResponseEntity<ApiErrorDto> accessDeniedResponse =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/users/username2/settings/1",
+        ResponseEntity<ApiErrorDto> accessDeniedResponse = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/users/username2/settings/1",
                 PUT, new HttpEntity<>(userSettingRequestDto, headers), ApiErrorDto.class);
 
-        assertThat(accessDeniedResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-        assertThat(accessDeniedResponse.getBody()).isNotNull();
-        assertThat(accessDeniedResponse.getBody().getMessage()).isEqualTo(
-            "You don't have permission to access to this resource");
+        assertEquals(HttpStatus.FORBIDDEN, accessDeniedResponse.getStatusCode());
+        assertNotNull(accessDeniedResponse.getBody());
+        assertEquals("You don't have permission to access to this resource",
+            accessDeniedResponse.getBody().getMessage());
 
         // Should update settings
-        ResponseEntity<ApiErrorDto> response =
-            restTemplate.exchange("http://localhost:" + port + "/api/v1/users/username/settings/1",
+        ResponseEntity<ApiErrorDto> response = restTemplate
+            .exchange("http://localhost:" + port + "/api/v1/users/username/settings/1",
                 PUT, new HttpEntity<>(userSettingRequestDto, headers), ApiErrorDto.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(response.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
     }
 }

@@ -1,9 +1,12 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -67,9 +70,9 @@ class RepositoryControllerTest {
 
         Page<RepositoryResponseDto> actual = repositoryController.getAll("search", Pageable.unpaged());
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().toList().get(0)).isEqualTo(repositoryResponseDto);
+        assertFalse(actual.isEmpty());
+        assertEquals(1, actual.get().count());
+        assertEquals(repositoryResponseDto, actual.get().toList().getFirst());
     }
 
     @Test
@@ -92,8 +95,8 @@ class RepositoryControllerTest {
 
         ResponseEntity<RepositoryResponseDto> actual = repositoryController.createOne(repositoryRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(actual.getBody()).isEqualTo(repositoryResponseDto);
+        assertEquals(HttpStatus.CREATED, actual.getStatusCode());
+        assertEquals(repositoryResponseDto, actual.getBody());
 
         verify(gitService)
             .updateWidgetFromEnabledGitRepositories();
@@ -119,10 +122,10 @@ class RepositoryControllerTest {
 
         ResponseEntity<RepositoryResponseDto> actual = repositoryController.createOne(repositoryRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(actual.getBody()).isEqualTo(repositoryResponseDto);
+        assertEquals(HttpStatus.CREATED, actual.getStatusCode());
+        assertEquals(repositoryResponseDto, actual.getBody());
 
-        verify(gitService, times(0))
+        verify(gitService, never())
             .updateWidgetFromEnabledGitRepositories();
     }
 
@@ -137,9 +140,12 @@ class RepositoryControllerTest {
         when(repositoryService.getOneById(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> repositoryController.getOneById(1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Repository '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> repositoryController.getOneById(1L)
+        );
+
+        assertEquals("Repository '1' not found", exception.getMessage());
     }
 
     @Test
@@ -157,8 +163,8 @@ class RepositoryControllerTest {
 
         ResponseEntity<RepositoryResponseDto> actual = repositoryController.getOneById(1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(repositoryResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(repositoryResponseDto, actual.getBody());
     }
 
     @Test
@@ -169,9 +175,12 @@ class RepositoryControllerTest {
         when(repositoryService.existsById(any()))
             .thenReturn(false);
 
-        assertThatThrownBy(() -> repositoryController.updateOneById(1L, repositoryRequestDto, true))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Repository '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> repositoryController.updateOneById(1L, repositoryRequestDto, true)
+        );
+
+        assertEquals("Repository '1' not found", exception.getMessage());
     }
 
     @Test
@@ -189,7 +198,7 @@ class RepositoryControllerTest {
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, true);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
     }
 
     @Test
@@ -208,7 +217,7 @@ class RepositoryControllerTest {
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, false);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
     }
 
     @Test
@@ -227,14 +236,14 @@ class RepositoryControllerTest {
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, false);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
     }
 
     @Test
     void shouldSynchronize() throws GitAPIException, IOException {
         ResponseEntity<Void> actual = repositoryController.synchronize();
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
     }
 
     @Test
@@ -242,9 +251,12 @@ class RepositoryControllerTest {
         when(repositoryService.getOneById(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> repositoryController.getRepositoryWidget(1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Repository '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> repositoryController.getRepositoryWidget(1L)
+        );
+
+        assertEquals("Repository '1' not found", exception.getMessage());
     }
 
     @Test
@@ -262,7 +274,8 @@ class RepositoryControllerTest {
 
         ResponseEntity<List<WidgetResponseDto>> actual = repositoryController.getRepositoryWidget(1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).contains(widgetResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertTrue(actual.getBody().contains(widgetResponseDto));
     }
 }

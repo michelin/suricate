@@ -1,6 +1,10 @@
 package com.michelin.suricate.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.michelin.suricate.model.entity.Category;
 import com.michelin.suricate.model.entity.CategoryParameter;
@@ -17,219 +21,217 @@ class WidgetUtilsTest {
     @Test
     void shouldParseLibraryFolderNull() throws IOException {
         List<Library> actual = WidgetUtils.parseLibraryFolder(null);
-        assertThat(actual).isNull();
+        assertNull(actual);
     }
 
     @Test
     void shouldParseLibraryFolderEmpty() throws IOException {
         List<Library> actual = WidgetUtils.parseLibraryFolder(new File("src/test/resources/repository"));
-        assertThat(actual).isNull();
+        assertNull(actual);
     }
 
     @Test
     void shouldParseLibraryFolder() throws IOException {
         List<Library> actual = WidgetUtils.parseLibraryFolder(new File("src/test/resources/repository/libraries"));
-        assertThat(actual).hasSize(1);
-        assertThat(actual.get(0).getTechnicalName()).isEqualTo("test.js");
+        assertEquals(1, actual.size());
+        assertEquals("test.js", actual.getFirst().getTechnicalName());
     }
 
     @Test
     void shouldParseCategoriesEmptyFolder() {
-        assertThat(
-            WidgetUtils.parseCategoriesFolder(new File("src/test/resources/specific-repository/content/no-name")))
-            .isEmpty();
+        assertTrue(WidgetUtils
+            .parseCategoriesFolder(new File("src/test/resources/specific-repository/content/no-name"))
+            .isEmpty());
     }
 
     @Test
     void shouldParseCategoriesUnknownFolder() {
-        assertThat(WidgetUtils.parseCategoriesFolder(
-            new File("src/test/resources/specific-repository/content/does-not-exist")))
-            .isEmpty();
+        assertTrue(WidgetUtils
+            .parseCategoriesFolder(new File("src/test/resources/specific-repository/content/does-not-exist"))
+            .isEmpty());
     }
 
     @Test
     void shouldParseCategoriesFolderAndGetGitHub() {
         List<Category> actual = WidgetUtils.parseCategoriesFolder(new File("src/test/resources/repository/content"));
-        assertThat(actual).hasSize(3);
-        assertThat(actual.get(0).getId()).isNull();
-        assertThat(actual.get(0).getName()).isEqualTo("GitHub");
-        assertThat(actual.get(0).getTechnicalName()).isEqualTo("github");
-        assertThat(actual.get(0).getImage()).isNotNull();
-        assertThat(actual.get(0).getImage().getContentType()).isEqualTo("image/png");
 
-        List<Widget> gitHubWidgets = new ArrayList<>(actual.get(0).getWidgets());
+        assertEquals(3, actual.size());
+        assertNull(actual.getFirst().getId());
+        assertEquals("GitHub", actual.getFirst().getName());
+        assertEquals("github", actual.getFirst().getTechnicalName());
+        assertNotNull(actual.getFirst().getImage());
+        assertEquals("image/png", actual.getFirst().getImage().getContentType());
 
-        assertThat(gitHubWidgets).hasSize(1);
-        assertThat(gitHubWidgets.get(0).getId()).isNull();
-        assertThat(gitHubWidgets.get(0).getName()).isEqualTo("Number of issues");
-        assertThat(gitHubWidgets.get(0).getTechnicalName()).isEqualTo("githubOpenedIssues");
-        assertThat(gitHubWidgets.get(0).getDescription()).isEqualTo("Display the number of issues of a GitHub project");
-        assertThat(gitHubWidgets.get(0).getDelay()).isEqualTo(600L);
-        assertThat(gitHubWidgets.get(0).getHtmlContent()).isNotNull();
-        assertThat(gitHubWidgets.get(0).getCssContent()).isNotNull();
-        assertThat(gitHubWidgets.get(0).getBackendJs()).isNotNull();
-        assertThat(gitHubWidgets.get(0).getImage()).isNotNull();
-        assertThat(gitHubWidgets.get(0).getImage().getContentType()).isEqualTo("image/png");
+        List<Widget> gitHubWidgets = new ArrayList<>(actual.getFirst().getWidgets());
 
-        List<CategoryParameter> gitHubConfig = new ArrayList<>(actual.get(0).getConfigurations());
+        assertEquals(1, gitHubWidgets.size());
+        assertNull(gitHubWidgets.getFirst().getId());
+        assertEquals("Number of issues", gitHubWidgets.getFirst().getName());
+        assertEquals("githubOpenedIssues", gitHubWidgets.getFirst().getTechnicalName());
+        assertEquals("Display the number of issues of a GitHub project", gitHubWidgets.getFirst().getDescription());
+        assertEquals(600L, gitHubWidgets.getFirst().getDelay());
+        assertNotNull(gitHubWidgets.getFirst().getHtmlContent());
+        assertNotNull(gitHubWidgets.getFirst().getCssContent());
+        assertNotNull(gitHubWidgets.getFirst().getBackendJs());
+        assertNotNull(gitHubWidgets.getFirst().getImage());
+        assertEquals("image/png", gitHubWidgets.getFirst().getImage().getContentType());
 
-        assertThat(gitHubConfig).hasSize(1);
-        assertThat(gitHubConfig.get(0).getId()).isEqualTo("WIDGET_CONFIG_GITHUB_TOKEN");
-        assertThat(gitHubConfig.get(0).getValue()).isNull();
-        assertThat(gitHubConfig.get(0).getDescription()).isEqualTo("Token for the GitHub API");
-        assertThat(gitHubConfig.get(0).getDataType()).isEqualTo(DataTypeEnum.PASSWORD);
+        List<CategoryParameter> gitHubConfig = new ArrayList<>(actual.getFirst().getConfigurations());
+
+        assertEquals(1, gitHubConfig.size());
+        assertEquals("WIDGET_CONFIG_GITHUB_TOKEN", gitHubConfig.getFirst().getId());
+        assertNull(gitHubConfig.getFirst().getValue());
+        assertEquals("Token for the GitHub API", gitHubConfig.getFirst().getDescription());
+        assertEquals(DataTypeEnum.PASSWORD, gitHubConfig.getFirst().getDataType());
     }
 
     @Test
     void shouldParseCategoriesFolderAndGetGitLab() {
         List<Category> actual = WidgetUtils.parseCategoriesFolder(new File("src/test/resources/repository/content"));
-        assertThat(actual).hasSize(3);
-        assertThat(actual.get(1).getId()).isNull();
-        assertThat(actual.get(1).getName()).isEqualTo("GitLab");
-        assertThat(actual.get(1).getTechnicalName()).isEqualTo("gitlab");
-        assertThat(actual.get(1).getImage()).isNotNull();
-        assertThat(actual.get(1).getImage().getContentType()).isEqualTo("image/png");
+
+        assertEquals(3, actual.size());
+        assertNull(actual.get(1).getId());
+        assertEquals("GitLab", actual.get(1).getName());
+        assertEquals("gitlab", actual.get(1).getTechnicalName());
+        assertNotNull(actual.get(1).getImage());
+        assertEquals("image/png", actual.get(1).getImage().getContentType());
 
         List<Widget> gitLabWidgets = new ArrayList<>(actual.get(1).getWidgets());
 
-        assertThat(gitLabWidgets).hasSize(1);
-        assertThat(gitLabWidgets.get(0).getId()).isNull();
-        assertThat(gitLabWidgets.get(0).getName()).isEqualTo("Number of merge requests");
-        assertThat(gitLabWidgets.get(0).getTechnicalName()).isEqualTo("gitlabOpenedMR");
-        assertThat(gitLabWidgets.get(0).getDescription()).isEqualTo(
-            "Display the number of merge requests of a GitLab project");
-        assertThat(gitLabWidgets.get(0).getDelay()).isEqualTo(500L);
-        assertThat(gitLabWidgets.get(0).getHtmlContent()).isNotNull();
-        assertThat(gitLabWidgets.get(0).getCssContent()).isNotNull();
-        assertThat(gitLabWidgets.get(0).getBackendJs()).isNotNull();
-        assertThat(gitLabWidgets.get(0).getImage()).isNotNull();
-        assertThat(gitLabWidgets.get(0).getImage().getContentType()).isEqualTo("image/png");
+        assertEquals(1, gitLabWidgets.size());
+        assertNull(gitLabWidgets.getFirst().getId());
+        assertEquals("Number of merge requests", gitLabWidgets.getFirst().getName());
+        assertEquals("gitlabOpenedMR", gitLabWidgets.getFirst().getTechnicalName());
+        assertEquals("Display the number of merge requests of a GitLab project",
+            gitLabWidgets.getFirst().getDescription());
+        assertEquals(500L, gitLabWidgets.getFirst().getDelay());
+        assertNotNull(gitLabWidgets.getFirst().getHtmlContent());
+        assertNotNull(gitLabWidgets.getFirst().getCssContent());
+        assertNotNull(gitLabWidgets.getFirst().getBackendJs());
+        assertNotNull(gitLabWidgets.getFirst().getImage());
+        assertEquals("image/png", gitLabWidgets.getFirst().getImage().getContentType());
 
         List<CategoryParameter> gitLabConfig = new ArrayList<>(actual.get(1).getConfigurations());
 
-        assertThat(gitLabConfig).hasSize(2);
-        assertThat(gitLabConfig.stream().map(CategoryParameter::getId))
-            .contains("WIDGET_CONFIG_GITLAB_URL")
-            .contains("WIDGET_CONFIG_GITLAB_TOKEN");
-        assertThat(gitLabConfig.stream().map(CategoryParameter::getDescription))
-            .contains("URL of the GitLab environment")
-            .contains("Token for the GitLab API");
+        assertEquals(2, gitLabConfig.size());
+        assertIterableEquals(List.of("WIDGET_CONFIG_GITLAB_URL", "WIDGET_CONFIG_GITLAB_TOKEN"),
+            gitLabConfig.stream().map(CategoryParameter::getId).toList());
+        assertIterableEquals(List.of("URL of the GitLab environment", "Token for the GitLab API"),
+            gitLabConfig.stream().map(CategoryParameter::getDescription).toList());
     }
 
     @Test
     void shouldGetCategoryNull() throws IOException {
-        assertThat(WidgetUtils.getCategory(null)).isNull();
+        assertNull(WidgetUtils.getCategory(null));
     }
 
     @Test
     void shouldGetCategoryWithNoName() throws IOException {
-        assertThat(
-            WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-name"))).isNull();
+        assertNull(WidgetUtils
+            .getCategory(new File("src/test/resources/specific-repository/content/no-name")));
     }
 
     @Test
     void shouldGetCategoryWithNoWidgets() throws IOException {
-        Category actual =
-            WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-widgets"));
+        Category actual = WidgetUtils
+            .getCategory(new File("src/test/resources/specific-repository/content/no-widgets"));
 
-        assertThat(actual.getId()).isNull();
-        assertThat(actual.getName()).isEqualTo("noWidgets");
-        assertThat(actual.getTechnicalName()).isEqualTo("noWidgets");
-        assertThat(actual.getImage()).isNotNull();
-        assertThat(actual.getImage().getContentType()).isEqualTo("image/png");
-        assertThat(actual.getWidgets()).isEmpty();
+        assertNull(actual.getId());
+        assertEquals("noWidgets", actual.getName());
+        assertEquals("noWidgets", actual.getTechnicalName());
+        assertNotNull(actual.getImage());
+        assertEquals("image/png", actual.getImage().getContentType());
+        assertTrue(actual.getWidgets().isEmpty());
     }
 
     @Test
     void shouldGetCategory() throws IOException {
         Category actual = WidgetUtils.getCategory(new File("src/test/resources/repository/content/github"));
 
-        assertThat(actual.getId()).isNull();
-        assertThat(actual.getName()).isEqualTo("GitHub");
-        assertThat(actual.getTechnicalName()).isEqualTo("github");
-        assertThat(actual.getImage()).isNotNull();
-        assertThat(actual.getImage().getContentType()).isEqualTo("image/png");
+        assertNull(actual.getId());
+        assertEquals("GitHub", actual.getName());
+        assertEquals("github", actual.getTechnicalName());
+        assertNotNull(actual.getImage());
+        assertEquals("image/png", actual.getImage().getContentType());
 
         List<Widget> gitHubWidgets = new ArrayList<>(actual.getWidgets());
 
-        assertThat(gitHubWidgets).hasSize(1);
-        assertThat(gitHubWidgets.get(0).getId()).isNull();
-        assertThat(gitHubWidgets.get(0).getName()).isEqualTo("Number of issues");
-        assertThat(gitHubWidgets.get(0).getTechnicalName()).isEqualTo("githubOpenedIssues");
-        assertThat(gitHubWidgets.get(0).getDescription()).isEqualTo("Display the number of issues of a GitHub project");
-        assertThat(gitHubWidgets.get(0).getDelay()).isEqualTo(600L);
-        assertThat(gitHubWidgets.get(0).getHtmlContent()).isNotNull();
-        assertThat(gitHubWidgets.get(0).getCssContent()).isNotNull();
-        assertThat(gitHubWidgets.get(0).getBackendJs()).isNotNull();
-        assertThat(gitHubWidgets.get(0).getImage()).isNotNull();
-        assertThat(gitHubWidgets.get(0).getImage().getContentType()).isEqualTo("image/png");
+        assertEquals(1, gitHubWidgets.size());
+        assertNull(gitHubWidgets.getFirst().getId());
+        assertEquals("Number of issues", gitHubWidgets.getFirst().getName());
+        assertEquals("githubOpenedIssues", gitHubWidgets.getFirst().getTechnicalName());
+        assertEquals("Display the number of issues of a GitHub project", gitHubWidgets.getFirst().getDescription());
+        assertEquals(600L, gitHubWidgets.getFirst().getDelay());
+        assertNotNull(gitHubWidgets.getFirst().getHtmlContent());
+        assertNotNull(gitHubWidgets.getFirst().getCssContent());
+        assertNotNull(gitHubWidgets.getFirst().getBackendJs());
+        assertNotNull(gitHubWidgets.getFirst().getImage());
+        assertEquals("image/png", gitHubWidgets.getFirst().getImage().getContentType());
 
         List<CategoryParameter> gitHubConfig = new ArrayList<>(actual.getConfigurations());
 
-        assertThat(gitHubConfig).hasSize(1);
-        assertThat(gitHubConfig.get(0).getId()).isEqualTo("WIDGET_CONFIG_GITHUB_TOKEN");
-        assertThat(gitHubConfig.get(0).getValue()).isNull();
-        assertThat(gitHubConfig.get(0).getDescription()).isEqualTo("Token for the GitHub API");
-        assertThat(gitHubConfig.get(0).getDataType()).isEqualTo(DataTypeEnum.PASSWORD);
+        assertEquals(1, gitHubConfig.size());
+        assertEquals("WIDGET_CONFIG_GITHUB_TOKEN", gitHubConfig.getFirst().getId());
+        assertNull(gitHubConfig.getFirst().getValue());
+        assertEquals("Token for the GitHub API", gitHubConfig.getFirst().getDescription());
+        assertEquals(DataTypeEnum.PASSWORD, gitHubConfig.getFirst().getDataType());
     }
 
     @Test
     void shouldGetWidgetNull() throws IOException {
-        assertThat(WidgetUtils.getWidget(null)).isNull();
+        assertNull(WidgetUtils.getWidget(null));
     }
 
     @Test
     void shouldGetWidgetNoDelay() throws IOException {
-        assertThat(WidgetUtils.getWidget(
-                new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-delay")))
-            .isNull();
+        assertNull(WidgetUtils
+            .getWidget(new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-delay")));
     }
 
     @Test
     void shouldGetWidgetDelayButNoScript() throws IOException {
-        assertThat(WidgetUtils.getWidget(
-                new File("src/test/resources/specific-repository/content/"
-                    + "specific-widgets/widgets/delay-but-no-script")))
-            .isNull();
+        assertNull(WidgetUtils
+            .getWidget(new File("src/test/resources/specific-repository/content/"
+                    + "specific-widgets/widgets/delay-but-no-script")));
     }
 
     @Test
     void shouldGetWidgetNoTechnicalName() throws IOException {
-        assertThat(WidgetUtils.getWidget(
-                new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-technical-name")))
-            .isNull();
+        assertNull(WidgetUtils
+            .getWidget(
+                new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-technical-name")));
     }
 
     @Test
     void shouldGetWidgetGitHubCountIssues() throws IOException {
-        Widget actual =
-            WidgetUtils.getWidget(new File("src/test/resources/repository/content/github/widgets/count-issues"));
+        Widget actual = WidgetUtils
+            .getWidget(new File("src/test/resources/repository/content/github/widgets/count-issues"));
 
-        assertThat(actual.getId()).isNull();
-        assertThat(actual.getName()).isEqualTo("Number of issues");
-        assertThat(actual.getDescription()).isEqualTo("Display the number of issues of a GitHub project");
-        assertThat(actual.getTechnicalName()).isEqualTo("githubOpenedIssues");
-        assertThat(actual.getDelay()).isEqualTo(600L);
-        assertThat(actual.getHtmlContent()).isNotNull();
-        assertThat(actual.getCssContent()).isNotNull();
-        assertThat(actual.getBackendJs()).isNotNull();
-        assertThat(actual.getImage()).isNotNull();
-        assertThat(actual.getWidgetParams()).hasSize(3);
+        assertNull(actual.getId());
+        assertEquals("Number of issues", actual.getName());
+        assertEquals("Display the number of issues of a GitHub project", actual.getDescription());
+        assertEquals("githubOpenedIssues", actual.getTechnicalName());
+        assertEquals(600L, actual.getDelay());
+        assertNotNull(actual.getHtmlContent());
+        assertNotNull(actual.getCssContent());
+        assertNotNull(actual.getBackendJs());
+        assertNotNull(actual.getImage());
+        assertEquals(3, actual.getWidgetParams().size());
     }
 
     @Test
     void shouldGetWidgetClockWithNoParams() throws IOException {
         Widget actual = WidgetUtils.getWidget(new File("src/test/resources/repository/content/other/widgets/clock"));
 
-        assertThat(actual.getId()).isNull();
-        assertThat(actual.getName()).isEqualTo("Clock");
-        assertThat(actual.getDescription()).isEqualTo("Display the current date and time with a clock");
-        assertThat(actual.getTechnicalName()).isEqualTo("clock");
-        assertThat(actual.getDelay()).isEqualTo(-1L);
-        assertThat(actual.getHtmlContent()).isNotNull();
-        assertThat(actual.getCssContent()).isNotNull();
-        assertThat(actual.getBackendJs()).isNull();
-        assertThat(actual.getImage()).isNotNull();
-        assertThat(actual.getWidgetParams()).isEmpty();
+        assertNull(actual.getId());
+        assertEquals("Clock", actual.getName());
+        assertEquals("Display the current date and time with a clock", actual.getDescription());
+        assertEquals("clock", actual.getTechnicalName());
+        assertEquals(-1L, actual.getDelay());
+        assertNotNull(actual.getHtmlContent());
+        assertNotNull(actual.getCssContent());
+        assertNull(actual.getBackendJs());
+        assertNotNull(actual.getImage());
+        assertTrue(actual.getWidgetParams().isEmpty());
     }
 }

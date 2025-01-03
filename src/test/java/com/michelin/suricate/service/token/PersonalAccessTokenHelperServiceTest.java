@@ -1,6 +1,8 @@
 package com.michelin.suricate.service.token;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.michelin.suricate.property.ApplicationProperties;
@@ -30,7 +32,7 @@ class PersonalAccessTokenHelperServiceTest {
 
         String actual = personalAccessTokenHelperService.createPersonalAccessToken();
 
-        assertThat(actual).startsWith("test_");
+        assertTrue(actual.startsWith("test_"));
     }
 
     @Test
@@ -44,10 +46,10 @@ class PersonalAccessTokenHelperServiceTest {
 
         when(applicationProperties.getAuthentication()).thenReturn(authProperties);
 
-        Long actual =
-            personalAccessTokenHelperService.computePersonAccessTokenChecksum("test_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
+        Long actual = personalAccessTokenHelperService
+            .computePersonAccessTokenChecksum("test_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
 
-        assertThat(actual).isEqualTo(3008800073L);
+        assertEquals(3008800073L, actual);
     }
 
     @Test
@@ -60,7 +62,7 @@ class PersonalAccessTokenHelperServiceTest {
 
         boolean actual = personalAccessTokenHelperService.validateToken("1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -73,10 +75,10 @@ class PersonalAccessTokenHelperServiceTest {
 
         when(applicationProperties.getAuthentication()).thenReturn(authProperties);
 
-        boolean actual =
-            personalAccessTokenHelperService.validateToken("wrongPrefix_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
+        boolean actual = personalAccessTokenHelperService
+            .validateToken("wrongPrefix_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -91,6 +93,6 @@ class PersonalAccessTokenHelperServiceTest {
 
         boolean actual = personalAccessTokenHelperService.validateToken("test_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
 
-        assertThat(actual).isTrue();
+        assertTrue(actual);
     }
 }

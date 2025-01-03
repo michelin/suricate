@@ -1,6 +1,6 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.michelin.suricate.model.dto.api.role.RoleResponseDto;
 import com.michelin.suricate.model.entity.Role;
@@ -24,8 +24,8 @@ class RoleMapperTest {
 
         RoleResponseDto actual = roleMapper.toRoleDto(role);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getName()).isEqualTo(UserRoleEnum.ROLE_USER);
-        assertThat(actual.getDescription()).isEqualTo("description");
+        assertEquals(1L, actual.getId());
+        assertEquals(UserRoleEnum.ROLE_USER, actual.getName());
+        assertEquals("description", actual.getDescription());
     }
 }

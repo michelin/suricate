@@ -1,9 +1,13 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -78,9 +82,8 @@ class ProjectWidgetServiceTest {
 
         List<ProjectWidget> actual = projectWidgetService.getAll();
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(projectWidget);
+        assertFalse(actual.isEmpty());
+        assertTrue(actual.contains(projectWidget));
 
         verify(projectWidgetRepository)
             .findAll();
@@ -96,9 +99,8 @@ class ProjectWidgetServiceTest {
 
         Optional<ProjectWidget> actual = projectWidgetService.getOne(1L);
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(projectWidget);
+        assertTrue(actual.isPresent());
+        assertEquals(projectWidget, actual.get());
 
         verify(projectWidgetRepository)
             .findById(1L);
@@ -114,9 +116,8 @@ class ProjectWidgetServiceTest {
 
         Optional<ProjectWidget> actual = projectWidgetService.findByIdAndProjectGridId(1L, 1L);
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(projectWidget);
+        assertTrue(actual.isPresent());
+        assertEquals(projectWidget, actual.get());
 
         verify(projectWidgetRepository)
             .findByIdAndProjectGridId(1L, 1L);
@@ -144,8 +145,7 @@ class ProjectWidgetServiceTest {
 
         ProjectWidget actual = projectWidgetService.create(projectWidget);
 
-        assertThat(actual)
-            .isEqualTo(projectWidget);
+        assertEquals(projectWidget, actual);
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
@@ -295,8 +295,7 @@ class ProjectWidgetServiceTest {
 
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, 1L);
 
-        assertThat(projectWidget.getState())
-            .isEqualTo(WidgetStateEnum.STOPPED);
+        assertEquals(WidgetStateEnum.STOPPED, projectWidget.getState());
 
         verify(projectWidgetRepository)
             .findById(1L);
@@ -333,10 +332,8 @@ class ProjectWidgetServiceTest {
         Date now = Date.from(Instant.parse("2000-01-01T01:00:00.00Z"));
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, 1L, now);
 
-        assertThat(projectWidget.getState())
-            .isEqualTo(WidgetStateEnum.STOPPED);
-        assertThat(projectWidget.getLastExecutionDate())
-            .isEqualTo(now);
+        assertEquals(WidgetStateEnum.STOPPED, projectWidget.getState());
+        assertEquals(now, projectWidget.getLastExecutionDate());
 
         verify(projectWidgetRepository)
             .findById(1L);
@@ -361,8 +358,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.instantiateProjectWidgetHtml(projectWidget);
 
-        assertThat(actual)
-            .isEqualTo("<h1>Titre</h1>");
+        assertEquals("<h1>Titre</h1>", actual);
     }
 
     @Test
@@ -411,8 +407,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.instantiateProjectWidgetHtml(projectWidget);
 
-        assertThat(actual)
-            .isEqualTo("<h1>titre</h1>");
+        assertEquals("<h1>titre</h1>", actual);
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
@@ -443,8 +438,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.instantiateProjectWidgetHtml(projectWidget);
 
-        assertThat(actual)
-            .isEmpty();
+        assertTrue(actual.isEmpty());
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
@@ -469,10 +463,9 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.instantiateProjectWidgetHtml(projectWidget);
 
-        assertThat(actual)
-            .isEqualTo("<h1></h1>");
+        assertEquals("<h1></h1>", actual);
 
-        verify(widgetService, times(0))
+        verify(widgetService, never())
             .getWidgetParametersWithCategoryParameters(any());
     }
 
@@ -494,10 +487,8 @@ class ProjectWidgetServiceTest {
 
         projectWidgetService.updateProjectWidget(projectWidget, "style", "param=value");
 
-        assertThat(projectWidget.getCustomStyle())
-            .isEqualTo("style");
-        assertThat(projectWidget.getBackendConfig())
-            .isEqualTo("param=value");
+        assertEquals("style", projectWidget.getCustomStyle());
+        assertEquals("param=value", projectWidget.getBackendConfig());
 
         verify(jsExecutionScheduler)
             .cancelWidgetExecution(1L);
@@ -523,10 +514,8 @@ class ProjectWidgetServiceTest {
 
         projectWidgetService.updateProjectWidget(projectWidget, null, null);
 
-        assertThat(projectWidget.getCustomStyle())
-            .isNull();
-        assertThat(projectWidget.getBackendConfig())
-            .isNull();
+        assertNull(projectWidget.getCustomStyle());
+        assertNull(projectWidget.getBackendConfig());
 
         verify(jsExecutionScheduler)
             .cancelWidgetExecution(1L);
@@ -569,8 +558,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.decryptSecretParamsIfNeeded(widget, "param=value");
 
-        assertThat(actual)
-            .isEqualTo("param=value");
+        assertEquals("param=value", actual);
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
@@ -593,8 +581,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.decryptSecretParamsIfNeeded(widget, "param=value");
 
-        assertThat(actual)
-            .isEqualTo("param=decrypted");
+        assertEquals("param=decrypted", actual);
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
@@ -617,7 +604,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.decryptSecretParamsIfNeeded(widget, "otherParam=");
 
-        assertThat(actual).isEmpty();
+        assertTrue(actual.isEmpty());
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
@@ -639,8 +626,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.encryptSecretParamsIfNeeded(widget, "param=value");
 
-        assertThat(actual)
-            .isEqualTo("param=value");
+        assertEquals("param=value", actual);
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
@@ -663,8 +649,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.encryptSecretParamsIfNeeded(widget, "param=value");
 
-        assertThat(actual)
-            .isEqualTo("param=encrypted");
+        assertEquals("param=encrypted", actual);
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
@@ -687,8 +672,7 @@ class ProjectWidgetServiceTest {
 
         String actual = projectWidgetService.encryptSecretParamsIfNeeded(widget, "otherParam=value");
 
-        assertThat(actual)
-            .isEqualTo("otherParam=value");
+        assertEquals("otherParam=value", actual);
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);

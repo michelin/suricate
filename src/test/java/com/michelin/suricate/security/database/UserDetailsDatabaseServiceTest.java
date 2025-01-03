@@ -18,8 +18,8 @@
 
 package com.michelin.suricate.security.database;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -50,9 +50,12 @@ class UserDetailsDatabaseServiceTest {
         when(userService.getOneByUsername(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userDetailsDatabaseService.loadUserByUsername("username"))
-            .isInstanceOf(UsernameNotFoundException.class)
-            .hasMessage("Bad credentials");
+        UsernameNotFoundException exception = assertThrows(
+            UsernameNotFoundException.class,
+            () -> userDetailsDatabaseService.loadUserByUsername("username")
+        );
+
+        assertEquals("Bad credentials", exception.getMessage());
     }
 
     @Test
@@ -72,9 +75,12 @@ class UserDetailsDatabaseServiceTest {
 
         LocalUser actual = userDetailsDatabaseService.loadUserByUsername("username");
 
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().get(0))
-            .isEqualTo("ROLE_ADMIN");
+        assertEquals("username", actual.getUsername());
+        assertEquals("password", actual.getPassword());
+        assertEquals("ROLE_ADMIN", actual.getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .toList()
+            .getFirst());
     }
 }

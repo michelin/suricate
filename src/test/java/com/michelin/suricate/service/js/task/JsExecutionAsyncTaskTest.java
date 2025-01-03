@@ -1,6 +1,9 @@
 package com.michelin.suricate.service.js.task;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
 import com.michelin.suricate.model.dto.js.JsResultDto;
@@ -39,8 +42,8 @@ class JsExecutionAsyncTaskTest {
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, null, Collections.emptyList());
         JsResultDto actual = task.call();
 
-        assertThat(actual.isFatal()).isTrue();
-        assertThat(actual.getLog()).isEqualTo(expectedLogs);
+        assertTrue(actual.isFatal());
+        assertEquals(expectedLogs, actual.getLog());
     }
 
     @ParameterizedTest
@@ -59,8 +62,8 @@ class JsExecutionAsyncTaskTest {
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, null, Collections.emptyList());
         JsResultDto actual = task.call();
 
-        assertThat(actual.getError()).isEqualTo(JsExecutionErrorTypeEnum.ERROR);
-        assertThat(actual.getLog()).isEqualTo(expectedLogs);
+        assertEquals(JsExecutionErrorTypeEnum.ERROR, actual.getError());
+        assertEquals(expectedLogs, actual.getLog());
     }
 
     @Test
@@ -75,12 +78,12 @@ class JsExecutionAsyncTaskTest {
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, null, Collections.emptyList());
         JsResultDto actual = task.call();
 
-        assertThat(actual.getError()).isNull();
-        assertThat(actual.isFatal()).isFalse();
-        assertThat(actual.getProjectId()).isEqualTo(1L);
-        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
-        assertThat(actual.getData()).isEqualTo("{}");
-        assertThat(actual.getLog()).isNull();
+        assertNull(actual.getError());
+        assertFalse(actual.isFatal());
+        assertEquals(1L, actual.getProjectId());
+        assertEquals(1L, actual.getProjectWidgetId());
+        assertEquals("{}", actual.getData());
+        assertNull(actual.getLog());
     }
 
     @Test
@@ -113,13 +116,13 @@ class JsExecutionAsyncTaskTest {
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, null, widgetParameters);
         JsResultDto actual = task.call();
 
-        assertThat(actual.getError()).isNull();
-        assertThat(actual.isFatal()).isFalse();
-        assertThat(actual.getProjectId()).isEqualTo(1L);
-        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
-        assertThat(actual.getData()).isEqualTo("{}");
-        assertThat(actual.getLog()).contains("title=************");
-        assertThat(actual.getLog()).contains("notRequiredTitle=null");
+        assertNull(actual.getError());
+        assertFalse(actual.isFatal());
+        assertEquals(1L, actual.getProjectId());
+        assertEquals(1L, actual.getProjectWidgetId());
+        assertEquals("{}", actual.getData());
+        assertTrue(actual.getLog().contains("title=************"));
+        assertTrue(actual.getLog().contains("notRequiredTitle=null"));
     }
 
     @Test
@@ -134,12 +137,12 @@ class JsExecutionAsyncTaskTest {
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, null, null);
         JsResultDto actual = task.call();
 
-        assertThat(actual.getError()).isNull();
-        assertThat(actual.isFatal()).isFalse();
-        assertThat(actual.getProjectId()).isEqualTo(1L);
-        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
-        assertThat(actual.getData()).isEqualTo("{}");
-        assertThat(actual.getLog()).isEqualTo("This is a log");
+        assertNull(actual.getError());
+        assertFalse(actual.isFatal());
+        assertEquals(1L, actual.getProjectId());
+        assertEquals(1L, actual.getProjectWidgetId());
+        assertEquals("{}", actual.getData());
+        assertEquals("This is a log", actual.getLog());
     }
 
     @Test
@@ -154,12 +157,12 @@ class JsExecutionAsyncTaskTest {
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, null, Collections.emptyList());
         JsResultDto actual = task.call();
 
-        assertThat(actual.getError()).isNull();
-        assertThat(actual.isFatal()).isFalse();
-        assertThat(actual.getProjectId()).isEqualTo(1L);
-        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
-        assertThat(actual.getData()).isEqualTo("{}");
-        assertThat(actual.getLog()).isEqualTo("dGVzdA==");
+        assertNull(actual.getError());
+        assertFalse(actual.isFatal());
+        assertEquals(1L, actual.getProjectId());
+        assertEquals(1L, actual.getProjectWidgetId());
+        assertEquals("{}", actual.getData());
+        assertEquals("dGVzdA==", actual.getLog());
     }
 
     @Test
@@ -186,12 +189,12 @@ class JsExecutionAsyncTaskTest {
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, encryptor, widgetParameters);
         JsResultDto actual = task.call();
 
-        assertThat(actual.getError()).isNull();
-        assertThat(actual.isFatal()).isFalse();
-        assertThat(actual.getProjectId()).isEqualTo(1L);
-        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
-        assertThat(actual.getData()).isEqualTo("{}");
-        assertThat(actual.getLog()).isEqualTo("****************");
+        assertNull(actual.getError());
+        assertFalse(actual.isFatal());
+        assertEquals(1L, actual.getProjectId());
+        assertEquals(1L, actual.getProjectWidgetId());
+        assertEquals("{}", actual.getData());
+        assertEquals("****************", actual.getLog());
     }
 
     @Test
@@ -217,8 +220,8 @@ class JsExecutionAsyncTaskTest {
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, encryptor, widgetParameters);
         JsResultDto actual = task.call();
 
-        assertThat(actual.isFatal()).isTrue();
-        assertThat(actual.getLog()).isEqualTo("org.jasypt.exceptions.EncryptionOperationNotPossibleException");
+        assertTrue(actual.isFatal());
+        assertEquals("org.jasypt.exceptions.EncryptionOperationNotPossibleException", actual.getLog());
     }
 
     @Test
@@ -226,26 +229,22 @@ class JsExecutionAsyncTaskTest {
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         JsExecutionAsyncTask task = new JsExecutionAsyncTask(jsExecutionDto, null, Collections.emptyList());
 
-        assertThat(task.isFatalError(new Exception(""), new Exception(""))).isTrue();
-        assertThat(task.isFatalError(new Exception("Error on server"), new Exception("Error on server"))).isTrue();
-        assertThat(task.isFatalError(new Exception("timeoutException"), new Exception(""))).isFalse();
-        assertThat(task.isFatalError(new Exception("timeoutException"), new FatalException(""))).isFalse();
-        assertThat(task.isFatalError(new Exception("timeout:"), new IllegalArgumentException(""))).isFalse();
-        assertThat(
-            task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server"))).isFalse();
-        assertThat(
-            task.isFatalError(new Exception("Error on server"), new UnknownHostException("Error on server"))).isFalse();
+        assertTrue(task.isFatalError(new Exception(""), new Exception("")));
+        assertTrue(task.isFatalError(new Exception("Error on server"), new Exception("Error on server")));
+        assertFalse(task.isFatalError(new Exception("timeoutException"), new Exception("")));
+        assertFalse(task.isFatalError(new Exception("timeoutException"), new FatalException("")));
+        assertFalse(task.isFatalError(new Exception("timeout:"), new IllegalArgumentException("")));
+        assertFalse(task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server")));
+        assertFalse(task.isFatalError(new Exception("Error on server"), new UnknownHostException("Error on server")));
 
         jsExecutionDto.setAlreadySuccess(true);
 
-        assertThat(task.isFatalError(new Exception(""), new Exception(""))).isFalse();
-        assertThat(task.isFatalError(new Exception("timeoutException"), new Exception(""))).isFalse();
-        assertThat(task.isFatalError(new Exception("timeoutException"), new FatalException(""))).isFalse();
-        assertThat(
-            task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server"))).isFalse();
-        assertThat(task.isFatalError(new Exception("Error on server"), new Exception("Error on server"))).isFalse();
-        assertThat(
-            task.isFatalError(new ConnectException("Connection error"), new IllegalArgumentException())).isFalse();
+        assertFalse(task.isFatalError(new Exception(""), new Exception("")));
+        assertFalse(task.isFatalError(new Exception("timeoutException"), new Exception("")));
+        assertFalse(task.isFatalError(new Exception("timeoutException"), new FatalException("")));
+        assertFalse(task.isFatalError(new Exception("Error on server"), new RemoteException("Error on server")));
+        assertFalse(task.isFatalError(new Exception("Error on server"), new Exception("Error on server")));
+        assertFalse(task.isFatalError(new ConnectException("Connection error"), new IllegalArgumentException()));
     }
 
     @NotNull

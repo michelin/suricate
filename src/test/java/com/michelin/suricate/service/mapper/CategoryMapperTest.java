@@ -1,6 +1,8 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mockStatic;
 
 import com.michelin.suricate.model.dto.api.category.CategoryParameterResponseDto;
@@ -34,13 +36,13 @@ class CategoryMapperTest {
 
             CategoryResponseDto actual = categoryMapper.toCategoryWithoutParametersDto(category);
 
-            assertThat(actual.getId()).isEqualTo(1L);
-            assertThat(actual.getName()).isEqualTo("name");
-            assertThat(actual.getTechnicalName()).isEqualTo("technicalName");
-            assertThat(actual.getAssetToken()).isEqualTo("encrypted");
-            assertThat(actual.getImage()).isNull();
-            assertThat(actual.getCategoryParameters()).isNull();
-            assertThat(actual.getWidgets()).isEmpty();
+            assertEquals(1L, actual.getId());
+            assertEquals("name", actual.getName());
+            assertEquals("technicalName", actual.getTechnicalName());
+            assertEquals("encrypted", actual.getAssetToken());
+            assertNull(actual.getImage());
+            assertNull(actual.getCategoryParameters());
+            assertTrue(actual.getWidgets().isEmpty());
         }
     }
 
@@ -73,11 +75,11 @@ class CategoryMapperTest {
 
             CategoryResponseDto actual = categoryMapper.toCategoryWithHiddenValueParametersDto(category);
 
-            assertThat(actual.getId()).isEqualTo(1L);
-            assertThat(actual.getName()).isEqualTo("name");
-            assertThat(actual.getTechnicalName()).isEqualTo("technicalName");
-            assertThat(actual.getAssetToken()).isEqualTo("encrypted");
-            assertThat(actual.getImage()).isNull();
+            assertEquals(1L, actual.getId());
+            assertEquals("name", actual.getName());
+            assertEquals("technicalName", actual.getTechnicalName());
+            assertEquals("encrypted", actual.getAssetToken());
+            assertNull(actual.getImage());
 
             CategoryParameterResponseDto categoryParameterResponseDto = new CategoryParameterResponseDto();
             categoryParameterResponseDto.setKey("key");
@@ -85,8 +87,9 @@ class CategoryMapperTest {
             categoryParameterResponseDto.setDataType(DataTypeEnum.TEXT);
             categoryParameterResponseDto.setExport(true);
             categoryParameterResponseDto.setDescription("description");
-            assertThat(actual.getCategoryParameters()).contains(categoryParameterResponseDto);
-            assertThat(actual.getWidgets()).isEmpty();
+
+            assertTrue(actual.getCategoryParameters().contains(categoryParameterResponseDto));
+            assertTrue(actual.getWidgets().isEmpty());
         }
     }
 
@@ -100,18 +103,19 @@ class CategoryMapperTest {
 
             CategoryParameterResponseDto actual = categoryMapper.toCategoryParameterDto(categoryParameter);
 
-            assertThat(actual.getKey()).isEqualTo("key");
-            assertThat(actual.getValue()).isEqualTo("value");
-            assertThat(actual.getDataType()).isEqualTo(DataTypeEnum.TEXT);
-            assertThat(actual.isExport()).isTrue();
-            assertThat(actual.getDescription()).isEqualTo("description");
+            assertEquals("key", actual.getKey());
+            assertEquals("value", actual.getValue());
+            assertEquals(DataTypeEnum.TEXT, actual.getDataType());
+            assertTrue(actual.isExport());
+            assertEquals("description", actual.getDescription());
 
             CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
             categoryResponseDto.setId(1L);
             categoryResponseDto.setName("name");
             categoryResponseDto.setTechnicalName("technicalName");
             categoryResponseDto.setAssetToken("encrypted");
-            assertThat(actual.getCategory()).isEqualTo(categoryResponseDto);
+
+            assertEquals(categoryResponseDto, actual.getCategory());
         }
     }
 
@@ -126,12 +130,12 @@ class CategoryMapperTest {
             CategoryParameterResponseDto actual =
                 categoryMapper.toCategoryParameterWithHiddenValuesDto(categoryParameter);
 
-            assertThat(actual.getKey()).isEqualTo("key");
-            assertThat(actual.getValue()).isEqualTo("value");
-            assertThat(actual.getDataType()).isEqualTo(DataTypeEnum.TEXT);
-            assertThat(actual.isExport()).isTrue();
-            assertThat(actual.getDescription()).isEqualTo("description");
-            assertThat(actual.getCategory()).isNull();
+            assertEquals("key", actual.getKey());
+            assertEquals("value", actual.getValue());
+            assertEquals(DataTypeEnum.TEXT, actual.getDataType());
+            assertTrue(actual.isExport());
+            assertEquals("description", actual.getDescription());
+            assertNull(actual.getCategory());
         }
     }
 

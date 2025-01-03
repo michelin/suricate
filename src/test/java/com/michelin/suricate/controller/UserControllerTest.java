@@ -1,7 +1,11 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -91,9 +95,9 @@ class UserControllerTest {
 
         Page<AdminUserResponseDto> actual = userController.getAllForAdmins("search", Pageable.unpaged());
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().toList().get(0)).isEqualTo(adminUserResponseDto);
+        assertFalse(actual.isEmpty());
+        assertEquals(1, actual.get().count());
+        assertEquals(adminUserResponseDto, actual.get().toList().getFirst());
     }
 
     @Test
@@ -111,9 +115,9 @@ class UserControllerTest {
 
         Page<UserResponseDto> actual = userController.getAll("search", Pageable.unpaged());
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().toList().get(0)).isEqualTo(userResponseDto);
+        assertFalse(actual.isEmpty());
+        assertEquals(1, actual.get().count());
+        assertEquals(userResponseDto, actual.get().toList().getFirst());
     }
 
     @Test
@@ -121,9 +125,12 @@ class UserControllerTest {
         when(userService.getOne(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userController.getOne(1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("User '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> userController.getOne(1L)
+        );
+
+        assertEquals("User '1' not found", exception.getMessage());
     }
 
     @Test
@@ -141,8 +148,8 @@ class UserControllerTest {
 
         ResponseEntity<UserResponseDto> actual = userController.getOne(1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(userResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(userResponseDto, actual.getBody());
     }
 
     @Test
@@ -153,9 +160,12 @@ class UserControllerTest {
         when(userService.updateUser(any(), any(), any(), any(), any(), any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userController.updateOne(1L, userRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("User '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> userController.updateOne(1L, userRequestDto)
+        );
+
+        assertEquals("User '1' not found", exception.getMessage());
     }
 
     @Test
@@ -171,8 +181,8 @@ class UserControllerTest {
 
         ResponseEntity<Void> actual = userController.updateOne(1L, userRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 
     @Test
@@ -180,9 +190,12 @@ class UserControllerTest {
         when(userService.getOne(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userController.deleteOne(1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("User '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> userController.deleteOne(1L)
+        );
+
+        assertEquals("User '1' not found", exception.getMessage());
     }
 
     @Test
@@ -195,8 +208,8 @@ class UserControllerTest {
 
         ResponseEntity<Void> actual = userController.deleteOne(1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 
     @Test
@@ -204,9 +217,12 @@ class UserControllerTest {
         when(userSettingService.getUserSettingsByUsername(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userController.getUserSettings("username"))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("UserSetting 'username' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> userController.getUserSettings("username")
+        );
+
+        assertEquals("UserSetting 'username' not found", exception.getMessage());
     }
 
     @Test
@@ -224,8 +240,9 @@ class UserControllerTest {
 
         ResponseEntity<List<UserSettingResponseDto>> actual = userController.getUserSettings("username");
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).contains(userSettingResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertTrue(actual.getBody().contains(userSettingResponseDto));
     }
 
     @Test
@@ -248,9 +265,12 @@ class UserControllerTest {
         when(userService.getOneByUsername(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("User 'username' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto)
+        );
+
+        assertEquals("User 'username' not found", exception.getMessage());
     }
 
     @Test
@@ -273,9 +293,12 @@ class UserControllerTest {
         when(userService.getOneByUsername(any()))
             .thenReturn(Optional.of(user));
 
-        assertThatThrownBy(() -> userController.updateUserSettings(localUser, "username2", 1L, userSettingRequestDto))
-            .isInstanceOf(AccessDeniedException.class)
-            .hasMessage("User username is not allowed to modify this resource");
+        AccessDeniedException exception = assertThrows(
+            AccessDeniedException.class,
+            () -> userController.updateUserSettings(localUser, "username2", 1L, userSettingRequestDto)
+        );
+
+        assertEquals("User username is not allowed to modify this resource", exception.getMessage());
     }
 
     @Test
@@ -300,9 +323,12 @@ class UserControllerTest {
         when(settingService.getOneById(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Setting '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto)
+        );
+
+        assertEquals("Setting '1' not found", exception.getMessage());
     }
 
     @Test
@@ -333,8 +359,8 @@ class UserControllerTest {
         ResponseEntity<UserResponseDto> actual =
             userController.updateUserSettings(localUser, "username", 1L, userSettingRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 
     @Test
@@ -348,9 +374,12 @@ class UserControllerTest {
         when(userService.getOneByUsername(any()))
             .thenReturn(Optional.of(user));
 
-        assertThatThrownBy(() -> userController.signUp(userRequestDto))
-            .isInstanceOf(UsernameAlreadyExistException.class)
-            .hasMessage("Username 'username' already exist");
+        UsernameAlreadyExistException exception = assertThrows(
+            UsernameAlreadyExistException.class,
+            () -> userController.signUp(userRequestDto)
+        );
+
+        assertEquals("Username 'username' already exist", exception.getMessage());
     }
 
     @Test
@@ -367,9 +396,12 @@ class UserControllerTest {
         when(userService.getOneByEmail(any()))
             .thenReturn(Optional.of(user));
 
-        assertThatThrownBy(() -> userController.signUp(userRequestDto))
-            .isInstanceOf(EmailAlreadyExistException.class)
-            .hasMessage("Email 'email' already exist");
+        EmailAlreadyExistException exception = assertThrows(
+            EmailAlreadyExistException.class,
+            () -> userController.signUp(userRequestDto)
+        );
+
+        assertEquals("Email 'email' already exist", exception.getMessage());
     }
 
     @Test
@@ -398,8 +430,8 @@ class UserControllerTest {
 
         ResponseEntity<UserResponseDto> actual = userController.signUp(userRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(actual.getBody()).isEqualTo(userResponseDto);
+        assertEquals(HttpStatus.CREATED, actual.getStatusCode());
+        assertEquals(userResponseDto, actual.getBody());
     }
 
     @Test
@@ -429,8 +461,9 @@ class UserControllerTest {
 
         ResponseEntity<List<PersonalAccessTokenResponseDto>> actual = userController.getPersonalAccessTokens(localUser);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).contains(personalAccessTokenResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertTrue(actual.getBody().contains(personalAccessTokenResponseDto));
     }
 
     @Test
@@ -468,8 +501,8 @@ class UserControllerTest {
         ResponseEntity<PersonalAccessTokenResponseDto> actual =
             userController.createPersonalAccessToken(localUser, personalAccessTokenRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(personalAccessTokenResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(personalAccessTokenResponseDto, actual.getBody());
     }
 
     @Test
@@ -489,9 +522,12 @@ class UserControllerTest {
         when(patService.findByNameAndUser(any(), any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userController.deletePersonalAccessToken(localUser, "token"))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("PersonalAccessToken 'token' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> userController.deletePersonalAccessToken(localUser, "token")
+        );
+
+        assertEquals("PersonalAccessToken 'token' not found", exception.getMessage());
     }
 
     @Test
@@ -516,7 +552,7 @@ class UserControllerTest {
 
         ResponseEntity<Void> actual = userController.deletePersonalAccessToken(localUser, "token");
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 }

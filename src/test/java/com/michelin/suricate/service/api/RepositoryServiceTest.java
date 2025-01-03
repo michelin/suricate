@@ -1,6 +1,8 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,9 +47,8 @@ class RepositoryServiceTest {
 
         Page<Repository> actual = repositoryService.getAll("search", Pageable.unpaged());
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(repository);
+        assertFalse(actual.isEmpty());
+        assertEquals(repository, actual.get().toList().getFirst());
 
         verify(repositoryRepository)
             .findAll(Mockito.<RepositorySearchSpecification>argThat(
@@ -66,10 +67,9 @@ class RepositoryServiceTest {
 
         Optional<List<Repository>> actual = repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
 
-        assertThat(actual).isPresent();
-        assertThat(actual.get())
-            .isNotEmpty()
-            .contains(repository);
+        assertTrue(actual.isPresent());
+        assertFalse(actual.get().isEmpty());
+        assertEquals(repository, actual.get().getFirst());
 
         verify(repositoryRepository)
             .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
@@ -85,9 +85,8 @@ class RepositoryServiceTest {
 
         Optional<Repository> actual = repositoryService.getOneById(1L);
 
-        assertThat(actual)
-            .isPresent()
-            .contains(repository);
+        assertTrue(actual.isPresent());
+        assertEquals(repository, actual.get());
 
         verify(repositoryRepository)
             .findById(1L);
@@ -103,9 +102,8 @@ class RepositoryServiceTest {
 
         Optional<Repository> actual = repositoryService.findByName("name");
 
-        assertThat(actual)
-            .isPresent()
-            .contains(repository);
+        assertTrue(actual.isPresent());
+        assertEquals(repository, actual.get());
 
         verify(repositoryRepository)
             .findByName("name");
@@ -118,8 +116,7 @@ class RepositoryServiceTest {
 
         boolean actual = repositoryService.existsById(1L);
 
-        assertThat(actual)
-            .isTrue();
+        assertTrue(actual);
 
         verify(repositoryRepository)
             .existsById(1L);

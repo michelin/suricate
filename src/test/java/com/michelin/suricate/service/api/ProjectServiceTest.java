@@ -1,6 +1,11 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.eq;
@@ -70,9 +75,8 @@ class ProjectServiceTest {
 
         Page<Project> actual = projectService.getAll("search", Pageable.unpaged());
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(project);
+        assertFalse(actual.isEmpty());
+        assertEquals(project, actual.get().toList().getFirst());
 
         verify(projectRepository)
             .findAll(Mockito.<ProjectSearchSpecification>argThat(
@@ -94,9 +98,8 @@ class ProjectServiceTest {
 
         List<Project> actual = projectService.getAllByUser(user);
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(project);
+        assertFalse(actual.isEmpty());
+        assertTrue(actual.contains(project));
 
         verify(projectRepository)
             .findByUsersIdOrderByName(1L);
@@ -112,9 +115,8 @@ class ProjectServiceTest {
 
         Optional<Project> actual = projectService.getOneById(1L);
 
-        assertThat(actual)
-            .isPresent()
-            .contains(project);
+        assertTrue(actual.isPresent());
+        assertEquals(project, actual.get());
 
         verify(projectRepository)
             .findById(1L);
@@ -130,9 +132,8 @@ class ProjectServiceTest {
 
         Optional<Project> actual = projectService.getOneByToken("token");
 
-        assertThat(actual)
-            .isPresent()
-            .contains(project);
+        assertTrue(actual.isPresent());
+        assertEquals(project, actual.get());
 
         verify(projectRepository)
             .findProjectByToken("token");
@@ -148,7 +149,7 @@ class ProjectServiceTest {
 
         String actual = projectService.getTokenByProjectId(1L);
 
-        assertThat(actual).isEqualTo("token");
+        assertEquals("token", actual);
 
         verify(projectRepository)
             .getToken(1L);
@@ -166,8 +167,8 @@ class ProjectServiceTest {
 
         Project actual = projectService.createProject(project);
 
-        assertThat(actual).isNotNull();
-        assertThat(actual.getToken()).isEqualTo("encrypted");
+        assertNotNull(actual);
+        assertEquals("encrypted", actual.getToken());
 
         verify(stringEncryptor)
             .encrypt(any(String.class));
@@ -186,8 +187,8 @@ class ProjectServiceTest {
 
         Project actual = projectService.createProject(project);
 
-        assertThat(actual).isNotNull();
-        assertThat(actual.getToken()).isEqualTo("token");
+        assertNotNull(actual);
+        assertEquals("token", actual.getToken());
 
         verify(stringEncryptor, times(0))
             .encrypt(any(String.class));
@@ -209,10 +210,9 @@ class ProjectServiceTest {
 
         Project actual = projectService.createProjectForUser(user, project);
 
-        assertThat(actual).isNotNull();
-        assertThat(actual.getUsers())
-            .hasSize(1)
-            .contains(user);
+        assertNotNull(actual);
+        assertEquals(1, actual.getUsers().size());
+        assertTrue(actual.getUsers().contains(user));
 
         verify(stringEncryptor, times(0))
             .encrypt(any(String.class));
@@ -252,9 +252,8 @@ class ProjectServiceTest {
 
         List<Project> actual = projectService.createUpdateProjects(Collections.singletonList(project), user);
 
-        assertThat(actual)
-            .hasSize(1)
-            .contains(project);
+        assertEquals(1, actual.size());
+        assertTrue(actual.contains(project));
 
         verify(projectRepository)
             .findProjectByToken("token");
@@ -322,15 +321,17 @@ class ProjectServiceTest {
 
         List<Project> actual = projectService.createUpdateProjects(Collections.singletonList(project), user);
 
-        assertThat(actual)
-            .hasSize(1)
-            .contains(project);
-        assertThat(actual.get(0).getId()).isEqualTo(1L);
-        assertThat(actual.get(0).getScreenshot().getId()).isEqualTo(1L);
-        assertThat(actual.get(0).getUsers()).isEqualTo(Collections.singleton(existingUser));
-        assertThat(new ArrayList<>(actual.get(0).getGrids()).get(0).getId()).isEqualTo(1L);
-        assertThat(new ArrayList<>(new ArrayList<>(actual.get(0).getGrids()).get(0).getWidgets()).get(0).getId())
-            .isEqualTo(1L);
+        assertEquals(1, actual.size());
+        assertTrue(actual.contains(project));
+        assertEquals(1L, actual.getFirst().getId());
+        assertEquals(1L, actual.getFirst().getScreenshot().getId());
+        assertIterableEquals(Collections.singleton(existingUser), actual.getFirst().getUsers());
+        assertEquals(1L, new ArrayList<>(actual.getFirst().getGrids()).getFirst().getId());
+        assertEquals(1L, new ArrayList<>(new ArrayList<>(actual.getFirst().getGrids())
+            .getFirst()
+            .getWidgets())
+            .getFirst()
+            .getId());
 
         verify(projectRepository)
             .findProjectByToken("token");
@@ -356,10 +357,11 @@ class ProjectServiceTest {
             .thenAnswer(answer -> answer.getArgument(0));
 
         projectService.updateProject(project, "newName", 1, 1, "css");
-        assertThat(project.getName()).isEqualTo("newName");
-        assertThat(project.getWidgetHeight()).isEqualTo(1);
-        assertThat(project.getMaxColumn()).isEqualTo(1);
-        assertThat(project.getCssStyle()).isEqualTo("css");
+
+        assertEquals("newName", project.getName());
+        assertEquals(1, project.getWidgetHeight());
+        assertEquals(1, project.getMaxColumn());
+        assertEquals("css", project.getCssStyle());
 
         verify(projectRepository)
             .save(project);
@@ -379,10 +381,10 @@ class ProjectServiceTest {
 
         projectService.updateProject(project, null, 0, 0, null);
 
-        assertThat(project.getName()).isNull();
-        assertThat(project.getWidgetHeight()).isNull();
-        assertThat(project.getMaxColumn()).isNull();
-        assertThat(project.getCssStyle()).isNull();
+        assertNull(project.getName());
+        assertNull(project.getWidgetHeight());
+        assertNull(project.getMaxColumn());
+        assertNull(project.getCssStyle());
 
         verify(projectRepository)
             .save(project);
@@ -405,7 +407,7 @@ class ProjectServiceTest {
             .thenAnswer(answer -> answer.getArgument(0));
 
         projectService.deleteUserFromProject(user, project);
-        assertThat(project.getUsers()).isEmpty();
+        assertTrue(project.getUsers().isEmpty());
 
         verify(projectRepository)
             .save(project);
@@ -430,8 +432,7 @@ class ProjectServiceTest {
 
         boolean actual = projectService.isConnectedUserCanAccessToProject(project, localUser);
 
-        assertThat(actual)
-            .isTrue();
+        assertTrue(actual);
     }
 
     @Test
@@ -454,8 +455,7 @@ class ProjectServiceTest {
 
         boolean actual = projectService.isConnectedUserCanAccessToProject(project, localUser);
 
-        assertThat(actual)
-            .isTrue();
+        assertTrue(actual);
     }
 
     @Test
@@ -477,8 +477,7 @@ class ProjectServiceTest {
 
         boolean actual = projectService.isConnectedUserCanAccessToProject(project, localUser);
 
-        assertThat(actual)
-            .isFalse();
+        assertFalse(actual);
     }
 
     @Test
