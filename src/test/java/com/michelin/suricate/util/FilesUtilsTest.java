@@ -52,7 +52,8 @@ class FilesUtilsTest {
     @Test
     void shouldReadImageAsset() throws IOException {
         Asset actual = FilesUtils.readAsset(
-            new File("src/test/resources/repository/content/github/widgets/count-issues/image.png"));
+            new File("src/test/resources/repository/content/github/widgets/count-issues/image.png")
+        );
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContentType()).isEqualTo("image/png");
@@ -60,8 +61,7 @@ class FilesUtilsTest {
 
     @Test
     void shouldSetContentTypeToDefaultTextPlain() throws IOException {
-        Asset actual =
-            FilesUtils.readAsset(new File("src/test/resources/repository/content/other/description.yml"));
+        Asset actual = FilesUtils.readAsset(new File("src/test/resources/repository/content/other/description.yml"));
 
         assertThat(actual.getContentType()).isEqualTo("text/plain");
         assertThat(actual.getSize()).isPositive();
