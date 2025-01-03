@@ -38,7 +38,9 @@ class JavaScriptUtilsTest {
         assertEquals("function(){Packages." + JsEndpoints.class.getName() + ".checkInterrupted();};", actual);
 
         String actualTwo = JavaScriptUtils.injectInterrupt("function()\n{\nwhile(true)\n{\n}\n};");
-        assertEquals("function(){Packages." + JsEndpoints.class.getName() + ".checkInterrupted();\nwhile(true){Packages."
-            + JsEndpoints.class.getName() + ".checkInterrupted();\n}\n};", actualTwo);
+        assertEquals("function(){Packages." + JsEndpoints.class.getName()
+            + ".checkInterrupted();\nwhile(true){Packages."
+            + JsEndpoints.class.getName()
+            + ".checkInterrupted();\n}\n};", actualTwo);
     }
 }
