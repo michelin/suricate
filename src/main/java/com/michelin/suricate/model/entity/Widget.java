@@ -96,8 +96,11 @@ public class Widget extends AbstractAuditingEntity<Long> {
 
     @ToString.Exclude
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "widget_library", joinColumns = {@JoinColumn(name = "widget_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "library_id")})
+    @JoinTable(
+        name = "widget_library",
+        joinColumns = {@JoinColumn(name = "widget_id")},
+        inverseJoinColumns = {@JoinColumn(name = "library_id")}
+    )
     private Set<Library> libraries = new LinkedHashSet<>();
 
     @ToString.Exclude

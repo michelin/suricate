@@ -1,7 +1,7 @@
 package com.michelin.suricate.security.ldap;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -53,9 +53,12 @@ class LdapAuthenticationTest {
 
         UserDetailsContextMapper mapper = ldapAuthentication.userDetailsContextMapper();
 
-        assertThatThrownBy(() -> mapper.mapUserFromContext(dirContextOperations, "username", Collections.emptyList()))
-            .isInstanceOf(UsernameNotFoundException.class)
-            .hasMessage("Bad credentials");
+        UsernameNotFoundException exception = assertThrows(
+            UsernameNotFoundException.class,
+            () -> mapper.mapUserFromContext(dirContextOperations, "username", Collections.emptyList())
+        );
+
+        assertEquals("Bad credentials", exception.getMessage());
     }
 
     @Test
@@ -86,9 +89,12 @@ class LdapAuthenticationTest {
         UserDetailsContextMapper mapper = ldapAuthentication.userDetailsContextMapper();
         UserDetails actual = mapper.mapUserFromContext(dirContextOperations, "username", Collections.emptyList());
 
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().get(0))
-            .isEqualTo("ROLE_ADMIN");
+        assertEquals("username", actual.getUsername());
+        assertEquals("password", actual.getPassword());
+        assertEquals("ROLE_ADMIN", actual.getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .toList()
+            .getFirst());
     }
 }

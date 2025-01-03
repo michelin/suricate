@@ -1,7 +1,9 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -62,9 +64,9 @@ class CategoryControllerTest {
 
         Page<CategoryResponseDto> actual = categoryController.getCategories("search", Pageable.unpaged());
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().toList().get(0)).isEqualTo(categoryResponseDto);
+        assertFalse(actual.isEmpty());
+        assertEquals(1, actual.get().count());
+        assertEquals(categoryResponseDto, actual.get().toList().getFirst());
     }
 
     @Test
@@ -72,9 +74,12 @@ class CategoryControllerTest {
         when(widgetService.getWidgetsByCategory(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> categoryController.getWidgetByCategory(1L))
-            .isInstanceOf(NoContentException.class)
-            .hasMessage("No resource for the class 'Widget'");
+        NoContentException exception = assertThrows(
+            NoContentException.class,
+            () -> categoryController.getWidgetByCategory(1L)
+        );
+
+        assertEquals("No resource for the class 'Widget'", exception.getMessage());
     }
 
     @Test
@@ -92,10 +97,10 @@ class CategoryControllerTest {
 
         ResponseEntity<List<WidgetResponseDto>> actual = categoryController.getWidgetByCategory(1L);
 
-        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isNotNull();
-        assertThat(actual.getBody()).hasSize(1);
-        assertThat(actual.getBody().get(0)).isEqualTo(widgetResponseDto);
+        assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertEquals(1, actual.getBody().size());
+        assertEquals(widgetResponseDto, actual.getBody().getFirst());
     }
 }

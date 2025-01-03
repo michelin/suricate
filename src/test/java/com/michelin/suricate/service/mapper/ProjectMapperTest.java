@@ -1,6 +1,9 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
@@ -117,19 +120,19 @@ class ProjectMapperTest {
 
             ProjectResponseDto actual = projectMapper.toProjectDto(project);
 
-            assertThat(actual.getToken()).isEqualTo("token");
-            assertThat(actual.getName()).isEqualTo("name");
-            assertThat(actual.getScreenshotToken()).isEqualTo("encrypted");
-            assertThat(actual.getLibrariesToken().get(0)).isEqualTo("libraryToken");
-            assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
-            assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
-            assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
-            assertThat(actual.getImage().getId()).isEqualTo(1L);
-            assertThat(actual.getImage().getContent()).isEqualTo(new byte[10]);
-            assertThat(actual.getImage().getSize()).isEqualTo(10);
-            assertThat(actual.getImage().getContentType()).isEqualTo("contentType");
-            assertThat(actual.getGrids().get(0).getId()).isEqualTo(1L);
-            assertThat(actual.getGrids().get(0).getTime()).isEqualTo(10);
+            assertEquals("token", actual.getToken());
+            assertEquals("name", actual.getName());
+            assertEquals("encrypted", actual.getScreenshotToken());
+            assertEquals("libraryToken", actual.getLibrariesToken().getFirst());
+            assertEquals(1, actual.getGridProperties().getMaxColumn());
+            assertEquals(1, actual.getGridProperties().getWidgetHeight());
+            assertEquals("style", actual.getGridProperties().getCssStyle());
+            assertEquals(1L, actual.getImage().getId());
+            assertArrayEquals(new byte[10], actual.getImage().getContent());
+            assertEquals(10, actual.getImage().getSize());
+            assertEquals("contentType", actual.getImage().getContentType());
+            assertEquals(1L, actual.getGrids().getFirst().getId());
+            assertEquals(10, actual.getGrids().getFirst().getTime());
         }
     }
 
@@ -174,19 +177,19 @@ class ProjectMapperTest {
 
             ProjectResponseDto actual = projectMapper.toProjectDtoNoLibrary(project);
 
-            assertThat(actual.getToken()).isEqualTo("token");
-            assertThat(actual.getName()).isEqualTo("name");
-            assertThat(actual.getLibrariesToken()).isEmpty();
-            assertThat(actual.getScreenshotToken()).isEqualTo("encrypted");
-            assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
-            assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
-            assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
-            assertThat(actual.getImage().getId()).isEqualTo(1L);
-            assertThat(actual.getImage().getContent()).isEqualTo(new byte[10]);
-            assertThat(actual.getImage().getSize()).isEqualTo(10);
-            assertThat(actual.getImage().getContentType()).isEqualTo("contentType");
-            assertThat(actual.getGrids().get(0).getId()).isEqualTo(1L);
-            assertThat(actual.getGrids().get(0).getTime()).isEqualTo(10);
+            assertEquals("token", actual.getToken());
+            assertEquals("name", actual.getName());
+            assertEquals("encrypted", actual.getScreenshotToken());
+            assertTrue(actual.getLibrariesToken().isEmpty());
+            assertEquals(1, actual.getGridProperties().getMaxColumn());
+            assertEquals(1, actual.getGridProperties().getWidgetHeight());
+            assertEquals("style", actual.getGridProperties().getCssStyle());
+            assertEquals(1L, actual.getImage().getId());
+            assertArrayEquals(new byte[10], actual.getImage().getContent());
+            assertEquals(10, actual.getImage().getSize());
+            assertEquals("contentType", actual.getImage().getContentType());
+            assertEquals(1L, actual.getGrids().getFirst().getId());
+            assertEquals(10, actual.getGrids().getFirst().getTime());
         }
     }
 
@@ -220,14 +223,14 @@ class ProjectMapperTest {
 
         ProjectResponseDto actual = projectMapper.toProjectDtoNoAsset(project);
 
-        assertThat(actual.getToken()).isEqualTo("token");
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getLibrariesToken()).isEmpty();
-        assertThat(actual.getScreenshotToken()).isNull();
-        assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
-        assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
-        assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
-        assertThat(actual.getImage()).isNull();
+        assertEquals("token", actual.getToken());
+        assertEquals("name", actual.getName());
+        assertNull(actual.getScreenshotToken());
+        assertTrue(actual.getLibrariesToken().isEmpty());
+        assertEquals(1, actual.getGridProperties().getMaxColumn());
+        assertEquals(1, actual.getGridProperties().getWidgetHeight());
+        assertEquals("style", actual.getGridProperties().getCssStyle());
+        assertNull(actual.getImage());
     }
 
     @Test
@@ -271,19 +274,19 @@ class ProjectMapperTest {
 
             List<ProjectResponseDto> actual = projectMapper.toProjectsDtos(Collections.singletonList(project));
 
-            assertThat(actual.get(0).getToken()).isEqualTo("token");
-            assertThat(actual.get(0).getName()).isEqualTo("name");
-            assertThat(actual.get(0).getLibrariesToken()).isEmpty();
-            assertThat(actual.get(0).getScreenshotToken()).isEqualTo("encrypted");
-            assertThat(actual.get(0).getGridProperties().getMaxColumn()).isEqualTo(1);
-            assertThat(actual.get(0).getGridProperties().getWidgetHeight()).isEqualTo(1);
-            assertThat(actual.get(0).getGridProperties().getCssStyle()).isEqualTo("style");
-            assertThat(actual.get(0).getImage().getId()).isEqualTo(1L);
-            assertThat(actual.get(0).getImage().getContent()).isEqualTo(new byte[10]);
-            assertThat(actual.get(0).getImage().getSize()).isEqualTo(10);
-            assertThat(actual.get(0).getImage().getContentType()).isEqualTo("contentType");
-            assertThat(actual.get(0).getGrids().get(0).getId()).isEqualTo(1L);
-            assertThat(actual.get(0).getGrids().get(0).getTime()).isEqualTo(10);
+            assertEquals("token", actual.getFirst().getToken());
+            assertEquals("name", actual.getFirst().getName());
+            assertEquals("encrypted", actual.getFirst().getScreenshotToken());
+            assertTrue(actual.getFirst().getLibrariesToken().isEmpty());
+            assertEquals(1, actual.getFirst().getGridProperties().getMaxColumn());
+            assertEquals(1, actual.getFirst().getGridProperties().getWidgetHeight());
+            assertEquals("style", actual.getFirst().getGridProperties().getCssStyle());
+            assertEquals(1L, actual.getFirst().getImage().getId());
+            assertArrayEquals(new byte[10], actual.getFirst().getImage().getContent());
+            assertEquals(10, actual.getFirst().getImage().getSize());
+            assertEquals("contentType", actual.getFirst().getImage().getContentType());
+            assertEquals(1L, actual.getFirst().getGrids().getFirst().getId());
+            assertEquals(10, actual.getFirst().getGrids().getFirst().getTime());
         }
     }
 
@@ -297,10 +300,10 @@ class ProjectMapperTest {
 
         Project actual = projectMapper.toProjectEntity(projectRequestDto);
 
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getCssStyle()).isEqualTo("style");
-        assertThat(actual.getMaxColumn()).isEqualTo(1);
-        assertThat(actual.getWidgetHeight()).isEqualTo(1);
+        assertEquals("name", actual.getName());
+        assertEquals("style", actual.getCssStyle());
+        assertEquals(1, actual.getMaxColumn());
+        assertEquals(1, actual.getWidgetHeight());
     }
 
     @Test
@@ -340,18 +343,18 @@ class ProjectMapperTest {
 
         ImportExportProjectDto actual = projectMapper.toImportExportProjectDto(project);
 
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getToken()).isEqualTo("token");
-        assertThat(actual.isDisplayProgressBar()).isTrue();
-        assertThat(actual.getGridProperties().getMaxColumn()).isEqualTo(1);
-        assertThat(actual.getGridProperties().getWidgetHeight()).isEqualTo(1);
-        assertThat(actual.getGridProperties().getCssStyle()).isEqualTo("style");
-        assertThat(actual.getImage().getContent()).isEqualTo(new byte[10]);
-        assertThat(actual.getImage().getContentType()).isEqualTo("contentType");
-        assertThat(actual.getImage().getSize()).isEqualTo(10);
-        assertThat(actual.getGrids().get(0).getId()).isEqualTo(1L);
-        assertThat(actual.getGrids().get(0).getTime()).isEqualTo(10);
-        assertThat(actual.getGrids().get(0).getWidgets().get(0).getId()).isEqualTo(1L);
+        assertEquals("token", actual.getToken());
+        assertEquals("name", actual.getName());
+        assertTrue(actual.isDisplayProgressBar());
+        assertEquals(1, actual.getGridProperties().getMaxColumn());
+        assertEquals(1, actual.getGridProperties().getWidgetHeight());
+        assertEquals("style", actual.getGridProperties().getCssStyle());
+        assertArrayEquals(new byte[10], actual.getImage().getContent());
+        assertEquals(10, actual.getImage().getSize());
+        assertEquals("contentType", actual.getImage().getContentType());
+        assertEquals(1L, actual.getGrids().getFirst().getId());
+        assertEquals(10, actual.getGrids().getFirst().getTime());
+        assertEquals(1L, actual.getGrids().getFirst().getWidgets().getFirst().getId());
     }
 
     @Test
@@ -389,17 +392,20 @@ class ProjectMapperTest {
 
         Project actual = projectMapper.toProjectEntity(importExportProjectDto);
 
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getToken()).isEqualTo("token");
-        assertThat(actual.getWidgetHeight()).isEqualTo(1);
-        assertThat(actual.getMaxColumn()).isEqualTo(1);
-        assertThat(actual.isDisplayProgressBar()).isTrue();
-        assertThat(actual.getScreenshot().getSize()).isEqualTo(10);
-        assertThat(actual.getScreenshot().getContent()).isEqualTo(new byte[10]);
-        assertThat(actual.getScreenshot().getContentType()).isEqualTo("contentType");
-        assertThat(new ArrayList<>(actual.getGrids()).get(0).getId()).isEqualTo(1L);
-        assertThat(new ArrayList<>(actual.getGrids()).get(0).getTime()).isEqualTo(10);
-        assertThat(new ArrayList<>(new ArrayList<>(actual.getGrids()).get(0).getWidgets()).get(0).getId()).isEqualTo(
-            1L);
+        assertEquals("token", actual.getToken());
+        assertEquals("name", actual.getName());
+        assertEquals(1, actual.getWidgetHeight());
+        assertEquals(1, actual.getMaxColumn());
+        assertTrue(actual.isDisplayProgressBar());
+        assertEquals(10, actual.getScreenshot().getSize());
+        assertArrayEquals(new byte[10], actual.getScreenshot().getContent());
+        assertEquals("contentType", actual.getScreenshot().getContentType());
+        assertEquals(1L, new ArrayList<>(actual.getGrids()).getFirst().getId());
+        assertEquals(10, new ArrayList<>(actual.getGrids()).getFirst().getTime());
+        assertEquals(1L, new ArrayList<>(new ArrayList<>(actual.getGrids())
+            .getFirst()
+            .getWidgets())
+            .getFirst()
+            .getId());
     }
 }

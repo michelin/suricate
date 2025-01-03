@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -41,12 +42,12 @@ class SettingMapperTest {
         Setting setting = getSetting();
         SettingResponseDto actual = settingMapper.toSettingDto(setting);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getDescription()).isEqualTo("description");
-        assertThat(actual.isConstrained()).isTrue();
-        assertThat(actual.getDataType()).isEqualTo(DataTypeEnum.TEXT);
-        assertThat(actual.getType()).isEqualTo(SettingType.LANGUAGE);
-        assertThat(actual.getAllowedSettingValues().get(0)).isEqualTo(allowedSettingValueResponseDto);
+        assertEquals(1L, actual.getId());
+        assertEquals("description", actual.getDescription());
+        assertTrue(actual.isConstrained());
+        assertEquals(DataTypeEnum.TEXT, actual.getDataType());
+        assertEquals(SettingType.LANGUAGE, actual.getType());
+        assertEquals(allowedSettingValueResponseDto, actual.getAllowedSettingValues().getFirst());
     }
 
     @Test
@@ -63,12 +64,12 @@ class SettingMapperTest {
         Setting setting = getSetting();
         List<SettingResponseDto> actual = settingMapper.toSettingsDtos(Collections.singletonList(setting));
 
-        assertThat(actual.get(0).getId()).isEqualTo(1L);
-        assertThat(actual.get(0).getDescription()).isEqualTo("description");
-        assertThat(actual.get(0).isConstrained()).isTrue();
-        assertThat(actual.get(0).getDataType()).isEqualTo(DataTypeEnum.TEXT);
-        assertThat(actual.get(0).getType()).isEqualTo(SettingType.LANGUAGE);
-        assertThat(actual.get(0).getAllowedSettingValues().get(0)).isEqualTo(allowedSettingValueResponseDto);
+        assertEquals(1L, actual.getFirst().getId());
+        assertEquals("description", actual.getFirst().getDescription());
+        assertTrue(actual.getFirst().isConstrained());
+        assertEquals(DataTypeEnum.TEXT, actual.getFirst().getDataType());
+        assertEquals(SettingType.LANGUAGE, actual.getFirst().getType());
+        assertEquals(allowedSettingValueResponseDto, actual.getFirst().getAllowedSettingValues().getFirst());
     }
 
     @NotNull

@@ -1,7 +1,9 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -51,9 +53,9 @@ class WidgetControllerTest {
 
         Page<WidgetResponseDto> actual = widgetController.getWidgets("search", Pageable.unpaged());
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().toList().get(0)).isEqualTo(widgetResponseDto);
+        assertFalse(actual.isEmpty());
+        assertEquals(1, actual.get().count());
+        assertEquals(widgetResponseDto, actual.get().toList().getFirst());
     }
 
     @Test
@@ -61,9 +63,12 @@ class WidgetControllerTest {
         when(widgetService.findOne(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> widgetController.getOneById(1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Widget '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> widgetController.getOneById(1L)
+        );
+
+        assertEquals("Widget '1' not found", exception.getMessage());
     }
 
     @Test
@@ -81,8 +86,8 @@ class WidgetControllerTest {
 
         ResponseEntity<WidgetResponseDto> actual = widgetController.getOneById(1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(widgetResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(widgetResponseDto, actual.getBody());
     }
 
     @Test
@@ -93,9 +98,12 @@ class WidgetControllerTest {
         when(widgetService.updateWidget(any(), any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> widgetController.updateWidget(1L, widgetRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Widget '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> widgetController.updateWidget(1L, widgetRequestDto)
+        );
+
+        assertEquals("Widget '1' not found", exception.getMessage());
     }
 
     @Test
@@ -111,7 +119,7 @@ class WidgetControllerTest {
 
         ResponseEntity<Void> actual = widgetController.updateWidget(1L, widgetRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 }

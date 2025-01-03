@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.michelin.suricate.model.dto.api.token.PersonalAccessTokenResponseDto;
 import com.michelin.suricate.model.entity.PersonalAccessToken;
@@ -31,9 +32,9 @@ class PersonalAccessTokenMapperTest {
         PersonalAccessTokenResponseDto actual =
             personalAccessTokenMapper.toPersonalAccessTokenDto(personalAccessToken, "value");
 
-        assertThat(actual.getValue()).isEqualTo("value");
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getCreatedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
+        assertEquals("value", actual.getValue());
+        assertEquals("name", actual.getName());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getCreatedDate());
     }
 
     @Test
@@ -48,9 +49,9 @@ class PersonalAccessTokenMapperTest {
         PersonalAccessTokenResponseDto actual =
             personalAccessTokenMapper.toPersonalAccessTokenNoValueDto(personalAccessToken);
 
-        assertThat(actual.getValue()).isNull();
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getCreatedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
+        assertNull(actual.getValue());
+        assertEquals("name", actual.getName());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getCreatedDate());
     }
 
     @Test
@@ -65,8 +66,8 @@ class PersonalAccessTokenMapperTest {
         List<PersonalAccessTokenResponseDto> actual =
             personalAccessTokenMapper.toPersonalAccessTokensDtos(Collections.singletonList(personalAccessToken));
 
-        assertThat(actual.get(0).getValue()).isNull();
-        assertThat(actual.get(0).getName()).isEqualTo("name");
-        assertThat(actual.get(0).getCreatedDate()).isEqualTo(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
+        assertNull(actual.getFirst().getValue());
+        assertEquals("name", actual.getFirst().getName());
+        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getFirst().getCreatedDate());
     }
 }

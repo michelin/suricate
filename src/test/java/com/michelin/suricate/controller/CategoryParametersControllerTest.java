@@ -1,7 +1,9 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -55,9 +57,9 @@ class CategoryParametersControllerTest {
 
         Page<CategoryParameterResponseDto> actual = categoryParametersController.getAll("search", Pageable.unpaged());
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().toList().get(0)).isEqualTo(categoryParameterResponseDto);
+        assertFalse(actual.isEmpty());
+        assertEquals(1, actual.get().count());
+        assertEquals(categoryParameterResponseDto, actual.get().toList().getFirst());
     }
 
     @Test
@@ -65,9 +67,12 @@ class CategoryParametersControllerTest {
         when(categoryParametersService.getOneByKey(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> categoryParametersController.getOneByKey("key"))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("CategoryParameter 'key' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> categoryParametersController.getOneByKey("key")
+        );
+
+        assertEquals("CategoryParameter 'key' not found", exception.getMessage());
     }
 
     @Test
@@ -85,10 +90,10 @@ class CategoryParametersControllerTest {
 
         ResponseEntity<CategoryParameterResponseDto> actual = categoryParametersController.getOneByKey("key");
 
-        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isNotNull();
-        assertThat(actual.getBody()).isEqualTo(categoryParameterResponseDto);
+        assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertEquals(categoryParameterResponseDto, actual.getBody());
     }
 
     @Test
@@ -99,9 +104,12 @@ class CategoryParametersControllerTest {
         when(categoryParametersService.getOneByKey(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("CategoryParameter 'key' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto)
+        );
+
+        assertEquals("CategoryParameter 'key' not found", exception.getMessage());
     }
 
     @Test
@@ -117,7 +125,7 @@ class CategoryParametersControllerTest {
 
         ResponseEntity<Void> actual = categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
     }
 
     @Test
@@ -125,9 +133,12 @@ class CategoryParametersControllerTest {
         when(categoryParametersService.getOneByKey(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> categoryParametersController.deleteOneByKey("key"))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("CategoryParameter 'key' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> categoryParametersController.deleteOneByKey("key")
+        );
+
+        assertEquals("CategoryParameter 'key' not found", exception.getMessage());
     }
 
     @Test
@@ -140,6 +151,6 @@ class CategoryParametersControllerTest {
 
         ResponseEntity<Void> actual = categoryParametersController.deleteOneByKey("key");
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
     }
 }

@@ -1,6 +1,6 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.michelin.suricate.model.dto.api.widget.WidgetParamValueResponseDto;
 import com.michelin.suricate.model.entity.WidgetParamValue;
@@ -25,8 +25,8 @@ class WidgetParamValueMapperTest {
 
         WidgetParamValueResponseDto actual = widgetParamValueMapper.toWidgetParameterValueDto(widgetParamValue);
 
-        assertThat(actual.getJsKey()).isEqualTo("key");
-        assertThat(actual.getValue()).isEqualTo("value");
+        assertEquals("key", actual.getJsKey());
+        assertEquals("value", actual.getValue());
     }
 
     @Test
@@ -39,7 +39,7 @@ class WidgetParamValueMapperTest {
         List<WidgetParamValueResponseDto> actual =
             widgetParamValueMapper.toWidgetParameterValuesDtos(Collections.singleton(widgetParamValue));
 
-        assertThat(actual.get(0).getJsKey()).isEqualTo("key");
-        assertThat(actual.get(0).getValue()).isEqualTo("value");
+        assertEquals("key", actual.getFirst().getJsKey());
+        assertEquals("value", actual.getFirst().getValue());
     }
 }

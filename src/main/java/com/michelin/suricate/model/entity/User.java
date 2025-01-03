@@ -78,8 +78,11 @@ public class User extends AbstractEntity<Long> {
 
     @ToString.Exclude
     @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "role_id")})
+    @JoinTable(
+        name = "user_role",
+        joinColumns = {@JoinColumn(name = "user_id")},
+        inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
     private Set<Role> roles = new LinkedHashSet<>();
 
     @ToString.Exclude

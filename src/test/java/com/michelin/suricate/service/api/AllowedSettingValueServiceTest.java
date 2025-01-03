@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,9 +34,8 @@ class AllowedSettingValueServiceTest {
 
         Optional<AllowedSettingValue> actual = allowedSettingValueService.findById(1L);
 
-        assertThat(actual)
-            .isPresent()
-            .contains(allowedSettingValue);
+        assertTrue(actual.isPresent());
+        assertEquals(allowedSettingValue, actual.get());
 
         verify(allowedSettingValueRepository)
             .findById(1L);

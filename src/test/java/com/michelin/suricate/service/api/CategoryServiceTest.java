@@ -1,6 +1,9 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,8 +61,8 @@ class CategoryServiceTest {
 
         Page<Category> actual = categoryService.getAll("search", Pageable.unpaged());
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get()).hasSize(1);
+        assertFalse(actual.isEmpty());
+        assertEquals(1, actual.get().count());
 
         verify(categoryRepository)
             .findAll(Mockito.<CategorySearchSpecification>argThat(
@@ -80,9 +83,8 @@ class CategoryServiceTest {
 
         Category actual = categoryRepository.findByTechnicalName("technicalName");
 
-        assertThat(actual)
-            .isNotNull()
-            .isEqualTo(category);
+        assertNotNull(actual);
+        assertEquals(category, actual);
 
         verify(categoryRepository)
             .findByTechnicalName("technicalName");
@@ -184,8 +186,8 @@ class CategoryServiceTest {
 
         categoryService.addOrUpdateCategory(category);
 
-        assertThat(category.getId()).isEqualTo(2L);
-        assertThat(category.getImage().getId()).isEqualTo(1L);
+        assertEquals(2L, category.getId());
+        assertEquals(1L, category.getImage().getId());
 
         verify(assetService)
             .save(asset);
@@ -217,11 +219,11 @@ class CategoryServiceTest {
 
         List<WidgetParam> actual = categoryService.getCategoryParametersByWidget(widget);
 
-        assertThat(actual).hasSize(1);
-        assertThat(actual.get(0).getName()).isEqualTo("key");
-        assertThat(actual.get(0).getDefaultValue()).isEqualTo("value");
-        assertThat(actual.get(0).getType()).isEqualTo(DataTypeEnum.TEXT);
-        assertThat(actual.get(0).getDescription()).isEqualTo("key");
-        assertThat(actual.get(0).isRequired()).isTrue();
+        assertEquals(1, actual.size());
+        assertEquals("key", actual.getFirst().getName());
+        assertEquals("value", actual.getFirst().getDefaultValue());
+        assertEquals(DataTypeEnum.TEXT, actual.getFirst().getType());
+        assertEquals("key", actual.getFirst().getDescription());
+        assertTrue(actual.getFirst().isRequired());
     }
 }

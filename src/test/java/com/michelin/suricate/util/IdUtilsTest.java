@@ -1,7 +1,8 @@
 package com.michelin.suricate.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
@@ -39,9 +40,12 @@ class IdUtilsTest {
             mocked.when(SpringContextUtils::getApplicationContext)
                 .thenReturn(applicationContext);
 
-            assertThatThrownBy(() -> IdUtils.decrypt(null))
-                .isInstanceOf(ProjectTokenInvalidException.class)
-                .hasMessage("Cannot decrypt token : null");
+            ProjectTokenInvalidException exception = assertThrows(
+                ProjectTokenInvalidException.class,
+                () -> IdUtils.decrypt(null)
+            );
+
+            assertEquals("Cannot decrypt token : null", exception.getMessage());
         }
     }
 
@@ -66,7 +70,7 @@ class IdUtilsTest {
 
             Long actual = IdUtils.decrypt("token");
 
-            assertThat(actual).isEqualTo(10L);
+            assertEquals(10L, actual);
         }
     }
 
@@ -91,7 +95,7 @@ class IdUtilsTest {
 
             String actual = IdUtils.encrypt(null);
 
-            assertThat(actual).isNull();
+            assertNull(actual);
         }
     }
 
@@ -116,7 +120,7 @@ class IdUtilsTest {
 
             String actual = IdUtils.encrypt(10L);
 
-            assertThat(actual).isEqualTo("encrypted");
+            assertEquals("encrypted", actual);
         }
     }
 
@@ -141,7 +145,7 @@ class IdUtilsTest {
 
             String actual = IdUtils.encrypt(10L);
 
-            assertThat(actual).isNull();
+            assertNull(actual);
         }
     }
 }

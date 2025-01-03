@@ -1,6 +1,8 @@
 package com.michelin.suricate.util.web;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.servlet.http.Cookie;
 import java.util.Optional;
@@ -19,14 +21,13 @@ class CookieUtilsTest {
 
         Optional<Cookie> actual = CookieUtils.getCookie(request, "myCookie");
 
-        assertThat(actual)
-            .isPresent()
-            .contains(cookie);
+        assertTrue(actual.isPresent());
+        assertEquals(cookie, actual.get());
     }
 
     @Test
     void shouldGetCookieEmpty() {
-        assertThat(CookieUtils.getCookie(new MockHttpServletRequest(), "myCookie")).isEmpty();
+        assertTrue(CookieUtils.getCookie(new MockHttpServletRequest(), "myCookie").isEmpty());
     }
 
     @Test
@@ -36,7 +37,7 @@ class CookieUtilsTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setCookies(cookie);
 
-        assertThat(CookieUtils.getCookie(request, "myNotFoundCookie")).isEmpty();
+        assertTrue(CookieUtils.getCookie(request, "myNotFoundCookie").isEmpty());
     }
 
     @Test
@@ -47,13 +48,13 @@ class CookieUtilsTest {
 
         Cookie actual = response.getCookie("myCookie");
 
-        assertThat(actual).isNotNull();
-        assertThat(actual.getPath()).isEqualTo("/");
-        assertThat(actual.getName()).isEqualTo("myCookie");
-        assertThat(actual.getValue()).isEqualTo("value");
-        assertThat(actual.getMaxAge()).isEqualTo(10);
-        assertThat(actual.isHttpOnly()).isTrue();
-        assertThat(actual.getSecure()).isTrue();
+        assertNotNull(actual);
+        assertEquals("/", actual.getPath());
+        assertEquals("myCookie", actual.getName());
+        assertEquals("value", actual.getValue());
+        assertEquals(10, actual.getMaxAge());
+        assertTrue(actual.isHttpOnly());
+        assertTrue(actual.getSecure());
     }
 
     @Test
@@ -69,11 +70,11 @@ class CookieUtilsTest {
 
         Cookie actual = response.getCookie("myCookie");
 
-        assertThat(actual).isNotNull();
-        assertThat(actual.getName()).isEqualTo("myCookie");
-        assertThat(actual.getValue()).isEmpty();
-        assertThat(actual.getPath()).isEqualTo("/");
-        assertThat(actual.getMaxAge()).isZero();
+        assertNotNull(actual);
+        assertEquals("/", actual.getPath());
+        assertEquals("myCookie", actual.getName());
+        assertTrue(actual.getValue().isEmpty());
+        assertEquals(0, actual.getMaxAge());
     }
 
     @Test
@@ -90,17 +91,17 @@ class CookieUtilsTest {
 
         Cookie actual = response.getCookie("myCookie");
 
-        assertThat(actual).isNotNull();
-        assertThat(actual.getName()).isEqualTo("myCookie");
-        assertThat(actual.getValue()).isEqualTo("value");
+        assertNotNull(actual);
+        assertEquals("myCookie", actual.getName());
+        assertEquals("value", actual.getValue());
     }
 
     @Test
     void shouldSerialize() {
-        assertThat(CookieUtils.serialize(new Cookie("myCookie", "value"))).isEqualTo(
-            "rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
-                + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
-                + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU=");
+        assertEquals("rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
+            + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
+            + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU=",
+            CookieUtils.serialize(new Cookie("myCookie", "value")));
     }
 
     @Test
@@ -112,8 +113,8 @@ class CookieUtilsTest {
 
         Cookie deserialized = CookieUtils.deserialize(cookie, Cookie.class);
 
-        assertThat(deserialized).isNotNull();
-        assertThat(deserialized.getName()).isEqualTo("myCookie");
-        assertThat(deserialized.getValue()).isEqualTo("value");
+        assertNotNull(deserialized);
+        assertEquals("myCookie", deserialized.getName());
+        assertEquals("value", deserialized.getValue());
     }
 }

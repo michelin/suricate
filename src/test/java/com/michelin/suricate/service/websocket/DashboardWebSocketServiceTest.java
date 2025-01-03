@@ -3,10 +3,12 @@ package com.michelin.suricate.service.websocket;
 import static com.michelin.suricate.model.enumeration.UpdateType.CONNECT_DASHBOARD;
 import static com.michelin.suricate.model.enumeration.UpdateType.DISCONNECT;
 import static com.michelin.suricate.model.enumeration.UpdateType.RELOAD;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -156,7 +158,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
 
-        assertThat(actual).contains(websocketClient);
+        assertTrue(actual.contains(websocketClient));
 
         verify(jsExecutionService)
             .getJsExecutionsByProject(project);
@@ -183,7 +185,8 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         Optional<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsBySessionId("session");
 
-        assertThat(actual).contains(websocketClient);
+        assertTrue(actual.isPresent());
+        assertEquals(websocketClient, actual.get());
 
         verify(jsExecutionService)
             .getJsExecutionsByProject(project);
@@ -210,7 +213,7 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         int actual = dashboardWebSocketService.countWebsocketClients();
 
-        assertThat(actual).isEqualTo(1);
+        assertEquals(1, actual);
 
         verify(jsExecutionService)
             .getJsExecutionsByProject(project);
@@ -239,7 +242,8 @@ class DashboardWebSocketServiceTest {
         Optional<WebsocketClient> actual =
             dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId("session", "subscription");
 
-        assertThat(actual).contains(websocketClient);
+        assertTrue(actual.isPresent());
+        assertEquals(websocketClient, actual.get());
     }
 
     @Test
@@ -263,12 +267,12 @@ class DashboardWebSocketServiceTest {
         Optional<WebsocketClient> actual = dashboardWebSocketService
             .getWebsocketClientsBySessionIdAndSubscriptionId("unknownSession", "unknownSubscription");
 
-        assertThat(actual).isEmpty();
+        assertTrue(actual.isEmpty());
 
         actual = dashboardWebSocketService
             .getWebsocketClientsBySessionIdAndSubscriptionId("session", "unknownSubscription");
 
-        assertThat(actual).isEmpty();
+        assertTrue(actual.isEmpty());
     }
 
     @Test
@@ -291,12 +295,12 @@ class DashboardWebSocketServiceTest {
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
-        assertThat(actual).contains(websocketClient);
+        assertTrue(actual.contains(websocketClient));
 
         dashboardWebSocketService.removeClientFromProject(websocketClient);
 
         actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
-        assertThat(actual).isEmpty();
+        assertTrue(actual.isEmpty());
 
         verify(jsExecutionService)
             .getJsExecutionsByProject(project);
@@ -334,14 +338,14 @@ class DashboardWebSocketServiceTest {
         dashboardWebSocketService.addClientToProject(project, websocketClient2);
         List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
 
-        assertThat(actual)
-            .contains(websocketClient)
-            .contains(websocketClient2);
+        assertTrue(actual.contains(websocketClient));
+        assertTrue(actual.contains(websocketClient2));
 
         dashboardWebSocketService.removeClientFromProject(websocketClient);
 
         actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
-        assertThat(actual).contains(websocketClient2);
+
+        assertTrue(actual.contains(websocketClient2));
 
         verify(jsExecutionService)
             .getJsExecutionsByProject(project);
@@ -399,7 +403,7 @@ class DashboardWebSocketServiceTest {
     void shouldNotReloadAllConnectedClientsToProjectWhenEmpty() {
         dashboardWebSocketService.reloadAllConnectedClientsToProject("token");
 
-        verify(simpMessagingTemplate, times(0))
+        verify(simpMessagingTemplate, never())
             .convertAndSendToUser(any(), any(), any());
     }
 }

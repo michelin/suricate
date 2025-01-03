@@ -18,7 +18,9 @@
 
 package com.michelin.suricate.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.michelin.suricate.model.entity.AllowedSettingValue;
 import com.michelin.suricate.model.entity.Role;
@@ -71,17 +73,17 @@ class PostgreSqlIntegrationTest {
     void shouldContainsSettings() {
         Optional<List<Setting>> actual = settingRepository.findAllByOrderByDescription();
 
-        assertThat(actual).isPresent();
-        assertThat(actual.get()).hasSize(2);
-        assertThat(actual.get().get(0).isConstrained()).isTrue();
-        assertThat(actual.get().get(0).getDataType()).isEqualTo(DataTypeEnum.COMBO);
-        assertThat(actual.get().get(0).getType()).isEqualTo(SettingType.LANGUAGE);
-        assertThat(actual.get().get(0).getDescription()).isEqualTo("Language");
+        assertTrue(actual.isPresent());
+        assertEquals(2, actual.get().size());
+        assertTrue(actual.get().getFirst().isConstrained());
+        assertEquals(DataTypeEnum.COMBO, actual.get().getFirst().getDataType());
+        assertEquals(SettingType.LANGUAGE, actual.get().getFirst().getType());
+        assertEquals("Language", actual.get().getFirst().getDescription());
 
-        assertThat(actual.get().get(1).isConstrained()).isTrue();
-        assertThat(actual.get().get(1).getDataType()).isEqualTo(DataTypeEnum.COMBO);
-        assertThat(actual.get().get(1).getType()).isEqualTo(SettingType.THEME);
-        assertThat(actual.get().get(1).getDescription()).isEqualTo("Theme");
+        assertTrue(actual.get().get(1).isConstrained());
+        assertEquals(DataTypeEnum.COMBO, actual.get().get(1).getDataType());
+        assertEquals(SettingType.THEME, actual.get().get(1).getType());
+        assertEquals("Theme", actual.get().get(1).getDescription());
     }
 
     @Test
@@ -91,28 +93,28 @@ class PostgreSqlIntegrationTest {
         List<AllowedSettingValue> actualAllowedSettingValues = new ArrayList<>();
         allowedSettingValueRepository.findAll().forEach(actualAllowedSettingValues::add);
 
-        assertThat(actual).isPresent();
+        assertTrue(actual.isPresent());
 
-        assertThat(actualAllowedSettingValues).hasSize(4);
-        assertThat(actualAllowedSettingValues.get(0).getTitle()).isEqualTo("Default");
-        assertThat(actualAllowedSettingValues.get(0).getValue()).isEqualTo("default-theme");
-        assertThat(actualAllowedSettingValues.get(0).isDefault()).isTrue();
-        assertThat(actualAllowedSettingValues.get(0).getSetting()).isEqualTo(actual.get().get(1));
+        assertEquals(4, actualAllowedSettingValues.size());
+        assertEquals("Default", actualAllowedSettingValues.getFirst().getTitle());
+        assertEquals("default-theme", actualAllowedSettingValues.getFirst().getValue());
+        assertTrue(actualAllowedSettingValues.getFirst().isDefault());
+        assertEquals(actual.get().get(1), actualAllowedSettingValues.getFirst().getSetting());
 
-        assertThat(actualAllowedSettingValues.get(1).getTitle()).isEqualTo("Dark");
-        assertThat(actualAllowedSettingValues.get(1).getValue()).isEqualTo("dark-theme");
-        assertThat(actualAllowedSettingValues.get(1).isDefault()).isFalse();
-        assertThat(actualAllowedSettingValues.get(1).getSetting()).isEqualTo(actual.get().get(1));
+        assertEquals("Dark", actualAllowedSettingValues.get(1).getTitle());
+        assertEquals("dark-theme", actualAllowedSettingValues.get(1).getValue());
+        assertFalse(actualAllowedSettingValues.get(1).isDefault());
+        assertEquals(actual.get().get(1), actualAllowedSettingValues.get(1).getSetting());
 
-        assertThat(actualAllowedSettingValues.get(2).getTitle()).isEqualTo("English");
-        assertThat(actualAllowedSettingValues.get(2).getValue()).isEqualTo("en");
-        assertThat(actualAllowedSettingValues.get(2).isDefault()).isTrue();
-        assertThat(actualAllowedSettingValues.get(2).getSetting()).isEqualTo(actual.get().get(0));
+        assertEquals("English", actualAllowedSettingValues.get(2).getTitle());
+        assertEquals("en", actualAllowedSettingValues.get(2).getValue());
+        assertTrue(actualAllowedSettingValues.get(2).isDefault());
+        assertEquals(actual.get().getFirst(), actualAllowedSettingValues.get(2).getSetting());
 
-        assertThat(actualAllowedSettingValues.get(3).getTitle()).isEqualTo("Français");
-        assertThat(actualAllowedSettingValues.get(3).getValue()).isEqualTo("fr");
-        assertThat(actualAllowedSettingValues.get(3).isDefault()).isFalse();
-        assertThat(actualAllowedSettingValues.get(3).getSetting()).isEqualTo(actual.get().get(0));
+        assertEquals("Français", actualAllowedSettingValues.get(3).getTitle());
+        assertEquals("fr", actualAllowedSettingValues.get(3).getValue());
+        assertFalse(actualAllowedSettingValues.get(3).isDefault());
+        assertEquals(actual.get().getFirst(), actualAllowedSettingValues.get(3).getSetting());
     }
 
     @Test
@@ -120,11 +122,11 @@ class PostgreSqlIntegrationTest {
         List<Role> actual = new ArrayList<>();
         roleRepository.findAll().forEach(actual::add);
 
-        assertThat(actual).hasSize(2);
-        assertThat(actual.get(0).getDescription()).isEqualTo("Administrator Role");
-        assertThat(actual.get(0).getName()).isEqualTo("ROLE_ADMIN");
+        assertEquals(2, actual.size());
+        assertEquals("Administrator Role", actual.getFirst().getDescription());
+        assertEquals("ROLE_ADMIN", actual.getFirst().getName());
 
-        assertThat(actual.get(1).getDescription()).isEqualTo("User role");
-        assertThat(actual.get(1).getName()).isEqualTo("ROLE_USER");
+        assertEquals("User role", actual.get(1).getDescription());
+        assertEquals("ROLE_USER", actual.get(1).getName());
     }
 }

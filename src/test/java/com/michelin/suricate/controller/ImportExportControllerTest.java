@@ -1,6 +1,8 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
@@ -79,11 +81,11 @@ class ImportExportControllerTest {
 
         ResponseEntity<ImportExportDto> actual = importExportController.exports();
 
-        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isNotNull();
-        assertThat(actual.getBody().getRepositories().get(0)).isEqualTo(importExportRepositoryDto);
-        assertThat(actual.getBody().getProjects().get(0)).isEqualTo(importExportProjectDto);
+        assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertEquals(importExportRepositoryDto, actual.getBody().getRepositories().getFirst());
+        assertEquals(importExportProjectDto, actual.getBody().getProjects().getFirst());
     }
 
     @Test
@@ -126,9 +128,9 @@ class ImportExportControllerTest {
 
         ResponseEntity<Void> actual = importExportController.imports(localUser, importExportDto);
 
-        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isNull();
+        assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNull(actual.getBody());
 
         verify(repositoryMapper)
             .toRepositoryEntity(importExportRepositoryDto);

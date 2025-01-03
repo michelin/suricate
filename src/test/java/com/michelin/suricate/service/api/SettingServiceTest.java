@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,9 +35,8 @@ class SettingServiceTest {
 
         Optional<Setting> actual = settingService.getOneById(1L);
 
-        assertThat(actual)
-            .isPresent()
-            .contains(setting);
+        assertTrue(actual.isPresent());
+        assertEquals(setting, actual.get());
 
         verify(settingRepository)
             .findById(1L);
@@ -53,10 +53,8 @@ class SettingServiceTest {
 
         Optional<List<Setting>> actual = settingService.getAll();
 
-        assertThat(actual).isPresent();
-        assertThat(actual.get())
-            .isNotEmpty()
-            .contains(setting);
+        assertTrue(actual.isPresent());
+        assertEquals(setting, actual.get().getFirst());
 
         verify(settingRepository)
             .findAllByOrderByDescription();

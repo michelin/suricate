@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.verify;
@@ -41,9 +42,8 @@ class PersonalAccessTokenServiceTest {
 
         List<PersonalAccessToken> actual = personalAccessTokenService.findAllByUser(user);
 
-        assertThat(actual)
-            .hasSize(1)
-            .contains(personalAccessToken);
+        assertEquals(1, actual.size());
+        assertTrue(actual.contains(personalAccessToken));
 
         verify(personalAccessTokenRepository)
             .findAllByUser(user);
@@ -62,9 +62,8 @@ class PersonalAccessTokenServiceTest {
 
         Optional<PersonalAccessToken> actual = personalAccessTokenService.findByNameAndUser("name", user);
 
-        assertThat(actual)
-            .isPresent()
-            .contains(personalAccessToken);
+        assertTrue(actual.isPresent());
+        assertEquals(personalAccessToken, actual.get());
 
         verify(personalAccessTokenRepository)
             .findByNameAndUser("name", user);
@@ -80,9 +79,8 @@ class PersonalAccessTokenServiceTest {
 
         Optional<PersonalAccessToken> actual = personalAccessTokenService.findByChecksum(1L);
 
-        assertThat(actual)
-            .isPresent()
-            .contains(personalAccessToken);
+        assertTrue(actual.isPresent());
+        assertEquals(personalAccessToken, actual.get());
 
         verify(personalAccessTokenRepository)
             .findByChecksum(1L);
@@ -107,9 +105,9 @@ class PersonalAccessTokenServiceTest {
 
         PersonalAccessToken actual = personalAccessTokenService.create("token", 1L, localUser);
 
-        assertThat(actual.getName()).isEqualTo("token");
-        assertThat(actual.getChecksum()).isEqualTo(1L);
-        assertThat(actual.getUser()).isEqualTo(localUser.getUser());
+        assertEquals("token", actual.getName());
+        assertEquals(1L, actual.getChecksum());
+        assertEquals(localUser.getUser(), actual.getUser());
 
         verify(personalAccessTokenRepository)
             .save(argThat(createdPersonalAccessToken -> createdPersonalAccessToken.getName().equals("token")

@@ -1,7 +1,10 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -55,9 +58,9 @@ class RoleControllerTest {
 
         Page<RoleResponseDto> actual = roleController.getRoles("search", Pageable.unpaged());
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get()).hasSize(1);
-        assertThat(actual.get().toList().get(0)).isEqualTo(roleResponseDto);
+        assertFalse(actual.isEmpty());
+        assertEquals(1, actual.get().count());
+        assertEquals(roleResponseDto, actual.get().toList().getFirst());
     }
 
     @Test
@@ -65,9 +68,12 @@ class RoleControllerTest {
         when(roleService.getOneById(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> roleController.getOne(1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Role '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> roleController.getOne(1L)
+        );
+
+        assertEquals("Role '1' not found", exception.getMessage());
     }
 
     @Test
@@ -85,8 +91,8 @@ class RoleControllerTest {
 
         ResponseEntity<RoleResponseDto> actual = roleController.getOne(1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(roleResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(roleResponseDto, actual.getBody());
     }
 
     @Test
@@ -94,9 +100,12 @@ class RoleControllerTest {
         when(roleService.getOneById(any()))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> roleController.getUsersByRole(1L))
-            .isInstanceOf(ObjectNotFoundException.class)
-            .hasMessage("Role '1' not found");
+        ObjectNotFoundException exception = assertThrows(
+            ObjectNotFoundException.class,
+            () -> roleController.getUsersByRole(1L)
+        );
+
+        assertEquals("Role '1' not found", exception.getMessage());
     }
 
     @Test
@@ -114,7 +123,8 @@ class RoleControllerTest {
 
         ResponseEntity<List<UserResponseDto>> actual = roleController.getUsersByRole(1L);
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).contains(userResponseDto);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertTrue(actual.getBody().contains(userResponseDto));
     }
 }

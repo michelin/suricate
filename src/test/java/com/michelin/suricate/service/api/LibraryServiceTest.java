@@ -1,9 +1,13 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,9 +61,8 @@ class LibraryServiceTest {
 
         Page<Library> actual = libraryService.getAll("search", Pageable.unpaged());
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(library);
+        assertFalse(actual.isEmpty());
+        assertTrue(actual.getContent().contains(library));
 
         verify(libraryRepository)
             .findAll(Mockito.<LibrarySearchSpecification>argThat(
@@ -75,9 +78,9 @@ class LibraryServiceTest {
 
         List<Library> actual = libraryService.getLibrariesByProject(project);
 
-        assertThat(actual).isEmpty();
+        assertTrue(actual.isEmpty());
 
-        verify(libraryRepository, times(0))
+        verify(libraryRepository, never())
             .findDistinctByWidgetsIdIn(any());
     }
 
@@ -102,9 +105,8 @@ class LibraryServiceTest {
 
         List<Library> actual = libraryService.getLibrariesByProject(project);
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(library);
+        assertFalse(actual.isEmpty());
+        assertTrue(actual.contains(library));
 
         verify(libraryRepository)
             .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
@@ -137,9 +139,9 @@ class LibraryServiceTest {
                 .thenReturn(Collections.singletonList(library));
 
             List<String> actual = libraryService.getLibraryTokensByProject(project);
-            assertThat(actual)
-                .isNotEmpty()
-                .contains("token");
+
+            assertFalse(actual.isEmpty());
+            assertTrue(actual.contains("token"));
 
             verify(libraryRepository)
                 .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
@@ -150,15 +152,15 @@ class LibraryServiceTest {
     void shouldCreateUpdateLibrariesWhenNull() {
         List<Library> actual = libraryService.createUpdateLibraries(null);
 
-        assertThat(actual).isEmpty();
+        assertTrue(actual.isEmpty());
 
-        verify(libraryRepository, times(0))
+        verify(libraryRepository, never())
             .findByTechnicalName(any());
-        verify(assetService, times(0))
+        verify(assetService, never())
             .save(any());
-        verify(libraryRepository, times(0))
+        verify(libraryRepository, never())
             .saveAll(any());
-        verify(libraryRepository, times(0))
+        verify(libraryRepository, never())
             .findAll();
     }
 
@@ -182,9 +184,8 @@ class LibraryServiceTest {
 
         List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(library);
+        assertFalse(actual.isEmpty());
+        assertTrue(actual.contains(library));
 
         verify(libraryRepository)
             .findByTechnicalName("technicalName");
@@ -210,9 +211,8 @@ class LibraryServiceTest {
 
         List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
 
-        assertThat(actual)
-            .isNotEmpty()
-            .contains(library);
+        assertFalse(actual.isEmpty());
+        assertTrue(actual.contains(library));
 
         verify(libraryRepository)
             .findByTechnicalName("technicalName");
@@ -248,10 +248,10 @@ class LibraryServiceTest {
 
         List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get(0)).isEqualTo(library);
-        assertThat(actual.get(0).getId()).isEqualTo(2L);
-        assertThat(actual.get(0).getAsset().getId()).isEqualTo(2L);
+        assertFalse(actual.isEmpty());
+        assertEquals(library, actual.getFirst());
+        assertEquals(2L, actual.getFirst().getId());
+        assertEquals(2L, actual.getFirst().getAsset().getId());
 
         verify(libraryRepository)
             .findByTechnicalName("technicalName");
@@ -283,10 +283,10 @@ class LibraryServiceTest {
 
         List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.get(0)).isEqualTo(library);
-        assertThat(actual.get(0).getId()).isEqualTo(2L);
-        assertThat(actual.get(0).getAsset()).isNotNull();
+        assertFalse(actual.isEmpty());
+        assertEquals(library, actual.getFirst());
+        assertEquals(2L, actual.getFirst().getId());
+        assertNotNull(actual.getFirst().getAsset());
 
         verify(libraryRepository)
             .findByTechnicalName("technicalName");

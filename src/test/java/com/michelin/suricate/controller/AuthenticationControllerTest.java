@@ -1,6 +1,7 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,10 +49,10 @@ class AuthenticationControllerTest {
 
         ResponseEntity<JwtAuthenticationResponseDto> actual = authenticationController.signIn(signInRequestDto);
 
-        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isNotNull();
-        assertThat(actual.getBody().getAccessToken()).isEqualTo("token");
+        assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertNotNull(actual.getBody());
+        assertEquals("token", actual.getBody().getAccessToken());
 
         verify(authenticationManager)
             .authenticate(Mockito.<UsernamePasswordAuthenticationToken>argThat(auth ->

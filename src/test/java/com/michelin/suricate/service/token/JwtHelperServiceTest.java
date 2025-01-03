@@ -1,7 +1,9 @@
 package com.michelin.suricate.service.token;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.michelin.suricate.model.entity.Role;
@@ -95,16 +97,19 @@ class JwtHelperServiceTest {
             }
         };
 
-        assertThatThrownBy(() -> jwtHelperService.createToken(authentication))
-            .isInstanceOf(WeakKeyException.class)
-            .hasMessage("The specified key byte array is 56 bits which "
-                + "is not secure enough for any JWT HMAC-SHA algorithm.  "
-                + "The JWT JWA Specification (RFC 7518, Section 3.2) states "
-                + "that keys used with HMAC-SHA algorithms MUST have a size >= 256 bits "
-                + "(the key size must be greater than or equal to the hash output size).  "
-                + "Consider using the Jwts.SIG.HS256.key() builder (or HS384.key() or HS512.key()) "
-                + "to create a key guaranteed to be secure enough for your preferred HMAC-SHA algorithm.  "
-                + "See https://tools.ietf.org/html/rfc7518#section-3.2 for more information.");
+        WeakKeyException exception = assertThrows(
+            WeakKeyException.class,
+            () -> jwtHelperService.createToken(authentication)
+        );
+
+        assertEquals("The specified key byte array is 56 bits which "
+            + "is not secure enough for any JWT HMAC-SHA algorithm.  "
+            + "The JWT JWA Specification (RFC 7518, Section 3.2) states "
+            + "that keys used with HMAC-SHA algorithms MUST have a size >= 256 bits "
+            + "(the key size must be greater than or equal to the hash output size).  "
+            + "Consider using the Jwts.SIG.HS256.key() builder (or HS384.key() or HS512.key()) "
+            + "to create a key guaranteed to be secure enough for your preferred HMAC-SHA algorithm.  "
+            + "See https://tools.ietf.org/html/rfc7518#section-3.2 for more information.", exception.getMessage());
     }
 
     @Test
@@ -173,7 +178,7 @@ class JwtHelperServiceTest {
 
         String actual = jwtHelperService.createToken(authentication);
 
-        assertThat(actual).startsWith("eyJhbGciOiJIUzI1NiJ9");
+        assertTrue(actual.startsWith("eyJhbGciOiJIUzI1NiJ9"));
     }
 
     @Test
@@ -236,13 +241,13 @@ class JwtHelperServiceTest {
 
             @Override
             public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
+                // Do nothing
             }
         };
 
         String actual = jwtHelperService.getUsernameFromToken(jwtHelperService.createToken(authentication));
 
-        assertThat(actual).isEqualTo("username");
+        assertEquals("username", actual);
     }
 
     @Test
@@ -311,7 +316,7 @@ class JwtHelperServiceTest {
 
         boolean actual = jwtHelperService.validateToken(jwtHelperService.createToken(authentication));
 
-        assertThat(actual).isTrue();
+        assertTrue(actual);
     }
 
     @Test
@@ -384,13 +389,13 @@ class JwtHelperServiceTest {
 
             @Override
             public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
+                // Do nothing
             }
         };
 
         boolean actual = jwtHelperService.validateToken(jwtHelperService.createToken(authentication));
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -410,7 +415,7 @@ class JwtHelperServiceTest {
                 + "wiYXZhdGFyX3VybCI6ImF2YXRhciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLC"
                 + "JlbWFpbCI6ImVtYWlsIn0.hWX18w6n-_4LDN66iSv1t5itKHd-0QcZQdB1BADvObE");
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 
     @Test
@@ -426,6 +431,6 @@ class JwtHelperServiceTest {
 
         boolean actual = jwtHelperService.validateToken("malformedJWT");
 
-        assertThat(actual).isFalse();
+        assertFalse(actual);
     }
 }

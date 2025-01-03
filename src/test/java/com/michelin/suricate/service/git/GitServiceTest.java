@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.git;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyList;
@@ -260,8 +261,10 @@ class GitServiceTest {
         repository.setType(RepositoryTypeEnum.LOCAL);
         repository.setLocalPath("unknown");
 
-        assertThatThrownBy(() -> gitService.readWidgetRepositories(Collections.singletonList(repository)))
-            .isInstanceOf(IOException.class);
+        assertThrows(
+            IOException.class,
+            () -> gitService.readWidgetRepositories(Collections.singletonList(repository))
+        );
 
         verify(jsExecutionScheduler)
             .init();
@@ -321,9 +324,12 @@ class GitServiceTest {
         when(applicationProperties.getWidgets())
             .thenReturn(widgetsProperties);
 
-        assertThatThrownBy(() -> gitService.readWidgetRepositories(Collections.singletonList(repository)))
-            .isInstanceOf(Exception.class)
-            .hasMessage("Exception caught during execution of fetch command");
+        Exception exception = assertThrows(
+            Exception.class,
+            () -> gitService.readWidgetRepositories(Collections.singletonList(repository))
+        );
+
+        assertEquals("Exception caught during execution of fetch command", exception.getMessage());
 
         verify(jsExecutionScheduler)
             .init();

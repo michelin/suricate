@@ -1,6 +1,6 @@
 package com.michelin.suricate.service.js.task;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyLong;
@@ -137,7 +137,7 @@ class JsResultAsyncTaskTest {
 
         task.call();
 
-        assertThat(Thread.currentThread().isInterrupted()).isTrue();
+        assertTrue(Thread.currentThread().isInterrupted());
 
         verify(scheduledFuture)
             .get(60, TimeUnit.SECONDS);

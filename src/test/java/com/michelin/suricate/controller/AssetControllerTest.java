@@ -1,6 +1,7 @@
 package com.michelin.suricate.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -45,7 +46,7 @@ class AssetControllerTest {
 
         ResponseEntity<byte[]> actual = assetController.getAsset(webRequest, "token");
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NOT_MODIFIED);
+        assertEquals(HttpStatus.NOT_MODIFIED, actual.getStatusCode());
 
         verify(assetService)
             .getAssetById("token");
@@ -69,11 +70,11 @@ class AssetControllerTest {
 
         ResponseEntity<byte[]> actual = assetController.getAsset(webRequest, "token");
 
-        assertThat(actual.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(actual.getHeaders().getContentLength()).isEqualTo(10L);
-        assertThat(actual.getHeaders().getLastModified()).isEqualTo(946688400000L);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isEqualTo(new byte[10]);
+        assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
+        assertEquals(10L, actual.getHeaders().getContentLength());
+        assertEquals(946688400000L, actual.getHeaders().getLastModified());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertArrayEquals(new byte[10], actual.getBody());
 
         verify(assetService)
             .getAssetById("token");

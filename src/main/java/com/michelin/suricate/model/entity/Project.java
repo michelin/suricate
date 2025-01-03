@@ -87,8 +87,11 @@ public class Project extends AbstractAuditingEntity<Long> {
 
     @ToString.Exclude
     @ManyToMany
-    @JoinTable(name = "user_project", joinColumns = {@JoinColumn(name = "project_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "user_id")})
+    @JoinTable(
+        name = "user_project",
+        joinColumns = {@JoinColumn(name = "project_id")},
+        inverseJoinColumns = {@JoinColumn(name = "user_id")}
+    )
     private Set<User> users = new LinkedHashSet<>();
 
     /**

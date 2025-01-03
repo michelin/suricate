@@ -1,7 +1,7 @@
 package com.michelin.suricate.security.oauth2;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,9 +57,12 @@ class Oauth2UserServiceTest {
             .userNameAttributeName("username")
             .build();
 
-        OAuth2AccessToken token =
-            new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", Instant.parse("2000-01-01T01:00:00.00Z"),
-                Instant.parse("2000-01-02T01:00:00.00Z"));
+        OAuth2AccessToken token = new OAuth2AccessToken(
+            OAuth2AccessToken.TokenType.BEARER,
+            "token",
+            Instant.parse("2000-01-01T01:00:00.00Z"),
+            Instant.parse("2000-01-02T01:00:00.00Z")
+        );
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
@@ -69,9 +72,12 @@ class Oauth2UserServiceTest {
         when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
             .thenReturn(ResponseEntity.ok(attributes));
 
-        assertThatThrownBy(() -> oauth2UserService.loadUser(request))
-            .isInstanceOf(Oauth2AuthenticationProcessingException.class)
-            .hasMessage("ID provider unknownIDP is not recognized");
+        Oauth2AuthenticationProcessingException exception = assertThrows(
+            Oauth2AuthenticationProcessingException.class,
+            () -> oauth2UserService.loadUser(request)
+        );
+
+        assertEquals("ID provider unknownIDP is not recognized", exception.getMessage());
     }
 
     @Test
@@ -99,9 +105,12 @@ class Oauth2UserServiceTest {
         when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
             .thenReturn(ResponseEntity.ok(attributes));
 
-        assertThatThrownBy(() -> oauth2UserService.loadUser(request))
-            .isInstanceOf(Oauth2AuthenticationProcessingException.class)
-            .hasMessage("Username not found from gitlab");
+        Oauth2AuthenticationProcessingException exception = assertThrows(
+            Oauth2AuthenticationProcessingException.class,
+            () -> oauth2UserService.loadUser(request)
+        );
+
+        assertEquals("Username not found from gitlab", exception.getMessage());
     }
 
     @Test
@@ -124,15 +133,21 @@ class Oauth2UserServiceTest {
             .userNameAttributeName("username")
             .build();
 
-        OAuth2AccessToken token =
-            new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", Instant.parse("2000-01-01T01:00:00.00Z"),
-                Instant.parse("2000-01-02T01:00:00.00Z"));
+        OAuth2AccessToken token = new OAuth2AccessToken(
+            OAuth2AccessToken.TokenType.BEARER,
+            "token",
+            Instant.parse("2000-01-01T01:00:00.00Z"),
+            Instant.parse("2000-01-02T01:00:00.00Z")
+        );
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
-        assertThatThrownBy(() -> oauth2UserService.loadUser(request))
-            .isInstanceOf(Oauth2AuthenticationProcessingException.class)
-            .hasMessage("Email not found from Gitlab");
+        Oauth2AuthenticationProcessingException exception = assertThrows(
+            Oauth2AuthenticationProcessingException.class,
+            () -> oauth2UserService.loadUser(request)
+        );
+
+        assertEquals("Email not found from Gitlab", exception.getMessage());
     }
 
     @Test
@@ -174,21 +189,24 @@ class Oauth2UserServiceTest {
             .userNameAttributeName("username")
             .build();
 
-        OAuth2AccessToken token =
-            new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", Instant.parse("2000-01-01T01:00:00.00Z"),
-                Instant.parse("2000-01-02T01:00:00.00Z"));
+        OAuth2AccessToken token = new OAuth2AccessToken(
+            OAuth2AccessToken.TokenType.BEARER,
+            "token",
+            Instant.parse("2000-01-01T01:00:00.00Z"),
+            Instant.parse("2000-01-02T01:00:00.00Z")
+        );
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
         LocalUser actual = (LocalUser) oauth2UserService.loadUser(request);
 
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getAttributes()).containsEntry("username", "myUsername");
-        assertThat(actual.getAttributes()).containsEntry("email", "myEmail");
-        assertThat(actual.getAttributes()).containsEntry("name", "myFirstName myLastName");
-        assertThat(actual.getAttributes()).containsEntry("avatar_url", "myAvatar");
-        assertThat(actual.getUser()).isEqualTo(createdUser);
+        assertEquals("username", actual.getUsername());
+        assertEquals("password", actual.getPassword());
+        assertEquals("myUsername", actual.getAttributes().get("username"));
+        assertEquals("myEmail", actual.getAttributes().get("email"));
+        assertEquals("myFirstName myLastName", actual.getAttributes().get("name"));
+        assertEquals("myAvatar", actual.getAttributes().get("avatar_url"));
+        assertEquals(createdUser, actual.getUser());
         verify(userService)
             .registerUser("myUsername", "myFirstName", "myLastName", "myEmail", "myAvatar",
                 AuthenticationProvider.GITLAB);
@@ -237,22 +255,24 @@ class Oauth2UserServiceTest {
             .userNameAttributeName("username")
             .build();
 
-        OAuth2AccessToken token =
-            new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", Instant.parse("2000-01-01T01:00:00.00Z"),
-                Instant.parse("2000-01-02T01:00:00.00Z"));
+        OAuth2AccessToken token = new OAuth2AccessToken(
+            OAuth2AccessToken.TokenType.BEARER,
+            "token",
+            Instant.parse("2000-01-01T01:00:00.00Z"),
+            Instant.parse("2000-01-02T01:00:00.00Z")
+        );
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
         LocalUser actual = (LocalUser) oauth2UserService.loadUser(request);
 
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getAttributes()).containsEntry("username", "myUsername");
-        assertThat(actual.getAttributes()).containsEntry("login", "myUsername");
-        assertThat(actual.getAttributes()).containsEntry("email", "myEmail");
-        assertThat(actual.getAttributes()).containsEntry("name", "MYLASTNAME myFirstName");
-        assertThat(actual.getAttributes()).containsEntry("picture", "myPicture");
-        assertThat(actual.getUser()).isEqualTo(createdUser);
+        assertEquals("username", actual.getUsername());
+        assertEquals("password", actual.getPassword());
+        assertEquals("myUsername", actual.getAttributes().get("username"));
+        assertEquals("myEmail", actual.getAttributes().get("email"));
+        assertEquals("MYLASTNAME myFirstName", actual.getAttributes().get("name"));
+        assertEquals("myPicture", actual.getAttributes().get("picture"));
+        assertEquals(createdUser, actual.getUser());
         verify(userService)
             .registerUser("myUsername", "myFirstName", "MYLASTNAME", "myEmail", "myPicture",
                 AuthenticationProvider.GITLAB);
@@ -291,20 +311,23 @@ class Oauth2UserServiceTest {
             .userNameAttributeName("username")
             .build();
 
-        OAuth2AccessToken token =
-            new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", Instant.parse("2000-01-01T01:00:00.00Z"),
-                Instant.parse("2000-01-02T01:00:00.00Z"));
+        OAuth2AccessToken token = new OAuth2AccessToken(
+            OAuth2AccessToken.TokenType.BEARER,
+            "token",
+            Instant.parse("2000-01-01T01:00:00.00Z"),
+            Instant.parse("2000-01-02T01:00:00.00Z")
+        );
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
         LocalUser actual = (LocalUser) oauth2UserService.loadUser(request);
 
-        assertThat(actual.getUsername()).isEqualTo("username");
-        assertThat(actual.getPassword()).isEqualTo("password");
-        assertThat(actual.getAttributes()).containsEntry("username", "myUsername");
-        assertThat(actual.getAttributes()).containsEntry("login", "myUsername");
-        assertThat(actual.getAttributes()).containsEntry("email", "myEmail");
-        assertThat(actual.getUser()).isEqualTo(createdUser);
+        assertEquals("username", actual.getUsername());
+        assertEquals("password", actual.getPassword());
+        assertEquals("myUsername", actual.getAttributes().get("username"));
+        assertEquals("myUsername", actual.getAttributes().get("login"));
+        assertEquals("myEmail", actual.getAttributes().get("email"));
+        assertEquals(createdUser, actual.getUser());
         verify(userService)
             .registerUser("myUsername", null, null, "myEmail", null, AuthenticationProvider.GITLAB);
     }

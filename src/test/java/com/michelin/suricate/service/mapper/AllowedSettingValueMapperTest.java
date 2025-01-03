@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.michelin.suricate.model.dto.api.setting.AllowedSettingValueResponseDto;
 import com.michelin.suricate.model.entity.AllowedSettingValue;
@@ -26,10 +27,10 @@ class AllowedSettingValueMapperTest {
 
         AllowedSettingValueResponseDto actual = allowedSettingValueMapper.toAllowedSettingValueDto(allowedSettingValue);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.isDefault()).isTrue();
-        assertThat(actual.getTitle()).isEqualTo("title");
-        assertThat(actual.getValue()).isEqualTo("value");
+        assertEquals(1L, actual.getId());
+        assertTrue(actual.isDefault());
+        assertEquals("title", actual.getTitle());
+        assertEquals("value", actual.getValue());
     }
 
     @Test
@@ -43,9 +44,9 @@ class AllowedSettingValueMapperTest {
         List<AllowedSettingValueResponseDto> actual =
             allowedSettingValueMapper.toAllowedSettingValuesDtos(Collections.singletonList(allowedSettingValue));
 
-        assertThat(actual.get(0).getId()).isEqualTo(1L);
-        assertThat(actual.get(0).isDefault()).isTrue();
-        assertThat(actual.get(0).getTitle()).isEqualTo("title");
-        assertThat(actual.get(0).getValue()).isEqualTo("value");
+        assertEquals(1L, actual.getFirst().getId());
+        assertTrue(actual.getFirst().isDefault());
+        assertEquals("title", actual.getFirst().getTitle());
+        assertEquals("value", actual.getFirst().getValue());
     }
 }

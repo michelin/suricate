@@ -1,7 +1,8 @@
 package com.michelin.suricate.service.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
@@ -43,9 +44,8 @@ class AssetServiceTest {
 
             Asset actual = assetService.getAssetById("token");
 
-            assertThat(actual)
-                .isNotNull()
-                .isEqualTo(asset);
+            assertNotNull(actual);
+            assertEquals(asset, actual);
 
             verify(assetRepository)
                 .findById(1L);
@@ -66,8 +66,10 @@ class AssetServiceTest {
             when(assetRepository.findById(1L))
                 .thenReturn(Optional.empty());
 
-            assertThatThrownBy(() -> assetService.getAssetById("token"))
-                .isInstanceOf(ObjectNotFoundException.class);
+            assertThrows(
+                ObjectNotFoundException.class,
+                () -> assetService.getAssetById("token")
+            );
         }
     }
 
@@ -84,9 +86,8 @@ class AssetServiceTest {
 
         Asset actual = assetService.save(asset);
 
-        assertThat(actual)
-            .isNotNull()
-            .isEqualTo(asset);
+        assertNotNull(actual);
+        assertEquals(asset, actual);
 
         verify(assetRepository)
             .save(asset);

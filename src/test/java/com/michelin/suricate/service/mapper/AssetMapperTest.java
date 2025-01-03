@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.michelin.suricate.model.dto.api.asset.AssetResponseDto;
 import com.michelin.suricate.model.dto.api.export.ImportExportAssetDto;
@@ -25,10 +26,10 @@ class AssetMapperTest {
 
         AssetResponseDto actual = assetMapper.toAssetDto(asset);
 
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getSize()).isEqualTo(10);
-        assertThat(actual.getContent()).isEqualTo(new byte[10]);
-        assertThat(actual.getContentType()).isEqualTo("contentType");
+        assertEquals(1L, actual.getId());
+        assertEquals(10, actual.getSize());
+        assertArrayEquals(new byte[10], actual.getContent());
+        assertEquals("contentType", actual.getContentType());
     }
 
     @Test
@@ -41,9 +42,9 @@ class AssetMapperTest {
 
         ImportExportAssetDto actual = assetMapper.toImportExportAssetDto(asset);
 
-        assertThat(actual.getSize()).isEqualTo(10);
-        assertThat(actual.getContent()).isEqualTo(new byte[10]);
-        assertThat(actual.getContentType()).isEqualTo("contentType");
+        assertEquals(10, actual.getSize());
+        assertArrayEquals(new byte[10], actual.getContent());
+        assertEquals("contentType", actual.getContentType());
     }
 
     @Test
@@ -55,8 +56,8 @@ class AssetMapperTest {
 
         Asset actual = assetMapper.toAssetEntity(asset);
 
-        assertThat(actual.getSize()).isEqualTo(10);
-        assertThat(actual.getContent()).isEqualTo(new byte[10]);
-        assertThat(actual.getContentType()).isEqualTo("contentType");
+        assertEquals(10, actual.getSize());
+        assertArrayEquals(new byte[10], actual.getContent());
+        assertEquals("contentType", actual.getContentType());
     }
 }

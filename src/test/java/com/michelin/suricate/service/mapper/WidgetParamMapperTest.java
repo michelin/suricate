@@ -1,6 +1,7 @@
 package com.michelin.suricate.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -36,15 +37,15 @@ class WidgetParamMapperTest {
 
         WidgetParamResponseDto actual = widgetParamMapper.toWidgetParameterDto(getWidgetParam());
 
-        assertThat(actual.getName()).isEqualTo("name");
-        assertThat(actual.getDescription()).isEqualTo("description");
-        assertThat(actual.getDefaultValue()).isEqualTo("defaultValue");
-        assertThat(actual.getType()).isEqualTo(DataTypeEnum.TEXT);
-        assertThat(actual.getAcceptFileRegex()).isEqualTo("regex");
-        assertThat(actual.getUsageExample()).isEqualTo("usageExample");
-        assertThat(actual.getUsageTooltip()).isEqualTo("tooltip");
-        assertThat(actual.isRequired()).isTrue();
-        assertThat(actual.getValues().get(0)).isEqualTo(widgetParamValueResponseDto);
+        assertEquals("name", actual.getName());
+        assertEquals("description", actual.getDescription());
+        assertEquals("defaultValue", actual.getDefaultValue());
+        assertEquals(DataTypeEnum.TEXT, actual.getType());
+        assertEquals("regex", actual.getAcceptFileRegex());
+        assertEquals("usageExample", actual.getUsageExample());
+        assertEquals("tooltip", actual.getUsageTooltip());
+        assertTrue(actual.isRequired());
+        assertEquals(widgetParamValueResponseDto, actual.getValues().getFirst());
     }
 
     @NotNull
