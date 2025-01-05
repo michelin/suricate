@@ -6,9 +6,7 @@
 
 [![GitHub Build](https://img.shields.io/github/actions/workflow/status/michelin/suricate/push_master.yml?branch=master&logo=github&style=for-the-badge)](https://img.shields.io/github/actions/workflow/status/michelin/suricate/push_master.yml)
 [![GitHub release](https://img.shields.io/github/v/release/michelin/suricate?logo=github&style=for-the-badge)](https://github.com/michelin/suricate/releases)
-[![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/michelin/suricate/latest?logo=github&style=for-the-badge)](https://github.com/michelin/suricate/commits/master)
 [![GitHub Stars](https://img.shields.io/github/stars/michelin/suricate?logo=github&style=for-the-badge)](https://github.com/michelin/suricate)
-[![GitHub Watch](https://img.shields.io/github/watchers/michelin/suricate?logo=github&style=for-the-badge)](https://github.com/michelin/suricate)
 [![Docker Pulls](https://img.shields.io/docker/pulls/michelin/suricate?label=Pulls&logo=docker&style=for-the-badge)](https://hub.docker.com/r/michelin/suricate/tags)
 [![Docker Stars](https://img.shields.io/docker/stars/michelin/suricate?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/michelin/suricate)
 [![SonarCloud Coverage](https://img.shields.io/sonar/coverage/michelin_suricate?logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/component_measures?id=michelin_suricate&metric=coverage&view=list)
