@@ -91,7 +91,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                     lastName = splitName.stream().filter(word -> word.equals(word.toUpperCase()))
                         .collect(Collectors.joining(SPACE));
                 } else {
-                    firstName = splitName.get(0);
+                    firstName = splitName.getFirst();
                     lastName = String.join(SPACE, splitName.subList(1, splitName.size()));
                 }
             }

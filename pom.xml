@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.4.1</version>
     </parent>
 
     <properties>
@@ -39,11 +39,11 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <maven-checkstyle-plugin>3.6.0</maven-checkstyle-plugin>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <mockito.version>5.0.0</mockito.version>
         <mustache.version>0.9.14</mustache.version>
+        <okhttp3.version>4.12.0</okhttp3.version>
         <packaging.type>jar</packaging.type>
         <testcontainers.version>1.20.4</testcontainers.version>
-        <springdoc.version>2.6.0</springdoc.version>
+        <springdoc.version>2.8.1</springdoc.version>
         <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>michelin</sonar.organization>
@@ -113,13 +113,20 @@
         </dependency>
 
         <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <version>${okhttp3.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
+            <version>${okhttp3.version}</version>
         </dependency>
 
         <dependency>
@@ -233,13 +240,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
