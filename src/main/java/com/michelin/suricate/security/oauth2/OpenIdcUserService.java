@@ -85,7 +85,7 @@ public class OpenIdcUserService extends OidcUserService {
                     lastName = splitName.stream().filter(word -> word.equals(word.toUpperCase()))
                         .collect(Collectors.joining(SPACE));
                 } else {
-                    firstName = splitName.get(0);
+                    firstName = splitName.getFirst();
                     lastName = String.join(SPACE, splitName.subList(1, splitName.size()));
                 }
             }
