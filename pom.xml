@@ -39,7 +39,6 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <maven-checkstyle-plugin>3.6.0</maven-checkstyle-plugin>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <mockito.version>5.0.0</mockito.version>
         <mustache.version>0.9.14</mustache.version>
         <okhttp3.version>4.12.0</okhttp3.version>
         <packaging.type>jar</packaging.type>
@@ -241,13 +240,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
