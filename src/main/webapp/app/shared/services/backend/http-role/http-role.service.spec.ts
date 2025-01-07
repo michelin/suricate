@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { HttpRoleService } from './http-role.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('HttpRoleService', () => {
+  let service: HttpRoleService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HttpRoleService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(HttpRoleService);
   });
 
-  it('should create', inject([HttpRoleService], (service: HttpRoleService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

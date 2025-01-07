@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { SidenavService } from './sidenav.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('SidenavService', () => {
+  let service: SidenavService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [SidenavService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(SidenavService);
   });
 
-  it('should create', inject([SidenavService], (service: SidenavService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

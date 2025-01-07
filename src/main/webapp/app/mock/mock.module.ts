@@ -20,7 +20,6 @@
 import { ElementRef, NgModule } from '@angular/core';
 import { MockRxStompService } from './services/mock-rx-stomp/mock-rx-stomp.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -30,23 +29,24 @@ import { MockElementRef } from './models/mock-element-ref';
 import { RxStompService } from '../shared/services/frontend/rx-stomp/rx-stomp.service';
 import { CoreModule } from '../core/core.module';
 
-@NgModule({ exports: [LayoutModule, SharedModule, HttpClientTestingModule, RouterTestingModule], imports: [TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
-                deps: [HttpClient]
-            }
-        }),
-        LayoutModule,
-        SharedModule,
-        CoreModule,
-        RouterTestingModule], providers: [
-        { provide: RxStompService, useClass: MockRxStompService },
-        {
-            provide: ElementRef,
-            useClass: MockElementRef
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ] })
+@NgModule({
+  exports: [LayoutModule, SharedModule],
+  imports: [TranslateModule.forRoot({
+    loader: {
+      provide: TranslateLoader,
+      useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+      deps: [HttpClient]
+    }
+  }),
+    LayoutModule,
+    SharedModule,
+    CoreModule
+  ],
+  providers: [
+    { provide: RxStompService, useClass: MockRxStompService },
+    { provide: ElementRef, useClass: MockElementRef },
+    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClientTesting()
+  ]
+})
 export class MockModule {}

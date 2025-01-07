@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { DashboardService } from './dashboard.service';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('DashboardService', () => {
+  let service: DashboardService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [DashboardService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(DashboardService);
   });
 
-  it('should create', inject([DashboardService], (service: DashboardService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

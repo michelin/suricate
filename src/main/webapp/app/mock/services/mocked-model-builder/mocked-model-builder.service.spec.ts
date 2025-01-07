@@ -27,10 +27,8 @@ describe('MockUnitTestsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [MockedModelBuilderService]
+      imports: [MockModule]
     });
-
     service = TestBed.inject(MockedModelBuilderService);
   });
 

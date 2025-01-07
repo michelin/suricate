@@ -20,16 +20,19 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RxStompService } from './rx-stomp.service';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('RxStompService', () => {
   let service: RxStompService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [MockModule]
+    });
     service = TestBed.inject(RxStompService);
   });
 
-  it('should be created', () => {
+  it('should create', () => {
     expect(service).toBeTruthy();
   });
 });

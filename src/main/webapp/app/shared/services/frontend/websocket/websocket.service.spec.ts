@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { WebsocketService } from './websocket.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('WebsocketService', () => {
+  let service: WebsocketService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [WebsocketService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(WebsocketService);
   });
 
-  it('should create', inject([WebsocketService], (service: WebsocketService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

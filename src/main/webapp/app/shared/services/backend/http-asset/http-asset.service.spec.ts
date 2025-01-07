@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { HttpAssetService } from './http-asset.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('HttpAssetService', () => {
+  let service: HttpAssetService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HttpAssetService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(HttpAssetService);
   });
 
-  it('should create', inject([HttpAssetService], (service: HttpAssetService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

@@ -28,9 +28,7 @@ describe('MockRxStompService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockModule],
-      providers: [MockRxStompService]
     });
-
     service = TestBed.inject(MockRxStompService);
   });
 

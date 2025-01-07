@@ -23,15 +23,16 @@ import { MenuService } from './menu.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('MenuService', () => {
+  let service: MenuService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [MenuService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(MenuService);
   });
 
   it('should create', () => {
-    const service: MenuService = TestBed.inject(MenuService);
     expect(service).toBeTruthy();
   });
 });

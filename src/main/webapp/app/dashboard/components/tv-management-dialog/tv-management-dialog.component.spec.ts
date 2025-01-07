@@ -17,23 +17,29 @@
  * under the License.
  */
 
-import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TvManagementDialogComponent } from './tv-management-dialog.component';
 import { MockModule } from '../../../mock/mock.module';
-import { AbstractHttpService } from '../../../shared/services/backend/abstract-http/abstract-http.service';
 
 describe('TvManagementDialogComponent', () => {
+  let component: TvManagementDialogComponent;
+  let fixture: ComponentFixture<TvManagementDialogComponent>;
+
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MockModule],
         declarations: [TvManagementDialogComponent]
       }).compileComponents();
+
+      fixture = TestBed.createComponent(TvManagementDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
     })
   );
 
-  it('should create', inject([AbstractHttpService], (component: TvManagementDialogComponent) => {
+  it('should create', () => {
     expect(component).toBeTruthy();
-  }));
+  });
 });

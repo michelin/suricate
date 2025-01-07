@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { FormService } from './form.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('FormService', () => {
+  let service: FormService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [FormService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(FormService);
   });
 
-  it('should create', inject([FormService], (service: FormService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

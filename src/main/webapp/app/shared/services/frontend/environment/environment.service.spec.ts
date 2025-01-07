@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { EnvironmentService } from './environment.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('EnvironmentService', () => {
+  let service: EnvironmentService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [EnvironmentService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(EnvironmentService);
   });
 
-  it('should create', inject([EnvironmentService], (service: EnvironmentService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

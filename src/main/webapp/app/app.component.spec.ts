@@ -44,10 +44,7 @@ describe('AppComponent', () => {
     })
   );
 
-  it(
-    'should create',
-    waitForAsync(() => {
+  it('should create', () => {
       expect(component).toBeTruthy();
-    })
-  );
+  });
 });

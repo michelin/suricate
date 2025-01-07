@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { HttpAdminUserService } from './http-admin-user.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('HttpAdminUserService', () => {
+  let service: HttpAdminUserService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HttpAdminUserService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(HttpAdminUserService);
   });
 
-  it('should create', inject([HttpAdminUserService], (service: HttpAdminUserService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

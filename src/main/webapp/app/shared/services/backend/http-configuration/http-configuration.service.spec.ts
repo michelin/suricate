@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { HttpConfigurationService } from './http-configuration.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('HttpConfigurationService', () => {
+  let service: HttpConfigurationService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HttpConfigurationService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(HttpConfigurationService);
   });
 
-  it('should create', inject([HttpConfigurationService], (service: HttpConfigurationService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });
