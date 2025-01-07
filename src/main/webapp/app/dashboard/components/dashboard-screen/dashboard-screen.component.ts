@@ -146,7 +146,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * @param libraryService Front-End service used to manage the libraries
    */
   constructor(
-    private renderer: Renderer2,
+    private readonly renderer: Renderer2,
     private readonly httpProjectService: HttpProjectService,
     private readonly websocketService: WebsocketService,
     private readonly libraryService: LibraryService
@@ -175,10 +175,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
         if (!changes['project'].previousValue) {
           this.initProjectWebsockets();
-        } else {
-          if (changes['project'].previousValue.token !== changes['project'].currentValue.token) {
-            this.resetProjectWebsockets();
-          }
+        } else if (changes['project'].previousValue.token !== changes['project'].currentValue.token) {
+          this.resetProjectWebsockets();
         }
       }
     }
@@ -215,7 +213,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       this.libraryService.init(this.project.librariesToken.length);
 
       if (this.project.librariesToken.length > 0) {
-        this.project.librariesToken.forEach(token => {
+        this.project.librariesToken.forEach((token) => {
           const script: HTMLScriptElement = document.createElement('script');
           script.type = 'text/javascript';
           script.src = HttpAssetService.getContentUrl(token);
@@ -291,13 +289,11 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         y: projectWidget.widgetPosition.gridRow - 1,
         w: projectWidget.widgetPosition.width,
         h: projectWidget.widgetPosition.height
-      })
+      });
     });
 
     return layout;
   }
-
-
 
   /**********************************************************************************************************/
   /*                                      WEBSOCKET MANAGEMENT                                              */
@@ -399,7 +395,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       this.currentGrid = layout;
 
       const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
-      this.currentGrid.forEach(gridItem => {
+      this.currentGrid.forEach((gridItem) => {
         projectWidgetPositionRequests.push({
           projectWidgetId: Number(gridItem.id),
           gridColumn: gridItem.x + 1,
@@ -421,8 +417,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private isGridItemsHasMoved(layout: KtdGridLayout): boolean {
     let itemHaveBeenMoved = false;
 
-    this.currentGrid.forEach(currentGridItem => {
-      const gridItemFound = layout.find(newGridItem => {
+    this.currentGrid.forEach((currentGridItem) => {
+      const gridItemFound = layout.find((newGridItem) => {
         return currentGridItem.id === newGridItem.id;
       });
 
@@ -439,6 +435,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * @param id The id of the project widget
    */
   public getProjectWidgetById(id: any): ProjectWidget {
-    return this.projectWidgets.find(projectWidget => projectWidget.id === Number(id));
+    return this.projectWidgets.find((projectWidget) => projectWidget.id === Number(id));
   }
 }

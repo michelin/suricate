@@ -57,8 +57,12 @@ public final class JsEndpoints {
      * @throws RemoteException  If an error occurred during the execution of the request
      * @throws RequestException If an error occurred during the execution of the request
      */
-    private static String executeRequest(String url, String headerName, String headerValue, String headerToReturn,
-                                         String body, boolean returnCode)
+    private static String executeRequest(String url,
+                                         String headerName,
+                                         String headerValue,
+                                         String headerToReturn,
+                                         String body,
+                                         boolean returnCode)
         throws IOException, RemoteException, RequestException {
         Request.Builder builder = new Request.Builder().url(url);
 

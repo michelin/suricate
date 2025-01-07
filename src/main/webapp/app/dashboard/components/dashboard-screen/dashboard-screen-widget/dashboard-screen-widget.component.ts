@@ -125,7 +125,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param httpProjectWidgetService Back-End service used to manage http calls for project widgets
    * @param websocketService Front-End service used to manage websocket connections
    * @param dialogService Front-End service used to manage dialog
-   * @param sidenavService Front-End service used to manage sidenav's
+   * @param sidenavService Front-End service used to manage sidenav
    * @param projectWidgetFormStepsService Front-End service used to generate steps for project widget
    * @param toastService Front-End service used to display messages
    * @param widgetConfigurationFormFieldsService Front-End service used to manage the widget's category settings

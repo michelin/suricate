@@ -441,7 +441,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * Add a new grid to the current project
    *
-   * @param formData The data retrieved from the side nav
+   * @param formGroup The data retrieved from the side nav
    */
   private addNewGrid(formGroup: UntypedFormGroup): void {
     const formData: GridRequest = formGroup.value;
@@ -453,7 +453,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * Execute the action edit the grids when the sidenav has been saved
    *
-   * @param formData The data retrieve from the form sidenav
+   * @param formGroup The data retrieve from the form sidenav
    */
   private editGrids(formGroup: UntypedFormGroup): void {
     const formData: ProjectGridRequest = formGroup.value;

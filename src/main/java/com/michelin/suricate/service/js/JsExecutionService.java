@@ -84,8 +84,10 @@ public class JsExecutionService {
      * @return The related Js execution
      */
     private JsExecutionDto createJsExecutionByProjectWidget(final ProjectWidget projectWidget) {
-        String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget,
-            projectWidget.getWidget().getCategory().getConfigurations());
+        String properties = getProjectWidgetConfigurationsWithGlobalOne(
+            projectWidget,
+            projectWidget.getWidget().getCategory().getConfigurations()
+        );
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
         Long projectId = projectWidget.getProjectGrid().getProject().getId();
@@ -95,8 +97,17 @@ public class JsExecutionService {
         WidgetStateEnum state = projectWidget.getState();
         Date lastSuccess = projectWidget.getLastSuccessDate();
 
-        return new JsExecutionDto(properties, script, previousData, projectId, technicalId, delay, timeout, state,
-            lastSuccess);
+        return new JsExecutionDto(
+            properties,
+            script,
+            previousData,
+            projectId,
+            technicalId,
+            delay,
+            timeout,
+            state,
+            lastSuccess
+        );
     }
 
     /**

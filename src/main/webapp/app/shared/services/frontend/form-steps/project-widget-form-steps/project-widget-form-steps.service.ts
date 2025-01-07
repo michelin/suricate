@@ -159,7 +159,7 @@ export class ProjectWidgetFormStepsService {
         type: widgetParam.type,
         label: widgetParam.description,
         placeholder: widgetParam.usageExample,
-        value: configValue ? configValue : widgetParam.defaultValue,
+        value: configValue || widgetParam.defaultValue,
         iconPrefix: widgetParam.usageTooltip ? IconEnum.HELP : undefined,
         iconPrefixTooltip: widgetParam.usageTooltip ? widgetParam.usageTooltip : undefined,
         iconSuffix: widgetParam.type === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
