@@ -52,7 +52,7 @@
     justify-content: center;
 
     li {
-      background-color: mat.get-color-from-palette($primary, 200);
+      background-color: mat.m2-get-color-from-palette($primary, 200);
       cursor: pointer;
       width: 30px;
       height: 4px;
@@ -61,7 +61,7 @@
     }
 
     .indicator-selected {
-      background-color: mat.get-color-from-palette($primary, 900);
+      background-color: mat.m2-get-color-from-palette($primary, 900);
     }
   }
 }

@@ -35,15 +35,15 @@
 @import 'sass/themes/dark-theme/dashboard-dark-palette';
 
 // Suricate typography
-$suricate-typography: mat.define-typography-config(
+$suricate-typography: mat.m2-define-typography-config(
   $font-family: Roboto
 );
 
 // Suricate Light Theme
-$light-primary: mat.define-palette($suricate-palette-light-primary);
-$light-accent: mat.define-palette($suricate-palette-light-accent);
-$light-warn: mat.define-palette($suricate-palette-light-warn);
-$light-theme: mat.define-light-theme(
+$light-primary: mat.m2-define-palette($suricate-palette-light-primary);
+$light-accent: mat.m2-define-palette($suricate-palette-light-accent);
+$light-warn: mat.m2-define-palette($suricate-palette-light-warn);
+$light-theme: mat.m2-define-light-theme(
   (
     color: (
       primary: $light-primary,
@@ -57,10 +57,10 @@ $light-theme: mat.define-light-theme(
 @include suricate-theme($light-theme);
 
 // Suricate Dark Theme
-$dark-primary: mat.define-palette($suricate-palette-dark-primary);
-$dark-accent: mat.define-palette($suricate-palette-dark-accent);
-$dark-warn: mat.define-palette($suricate-palette-dark-warn);
-$dark-theme: mat.define-dark-theme(
+$dark-primary: mat.m2-define-palette($suricate-palette-dark-primary);
+$dark-accent: mat.m2-define-palette($suricate-palette-dark-accent);
+$dark-warn: mat.m2-define-palette($suricate-palette-dark-warn);
+$dark-theme: mat.m2-define-dark-theme(
   (
     color: (
       primary: $dark-primary,
