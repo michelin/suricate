@@ -2,27 +2,28 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "strictNullChecks": false,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "useDefineForClassFields": false,
-    "downlevelIteration": true,
     "target": "ES2022",
     "module": "ES2022",
+    "useDefineForClassFields": false,
     "lib": [
       "ES2022",
       "dom"
     ],
+    "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": false,
+    "noImplicitReturns": true,
+    "downlevelIteration": true,
     "typeRoots": [
       "node_modules/@types"
     ]
