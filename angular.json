@@ -9,11 +9,12 @@
       "sourceRoot": "src/main/webapp",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "target/dist/public",
+            "outputPath": {
+              "base": "target/dist/public"
+            },
             "index": "src/main/webapp/index.html",
-            "main": "src/main/webapp/main.ts",
             "tsConfig": "src/main/webapp/tsconfig.app.json",
             "polyfills": [
               "zone.js",
@@ -47,8 +48,7 @@
             "namedChunks": false,
             "aot": true,
             "extractLicenses": false,
-            "vendorChunk": true,
-            "buildOptimizer": true
+            "browser": "src/main/webapp/main.ts"
           },
           "configurations": {
             "production": {
@@ -75,9 +75,7 @@
               "sourceMap": true,
               "namedChunks": false,
               "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": true
+              "extractLicenses": true
             }
           },
           "defaultConfiguration": ""

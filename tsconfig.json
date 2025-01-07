@@ -23,7 +23,6 @@
     "forceConsistentCasingInFileNames": true,
     "strictNullChecks": false,
     "noImplicitReturns": true,
-    "downlevelIteration": true,
     "typeRoots": [
       "node_modules/@types"
     ]

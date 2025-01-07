@@ -19,7 +19,7 @@
 
 import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -53,23 +53,7 @@ import { ActionsDialogComponent } from './components/actions-dialog/actions-dial
 import { KtdGridModule } from '@katoid/angular-grid-layout';
 import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-init.directive';
 
-@NgModule({
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        CommonModule,
-        FormsModule,
-        HttpClientModule,
-        MaterialCDKModule,
-        MaterialModule,
-        KtdGridModule,
-        ReactiveFormsModule,
-        RouterModule,
-        TranslateModule,
-        ColorPickerModule,
-        NgOptimizedImage
-    ],
-    declarations: [
+@NgModule({ declarations: [
         CommunicationDialogComponent,
         ConfirmDialogComponent,
         FileInputComponent,
@@ -124,11 +108,21 @@ import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-
         ProgressBarComponent,
         ColorPickerModule,
         NgOptimizedImage
-    ],
-    providers: [
+    ], imports: [BrowserAnimationsModule,
+        BrowserModule,
+        CommonModule,
+        FormsModule,
+        MaterialCDKModule,
+        MaterialModule,
+        KtdGridModule,
+        ReactiveFormsModule,
+        RouterModule,
+        TranslateModule,
+        ColorPickerModule,
+        NgOptimizedImage], providers: [
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        DatePipe
-    ]
-})
+        DatePipe,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class SharedModule {}
