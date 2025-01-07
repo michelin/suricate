@@ -1,33 +1,45 @@
 <div [@slideInOut]="animationState">
-  <div class="wrapper" *ngIf="message">
-    <aside>
-      <div class="notification mat-elevation-z12" [ngClass]="message.style">
-        <button class="delete" (click)="hideToast()"></button>
-        <div class="notification-body">
-          <div class="icon-wrapper" [ngSwitch]="message.style">
-            <mat-icon class="material-icons" *ngSwitchCase="toastType.INFO">
-              {{ materialIconRecords[iconEnum.INFO] }}
-            </mat-icon>
-            <mat-icon class="material-icons" *ngSwitchCase="toastType.WARNING">
-              {{ materialIconRecords[iconEnum.WARNING] }}
-            </mat-icon>
-            <mat-icon class="material-icons" *ngSwitchCase="toastType.DANGER">
-              {{ materialIconRecords[iconEnum.ERROR] }}
-            </mat-icon>
-            <mat-icon class="material-icons" *ngSwitchCase="toastType.SUCCESS">
-              {{ materialIconRecords[iconEnum.SUCCESS] }}
-            </mat-icon>
-          </div>
-          <div class="notification-content">
-            <div class="notification-title">
-              {{ message.title | translate }}
+  @if (message) {
+    <div class="wrapper">
+      <aside>
+        <div class="notification mat-elevation-z12" [ngClass]="message.style">
+          <button class="delete" (click)="hideToast()"></button>
+          <div class="notification-body">
+            <div class="icon-wrapper">
+              @switch (message.style) {
+                @case (toastType.INFO) {
+                  <mat-icon class="material-icons">
+                    {{ materialIconRecords[iconEnum.INFO] }}
+                  </mat-icon>
+                }
+                @case (toastType.WARNING) {
+                  <mat-icon class="material-icons">
+                    {{ materialIconRecords[iconEnum.WARNING] }}
+                  </mat-icon>
+                }
+                @case (toastType.DANGER) {
+                  <mat-icon class="material-icons">
+                    {{ materialIconRecords[iconEnum.ERROR] }}
+                  </mat-icon>
+                }
+                @case (toastType.SUCCESS) {
+                  <mat-icon class="material-icons">
+                    {{ materialIconRecords[iconEnum.SUCCESS] }}
+                  </mat-icon>
+                }
+              }
             </div>
-            <div class="notification-body">
-              {{ message.content | translate }}
+            <div class="notification-content">
+              <div class="notification-title">
+                {{ message.title | translate }}
+              </div>
+              <div class="notification-body">
+                {{ message.content | translate }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </aside>
-  </div>
+      </aside>
+    </div>
+  }
 </div>

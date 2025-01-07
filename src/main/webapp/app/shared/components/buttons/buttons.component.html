@@ -1,56 +1,64 @@
-<ng-container *ngFor="let configuration of configurations" [ngSwitch]="configuration.variant">
-  <!-- Display stroked button -->
-  <ng-container *ngSwitchCase="'stroked'">
-    <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'miniFab'">
-    <ng-container *ngTemplateOutlet="miniFabButton; context: { configuration: configuration }"> </ng-container>
-  </ng-container>
-
-  <ng-container *ngSwitchDefault>
-    <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
-  </ng-container>
-</ng-container>
+@for (configuration of configurations; track configuration) {
+  @switch (configuration.variant) {
+    <!-- Display stroked button -->
+    @case ('stroked') {
+      <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
+    }
+    @case ('miniFab') {
+      <ng-container *ngTemplateOutlet="miniFabButton; context: { configuration: configuration }"> </ng-container>
+    }
+    @default {
+      <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
+    }
+  }
+}
 
 <!------------------------------------------------------------------------------------------------------------->
 <!--                                         BUTTON VARIANT                                                  -->
 <!------------------------------------------------------------------------------------------------------------->
 
 <ng-template #strokedButton let-configuration="configuration">
-  <button
-    *ngIf="shouldDisplayButton(configuration, object)"
-    mat-stroked-button
-    [matTooltip]="configuration.tooltip?.message | translate"
-    [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip.position) : 'below'"
-    [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
-    [color]="$any(configuration.color)"
-    [disabled]="configuration.disabled | async"
-    (click)="configuration.callback ? configuration.callback($event, object) : null"
-  >
-    <mat-icon *ngIf="configuration.icon" [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
-      {{ materialIconRecords[configuration.icon] }}
-    </mat-icon>
-
-    <span *ngIf="configuration.label"> {{ configuration.label | translate }} </span>
-  </button>
+  @if (shouldDisplayButton(configuration, object)) {
+    <button
+      mat-stroked-button
+      [matTooltip]="configuration.tooltip?.message | translate"
+      [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip.position) : 'below'"
+      [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
+      [color]="$any(configuration.color)"
+      [disabled]="configuration.disabled | async"
+      (click)="configuration.callback ? configuration.callback($event, object) : null"
+      >
+      @if (configuration.icon) {
+        <mat-icon [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
+          {{ materialIconRecords[configuration.icon] }}
+        </mat-icon>
+      }
+      @if (configuration.label) {
+        <span> {{ configuration.label | translate }} </span>
+      }
+    </button>
+  }
 </ng-template>
 
 <ng-template #miniFabButton let-configuration="configuration">
-  <button
-    *ngIf="shouldDisplayButton(configuration, object)"
-    mat-mini-fab
-    [matTooltip]="configuration.tooltip?.message | translate"
-    [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip?.position) : 'below'"
-    [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
-    [color]="$any(configuration.color)"
-    [disabled]="configuration.disabled | async"
-    (click)="configuration.callback ? configuration.callback($event, object) : null"
-  >
-    <mat-icon *ngIf="configuration.icon" [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
-      {{ materialIconRecords[configuration.icon] }}
-    </mat-icon>
-
-    <span *ngIf="configuration.label"> {{ configuration.label | translate }} </span>
-  </button>
+  @if (shouldDisplayButton(configuration, object)) {
+    <button
+      mat-mini-fab
+      [matTooltip]="configuration.tooltip?.message | translate"
+      [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip?.position) : 'below'"
+      [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
+      [color]="$any(configuration.color)"
+      [disabled]="configuration.disabled | async"
+      (click)="configuration.callback ? configuration.callback($event, object) : null"
+      >
+      @if (configuration.icon) {
+        <mat-icon [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
+          {{ materialIconRecords[configuration.icon] }}
+        </mat-icon>
+      }
+      @if (configuration.label) {
+        <span> {{ configuration.label | translate }} </span>
+      }
+    </button>
+  }
 </ng-template>

@@ -8,21 +8,22 @@
     opened="false"
     [fixedInViewport]="true"
     [autoFocus]="false"
-  >
+    >
     <suricate-form-sidenav (openFormSidenav)="openFormSidenav()" (closeFormSidenav)="closeFormSidenav()"> </suricate-form-sidenav>
   </mat-sidenav>
 
   <!-- Sidenav used to display the menu -->
-  <mat-sidenav
-    *ngIf="!shouldHideMenu"
-    mode="side"
-    position="start"
-    opened="true"
-    class="menu-sidenav mat-elevation-z15"
-    [fixedInViewport]="true"
-  >
-    <suricate-menu> </suricate-menu>
-  </mat-sidenav>
+  @if (!shouldHideMenu) {
+    <mat-sidenav
+      mode="side"
+      position="start"
+      opened="true"
+      class="menu-sidenav mat-elevation-z15"
+      [fixedInViewport]="true"
+      >
+      <suricate-menu> </suricate-menu>
+    </mat-sidenav>
+  }
 
   <mat-sidenav-content>
     <router-outlet></router-outlet>

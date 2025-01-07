@@ -3,8 +3,12 @@
   <div id="user-section" class="sidenav-section">
     <div class="avatar-container">
       <div class="avatar">
-        <img *ngIf="connectedUser.avatarUrl" ngSrc="{{ connectedUser.avatarUrl }}" width="70" height="70" alt="avatar"/>
-        <span *ngIf="!connectedUser.avatarUrl">{{ getInitials() }}</span>
+        @if (connectedUser.avatarUrl) {
+          <img ngSrc="{{ connectedUser.avatarUrl }}" width="70" height="70" alt="avatar"/>
+        }
+        @if (!connectedUser.avatarUrl) {
+          <span>{{ getInitials() }}</span>
+        }
       </div>
     </div>
 
@@ -17,10 +21,16 @@
                 <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
                 <div>{{ connectedUser.username }}</div>
               </div>
-              <div *ngIf="isConnectedByIdp()">
-                <img *ngIf="isConnectedWithGithub()" ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub" />
-                <img *ngIf="isConnectedWithGitlab()" ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
-              </div>
+              @if (isConnectedByIdp()) {
+                <div>
+                  @if (isConnectedWithGithub()) {
+                    <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub" />
+                  }
+                  @if (isConnectedWithGitlab()) {
+                    <img ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
+                  }
+                </div>
+              }
             </div>
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -43,34 +53,36 @@
     </mat-accordion>
   </div>
 
-  <div *ngIf="menu" class="sidenav-section-container">
-    <mat-divider></mat-divider>
-
-    <div class="sidenav-section home-tv-menu">
-      <a routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
-        <div class="common-icon-button">
-          <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
-        </div>
-      </a>
-      <a routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
-        <div class="common-icon-button">
-          <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
-        </div>
-      </a>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <div *ngFor="let category of menu.categories" class="sidenav-menu-section">
-      <h1 class="menu-title">{{ category.label | translate }}</h1>
-
-      <mat-nav-list>
-        <a *ngFor="let item of category.items" mat-list-item routerLinkActive="active" [routerLink]="item.linkConfiguration.link">
-          {{ item.label | translate }}
+  @if (menu) {
+    <div class="sidenav-section-container">
+      <mat-divider></mat-divider>
+      <div class="sidenav-section home-tv-menu">
+        <a routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
+          <div class="common-icon-button">
+            <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
+          </div>
         </a>
-      </mat-nav-list>
+        <a routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
+          <div class="common-icon-button">
+            <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
+          </div>
+        </a>
+      </div>
+      <mat-divider></mat-divider>
+      @for (category of menu.categories; track category) {
+        <div class="sidenav-menu-section">
+          <h1 class="menu-title">{{ category.label | translate }}</h1>
+          <mat-nav-list>
+            @for (item of category.items; track item) {
+              <a mat-list-item routerLinkActive="active" [routerLink]="item.linkConfiguration.link">
+                {{ item.label | translate }}
+              </a>
+            }
+          </mat-nav-list>
+        </div>
+      }
     </div>
-  </div>
+  }
 
   <mat-divider></mat-divider>
 

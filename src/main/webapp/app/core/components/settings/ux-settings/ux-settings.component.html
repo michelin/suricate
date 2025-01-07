@@ -1,9 +1,12 @@
-<div *ngIf="formGroup" class="form-container">
-  <div>
-    <suricate-input *ngFor="let field of formFields" [formGroup]="formGroup" [field]="field"> </suricate-input>
+@if (formGroup) {
+  <div class="form-container">
+    <div>
+      @for (field of formFields; track field) {
+        <suricate-input [formGroup]="formGroup" [field]="field"> </suricate-input>
+      }
+    </div>
+    <div class="save-ux-settings-button">
+      <suricate-buttons [configurations]="buttons"> </suricate-buttons>
+    </div>
   </div>
-
-  <div class="save-ux-settings-button">
-    <suricate-buttons [configurations]="buttons"> </suricate-buttons>
-  </div>
-</div>
+}

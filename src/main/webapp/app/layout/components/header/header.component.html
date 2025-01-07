@@ -1,16 +1,20 @@
-<div *ngIf="configuration" class="header-container">
-  <div class="header-sub-container">
-    <div class="header-info">
-      <h1 class="little title">{{ pageName }}</h1>
-      <h2 class="header">
-        {{ configuration.title | translate }}
-      </h2>
+@if (configuration) {
+  <div class="header-container">
+    <div class="header-sub-container">
+      <div class="header-info">
+        <h1 class="little title">{{ pageName }}</h1>
+        <h2 class="header">
+          {{ configuration.title | translate }}
+        </h2>
+      </div>
+      @if (showMenu) {
+        <div>
+          @if (configuration.actions) {
+            <suricate-buttons class="actions" [configurations]="configuration.actions"> </suricate-buttons>
+          }
+        </div>
+      }
     </div>
-
-    <div *ngIf="showMenu">
-      <suricate-buttons class="actions" *ngIf="configuration.actions" [configurations]="configuration.actions"> </suricate-buttons>
-    </div>
+    <mat-divider></mat-divider>
   </div>
-
-  <mat-divider></mat-divider>
-</div>
+}

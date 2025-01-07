@@ -9,39 +9,46 @@
         color="primary"
         [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
         (click)="file.click()"
-      >
+        >
         <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
         <span> {{ field.label | translate }} </span>
       </button>
 
-      <button
-        *ngIf="componentRef"
-        mat-raised-button
-        type="button"
-        class="upload-button"
-        color="primary"
-        [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
-        (click)="screenshot()"
-      >
-        <mat-icon> {{ materialIconRecords[iconEnum.SCREENSHOT] }} </mat-icon>
-        <span> {{ 'dashboard.take.screenshot' | translate }} </span>
-      </button>
+      @if (componentRef) {
+        <button
+          mat-raised-button
+          type="button"
+          class="upload-button"
+          color="primary"
+          [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
+          (click)="screenshot()"
+          >
+          <mat-icon> {{ materialIconRecords[iconEnum.SCREENSHOT] }} </mat-icon>
+          <span> {{ 'dashboard.take.screenshot' | translate }} </span>
+        </button>
+      }
     </div>
 
     <!-- Error Message for file input -->
-    <div *ngIf="isInputFieldOnError()" [@animationError] class="file-input-error">
-      <div>
-        {{ getInputErrors() | translate }}
+    @if (isInputFieldOnError()) {
+      <div [@animationError] class="file-input-error">
+        <div>
+          {{ getInputErrors() | translate }}
+        </div>
       </div>
-    </div>
+    }
   </div>
 
   <!-- Image uploaded -->
-  <img *ngIf="imgBase64" [src]="imgBase64" class="uploaded-file" alt="Uploaded file" />
+  @if (imgBase64) {
+    <img [src]="imgBase64" class="uploaded-file" alt="Uploaded file" />
+  }
 
-  <div *ngIf="filename">
-    {{ filename }}
-  </div>
+  @if (filename) {
+    <div>
+      {{ filename }}
+    </div>
+  }
 
   <!-- Used to retrieve the file (hidden) -->
   <input #file type="file" (change)="onFileChange($event)" />

@@ -1,34 +1,40 @@
 <div class="tv-wrapper">
-  <div
-    *ngIf="!project || !projectWidgetsByGrid; else dashboardScreen"
-    class="container without-header"
-  >
-    <div class="wrapper mat-elevation-z12">
-      <div class="brand-image">
-        <img ngSrc="../../../../../assets/images/logo.png" width="282" height="282" alt="brand image" />
-      </div>
-
-      <suricate-spinner *ngIf="isDashboardLoading" color="accent"></suricate-spinner>
-      <div *ngIf="!isDashboardLoading" id="screen-code-wrapper">
-        {{ screenCode }}
+  @if (!project || !projectWidgetsByGrid) {
+    <div
+      class="container without-header"
+      >
+      <div class="wrapper mat-elevation-z12">
+        <div class="brand-image">
+          <img ngSrc="../../../../../assets/images/logo.png" width="282" height="282" alt="brand image" />
+        </div>
+        @if (isDashboardLoading) {
+          <suricate-spinner color="accent"></suricate-spinner>
+        }
+        @if (!isDashboardLoading) {
+          <div id="screen-code-wrapper">
+            {{ screenCode }}
+          </div>
+        }
       </div>
     </div>
-  </div>
+  } @else {
+    @for (entry of projectWidgetsByGrid | keyvalue; track entry; let i = $index) {
+      <suricate-dashboard-screen
+        hideAfterInit
+        [hide]="entry.key !== project.grids[rotationIndex].id"
+        [project]="project"
+        [projectWidgets]="entry.value"
+        [screenCode]="screenCode"
+        [readOnly]="true"
+        [openWebsockets]="i === 0"
+        (refreshAllProjectWidgets)="refreshCurrentProjectAndWidgets()"
+        (disconnectEvent)="handlingDashboardDisconnect()"
+      ></suricate-dashboard-screen>
+    }
+  }
 
-  <ng-template #dashboardScreen>
-    <suricate-dashboard-screen
-      *ngFor="let entry of projectWidgetsByGrid | keyvalue; let i = index"
-      hideAfterInit
-      [hide]="entry.key !== project.grids[rotationIndex].id"
-      [project]="project"
-      [projectWidgets]="entry.value"
-      [screenCode]="screenCode"
-      [readOnly]="true"
-      [openWebsockets]="i === 0"
-      (refreshAllProjectWidgets)="refreshCurrentProjectAndWidgets()"
-      (disconnectEvent)="handlingDashboardDisconnect()"
-    ></suricate-dashboard-screen>
-  </ng-template>
 
-  <suricate-progress-bar *ngIf="project && project.grids.length > 1 && project.displayProgressBar" class="rotation-progress-bar" [value]="timerPercentage"></suricate-progress-bar>
+  @if (project && project.grids.length > 1 && project.displayProgressBar) {
+    <suricate-progress-bar class="rotation-progress-bar" [value]="timerPercentage"></suricate-progress-bar>
+  }
 </div>
