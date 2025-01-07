@@ -7,6 +7,7 @@ on:
 
 jobs:
   back-end:
+    name: Build back-end
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -46,6 +47,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   front-end:
+    name: Build front-end
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -53,7 +55,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up NodeJS 20.x
+      - name: Set up Node.js 20.x
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -70,6 +72,7 @@ jobs:
         run: npm run test-ci
 
   docker:
+    name: Build Docker
     runs-on: ubuntu-latest
     needs: [ front-end, back-end ]
     steps:

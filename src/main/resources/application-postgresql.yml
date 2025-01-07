@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driverClassName: 'org.postgresql.Driver'
+    password: 'changeme'
+    url: 'jdbc:postgresql://localhost:5432/postgres?currentSchema=suricate'
+    username: 'postgres'
+  flyway:
+    locations: 'classpath:flyway/postgresql'
+  jpa:
+    properties:
+      hibernate:
+        dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+        temp:
+          use_jdbc_metadata_defaults: false
