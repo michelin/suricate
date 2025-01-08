@@ -37,9 +37,4 @@ export class ProgressBarComponent {
    */
   @Input()
   public value: number;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 }
