@@ -26,7 +26,8 @@ describe('SafeHtmlPipe', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule]
+      imports: [MockModule],
+      providers: [SafeHtmlPipe]
     });
     pipe = TestBed.inject(SafeHtmlPipe);
   });
