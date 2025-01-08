@@ -17,7 +17,7 @@
  * under the License.
  */
 
-@use '@angular/material/index' as mat;
+@use '@angular/material' as mat;
 
 @mixin custom-file-input-component-theme($theme) {
   $warn: map-get($theme, warn);
