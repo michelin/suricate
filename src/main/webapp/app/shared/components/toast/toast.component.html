@@ -3,7 +3,6 @@
     <div class="wrapper">
       <aside>
         <div class="notification mat-elevation-z12" [ngClass]="message.style">
-          <button class="delete" (click)="hideToast()"></button>
           <div class="notification-body">
             <div class="icon-wrapper">
               @switch (message.style) {
@@ -37,6 +36,9 @@
                 {{ message.content | translate }}
               </div>
             </div>
+            <button mat-icon-button (click)="hideToast()">
+              <mat-icon>close</mat-icon>
+            </button>
           </div>
         </div>
       </aside>

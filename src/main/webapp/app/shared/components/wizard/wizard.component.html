@@ -43,7 +43,7 @@
                 </div>
               </div>
             }
-            @if (isWidgetConfigurationStep(step) && step.category?.categoryParameters.length > 0) {
+            @if (isWidgetConfigurationStep() && step.category?.categoryParameters.length > 0) {
               <suricate-slide-toggle
                 [label]="'widget.parameters.category.override.title'"
                 (slideToggleButtonPressed)="displayCategorySettings($event)"

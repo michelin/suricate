@@ -274,10 +274,8 @@ export class WizardComponent implements OnInit {
 
   /**
    * Does the current step is the widget configuration step or not
-   *
-   * @param step The step
    */
-  public isWidgetConfigurationStep(step: FormStep): boolean {
+  public isWidgetConfigurationStep(): boolean {
     return this.currentStep.key === ProjectWidgetFormStepsService.configureWidgetStepKey;
   }
 
@@ -287,7 +285,9 @@ export class WizardComponent implements OnInit {
    *
    * @param formGroup The form group
    */
-  protected saveWizard(formGroup: UntypedFormGroup): void {}
+  protected saveWizard(formGroup: UntypedFormGroup): void {
+    // Implemented by child component
+  }
 
   /**
    * Check if the stepper form is valid before saving the data

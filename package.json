@@ -39,7 +39,6 @@
     "lodash": "^4.17.21",
     "moment": "^2.22.1",
     "ngx-color-picker": "^16.0.0",
-    "normalize-scss": "^7.0.1",
     "rxjs": "7.4.0",
     "sockjs-client": "^1.6.1",
     "zone.js": "~0.14.2"

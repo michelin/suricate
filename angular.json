@@ -18,15 +18,13 @@
             "tsConfig": "src/main/webapp/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "polyfills": [
-              "zone.js",
-              "src/main/webapp/polyfills.ts"
+              "zone.js"
             ],
             "assets": [
               "src/main/webapp/assets"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules/normalize-scss/sass",
                 "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
@@ -103,8 +101,7 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing",
-              "src/main/webapp/polyfills.ts"
+              "zone.js/testing"
             ],
             "tsConfig": "src/main/webapp/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
@@ -113,7 +110,6 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules/normalize-scss/sass",
                 "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
