@@ -17,19 +17,19 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { Page } from '../../../models/backend/page';
 import { Project } from '../../../models/backend/project/project';
 import { ProjectRequest } from '../../../models/backend/project/project-request';
 import { ProjectWidgetPositionRequest } from '../../../models/backend/project-widget/project-widget-position-request';
 import { User } from '../../../models/backend/user/user';
 import { WebsocketClient } from '../../../models/backend/websocket-client';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectService implements AbstractHttpService<Project, ProjectRequest> {

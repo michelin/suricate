@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { AuthenticationService } from './authentication.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { AuthenticationService } from './authentication.service';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;

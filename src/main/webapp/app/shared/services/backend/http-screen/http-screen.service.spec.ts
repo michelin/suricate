@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpScreenService } from './http-screen.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpScreenService } from './http-screen.service';
 
 describe('HttpScreenService', () => {
   let service: HttpScreenService;

@@ -18,17 +18,18 @@
  */
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormService } from '../../services/frontend/form/form.service';
-import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
-import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { UntypedFormGroup } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
-import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
-import { IconEnum } from '../../enums/icon.enum';
-import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
-import { FormField } from '../../models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { IconEnum } from '../../enums/icon.enum';
+import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+import { FormField } from '../../models/frontend/form/form-field';
+import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
+import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
+import { FormService } from '../../services/frontend/form/form.service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 
 /**
  * Component used to display the form sidenav
@@ -77,7 +78,10 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * @param formService Frontend service used to manage the forms
    * @param sidenavService Sidenav service used to manage the side navs
    */
-  constructor(private readonly formService: FormService, private readonly sidenavService: SidenavService) {
+  constructor(
+    private readonly formService: FormService,
+    private readonly sidenavService: SidenavService
+  ) {
     this.initButtons();
   }
 
@@ -183,6 +187,10 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    */
   public getCategorySettings(event: MatSlideToggleChange): void {
     this.configuration.slideToggleButtonConfiguration.toggleChecked = event.checked;
-    this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(event, this.formGroup, this.configuration.formFields);
+    this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
+      event,
+      this.formGroup,
+      this.configuration.formFields
+    );
   }
 }

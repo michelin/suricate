@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { WebsocketService } from './websocket.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { WebsocketService } from './websocket.service';
 
 describe('WebsocketService', () => {
   let service: WebsocketService;

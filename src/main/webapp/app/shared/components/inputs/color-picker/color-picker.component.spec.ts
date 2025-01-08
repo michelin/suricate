@@ -19,32 +19,30 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { ColorPickerComponent } from './color-picker.component';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
+import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { ColorPickerComponent } from './color-picker.component';
 
 describe('ColorPickerComponent', () => {
   let component: ColorPickerComponent;
   let fixture: ComponentFixture<ColorPickerComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [ColorPickerComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [ColorPickerComponent]
+    }).compileComponents();
 
-      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-      fixture = TestBed.createComponent(ColorPickerComponent);
-      component = fixture.componentInstance;
-      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.COLOR_PICKER);
-      component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.COLOR_PICKER);
+    fixture = TestBed.createComponent(ColorPickerComponent);
+    component = fixture.componentInstance;
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.COLOR_PICKER);
+    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.COLOR_PICKER);
 
-      fixture.detectChanges();
-    })
-  );
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -18,10 +18,10 @@
  */
 
 import { Injectable } from '@angular/core';
-import { CssSelector } from '../../../models/frontend/css-parser/css-selector';
-import { CssRule } from '../../../models/frontend/css-parser/css-rule';
-
 import * as CSSParser from 'jotform-css.js';
+
+import { CssRule } from '../../../models/frontend/css-parser/css-rule';
+import { CssSelector } from '../../../models/frontend/css-parser/css-selector';
 
 /**
  * The dashboard service
@@ -43,13 +43,17 @@ export class CssService {
   public static extractCssValue(cssContent: string, cssSelector: string, propertyName: string): string {
     if (cssContent && cssSelector && propertyName) {
       const parser = new CSSParser.cssjs();
-      const parsedCss = parser.parseCSS(cssContent) as unknown as Array<CssSelector>;
+      const parsedCss = parser.parseCSS(cssContent) as unknown as CssSelector[];
 
       if (parsedCss) {
-        const cssSelectorFound: CssSelector = parsedCss.find((currCssSelector: CssSelector) => currCssSelector.selector === cssSelector);
+        const cssSelectorFound: CssSelector = parsedCss.find(
+          (currCssSelector: CssSelector) => currCssSelector.selector === cssSelector
+        );
 
         if (cssSelectorFound) {
-          const cssRule: CssRule = cssSelectorFound.rules.find((currCssRule: CssRule) => currCssRule.directive === propertyName);
+          const cssRule: CssRule = cssSelectorFound.rules.find(
+            (currCssRule: CssRule) => currCssRule.directive === propertyName
+          );
           return cssRule ? cssRule.value : null;
         }
       }

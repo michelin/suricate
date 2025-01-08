@@ -18,40 +18,41 @@
  */
 
 import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { CheckboxComponent } from './components/inputs/checkbox/checkbox.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { KtdGridModule } from '@katoid/angular-grid-layout';
+import { TranslateModule } from '@ngx-translate/core';
+import { ColorPickerModule } from 'ngx-color-picker';
+
+import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
+import { ButtonsComponent } from './components/buttons/buttons.component';
 import { CommunicationDialogComponent } from './components/communication-dialog/communication-dialog.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import { ErrorInterceptor } from './interceptors/error.interceptor';
-import { FileInputComponent } from './components/inputs/file-input/file-input.component';
-import { InputComponent } from './components/inputs/input/input.component';
-import { MaterialCDKModule } from './modules/material-cdk.module';
-import { MaterialModule } from './modules/material.module';
-import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
-import { ToastComponent } from './components/toast/toast.component';
-import { TokenInterceptor } from './interceptors/token.interceptor';
-import { TranslateModule } from '@ngx-translate/core';
-import { ListComponent } from './components/list/list.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
-import { ButtonsComponent } from './components/buttons/buttons.component';
 import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.component';
-import { WizardComponent } from './components/wizard/wizard.component';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { CheckboxComponent } from './components/inputs/checkbox/checkbox.component';
 import { ColorPickerComponent } from './components/inputs/color-picker/color-picker.component';
 import { FieldsComponent } from './components/inputs/fields/fields.component';
+import { FileInputComponent } from './components/inputs/file-input/file-input.component';
+import { InputComponent } from './components/inputs/input/input.component';
 import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
-import { PaginatorComponent } from './components/paginator/paginator.component';
 import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
-import { WidgetHtmlDirective } from './directives/widget-html/widget-html.directive';
+import { ListComponent } from './components/list/list.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
-import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
-import { KtdGridModule } from '@katoid/angular-grid-layout';
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { ToastComponent } from './components/toast/toast.component';
+import { WizardComponent } from './components/wizard/wizard.component';
 import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-init.directive';
+import { WidgetHtmlDirective } from './directives/widget-html/widget-html.directive';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { MaterialModule } from './modules/material.module';
+import { MaterialCDKModule } from './modules/material-cdk.module';
+import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
 
 @NgModule({
   declarations: [
@@ -121,7 +122,8 @@ import { HideAfterInitDirective } from './directives/hide-after-init/hide-after-
     RouterModule,
     TranslateModule,
     ColorPickerModule,
-    NgOptimizedImage],
+    NgOptimizedImage
+  ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

@@ -17,13 +17,13 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
 import { AbstractHttpService } from '../services/backend/abstract-http/abstract-http.service';
-import { Router } from '@angular/router';
+import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
 
 /**
  * Used to put the token in the request
@@ -45,7 +45,8 @@ export class TokenInterceptor implements HttpInterceptor {
     if (
       !request ||
       !request.url ||
-      (/^http/.test(request.url) && !(AbstractHttpService.baseApiEndpoint && request.url.startsWith(AbstractHttpService.baseApiEndpoint)))
+      (/^http/.test(request.url) &&
+        !(AbstractHttpService.baseApiEndpoint && request.url.startsWith(AbstractHttpService.baseApiEndpoint)))
     ) {
       return next.handle(request);
     }

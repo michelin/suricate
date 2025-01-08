@@ -19,12 +19,12 @@
 
 import { Routes } from '@angular/router';
 
-import { UsersComponent } from './users/users.component';
-import { RepositoriesComponent } from './repositories/repositories.component';
-import { DashboardsComponent } from './dashboards/dashboards.component';
-import { ConfigurationsComponent } from './configurations/configurations.component';
 import { adminGuard } from '../shared/guards/admin/admin.guard';
 import { authGuard } from '../shared/guards/auth/auth.guard';
+import { ConfigurationsComponent } from './configurations/configurations.component';
+import { DashboardsComponent } from './dashboards/dashboards.component';
+import { RepositoriesComponent } from './repositories/repositories.component';
+import { UsersComponent } from './users/users.component';
 
 export const adminRoutes: Routes = [
   {
@@ -46,12 +46,12 @@ export const adminRoutes: Routes = [
     path: 'admin/repositories',
     component: RepositoriesComponent,
     canActivate: [authGuard, adminGuard],
-    canActivateChild: [authGuard, adminGuard],
+    canActivateChild: [authGuard, adminGuard]
   },
   {
     path: 'admin/configurations',
     component: ConfigurationsComponent,
     canActivate: [authGuard, adminGuard],
-    canActivateChild: [authGuard, adminGuard],
+    canActivateChild: [authGuard, adminGuard]
   }
 ];

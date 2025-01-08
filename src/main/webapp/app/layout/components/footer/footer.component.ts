@@ -18,6 +18,7 @@
  */
 
 import { Component } from '@angular/core';
+
 import { EnvironmentService } from '../../../shared/services/frontend/environment/environment.service';
 
 /**
@@ -43,9 +44,4 @@ export class FooterComponent {
    * The current year
    */
   public year = new Date().getFullYear();
-
-  /**
-   * The constructor
-   */
-  constructor() {}
 }

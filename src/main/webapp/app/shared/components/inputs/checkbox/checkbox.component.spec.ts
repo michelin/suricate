@@ -19,32 +19,30 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { CheckboxComponent } from './checkbox.component';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
+import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { CheckboxComponent } from './checkbox.component';
 
 describe('CheckboxComponent', () => {
   let component: CheckboxComponent;
   let fixture: ComponentFixture<CheckboxComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [CheckboxComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [CheckboxComponent]
+    }).compileComponents();
 
-      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-      fixture = TestBed.createComponent(CheckboxComponent);
-      component = fixture.componentInstance;
-      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.BOOLEAN);
-      component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.BOOLEAN);
+    fixture = TestBed.createComponent(CheckboxComponent);
+    component = fixture.componentInstance;
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.BOOLEAN);
+    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.BOOLEAN);
 
-      fixture.detectChanges();
-    })
-  );
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

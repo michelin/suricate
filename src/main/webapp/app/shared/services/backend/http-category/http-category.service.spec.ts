@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpCategoryService } from './http-category.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpCategoryService } from './http-category.service';
 
 describe('HttpCategoryService', () => {
   let service: HttpCategoryService;

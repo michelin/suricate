@@ -29,25 +29,24 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
+import { KtdGridLayout } from '@katoid/angular-grid-layout/lib/grid.definitions';
+import { IMessage } from '@stomp/rx-stomp';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
-import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
-import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import {
-  ProjectWidgetPositionRequest
-} from '../../../shared/models/backend/project-widget/project-widget-position-request';
-import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { LibraryService } from '../../services/library/library.service';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { IMessage } from '@stomp/rx-stomp';
-import { KtdGridLayout } from '@katoid/angular-grid-layout/lib/grid.definitions';
+import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
 import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
+import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
+import { LibraryService } from '../../services/library/library.service';
 
 /**
  * Display the grid stack widgets
@@ -405,7 +404,9 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         });
       });
 
-      this.httpProjectService.updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests).subscribe();
+      this.httpProjectService
+        .updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests)
+        .subscribe();
     }
   }
 

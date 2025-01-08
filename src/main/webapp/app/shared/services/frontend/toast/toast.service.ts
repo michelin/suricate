@@ -20,8 +20,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ToastMessage } from '../../../models/frontend/toast/toast-message';
 import { ToastTypeEnum } from '../../../enums/toast-type.enum';
+import { ToastMessage } from '../../../models/frontend/toast/toast-message';
 
 /**
  * The service that manage toast notification message
@@ -30,18 +30,11 @@ import { ToastTypeEnum } from '../../../enums/toast-type.enum';
 export class ToastService {
   /**
    * The toast message subject
-   * @type {BehaviorSubject<ToastMessage>}
-   * @private
    */
   private toastMessageSubject = new BehaviorSubject<ToastMessage>(null);
 
   /**
-   * The constructor
-   */
-  constructor() {}
-
-  /**
-   * get the toast message events
+   * Get the toast message events
    * @returns {Observable<ToastMessage>}
    */
   public listenForToastMessages(): Observable<ToastMessage> {
@@ -49,10 +42,10 @@ export class ToastService {
   }
 
   /**
-   * A new message thru toast component
-   * @param {string} title The title of the message
-   * @param {ToastTypeEnum} style The message style
-   * @param {string} content The content of the message
+   * A new message to toast component
+   * @param title The title of the message
+   * @param style The message style
+   * @param content The content of the message
    */
   public sendMessage(title: string, style?: ToastTypeEnum, content?: string): void {
     this.toastMessageSubject.next(new ToastMessage(title, content, style));

@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpProjectWidgetService } from './http-project-widget.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpProjectWidgetService } from './http-project-widget.service';
 
 describe('HttpProjectWidgetService', () => {
   let service: HttpProjectWidgetService;

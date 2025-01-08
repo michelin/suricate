@@ -18,9 +18,10 @@
  */
 
 import { Component, Input } from '@angular/core';
+
+import { ButtonTypeEnum } from '../../enums/button-type.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { MaterialIconRecords } from '../../records/material-icon.record';
-import { ButtonTypeEnum } from '../../enums/button-type.enum';
 
 /**
  * Component used to generate buttons

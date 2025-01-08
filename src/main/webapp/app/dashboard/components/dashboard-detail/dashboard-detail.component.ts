@@ -18,45 +18,40 @@
  */
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-
-import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { Project } from '../../../shared/models/backend/project/project';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { FileUtils } from '../../../shared/utils/file.utils';
-import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
-import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
-import { DialogService } from '../../../shared/services/frontend/dialog/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
-import {
-  ProjectFormFieldsService
-} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
-import {
-  ProjectUsersFormFieldsService
-} from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
-import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
-import { ImageUtils } from '../../../shared/utils/image.utils';
-import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
-import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid.service';
-import {
-  HttpProjectWidgetService
-} from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
-import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
-import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
-import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
 import { UntypedFormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
+
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { Project } from '../../../shared/models/backend/project/project';
+import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
+import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
+import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
+import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
+import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid.service';
+import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
+import { DialogService } from '../../../shared/services/frontend/dialog/dialog.service';
+import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
+import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { FileUtils } from '../../../shared/utils/file.utils';
+import { ImageUtils } from '../../../shared/utils/image.utils';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
+import { PageEvent } from '@angular/material/paginator';
 
 /**
  * Component used to display a specific dashboard
@@ -196,7 +191,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
             this.isDashboardLoading = false;
             this.router.navigate(['/home']);
           }
-      });
+        });
     });
   }
 
@@ -211,7 +206,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Refresh the project
    */
   private refreshProject(): Observable<Project> {
-    return this.httpProjectService.getById(this.dashboardToken).pipe(tap((project: Project) => (this.project = project)));
+    return this.httpProjectService
+      .getById(this.dashboardToken)
+      .pipe(tap((project: Project) => (this.project = project)));
   }
 
   /**
@@ -239,7 +236,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         this.allWidgets = projectWidgets;
 
         if (this.gridId) {
-          this.currentWidgets = this.allWidgets ? this.allWidgets.filter(widget => widget.gridId === this.gridId) : [];
+          this.currentWidgets = this.allWidgets
+            ? this.allWidgets.filter((widget) => widget.gridId === this.gridId)
+            : [];
         }
       })
     );
@@ -248,19 +247,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * When manually triggered, rotate to the required dashboard
    *
-   * @param gridId The id of the grid to display
+   * @param pageEvent The page event
    */
-  public redirectToGrid(gridId: number): void {
-    if (this.gridId !== gridId) {
-      this.router.navigate(['/dashboards', this.dashboardToken, gridId]);
-    }
-  }
-
-  /**
-   * Redirect to the add grid page
-   */
-  public redirectToAddGrid(): void {
-    this.router.navigate(['/dashboards', this.dashboardToken]);
+  public redirectToGrid(pageEvent: PageEvent): void {
+    this.router.navigate(['/dashboards', this.dashboardToken, this.getGridIdByIndex(pageEvent.pageIndex)]);
   }
 
   /**
@@ -275,8 +265,16 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'widget.add' },
-          hidden: () => this.isReadOnly || !this.gridId,
+          hidden: () => this.isReadOnly,
           callback: () => this.displayProjectWidgetWizard()
+        },
+        {
+          icon: IconEnum.ADD_GRID,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'grid.add' },
+          hidden: () => this.isReadOnly,
+          callback: () => this.openAddGridFormSidenav()
         },
         {
           icon: IconEnum.EDIT,
@@ -368,7 +366,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService
         .addUserToProject(this.project.token, valueChangedEvent.value)
-        .pipe(switchMap(() => of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.project.token))));
+        .pipe(
+          switchMap(() => of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.project.token)))
+        );
     }
 
     return EMPTY;
@@ -424,7 +424,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           ImageUtils.getDataFromBase64URL(formData.image),
           ImageUtils.getContentTypeFromBase64URL(formData.image)
         );
-        const file: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.${contentType.split('/')[1]}`, new Date());
+        const file: File = FileUtils.convertBlobToFile(
+          blob,
+          `${this.project.token}.${contentType.split('/')[1]}`,
+          new Date()
+        );
 
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
       }
@@ -458,8 +462,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   private editGrids(formGroup: UntypedFormGroup): void {
     const formData: ProjectGridRequest = formGroup.value;
     const newTimes = Object.keys(formData)
-      .filter(key => key.includes(ProjectFormFieldsService.timeFormFieldKey))
-      .map(key => formData[key]);
+      .filter((key) => key.includes(ProjectFormFieldsService.timeFormFieldKey))
+      .map((key) => formData[key]);
 
     formData.grids = [];
     this.project.grids.forEach((grid, index) => {
@@ -560,5 +564,21 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   public handlingDashboardDisconnect(): void {
     this.router.navigate(['/home']);
+  }
+
+  /**
+   * Get the index of the grid
+   */
+  public getGridIndex(): number {
+    return this.project.grids.findIndex((grid) => grid.id === this.gridId);
+  }
+
+  /**
+   * Get the grid id by index
+   *
+   * @param index The index of the grid
+   */
+  public getGridIdByIndex(index: number): number {
+    return this.project.grids[index].id;
   }
 }

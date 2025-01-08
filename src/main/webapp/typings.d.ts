@@ -18,7 +18,7 @@
  */
 
 /* SystemJS module definition */
-declare var module: NodeModule;
+declare let module: NodeModule;
 declare module 'sockjs-client';
 
 interface NodeModule {

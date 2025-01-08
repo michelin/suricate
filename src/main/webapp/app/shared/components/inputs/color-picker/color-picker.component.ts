@@ -18,6 +18,7 @@
  */
 
 import { Component } from '@angular/core';
+
 import { InputComponent } from '../input/input.component';
 
 /**

@@ -18,14 +18,15 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { Router } from '@angular/router';
-import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
+
+import { SettingsService } from '../../../core/services/settings.service';
+import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { HttpSettingService } from '../../../shared/services/backend/http-setting/http-setting.service';
-import { SettingsService } from '../../../core/services/settings.service';
-import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 
 /**
  * Display the menu on the sidenav

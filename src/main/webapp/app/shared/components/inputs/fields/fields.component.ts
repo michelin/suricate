@@ -18,12 +18,13 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { InputComponent } from '../input/input.component';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+
 import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { FormField } from '../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../enums/icon.enum';
 import { ButtonConfiguration } from '../../../models/frontend/button/button-configuration';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { InputComponent } from '../input/input.component';
 
 /**
  * Used to display fields of type Fields
@@ -33,7 +34,7 @@ import { ButtonConfiguration } from '../../../models/frontend/button/button-conf
   templateUrl: './fields.component.html',
   styleUrls: ['./fields.component.scss']
 })
-export class FieldsComponent extends InputComponent implements OnInit{
+export class FieldsComponent extends InputComponent implements OnInit {
   @Input()
   public formArray: UntypedFormArray;
   public deleteRowConfig: ButtonConfiguration<any>[];
@@ -49,7 +50,7 @@ export class FieldsComponent extends InputComponent implements OnInit{
    * Called when the component is init
    */
   public override ngOnInit(): void {
-    super.ngOnInit()
+    super.ngOnInit();
 
     if (this.field.deleteRow) {
       this.initDeleteRowConfiguration();
@@ -83,13 +84,15 @@ export class FieldsComponent extends InputComponent implements OnInit{
   }
 
   private initDeleteRowConfiguration(): void {
-    this.deleteRowConfig = [{
+    this.deleteRowConfig = [
+      {
         icon: IconEnum.DELETE,
         color: 'warn',
         variant: 'miniFab',
         callback: (event: Event, object: { formGroup: UntypedFormGroup; index: number }) => {
-          this.deleteRow(object.formGroup, object.index)
+          this.deleteRow(object.formGroup, object.index);
         }
-    }];
+      }
+    ];
   }
 }

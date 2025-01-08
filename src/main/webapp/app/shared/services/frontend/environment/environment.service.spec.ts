@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { EnvironmentService } from './environment.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { EnvironmentService } from './environment.service';
 
 describe('EnvironmentService', () => {
   let service: EnvironmentService;

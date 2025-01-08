@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { CssService } from './css.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { CssService } from './css.service';
 
 describe('CssService', () => {
   let service: CssService;

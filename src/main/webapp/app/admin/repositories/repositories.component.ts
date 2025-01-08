@@ -17,23 +17,22 @@
  * under the License.
  */
 
+import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { BehaviorSubject, EMPTY, forkJoin, of } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+
 import { ListComponent } from '../../shared/components/list/list.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
-import { Repository } from '../../shared/models/backend/repository/repository';
-import { HttpRepositoryService } from '../../shared/services/backend/http-repository/http-repository.service';
-import { FormField } from '../../shared/models/frontend/form/form-field';
-import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
-import {
-  RepositoryFormFieldsService
-} from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
-import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
-import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject, EMPTY, forkJoin, of } from 'rxjs';
-import { DatePipe } from '@angular/common';
-import { UntypedFormGroup } from '@angular/forms';
+import { Repository } from '../../shared/models/backend/repository/repository';
+import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
+import { FormField } from '../../shared/models/frontend/form/form-field';
+import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { HttpRepositoryService } from '../../shared/services/backend/http-repository/http-repository.service';
+import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
 
 /**
  * Component used to display the list of git repositories
@@ -91,7 +90,12 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
     return this.translateService.instant('repository.third.label', {
       type: repository.type,
       priority: repository.priority,
-      createdDate: this.datePipe.transform(repository.createdDate, 'd MMMM yyyy HH:mm:ss', undefined, this.translateService.currentLang)
+      createdDate: this.datePipe.transform(
+        repository.createdDate,
+        'd MMMM yyyy HH:mm:ss',
+        undefined,
+        this.translateService.currentLang
+      )
     });
   }
 
@@ -135,7 +139,8 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
           tooltip: { message: 'repository.edit' },
           color: 'primary',
           variant: 'miniFab',
-          callback: (event: Event, repository: Repository) => this.openFormSidenav(event, repository, this.updateRepository.bind(this)),
+          callback: (event: Event, repository: Repository) =>
+            this.openFormSidenav(event, repository, this.updateRepository.bind(this)),
           disabled: this.disableAllReposSync.asObservable()
         }
       ]
@@ -164,7 +169,11 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
    * @param repository The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, repository: Repository, saveCallback: (formGroup: UntypedFormGroup) => void): void {
+  private openFormSidenav(
+    event: Event,
+    repository: Repository,
+    saveCallback: (formGroup: UntypedFormGroup) => void
+  ): void {
     this.repository = repository ? Object.assign({}, repository) : new Repository();
 
     this.sidenavService.openFormSidenav({
@@ -294,7 +303,7 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
    * Update repositories priority when dropped and save them
    */
   public override drop(): void {
-    this.objectsPaged.content.forEach(repository => {
+    this.objectsPaged.content.forEach((repository) => {
       repository.priority = this.objectsPaged.content.indexOf(repository) + 1;
     });
 
@@ -303,7 +312,9 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
     this.toastService.sendMessage('repository.priority.running', ToastTypeEnum.INFO);
 
     forkJoin(
-      this.objectsPaged.content.map(repository => this.httpRepositoryService.update(repository.id, Object.assign({}, repository), true))
+      this.objectsPaged.content.map((repository) =>
+        this.httpRepositoryService.update(repository.id, Object.assign({}, repository), true)
+      )
     ).subscribe({
       next: () => {
         this.disableAllReposSync.next(false);

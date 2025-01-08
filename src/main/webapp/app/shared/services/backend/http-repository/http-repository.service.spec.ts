@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpRepositoryService } from './http-repository.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpRepositoryService } from './http-repository.service';
 
 describe('HttpRepositoryService', () => {
   let service: HttpRepositoryService;

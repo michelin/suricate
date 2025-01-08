@@ -18,10 +18,10 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-
 import { CanActivateFn } from '@angular/router';
-import { adminGuard } from './admin.guard';
+
 import { MockModule } from '../../../mock/mock.module';
+import { adminGuard } from './admin.guard';
 
 describe('AdminGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>

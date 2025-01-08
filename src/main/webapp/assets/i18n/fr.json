@@ -27,7 +27,7 @@
   "dashboard.delete.confirm": "Voulez-vous vraiment supprimer le tableau de bord",
   "dashboard.delete.success": "Tableau de bord supprimé avec succès",
   "dashboard.edit": "Editer un tableau de bord",
-  "dashboard.grid.addition.rotation.speed.form.field": "Vitesse de rotation",
+  "dashboard.grid.addition.rotation.speed.form.field": "Vitesse de rotation (en secondes)",
   "dashboard.grid.delete": "Suppression d'un tableau de bord ou d'une grille",
   "dashboard.grid.delete.dialog.message": "Sélectionnez l'entité à supprimer",
   "dashboard.grid.delete.dialog.select.dashboard": "Le tableau de bord",

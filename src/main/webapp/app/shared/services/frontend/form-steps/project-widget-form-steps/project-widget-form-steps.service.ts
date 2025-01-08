@@ -18,26 +18,27 @@
  */
 
 import { Injectable } from '@angular/core';
-import { EMPTY, from, Observable, of } from 'rxjs';
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { FormStep } from '../../../../models/frontend/form/form-step';
-import { IconEnum } from '../../../../enums/icon.enum';
-import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
-import { map, switchMap, tap, toArray } from 'rxjs/operators';
-import { MosaicFormOption } from '../../../../models/frontend/form/mosaic-form-option';
-import { Category } from '../../../../models/backend/category/category';
-import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
 import { UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { Widget } from '../../../../models/backend/widget/widget';
-import { FormField } from '../../../../models/frontend/form/form-field';
-import { HttpWidgetService } from '../../../backend/http-widget/http-widget.service';
-import { WidgetParam } from '../../../../models/backend/widget/widget-param';
-import { FormOption } from '../../../../models/frontend/form/form-option';
-import { WidgetParamValue } from '../../../../models/backend/widget/widget-param-value';
-import { HttpFilterService } from '../../../backend/http-filter/http-filter.service';
-import { Page } from '../../../../models/backend/page';
-import { CustomValidator } from '../../../../validators/custom-validator';
 import { TranslateService } from '@ngx-translate/core';
+import { EMPTY, from, Observable, of } from 'rxjs';
+import { map, switchMap, tap, toArray } from 'rxjs/operators';
+
+import { DataTypeEnum } from '../../../../enums/data-type.enum';
+import { IconEnum } from '../../../../enums/icon.enum';
+import { Category } from '../../../../models/backend/category/category';
+import { Page } from '../../../../models/backend/page';
+import { Widget } from '../../../../models/backend/widget/widget';
+import { WidgetParam } from '../../../../models/backend/widget/widget-param';
+import { WidgetParamValue } from '../../../../models/backend/widget/widget-param-value';
+import { FormField } from '../../../../models/frontend/form/form-field';
+import { FormOption } from '../../../../models/frontend/form/form-option';
+import { FormStep } from '../../../../models/frontend/form/form-step';
+import { MosaicFormOption } from '../../../../models/frontend/form/mosaic-form-option';
+import { CustomValidator } from '../../../../validators/custom-validator';
+import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
+import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
+import { HttpFilterService } from '../../../backend/http-filter/http-filter.service';
+import { HttpWidgetService } from '../../../backend/http-widget/http-widget.service';
 
 /**
  * Service used to build the steps related to a project widget
@@ -283,13 +284,10 @@ export class ProjectWidgetFormStepsService {
    * @param widgetConfig The list of configurations
    */
   public retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
-    const parameter = widgetConfig.split('\n').find(keyValue => keyValue.split('=')[0] === key);
+    const parameter = widgetConfig.split('\n').find((keyValue) => keyValue.split('=')[0] === key);
 
     if (parameter) {
-      return parameter
-        .replace(key, '')
-        .replace('=', '')
-        .replace(/\\n/g, '\n');
+      return parameter.replace(key, '').replace('=', '').replace(/\\n/g, '\n');
     }
 
     return null;

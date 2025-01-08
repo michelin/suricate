@@ -27,7 +27,7 @@
   "dashboard.delete.confirm": "Do you want to delete the dashboard",
   "dashboard.delete.success": "Dashboard deleted successfully",
   "dashboard.edit": "Edit dashboard",
-  "dashboard.grid.addition.rotation.speed.form.field": "Rotation speed",
+  "dashboard.grid.addition.rotation.speed.form.field": "Rotation speed (in seconds)",
   "dashboard.grid.delete": "Delete dashboard or grid",
   "dashboard.grid.delete.dialog.message": "Select the entity to delete",
   "dashboard.grid.delete.dialog.select.dashboard": "The dashboard",

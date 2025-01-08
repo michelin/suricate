@@ -18,19 +18,20 @@
  */
 
 import { Injectable } from '@angular/core';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { WizardConfiguration } from '../../../shared/models/frontend/wizard/wizard-configuration';
-import { FormStep } from '../../../shared/models/frontend/form/form-step';
+
+import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
-import { Project } from '../../../shared/models/backend/project/project';
+import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
 import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
+import { Project } from '../../../shared/models/backend/project/project';
+import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetPosition } from '../../../shared/models/backend/project-widget/project-widget-position';
-import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
-import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { FormStep } from '../../../shared/models/frontend/form/form-step';
 import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
+import { WizardConfiguration } from '../../../shared/models/frontend/wizard/wizard-configuration';
 
 @Injectable({
   providedIn: 'root'
@@ -170,6 +171,6 @@ export class MockedModelBuilderService {
       draggable: true,
       resizable: true,
       compactType: 'vertical'
-    }
+    };
   }
 }

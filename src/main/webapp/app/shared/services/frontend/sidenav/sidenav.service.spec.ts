@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { SidenavService } from './sidenav.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { SidenavService } from './sidenav.service';
 
 describe('SidenavService', () => {
   let service: SidenavService;

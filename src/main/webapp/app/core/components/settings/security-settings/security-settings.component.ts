@@ -17,25 +17,24 @@
  * under the License.
  */
 
+import { Clipboard } from '@angular/cdk/clipboard';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
-import { FormField } from '../../../../shared/models/frontend/form/form-field';
-import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
-import { FormService } from '../../../../shared/services/frontend/form/form.service';
-import { IconEnum } from '../../../../shared/enums/icon.enum';
-import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
-import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user.service';
-import { PersonalAccessToken } from '../../../../shared/models/backend/personal-access-token/personal-access-token';
-import { Clipboard } from '@angular/cdk/clipboard';
-import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
-import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  PersonalAccessTokenRequest
-} from '../../../../shared/models/backend/personal-access-token/personal-access-token-request';
+
+import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
+import { IconEnum } from '../../../../shared/enums/icon.enum';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { PersonalAccessToken } from '../../../../shared/models/backend/personal-access-token/personal-access-token';
+import { PersonalAccessTokenRequest } from '../../../../shared/models/backend/personal-access-token/personal-access-token-request';
+import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
+import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user.service';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
+import { FormService } from '../../../../shared/services/frontend/form/form.service';
+import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 
 @Component({
   selector: 'suricate-security-settings',
@@ -172,7 +171,9 @@ export class SecuritySettingsComponent implements OnInit {
         error: (error: HttpErrorResponse) => {
           if (error.status === 400) {
             this.toastService.sendMessage(
-              this.translateService.instant('settings.security.token.created.duplicated.name', { tokenName: tokenRequest.name }),
+              this.translateService.instant('settings.security.token.created.duplicated.name', {
+                tokenName: tokenRequest.name
+              }),
               ToastTypeEnum.DANGER
             );
           }

@@ -17,22 +17,13 @@
  * under the License.
  */
 
-import { NgModule } from '@angular/core';
-
-import { OverlayModule } from '@angular/cdk/overlay';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { NgModule } from '@angular/core';
 
 @NgModule({
-  imports: [
-    ClipboardModule,
-    OverlayModule,
-    DragDropModule
-  ],
-  exports: [
-    ClipboardModule,
-    OverlayModule,
-    DragDropModule
-  ]
+  imports: [ClipboardModule, OverlayModule, DragDropModule],
+  exports: [ClipboardModule, OverlayModule, DragDropModule]
 })
 export class MaterialCDKModule {}

@@ -17,9 +17,10 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 
 /**

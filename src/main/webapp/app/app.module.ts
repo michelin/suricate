@@ -17,22 +17,22 @@
  * under the License.
  */
 
+import { registerLocaleData } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import localeFr from '@angular/common/locales/fr';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import { AdminModule } from './admin/admin.module';
 import { AppComponent } from './app.component';
+import { appRoutes } from './app.routes';
 import { CoreModule } from './core/core.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { LayoutModule } from './layout/layout.module';
-import { AdminModule } from './admin/admin.module';
 import { SharedModule } from './shared/shared.module';
 import { WidgetModule } from './widget/widget.module';
-import { appRoutes } from './app.routes';
-import { registerLocaleData } from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
 
 registerLocaleData(localeFr);
 

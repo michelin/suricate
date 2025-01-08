@@ -23,6 +23,7 @@
 export enum IconEnum {
   ACCESS_TIME = 'ACCESS_TIME',
   ADD = 'ADD',
+  ADD_GRID = 'ADD_GRID',
   ARROW_DOWN = 'ARROW_DOWN',
   BRANCH = 'BRANCH',
   CATEGORY = 'CATEGORY',

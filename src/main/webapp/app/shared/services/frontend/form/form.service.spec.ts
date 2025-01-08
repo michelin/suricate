@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { FormService } from './form.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { FormService } from './form.service';
 
 describe('FormService', () => {
   let service: FormService;

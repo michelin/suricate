@@ -17,9 +17,10 @@
  * under the License.
  */
 
-import { WidgetHtmlDirective } from './widget-html.directive';
 import { TestBed } from '@angular/core/testing';
+
 import { MockModule } from '../../../mock/mock.module';
+import { WidgetHtmlDirective } from './widget-html.directive';
 
 describe('WidgetHtmlDirective', () => {
   let directive: WidgetHtmlDirective;

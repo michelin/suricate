@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpSettingService } from './http-setting.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpSettingService } from './http-setting.service';
 
 describe('HttpSettingService', () => {
   let service: HttpSettingService;

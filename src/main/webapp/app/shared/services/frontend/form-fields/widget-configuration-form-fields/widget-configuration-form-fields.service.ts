@@ -18,16 +18,15 @@
  */
 
 import { Injectable } from '@angular/core';
-import { FormField } from '../../../../models/frontend/form/form-field';
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { UntypedFormGroup, Validators } from '@angular/forms';
+
+import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { IconEnum } from '../../../../enums/icon.enum';
+import { CategoryParameter } from '../../../../models/backend/category-parameters/category-parameter';
+import { FormField } from '../../../../models/frontend/form/form-field';
 import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
 import { FormService } from '../../form/form.service';
-import {
-  ProjectWidgetFormStepsService
-} from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { CategoryParameter } from '../../../../models/backend/category-parameters/category-parameter';
+import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
 
 /**
  * Service used to build the form fields related to a project
@@ -88,10 +87,13 @@ export class WidgetConfigurationFormFieldsService {
    * @param categorySettings The widget settings
    * @param widgetBackendConfig The current widget backend configuration
    */
-  public generateCategoryParametersFormFields(categorySettings: CategoryParameter[], widgetBackendConfig: string): FormField[] {
-    const formFields: Array<FormField> = [];
+  public generateCategoryParametersFormFields(
+    categorySettings: CategoryParameter[],
+    widgetBackendConfig: string
+  ): FormField[] {
+    const formFields: FormField[] = [];
 
-    categorySettings.forEach(configuration => {
+    categorySettings.forEach((configuration) => {
       let backendConfigValue = null;
 
       if (widgetBackendConfig) {
@@ -138,7 +140,7 @@ export class WidgetConfigurationFormFieldsService {
       this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
     } else {
       for (const categoryField of categorySettingsFormFields) {
-        const index = fields.findIndex(field => field.key === categoryField.key);
+        const index = fields.findIndex((field) => field.key === categoryField.key);
 
         if (index !== -1) {
           fields.splice(index, 1);

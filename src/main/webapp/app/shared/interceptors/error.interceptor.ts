@@ -18,14 +18,14 @@
  */
 
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
 
-import { ToastService } from '../services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../enums/toast-type.enum';
 import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
-import { Router } from '@angular/router';
+import { ToastService } from '../services/frontend/toast/toast.service';
 
 /**
  * Interceptor that manage http errors
@@ -37,7 +37,10 @@ export class ErrorInterceptor implements HttpInterceptor {
    * @param router The router
    * @param toastService The toast service
    */
-  constructor(private router: Router, private toastService: ToastService) {}
+  constructor(
+    private router: Router,
+    private toastService: ToastService
+  ) {}
 
   /**
    * Method that intercept the request
@@ -48,8 +51,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       tap({
-        next: () => {
-        },
+        next: () => {},
         error: (httpError: any) => {
           if (httpError instanceof HttpErrorResponse) {
             switch (httpError.status) {

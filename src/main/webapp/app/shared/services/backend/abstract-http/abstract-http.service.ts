@@ -19,9 +19,10 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EnvironmentService } from '../../frontend/environment/environment.service';
-import { Page } from '../../../models/backend/page';
+
 import { HttpFilter } from '../../../models/backend/http-filter';
+import { Page } from '../../../models/backend/page';
+import { EnvironmentService } from '../../frontend/environment/environment.service';
 
 /**
  * Service used to define the minimum requirement for a http service

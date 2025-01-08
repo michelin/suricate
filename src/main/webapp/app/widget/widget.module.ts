@@ -20,10 +20,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../layout/layout.module';
-import { widgetRoutes } from './widget.route';
+import { SharedModule } from '../shared/shared.module';
 import { CatalogComponent } from './catalog/catalog.component';
+import { widgetRoutes } from './widget.route';
 
 @NgModule({
   imports: [LayoutModule, SharedModule, RouterModule.forChild(widgetRoutes)],

@@ -17,16 +17,16 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { Page } from '../../../models/backend/page';
 import { Role } from '../../../models/backend/role/role';
 import { User } from '../../../models/backend/user/user';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
 
 /**
  * Manage the http role calls

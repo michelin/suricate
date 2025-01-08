@@ -18,21 +18,17 @@
  */
 
 import { Injectable } from '@angular/core';
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { Validators } from '@angular/forms';
-import { FormField } from '../../../../models/frontend/form/form-field';
+
+import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { IconEnum } from '../../../../enums/icon.enum';
+import { FormField } from '../../../../models/frontend/form/form-field';
 
 /**
  * Service used to build the form fields related to the login page
  */
 @Injectable({ providedIn: 'root' })
 export class LoginFormFieldsService {
-  /**
-   * Constructor
-   */
-  constructor() {}
-
   /**
    * Get the list of fields for the login page
    */

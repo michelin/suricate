@@ -17,22 +17,20 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { Page } from '../../../models/backend/page';
+import { PersonalAccessToken } from '../../../models/backend/personal-access-token/personal-access-token';
+import { PersonalAccessTokenRequest } from '../../../models/backend/personal-access-token/personal-access-token-request';
+import { UserSetting } from '../../../models/backend/setting/user-setting';
+import { UserSettingRequest } from '../../../models/backend/setting/user-setting-request';
 import { User } from '../../../models/backend/user/user';
 import { UserRequest } from '../../../models/backend/user/user-request';
-import { UserSettingRequest } from '../../../models/backend/setting/user-setting-request';
-import { UserSetting } from '../../../models/backend/setting/user-setting';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { Page } from '../../../models/backend/page';
-import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import {
-  PersonalAccessTokenRequest
-} from '../../../models/backend/personal-access-token/personal-access-token-request';
-import { PersonalAccessToken } from '../../../models/backend/personal-access-token/personal-access-token';
 
 /**
  * Manage the http user calls
@@ -112,7 +110,11 @@ export class HttpUserService implements AbstractHttpService<User, UserRequest> {
    * @param settingId The setting id
    * @param userSettingRequest The user setting request
    */
-  public updateUserSetting(userName: string, settingId: number, userSettingRequest: UserSettingRequest): Observable<void> {
+  public updateUserSetting(
+    userName: string,
+    settingId: number,
+    userSettingRequest: UserSettingRequest
+  ): Observable<void> {
     const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
 
     return this.httpClient.put<void>(url, userSettingRequest);

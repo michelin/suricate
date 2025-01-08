@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { WidgetParamValue } from './widget-param-value';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { WidgetParamValue } from './widget-param-value';
 
 /**
  * The widget param entity

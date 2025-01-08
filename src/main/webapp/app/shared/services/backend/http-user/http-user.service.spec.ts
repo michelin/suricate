@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpUserService } from './http-user.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpUserService } from './http-user.service';
 
 describe('HttpUserService', () => {
   let service: HttpUserService;

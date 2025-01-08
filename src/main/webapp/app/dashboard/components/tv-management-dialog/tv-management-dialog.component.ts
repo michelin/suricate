@@ -18,20 +18,20 @@
  */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
+import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
+import { IconEnum } from '../../../shared/enums/icon.enum';
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketClient } from '../../../shared/models/backend/websocket-client';
-import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { FormService } from '../../../shared/services/frontend/form/form.service';
-import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
-import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { IconEnum } from '../../../shared/enums/icon.enum';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
+import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 
 @Component({
@@ -166,7 +166,7 @@ export class TvManagementDialogComponent implements OnInit {
    * Retrieve the websocket connections to a dashboard
    */
   public getConnectedWebsocketClient(): void {
-    this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe(websocketClients => {
+    this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe((websocketClients) => {
       this.websocketClients = websocketClients;
     });
   }
@@ -200,9 +200,11 @@ export class TvManagementDialogComponent implements OnInit {
    * @param websocketClient The websocket to disconnect
    */
   public disconnectScreen(websocketClient: WebsocketClient): void {
-    this.httpScreenService.disconnectScreenFromProject(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
-      setTimeout(() => this.getConnectedWebsocketClient(), 2000);
-    });
+    this.httpScreenService
+      .disconnectScreenFromProject(websocketClient.projectToken, +websocketClient.screenCode)
+      .subscribe(() => {
+        setTimeout(() => this.getConnectedWebsocketClient(), 2000);
+      });
   }
 
   /**

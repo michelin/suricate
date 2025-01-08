@@ -18,6 +18,7 @@
  */
 
 import { ValidatorFn } from '@angular/forms';
+
 import { IconEnum } from '../../../enums/icon.enum';
 
 /**

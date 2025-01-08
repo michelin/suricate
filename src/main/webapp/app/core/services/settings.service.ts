@@ -21,12 +21,13 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+
+import { SettingsTypeEnum } from '../../shared/enums/settings-type.enum';
+import { Setting } from '../../shared/models/backend/setting/setting';
 import { UserSetting } from '../../shared/models/backend/setting/user-setting';
 import { User } from '../../shared/models/backend/user/user';
-import { HttpUserService } from '../../shared/services/backend/http-user/http-user.service';
-import { SettingsTypeEnum } from '../../shared/enums/settings-type.enum';
 import { HttpSettingService } from '../../shared/services/backend/http-setting/http-setting.service';
-import { Setting } from '../../shared/models/backend/setting/setting';
+import { HttpUserService } from '../../shared/services/backend/http-user/http-user.service';
 
 /**
  * Manage the app theme
@@ -57,12 +58,12 @@ export class SettingsService {
   initDefaultSettings() {
     this.httpSettingService.getAll().subscribe((settings: Setting[]) => {
       this.currentThemeValue = settings
-        .find(setting => setting.type === SettingsTypeEnum.THEME)
-        .allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
+        .find((setting) => setting.type === SettingsTypeEnum.THEME)
+        .allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
 
       const defaultLanguageCode = settings
-        .find(setting => setting.type === SettingsTypeEnum.LANGUAGE)
-        .allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
+        .find((setting) => setting.type === SettingsTypeEnum.LANGUAGE)
+        .allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
 
       // This language will be used as a fallback when a translation is not found in the current language
       this.translateService.setDefaultLang(defaultLanguageCode);
@@ -79,10 +80,12 @@ export class SettingsService {
   initUserSettings(user: User): Observable<UserSetting[]> {
     return this.httpUserService.getUserSettings(user.username).pipe(
       tap((userSettings: UserSetting[]) => {
-        this.currentThemeValue = userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.THEME).settingValue.value;
+        this.currentThemeValue = userSettings.find(
+          (userSetting) => userSetting.setting.type === SettingsTypeEnum.THEME
+        ).settingValue.value;
 
         this.translateService.use(
-          userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value
+          userSettings.find((userSetting) => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value
         );
       })
     );

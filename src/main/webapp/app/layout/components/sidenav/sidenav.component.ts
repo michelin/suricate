@@ -18,15 +18,15 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-
-import { RouteService } from '../../../shared/services/frontend/route/route.service';
-import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
+import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { HttpUserService } from '../../../shared/services/backend/http-user/http-user.service';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
+import { RouteService } from '../../../shared/services/frontend/route/route.service';
 
 /**
  * Hold the sidenav behavior and the main view
@@ -47,7 +47,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private readonly unsubscribe: Subject<void> = new Subject<void>();
+  private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * Used to hide or display the menu using activated routes
@@ -58,14 +58,10 @@ export class SidenavComponent implements OnInit, OnDestroy {
    * Constructor
    * @param router Angular service used to manage routes
    * @param activatedRoute Angular service used to retrieve the component activated route
-   * @param httpUserService The HTTP user service
-   * @param authenticationService The authentication service
    */
   constructor(
     private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly httpUserService: HttpUserService,
-    private readonly authenticationService: AuthenticationService
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   /**

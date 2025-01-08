@@ -17,26 +17,23 @@
  * under the License.
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
-import { UntypedFormGroup } from '@angular/forms';
-import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
-import { FormService } from '../../services/frontend/form/form.service';
-import { FormStep } from '../../models/frontend/form/form-step';
-import { MaterialIconRecords } from '../../records/material-icon.record';
-import { MatStepper } from '@angular/material/stepper';
-import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
-import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
-import { FormField } from '../../models/frontend/form/form-field';
-import {
-  WidgetConfigurationFormFieldsService
-} from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import {
-  ProjectWidgetFormStepsService
-} from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import { MatStepper } from '@angular/material/stepper';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+import { FormField } from '../../models/frontend/form/form-field';
+import { FormStep } from '../../models/frontend/form/form-step';
+import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
+import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
+import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
+import { MaterialIconRecords } from '../../records/material-icon.record';
+import { FormService } from '../../services/frontend/form/form.service';
+import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 
 /**
  * Generic component used to display wizards
@@ -180,10 +177,13 @@ export class WizardComponent implements OnInit {
 
     if (this.currentStep && this.currentStep.asyncFields) {
       this.currentStep
-        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as UntypedFormGroup, this.currentStep)
+        .asyncFields(stepperSelectionEvent.selectedStep.stepControl as unknown as UntypedFormGroup, this.currentStep)
         .subscribe((formFields: FormField[]) => {
           this.currentStep.fields = formFields;
-          this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
+          this.stepperFormGroup.setControl(
+            this.currentStep.key,
+            this.formService.generateFormGroupForFields(formFields)
+          );
         });
     }
   }
@@ -224,14 +224,22 @@ export class WizardComponent implements OnInit {
    * Used to know if the back button should be displayed
    */
   private shouldDisplayNextButton(): boolean {
-    return this.wizardStepper && this.wizardStepper.steps && this.wizardStepper.selectedIndex < this.wizardStepper.steps.length - 1;
+    return (
+      this.wizardStepper &&
+      this.wizardStepper.steps &&
+      this.wizardStepper.selectedIndex < this.wizardStepper.steps.length - 1
+    );
   }
 
   /**
    * Used to know if the back button should be displayed
    */
   private shouldDisplayDoneButton(): boolean {
-    return this.wizardStepper && this.wizardStepper.steps && this.wizardStepper.selectedIndex === this.wizardStepper.steps.length - 1;
+    return (
+      this.wizardStepper &&
+      this.wizardStepper.steps &&
+      this.wizardStepper.selectedIndex === this.wizardStepper.steps.length - 1
+    );
   }
 
   /**

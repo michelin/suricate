@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { RouteService } from './route.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { RouteService } from './route.service';
 
 describe('RouteService', () => {
   let service: RouteService;

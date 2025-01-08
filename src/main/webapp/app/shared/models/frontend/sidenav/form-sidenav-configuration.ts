@@ -17,12 +17,13 @@
  * under the License.
  */
 
+import { ElementRef } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
+
+import { SlideToggleButtonConfiguration } from '../button/slide-toggle/slide-toggle-button-configuration';
 import { FormField } from '../form/form-field';
 import { ValueChangedEvent } from '../form/value-changed-event';
-import { Observable } from 'rxjs';
-import { SlideToggleButtonConfiguration } from '../button/slide-toggle/slide-toggle-button-configuration';
-import { UntypedFormGroup } from '@angular/forms';
-import { ElementRef } from '@angular/core';
 
 /**
  * Configuration used by the form sidenav

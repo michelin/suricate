@@ -18,18 +18,19 @@
  */
 
 import { Injectable } from '@angular/core';
-import { FormField } from '../../../../models/frontend/form/form-field';
-import { Setting } from '../../../../models/backend/setting/setting';
+import { Validators } from '@angular/forms';
 import { EMPTY, from, Observable } from 'rxjs';
+import { map, toArray } from 'rxjs/operators';
+
+import { SettingsService } from '../../../../../core/services/settings.service';
+import { IconEnum } from '../../../../enums/icon.enum';
+import { AllowedSettingValue } from '../../../../models/backend/setting/allowed-setting-value';
+import { Setting } from '../../../../models/backend/setting/setting';
+import { UserSetting } from '../../../../models/backend/setting/user-setting';
+import { FormField } from '../../../../models/frontend/form/form-field';
+import { FormOption } from '../../../../models/frontend/form/form-option';
 import { HttpSettingService } from '../../../backend/http-setting/http-setting.service';
 import { HttpUserService } from '../../../backend/http-user/http-user.service';
-import { UserSetting } from '../../../../models/backend/setting/user-setting';
-import { map, toArray } from 'rxjs/operators';
-import { FormOption } from '../../../../models/frontend/form/form-option';
-import { AllowedSettingValue } from '../../../../models/backend/setting/allowed-setting-value';
-import { IconEnum } from '../../../../enums/icon.enum';
-import { Validators } from '@angular/forms';
-import { SettingsService } from '../../../../../core/services/settings.service';
 
 /**
  * Service used to build the form fields related to the settings

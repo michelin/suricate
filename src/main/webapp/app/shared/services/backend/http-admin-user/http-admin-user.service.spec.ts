@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpAdminUserService } from './http-admin-user.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpAdminUserService } from './http-admin-user.service';
 
 describe('HttpAdminUserService', () => {
   let service: HttpAdminUserService;

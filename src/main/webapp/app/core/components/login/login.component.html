@@ -1,7 +1,7 @@
 <div class="container without-header">
   <div class="wrapper mat-elevation-z12">
     <div class="brand-image">
-      <img ngSrc="../../../../../assets/images/logo.png" width="282" height="282" priority alt="brand image" />
+      <img ngSrc="../../../../../assets/images/logo.png" width="282" height="282" priority alt="Suricate" />
     </div>
 
     @if (loading) {
@@ -42,7 +42,7 @@
         @if (isGithubAuthenticationActivated()) {
           <li style="background-color: rgb(68, 68, 68)">
             <a class="identity-provider-link" href="{{ this.githubAuthenticationEndpoint }}">
-              <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" />
+              <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub"/>
               <span>{{ 'github' | translate }}</span>
             </a>
           </li>
@@ -50,7 +50,7 @@
         @if (isGitlabAuthenticationActivated()) {
           <li style="background-color: rgb(41, 41, 97)">
             <a class="identity-provider-link" href="{{ this.gitlabAuthenticationEndpoint }}">
-              <img ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" />
+              <img ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
               <span>{{ 'gitlab' | translate }}</span>
             </a>
           </li>

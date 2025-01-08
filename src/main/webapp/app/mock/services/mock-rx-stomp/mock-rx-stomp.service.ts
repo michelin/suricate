@@ -18,18 +18,13 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { RxStompConfig, StompHeaders } from '@stomp/rx-stomp';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MockRxStompService {
-  /**
-   * Constructor
-   */
-  constructor() {}
-
   /**
    * Mocked initAndConnect method for the unit tests
    */

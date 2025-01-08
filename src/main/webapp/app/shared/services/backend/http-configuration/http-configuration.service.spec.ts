@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpConfigurationService } from './http-configuration.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpConfigurationService } from './http-configuration.service';
 
 describe('HttpConfigurationService', () => {
   let service: HttpConfigurationService;

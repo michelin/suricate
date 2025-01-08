@@ -17,28 +17,29 @@
  * under the License.
  */
 
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ListConfiguration } from '../../models/frontend/list/list-configuration';
-import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
-import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
-import { ToastService } from '../../services/frontend/toast/toast.service';
-import { DialogService } from '../../services/frontend/dialog/dialog.service';
-import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
-import { Page } from '../../models/backend/page';
-import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
-import { PageEvent } from '@angular/material/paginator';
-import { MaterialIconRecords } from '../../records/material-icon.record';
-import { IconEnum } from '../../enums/icon.enum';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+
 import { DataTypeEnum } from '../../enums/data-type.enum';
-import { UntypedFormGroup } from '@angular/forms';
+import { IconEnum } from '../../enums/icon.enum';
+import { Page } from '../../models/backend/page';
 import { FormField } from '../../models/frontend/form/form-field';
-import { FormService } from '../../services/frontend/form/form.service';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
+import { ListConfiguration } from '../../models/frontend/list/list-configuration';
+import { MaterialIconRecords } from '../../records/material-icon.record';
+import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
+import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
+import { DialogService } from '../../services/frontend/dialog/dialog.service';
+import { FormService } from '../../services/frontend/form/form.service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
+import { ToastService } from '../../services/frontend/toast/toast.service';
 
 /**
  * Generic component used to display and manage lists
@@ -218,7 +219,7 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   /**
    * Called when we change page from paginator
    *
-   * @param pageEvent The angular material page event
+   * @param pageEvent The page event
    */
   public pageChanged(pageEvent: PageEvent): void {
     this.httpFilter.page = pageEvent.pageIndex;
@@ -284,11 +285,13 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Wait for a few time before triggering the refresh
    */
   private subscribeToInputSearchElement(): void {
-    this.researchChanged.pipe(takeUntil(this.unsubscribe), debounceTime(500), distinctUntilChanged()).subscribe((searchValue: string) => {
-      this.httpFilter.page = 0;
-      this.httpFilter.search = searchValue;
-      this.refreshList();
-    });
+    this.researchChanged
+      .pipe(takeUntil(this.unsubscribe), debounceTime(500), distinctUntilChanged())
+      .subscribe((searchValue: string) => {
+        this.httpFilter.page = 0;
+        this.httpFilter.search = searchValue;
+        this.refreshList();
+      });
   }
 
   /**

@@ -19,6 +19,7 @@
 
 import { Injectable } from '@angular/core';
 
+import * as packageJson from '../../../../../../../../package.json';
 import { environment } from '../../../../../environments/environment';
 
 /**
@@ -39,7 +40,7 @@ export class EnvironmentService {
   /**
    * The global app version
    */
-  public static readonly appVersion = `${environment.version}`;
+  public static readonly appVersion = packageJson.version;
 
   /**
    * The global app environment

@@ -20,15 +20,14 @@
 import { IconEnum } from '../enums/icon.enum';
 
 /**
- * Records used to store related material icons from https://material.io/resources/icons
+ * Records used to store related material icons from https://fonts.google.com/icons
  */
-type MaterialIcon = {
-  [key: string]: string;
-};
+type MaterialIcon = Record<string, string>;
 
 export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.ACCESS_TIME]: 'access_time',
   [IconEnum.ADD]: 'add',
+  [IconEnum.ADD_GRID]: 'library_add',
   [IconEnum.ARROW_DOWN]: 'keyboard_arrow_right',
   [IconEnum.BRANCH]: 'merge_type',
   [IconEnum.CATEGORY]: 'category',
@@ -44,7 +43,7 @@ export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.FILE_DOWNLOAD]: 'file_download',
   [IconEnum.FILE_UPLOAD]: 'file_upload',
   [IconEnum.GENERAL_INFORMATION]: 'menu_book',
-  [IconEnum.GRID]: 'view_carousel',
+  [IconEnum.GRID]: 'grid_view',
   [IconEnum.HEIGHT]: 'height',
   [IconEnum.HELP]: 'help',
   [IconEnum.HIDE_PASSWORD]: 'visibility_off',

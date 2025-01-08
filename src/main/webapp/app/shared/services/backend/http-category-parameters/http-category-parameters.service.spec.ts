@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpCategoryParametersService } from './http-category-parameters.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpCategoryParametersService } from './http-category-parameters.service';
 
 describe('HttpCategoryParametersService', () => {
   let service: HttpCategoryParametersService;

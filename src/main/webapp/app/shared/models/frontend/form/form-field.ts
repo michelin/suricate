@@ -17,12 +17,13 @@
  * under the License.
  */
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { Observable } from 'rxjs';
-import { FormOption } from './form-option';
 import { AsyncValidatorFn, UntypedFormGroup, ValidatorFn } from '@angular/forms';
-import { MosaicFormOption } from './mosaic-form-option';
+import { Observable } from 'rxjs';
+
+import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
+import { FormOption } from './form-option';
+import { MosaicFormOption } from './mosaic-form-option';
 
 /**
  * Describe a field used to manage the form

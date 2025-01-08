@@ -17,15 +17,16 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
+
+import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { Page } from '../../../models/backend/page';
 import { WidgetConfigurationRequest } from '../../../models/backend/widget-configuration/widget-configuration-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
-import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
 
 /**
  * Configuration services manage http calls

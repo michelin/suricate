@@ -19,9 +19,10 @@
 
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { MenuCategoryConfiguration } from '../../../models/frontend/menu/menu-category-configuration';
 import { MenuConfiguration } from '../../../models/frontend/menu/menu-configuration';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { MenuCategoryConfiguration } from '../../../models/frontend/menu/menu-category-configuration';
 
 /**
  * Service used to manage menu

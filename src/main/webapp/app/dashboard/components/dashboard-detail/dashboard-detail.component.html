@@ -1,11 +1,14 @@
 @if (!isDashboardLoading && project) {
   <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
-  <ol class="carousel-indicators">
-    @for (grid of project.grids; track grid) {
-      <li (click)="redirectToGrid(grid.id)" [ngClass]="{ 'indicator-selected': grid.id === gridId }"></li>
-    }
-    <li (click)="redirectToAddGrid()" [ngClass]="{ 'indicator-selected': !gridId }"></li>
-  </ol>
+
+  <suricate-paginator
+    (pageChange)="redirectToGrid($event)"
+    [currentPage]="getGridIndex()"
+    [pageNbElements]="1"
+    [totalElements]="project.grids.length"
+  >
+  </suricate-paginator>
+
   <!-- Dashboard screen -->
   @if (currentWidgets?.length > 0) {
     <suricate-dashboard-screen
@@ -22,35 +25,18 @@
   @if (!isDashboardLoading && (!currentWidgets || currentWidgets.length === 0)) {
     <div class="grid add-widget-grid">
       <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
-      @if (gridId) {
-        <mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
-          <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="displayProjectWidgetWizard()">
-            <div class="grid-tile-content-wrapper">
-              <div class="grid-tile-body">
-                <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
-              </div>
-              <div class="grid-tile-footer">
-                {{ 'widget.add' | translate }}
-              </div>
+      <mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
+        <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="displayProjectWidgetWizard()">
+          <div class="grid-tile-content-wrapper">
+            <div class="grid-tile-body">
+              <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
             </div>
-          </mat-grid-tile>
-        </mat-grid-list>
-      }
-      <!-- Display the add grid -->
-      @if (!gridId) {
-        <mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
-          <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="openAddGridFormSidenav()">
-            <div class="grid-tile-content-wrapper">
-              <div class="grid-tile-body">
-                <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
-              </div>
-              <div class="grid-tile-footer">
-                {{ 'grid.add' | translate }}
-              </div>
+            <div class="grid-tile-footer">
+              {{ 'widget.add' | translate }}
             </div>
-          </mat-grid-tile>
-        </mat-grid-list>
-      }
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
     </div>
   }
 }

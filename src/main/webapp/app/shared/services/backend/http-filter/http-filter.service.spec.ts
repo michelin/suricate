@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpFilterService } from './http-filter.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpFilterService } from './http-filter.service';
 
 describe('HttpFilterService', () => {
   let service: HttpFilterService;

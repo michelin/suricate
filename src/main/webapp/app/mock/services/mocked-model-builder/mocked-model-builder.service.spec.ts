@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { MockedModelBuilderService } from './mocked-model-builder.service';
 import { MockModule } from '../../mock.module';
+import { MockedModelBuilderService } from './mocked-model-builder.service';
 
 describe('MockUnitTestsService', () => {
   let service: MockedModelBuilderService;

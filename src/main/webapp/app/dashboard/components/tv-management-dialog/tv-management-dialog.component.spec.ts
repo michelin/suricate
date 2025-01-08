@@ -18,33 +18,29 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { TvManagementDialogComponent } from './tv-management-dialog.component';
 import { MockModule } from '../../../mock/mock.module';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ActionsDialogConfiguration } from '../../../shared/models/frontend/dialog/actions-dialog-configuration';
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { Project } from '../../../shared/models/backend/project/project';
 import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
+import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
+import { TvManagementDialogComponent } from './tv-management-dialog.component';
 
 describe('TvManagementDialogComponent', () => {
   let component: TvManagementDialogComponent;
   let fixture: ComponentFixture<TvManagementDialogComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [TvManagementDialogComponent],
-        providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [TvManagementDialogComponent],
+      providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(TvManagementDialogComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(TvManagementDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

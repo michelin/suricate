@@ -18,18 +18,19 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { FormField } from '../../../../models/frontend/form/form-field';
-import { map } from 'rxjs/operators';
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { Validators } from '@angular/forms';
-import { FormOption } from '../../../../models/frontend/form/form-option';
-import { User } from '../../../../models/backend/user/user';
-import { Role } from '../../../../models/backend/role/role';
-import { HttpRoleService } from '../../../backend/http-role/http-role.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { IconEnum } from '../../../../enums/icon.enum';
-import { HttpFilterService } from '../../../backend/http-filter/http-filter.service';
 import { Page } from '../../../../models/backend/page';
+import { Role } from '../../../../models/backend/role/role';
+import { User } from '../../../../models/backend/user/user';
+import { FormField } from '../../../../models/frontend/form/form-field';
+import { FormOption } from '../../../../models/frontend/form/form-option';
+import { HttpFilterService } from '../../../backend/http-filter/http-filter.service';
+import { HttpRoleService } from '../../../backend/http-role/http-role.service';
 
 /**
  * Service used to build the form fields related to a user
@@ -87,7 +88,7 @@ export class UserFormFieldsService {
         key: 'roles',
         label: 'roles',
         type: DataTypeEnum.MULTIPLE,
-        value: user.roles && user.roles.length > 0 ? user.roles.map(role => role.name) : null,
+        value: user.roles && user.roles.length > 0 ? user.roles.map((role) => role.name) : null,
         options: () => this.getRoleOptions(),
         validators: [Validators.required]
       }

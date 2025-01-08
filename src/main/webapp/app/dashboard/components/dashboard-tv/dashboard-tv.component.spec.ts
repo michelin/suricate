@@ -19,25 +19,23 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { DashboardTvComponent } from './dashboard-tv.component';
 import { MockModule } from '../../../mock/mock.module';
+import { DashboardTvComponent } from './dashboard-tv.component';
 
 describe('DashboardTvComponent', () => {
   let component: DashboardTvComponent;
   let fixture: ComponentFixture<DashboardTvComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [DashboardTvComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [DashboardTvComponent]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(DashboardTvComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(DashboardTvComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

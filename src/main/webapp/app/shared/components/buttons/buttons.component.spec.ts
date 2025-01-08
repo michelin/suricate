@@ -19,25 +19,23 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { ButtonsComponent } from './buttons.component';
 import { MockModule } from '../../../mock/mock.module';
+import { ButtonsComponent } from './buttons.component';
 
 describe('ButtonsComponent', () => {
   let component: ButtonsComponent<unknown>;
   let fixture: ComponentFixture<ButtonsComponent<unknown>>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [ButtonsComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [ButtonsComponent]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ButtonsComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ButtonsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

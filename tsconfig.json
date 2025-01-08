@@ -20,6 +20,7 @@
       "ES2022",
       "dom"
     ],
+    "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "strictNullChecks": false,
     "noImplicitReturns": true,
@@ -31,6 +32,6 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
   }
 }

@@ -19,11 +19,12 @@
 
 import { Injectable } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { HttpRepositoryService } from '../services/backend/http-repository/http-repository.service';
 import { Observable } from 'rxjs';
-import { HttpFilterService } from '../services/backend/http-filter/http-filter.service';
+import { map } from 'rxjs/operators';
+
 import { Repository } from '../models/backend/repository/repository';
+import { HttpFilterService } from '../services/backend/http-filter/http-filter.service';
+import { HttpRepositoryService } from '../services/backend/http-repository/http-repository.service';
 
 @Injectable({
   providedIn: 'root'
@@ -42,10 +43,10 @@ export class CustomAsyncValidatorService {
   public validateRepositoryUniquePriority(currentRepository: Repository): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors> => {
       return this.httpRepositoryService.getAll(HttpFilterService.getInfiniteFilter()).pipe(
-        map(repositories => {
+        map((repositories) => {
           return repositories.content
-            .filter(repository => repository.id !== currentRepository.id)
-            .filter(repository => repository.priority === control.value).length >= 1
+            .filter((repository) => repository.id !== currentRepository.id)
+            .filter((repository) => repository.priority === control.value).length >= 1
             ? { uniquePriority: true }
             : null;
         })

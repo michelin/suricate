@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { RxStompService } from './rx-stomp.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { RxStompService } from './rx-stomp.service';
 
 describe('RxStompService', () => {
   let service: RxStompService;

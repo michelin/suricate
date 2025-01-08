@@ -19,22 +19,21 @@
 
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { FormField } from '../../../../shared/models/frontend/form/form-field';
-import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
-import { UserSetting } from '../../../../shared/models/backend/setting/user-setting';
-import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication.service';
-import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { from, mergeMap } from 'rxjs';
 import { toArray } from 'rxjs/operators';
-import { Setting } from '../../../../shared/models/backend/setting/setting';
-import { UserSettingRequest } from '../../../../shared/models/backend/setting/user-setting-request';
+
+import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { AllowedSettingValue } from '../../../../shared/models/backend/setting/allowed-setting-value';
-import { SettingsService } from '../../../services/settings.service';
-import {
-  SettingsFormFieldsService
-} from '../../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields.service';
-import { FormService } from '../../../../shared/services/frontend/form/form.service';
+import { Setting } from '../../../../shared/models/backend/setting/setting';
+import { UserSetting } from '../../../../shared/models/backend/setting/user-setting';
+import { UserSettingRequest } from '../../../../shared/models/backend/setting/user-setting-request';
+import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user.service';
+import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication.service';
+import { FormService } from '../../../../shared/services/frontend/form/form.service';
+import { SettingsFormFieldsService } from '../../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields.service';
+import { SettingsService } from '../../../services/settings.service';
 
 @Component({
   selector: 'suricate-ux-settings',
@@ -82,13 +81,15 @@ export class UxSettingsComponent implements OnInit {
   ngOnInit(): void {
     this.initButtons();
 
-    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
-      this.userSettings = userSettings;
-      this.settingsFormFieldsService.generateSettingsFormFields(userSettings).subscribe((formFields: FormField[]) => {
-        this.formFields = formFields;
-        this.formGroup = this.formService.generateFormGroupForFields(formFields);
+    this.settingsService
+      .initUserSettings(AuthenticationService.getConnectedUser())
+      .subscribe((userSettings: UserSetting[]) => {
+        this.userSettings = userSettings;
+        this.settingsFormFieldsService.generateSettingsFormFields(userSettings).subscribe((formFields: FormField[]) => {
+          this.formFields = formFields;
+          this.formGroup = this.formService.generateFormGroupForFields(formFields);
+        });
       });
-    });
   }
 
   /**
@@ -118,28 +119,36 @@ export class UxSettingsComponent implements OnInit {
    * Save the selected settings
    */
   private saveSettings(): void {
-    from(this.userSettings.map(userSetting => userSetting.setting))
+    from(this.userSettings.map((userSetting) => userSetting.setting))
       .pipe(
         mergeMap((setting: Setting) => {
           const userSettingRequest = new UserSettingRequest();
           if (setting.constrained && setting.allowedSettingValues) {
-            const selectedAllowedSetting = setting.allowedSettingValues.find((allowedSettingValue: AllowedSettingValue) => {
-              return allowedSettingValue.value === this.formGroup.get(setting.type).value;
-            });
+            const selectedAllowedSetting = setting.allowedSettingValues.find(
+              (allowedSettingValue: AllowedSettingValue) => {
+                return allowedSettingValue.value === this.formGroup.get(setting.type).value;
+              }
+            );
 
             userSettingRequest.allowedSettingValueId = selectedAllowedSetting.id;
           } else {
             userSettingRequest.unconstrainedValue = this.formGroup.get(setting.type).value;
           }
 
-          return this.httpUserService.updateUserSetting(AuthenticationService.getConnectedUser().username, setting.id, userSettingRequest);
+          return this.httpUserService.updateUserSetting(
+            AuthenticationService.getConnectedUser().username,
+            setting.id,
+            userSettingRequest
+          );
         }),
         toArray()
       )
       .subscribe(() => {
-        this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
-          this.userSettings = userSettings;
-        });
+        this.settingsService
+          .initUserSettings(AuthenticationService.getConnectedUser())
+          .subscribe((userSettings: UserSetting[]) => {
+            this.userSettings = userSettings;
+          });
       });
   }
 }

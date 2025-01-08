@@ -17,16 +17,16 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 
-import { User } from '../../../models/backend/user/user';
-import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { Page } from '../../../models/backend/page';
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { HttpFilterService } from '../http-filter/http-filter.service';
+import { Page } from '../../../models/backend/page';
+import { User } from '../../../models/backend/user/user';
 import { UserRequest } from '../../../models/backend/user/user-request';
+import { AbstractHttpService } from '../abstract-http/abstract-http.service';
+import { HttpFilterService } from '../http-filter/http-filter.service';
 import { HttpUserService } from '../http-user/http-user.service';
 
 @Injectable({ providedIn: 'root' })

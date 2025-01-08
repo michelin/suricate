@@ -19,30 +19,28 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { WizardComponent } from './wizard.component';
-import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../mock/mock.module';
+import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
+import { WizardComponent } from './wizard.component';
 
 describe('WizardComponent', () => {
   let component: WizardComponent;
   let fixture: ComponentFixture<WizardComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [WizardComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [WizardComponent]
+    }).compileComponents();
 
-      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-      fixture = TestBed.createComponent(WizardComponent);
-      component = fixture.componentInstance;
-      component.wizardConfiguration = mockedModelBuilderService.buildWizardConfiguration();
+    fixture = TestBed.createComponent(WizardComponent);
+    component = fixture.componentInstance;
+    component.wizardConfiguration = mockedModelBuilderService.buildWizardConfiguration();
 
-      fixture.detectChanges();
-    })
-  );
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

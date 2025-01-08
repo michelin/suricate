@@ -17,20 +17,20 @@
  * under the License.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { DialogService } from './shared/services/frontend/dialog/dialog.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
-import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { SettingsService } from './core/services/settings.service';
-import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
-import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
-import { Subject } from 'rxjs';
-import { ActionsDialogConfiguration } from './shared/models/frontend/dialog/actions-dialog-configuration';
 import { ActionsDialogComponent } from './shared/components/actions-dialog/actions-dialog.component';
+import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
+import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { ActionsDialogConfiguration } from './shared/models/frontend/dialog/actions-dialog-configuration';
+import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
+import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
+import { DialogService } from './shared/services/frontend/dialog/dialog.service';
 
 @Component({
   selector: 'suricate-root',

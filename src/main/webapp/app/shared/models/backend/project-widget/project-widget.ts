@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { ProjectWidgetPosition } from './project-widget-position';
 import { WidgetStateEnum } from '../../../enums/widget-sate.enum';
+import { ProjectWidgetPosition } from './project-widget-position';
 
 /**
  * The project widget entity

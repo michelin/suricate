@@ -42,7 +42,7 @@ export class SlideToggleComponent {
    * The event emitter
    */
   @Output()
-  slideToggleButtonPressed: EventEmitter<MatSlideToggleChange> = new EventEmitter();
+  slideToggleButtonPressed = new EventEmitter<MatSlideToggleChange>();
 
   /**
    * Constructor

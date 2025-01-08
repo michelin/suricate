@@ -17,24 +17,22 @@
  * under the License.
  */
 
-import { ElementRef, NgModule } from '@angular/core';
-import { MockRxStompService } from './services/mock-rx-stomp/mock-rx-stomp.service';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { SharedModule } from '../shared/shared.module';
-import { LayoutModule } from '../layout/layout.module';
-import { MockElementRef } from './models/mock-element-ref';
-import { RxStompService } from '../shared/services/frontend/rx-stomp/rx-stomp.service';
-import { CoreModule } from '../core/core.module';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ElementRef, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+import { CoreModule } from '../core/core.module';
+import { LayoutModule } from '../layout/layout.module';
+import { RxStompService } from '../shared/services/frontend/rx-stomp/rx-stomp.service';
+import { SharedModule } from '../shared/shared.module';
+import { MockElementRef } from './models/mock-element-ref';
+import { MockRxStompService } from './services/mock-rx-stomp/mock-rx-stomp.service';
 
 @NgModule({
-  exports: [
-    LayoutModule,
-    SharedModule
-  ],
+  exports: [LayoutModule, SharedModule],
   imports: [
     TranslateModule.forRoot({
       loader: {

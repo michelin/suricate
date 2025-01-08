@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { DialogConfiguration } from './dialog-configuration';
 import { ButtonConfiguration } from '../button/button-configuration';
+import { DialogConfiguration } from './dialog-configuration';
 
 /**
  * Configuration used by the actions dialog

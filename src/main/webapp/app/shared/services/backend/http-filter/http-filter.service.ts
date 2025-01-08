@@ -17,6 +17,7 @@
  * under the License.
  */
 import { Injectable } from '@angular/core';
+
 import { HttpFilter } from '../../../models/backend/http-filter';
 
 /**
@@ -80,7 +81,7 @@ export class HttpFilterService {
    * @param httpFilter The filter used to build the url
    */
   static getFilteredUrl(url: string, httpFilter: HttpFilter = HttpFilterService.getDefaultFilter()): string {
-    Object.keys(httpFilter).forEach(filterKey => {
+    Object.keys(httpFilter).forEach((filterKey) => {
       if (httpFilter[filterKey]) {
         if (httpFilter[filterKey] instanceof Array) {
           httpFilter[filterKey].forEach((filterKeyValue: string) => {

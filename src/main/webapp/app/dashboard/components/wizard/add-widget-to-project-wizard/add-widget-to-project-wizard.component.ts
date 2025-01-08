@@ -18,21 +18,18 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
-import {
-  ProjectWidgetFormStepsService
-} from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { FormStep } from '../../../../shared/models/frontend/form/form-step';
-import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
-import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
-import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
-import {
-  HttpProjectWidgetService
-} from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
-import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
-import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
-import { Project } from '../../../../shared/models/backend/project/project';
 import { UntypedFormGroup } from '@angular/forms';
+
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { Project } from '../../../../shared/models/backend/project/project';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
+import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
+import { FormStep } from '../../../../shared/models/frontend/form/form-step';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
+import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 
 @Component({
   templateUrl: '../../../../shared/components/wizard/wizard.component.html',
@@ -92,12 +89,14 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
         let row = 1;
         let column = 1;
         if (widgets != null && widgets.length > 0) {
-          const widgetsByGrid = widgets.filter(widget => widget.gridId === this.gridId);
+          const widgetsByGrid = widgets.filter((widget) => widget.gridId === this.gridId);
           while (
-            widgetsByGrid.filter(widget => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column).length > 0
+            widgetsByGrid.filter(
+              (widget) => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column
+            ).length > 0
           ) {
             column += widgetsByGrid.filter(
-              widget => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column
+              (widget) => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column
             )[0].widgetPosition.width;
             if (column > project.gridProperties.maxColumn) {
               column = 1;
@@ -107,7 +106,9 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
         }
 
         const projectWidgetRequest: ProjectWidgetRequest = {
-          widgetId: formGroup.get(ProjectWidgetFormStepsService.selectWidgetStepKey).value[ProjectWidgetFormStepsService.widgetIdFieldKey],
+          widgetId: formGroup.get(ProjectWidgetFormStepsService.selectWidgetStepKey).value[
+            ProjectWidgetFormStepsService.widgetIdFieldKey
+          ],
           backendConfig: Object.keys(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value)
             .filter(
               (key: string) =>
@@ -115,17 +116,20 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
                 String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).trim() !== ''
             )
             .map(
-              (key: string) => `${key}=${String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).replace(/\n/g, '\\n')}`
+              (key: string) =>
+                `${key}=${String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).replace(/\n/g, '\\n')}`
             )
             .join('\n'),
           gridColumn: column,
           gridRow: row
         };
 
-        this.httpProjectWidgetsService.addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest).subscribe(() => {
-          this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
-          this.redirectToDashboard();
-        });
+        this.httpProjectWidgetsService
+          .addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest)
+          .subscribe(() => {
+            this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
+            this.redirectToDashboard();
+          });
       });
     });
   }

@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { HttpRoleService } from './http-role.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpRoleService } from './http-role.service';
 
 describe('HttpRoleService', () => {
   let service: HttpRoleService;

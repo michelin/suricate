@@ -19,8 +19,8 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { DialogService } from './dialog.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { DialogService } from './dialog.service';
 
 describe('DialogService', () => {
   let service: DialogService;

@@ -29,7 +29,10 @@ export class CustomValidator {
    */
   public static checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
     return (confirmPasswordControl: AbstractControl): ValidationErrors => {
-      if ((passwordControl.dirty || passwordControl.touched) && (confirmPasswordControl.dirty || confirmPasswordControl.touched)) {
+      if (
+        (passwordControl.dirty || passwordControl.touched) &&
+        (confirmPasswordControl.dirty || confirmPasswordControl.touched)
+      ) {
         return passwordControl.value !== confirmPasswordControl.value ? { passwordMismatch: true } : null;
       }
       return null;

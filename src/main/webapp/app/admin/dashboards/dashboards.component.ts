@@ -18,24 +18,21 @@
  */
 
 import { Component } from '@angular/core';
-import { ListComponent } from '../../shared/components/list/list.component';
-import { IconEnum } from '../../shared/enums/icon.enum';
-import { Project } from '../../shared/models/backend/project/project';
-import { HttpProjectService } from '../../shared/services/backend/http-project/http-project.service';
-import { ProjectRequest } from '../../shared/models/backend/project/project-request';
-import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
-import { FormField } from '../../shared/models/frontend/form/form-field';
-import {
-  ProjectFormFieldsService
-} from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import {
-  ProjectUsersFormFieldsService
-} from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
-import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { UntypedFormGroup } from '@angular/forms';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+
+import { ListComponent } from '../../shared/components/list/list.component';
+import { IconEnum } from '../../shared/enums/icon.enum';
+import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
+import { Project } from '../../shared/models/backend/project/project';
+import { ProjectRequest } from '../../shared/models/backend/project/project-request';
+import { FormField } from '../../shared/models/frontend/form/form-field';
+import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { HttpProjectService } from '../../shared/services/backend/http-project/http-project.service';
 import { CssService } from '../../shared/services/frontend/css/css.service';
-import { UntypedFormGroup } from '@angular/forms';
+import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
+import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',
@@ -167,7 +164,9 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
    */
   private editProject(formGroup: UntypedFormGroup): void {
     const projectRequest: ProjectRequest = formGroup.value;
-    projectRequest.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(projectRequest.gridBackgroundColor)]);
+    projectRequest.cssStyle = CssService.buildCssFile([
+      CssService.buildCssGridBackgroundColor(projectRequest.gridBackgroundColor)
+    ]);
 
     this.httpProjectService.update(this.projectSelected.token, projectRequest).subscribe(() => {
       this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
@@ -223,7 +222,11 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService
         .addUserToProject(this.projectSelected.token, valueChangedEvent.value)
-        .pipe(switchMap(() => of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.projectSelected.token))));
+        .pipe(
+          switchMap(() =>
+            of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.projectSelected.token))
+          )
+        );
     }
 
     return EMPTY;

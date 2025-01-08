@@ -29,7 +29,6 @@
 @import '../components/mat-input-theme';
 @import '../components/mat-file-input-theme';
 @import '../components/mat-communication-dialog-theme';
-@import '../components/mat-dashboard-detail-theme';
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
@@ -47,5 +46,4 @@
   @include custom-input-component-theme($theme);
   @include custom-file-input-component-theme($theme);
   @include custom-communication-dialog-component-theme($theme);
-  @include dashboard-detail-component-theme($theme);
 }
