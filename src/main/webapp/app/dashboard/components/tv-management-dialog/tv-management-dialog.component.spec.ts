@@ -21,6 +21,12 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TvManagementDialogComponent } from './tv-management-dialog.component';
 import { MockModule } from '../../../mock/mock.module';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ActionsDialogConfiguration } from '../../../shared/models/frontend/dialog/actions-dialog-configuration';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { Project } from '../../../shared/models/backend/project/project';
+import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
+import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 
 describe('TvManagementDialogComponent', () => {
   let component: TvManagementDialogComponent;
@@ -30,7 +36,8 @@ describe('TvManagementDialogComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MockModule],
-        declarations: [TvManagementDialogComponent]
+        declarations: [TvManagementDialogComponent],
+        providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }]
       }).compileComponents();
 
       fixture = TestBed.createComponent(TvManagementDialogComponent);
@@ -42,4 +49,34 @@ describe('TvManagementDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  function buildProject(): Project {
+    const gridProperties: GridProperties = {
+      maxColumn: 5,
+      widgetHeight: 300,
+      cssStyle: ''
+    };
+
+    const grid: ProjectGrid = {
+      id: 1,
+      time: 30
+    };
+
+    return {
+      gridProperties: gridProperties,
+      librariesToken: ['Token1', 'Token2'],
+      name: 'ProjectName',
+      screenshotToken: 'ScreenToken',
+      image: {
+        content: 'content',
+        contentType: 'image/png',
+        id: 'id',
+        lastUpdateDate: new Date(),
+        size: 10
+      },
+      token: 'Token',
+      displayProgressBar: false,
+      grids: [grid]
+    };
+  }
 });

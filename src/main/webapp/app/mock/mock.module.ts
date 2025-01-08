@@ -28,16 +28,22 @@ import { LayoutModule } from '../layout/layout.module';
 import { MockElementRef } from './models/mock-element-ref';
 import { RxStompService } from '../shared/services/frontend/rx-stomp/rx-stomp.service';
 import { CoreModule } from '../core/core.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  exports: [LayoutModule, SharedModule],
-  imports: [TranslateModule.forRoot({
-    loader: {
-      provide: TranslateLoader,
-      useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
-      deps: [HttpClient]
-    }
-  }),
+  exports: [
+    LayoutModule,
+    SharedModule
+  ],
+  imports: [
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+        deps: [HttpClient]
+      }
+    }),
+    RouterModule.forRoot([]),
     LayoutModule,
     SharedModule,
     CoreModule
