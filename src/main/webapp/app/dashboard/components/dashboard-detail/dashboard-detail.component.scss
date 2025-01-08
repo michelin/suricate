@@ -17,6 +17,11 @@
  * under the License.
  */
 
+.grid-pagination {
+  display: flex;
+  justify-content: center;
+}
+
 .add-widget-grid {
   color: inherit;
   font-size: inherit;

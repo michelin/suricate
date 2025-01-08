@@ -32,15 +32,23 @@ import { HttpFilterService } from '../../services/backend/http-filter/http-filte
 })
 export class PaginatorComponent {
   /**
+   * Hide the page size
+   */
+  @Input()
+  hidePageSize: boolean;
+
+  /**
    * The current page to display
    */
   @Input()
   currentPage: number;
+
   /**
    * Number of elements per paged
    */
   @Input()
   pageNbElements: number;
+
   /**
    * Total of fetch elements
    */
@@ -53,7 +61,6 @@ export class PaginatorComponent {
   @Output()
   pageChange = new EventEmitter<PageEvent>();
 
-  constructor() {}
 
   /**
    * Used to emit an event when the page has changed
