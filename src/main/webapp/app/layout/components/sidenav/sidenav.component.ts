@@ -23,8 +23,6 @@ import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { HttpUserService } from '../../../shared/services/backend/http-user/http-user.service';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 import { RouteService } from '../../../shared/services/frontend/route/route.service';
 

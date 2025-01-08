@@ -149,9 +149,9 @@ export class HttpProjectService implements AbstractHttpService<Project, ProjectR
   /**
    * Add a user to a project
    *
-   * @param {string} projectToken The projectToken
-   * @param {string} username The username to add
-   * @returns {Observable<Project>} The project as observable
+   * @param projectToken The projectToken
+   * @param username The username to add
+   * @returns The project as observable
    */
   public addUserToProject(projectToken: string, username: string): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/users`;

@@ -38,19 +38,6 @@ import { HttpUserService } from '../../../backend/http-user/http-user.service';
 @Injectable({ providedIn: 'root' })
 export class SettingsFormFieldsService {
   /**
-   * Constructor
-   *
-   * @param httpSettingService Service used to manage http calls for settings
-   * @param httpUserService Service used to manage http calls for users
-   * @param settingService Service used to manage the user settings
-   */
-  constructor(
-    private readonly httpSettingService: HttpSettingService,
-    private readonly httpUserService: HttpUserService,
-    private readonly settingService: SettingsService
-  ) {}
-
-  /**
    * Get the list of fields for the settings
    */
   public generateSettingsFormFields(userSettings: UserSetting[]): Observable<FormField[]> {

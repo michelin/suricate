@@ -143,10 +143,10 @@ export class HomeComponent implements OnInit {
           ImageUtils.getDataFromBase64URL(formData.image),
           ImageUtils.getContentTypeFromBase64URL(formData.image)
         );
+
         const file: File = FileUtils.convertBlobToFile(
           blob,
-          `${project.token}.${contentType.split('/')[1]}`,
-          new Date()
+          `${project.token}.${contentType.split('/')[1]}`
         );
 
         this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();

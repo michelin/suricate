@@ -76,8 +76,8 @@ public class CategoryParametersController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "204", description = "No Content"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -99,12 +99,12 @@ public class CategoryParametersController {
     @Operation(summary = "Get a configuration by the key")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Configuration not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Configuration not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/category-parameters/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -133,12 +133,12 @@ public class CategoryParametersController {
     @Operation(summary = "Update a configuration by the key")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Configuration updated"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Configuration not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Configuration not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/category-parameters/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -169,12 +169,12 @@ public class CategoryParametersController {
     @Operation(summary = "Delete a configuration by the key")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Configuration deleted"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Configuration not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Configuration not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @DeleteMapping(value = "/v1/category-parameters/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

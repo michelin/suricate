@@ -20,6 +20,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
@@ -51,7 +52,6 @@ import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
-import { PageEvent } from '@angular/material/paginator';
 
 /**
  * Component used to display a specific dashboard
@@ -330,9 +330,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           variant: 'miniFab',
           tooltip: { message: this.project.grids.length === 1 ? 'dashboard.delete' : 'dashboard.grid.delete' },
           hidden: () => this.isReadOnly,
-          callback: () => {
-            this.project.grids.length === 1 ? this.deleteDashboard() : this.deleteDashboardOrGrid();
-          }
+          callback: this.project.grids.length === 1 ? () => this.deleteDashboard() : () => this.deleteDashboardOrGrid()
         }
       ]
     };
@@ -426,8 +424,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         );
         const file: File = FileUtils.convertBlobToFile(
           blob,
-          `${this.project.token}.${contentType.split('/')[1]}`,
-          new Date()
+          `${this.project.token}.${contentType.split('/')[1]}`
         );
 
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();

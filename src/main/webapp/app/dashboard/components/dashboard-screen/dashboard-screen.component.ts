@@ -20,6 +20,7 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -48,6 +49,12 @@ import { WebsocketService } from '../../../shared/services/frontend/websocket/we
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { LibraryService } from '../../services/library/library.service';
 
+declare global {
+  interface Window {
+    page_loaded: boolean;
+  }
+}
+
 /**
  * Display the grid stack widgets
  */
@@ -61,7 +68,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Reference on the span containing all the required JS libraries
    */
   @ViewChild('externalJsLibraries')
-  public externalJsLibrariesSpan: any;
+  public externalJsLibrariesSpan: ElementRef<HTMLSpanElement>;
 
   /**
    * The project to display
@@ -160,7 +167,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     if (changes['project']) {
       if (!changes['project'].previousValue) {
         // Inject this variable in the window scope because some widgets use it to init the js
-        (window as any).page_loaded = true;
+        window.page_loaded = true;
       }
 
       if (changes['project'].currentValue) {

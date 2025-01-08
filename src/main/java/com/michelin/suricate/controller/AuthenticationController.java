@@ -66,8 +66,8 @@ public class AuthenticationController {
     @Operation(summary = "Sign in a user")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Bad request", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
     })
     @PostMapping(value = "/v1/auth/signin")
     @PreAuthorize("isAnonymous()")

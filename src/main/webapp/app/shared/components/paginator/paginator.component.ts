@@ -61,7 +61,6 @@ export class PaginatorComponent {
   @Output()
   pageChange = new EventEmitter<PageEvent>();
 
-
   /**
    * Used to emit an event when the page has changed
    *
