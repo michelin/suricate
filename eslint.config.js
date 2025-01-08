@@ -2,16 +2,18 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
-const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
-const unusedImports = require('eslint-plugin-unused-imports');
 const deprecation = require('eslint-plugin-deprecation');
+const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
+const simpleImportSort = require('eslint-plugin-simple-import-sort');
+const unusedImports = require('eslint-plugin-unused-imports');
 
 module.exports = tseslint.config(
   {
     files: ["**/*.ts"],
     plugins: {
-      "unused-imports": unusedImports,
       "deprecation": deprecation,
+      "simple-import-sort": simpleImportSort,
+      "unused-imports": unusedImports,
     },
     extends: [
       eslint.configs.recommended,
