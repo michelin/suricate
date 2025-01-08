@@ -17,24 +17,62 @@
  * under the License.
  */
 
-.add-widget-grid {
-  color: inherit;
-  font-size: inherit;
+* {
+  font-family: Roboto, sans-serif;
+}
 
-  .grid-widget-tile {
-    margin-top: 4px;
-    margin-left: 4px;
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+
+  .mat-icon {
+    & {
+      font-variant: none;
+    }
+  }
+
+  .container {
+    min-height: 89vh;
+
+    &.without-header {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  h1.little {
+    font-size: 1.2em;
+    margin: 0;
+    font-variant: all-small-caps;
+  }
+
+  h2.little {
+    font-size: 1.3em;
+    margin: 0;
+    font-variant: all-small-caps;
+  }
+
+  a {
+    &, &:visited {
+      text-decoration: none;
+    }
+  }
+
+  .text-justify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  .mat-table .mat-row .mat-cell {
+    font-size: 11px;
+  }
+
+  .mat-mdc-form-field-icon-suffix {
+    cursor: pointer;
   }
 }
 
-.mat-grid-tile {
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: 0 4px 5px -2px rgba(0, 0, 0, 0.2), 0 7px 10px 1px rgba(0, 0, 0, 0.14), 0 2px 16px 1px rgba(0, 0, 0, 0.12);
-  }
-
-  .grid-tile-body {
-    max-height: 200px;
-  }
-}

@@ -17,12 +17,12 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+@use '@angular/material/index' as mat;
 
 @mixin custom-communication-dialog-component-theme($theme) {
   $warn: map-get($theme, warn);
 
   .communication-dialog-wrapper .mat-mdc-dialog-content.communication-dialog-error {
-    color: mat.get-color-from-palette($warn, 500);
+    color: mat.m2-get-color-from-palette($warn, 500);
   }
 }

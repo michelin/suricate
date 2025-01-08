@@ -17,24 +17,12 @@
  * under the License.
  */
 
-.add-widget-grid {
-  color: inherit;
-  font-size: inherit;
+@use '@angular/material/index' as mat;
 
-  .grid-widget-tile {
-    margin-top: 4px;
-    margin-left: 4px;
-  }
-}
+@mixin custom-input-component-theme($theme) {
+  $warn: map-get($theme, warn);
 
-.mat-grid-tile {
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: 0 4px 5px -2px rgba(0, 0, 0, 0.2), 0 7px 10px 1px rgba(0, 0, 0, 0.14), 0 2px 16px 1px rgba(0, 0, 0, 0.12);
-  }
-
-  .grid-tile-body {
-    max-height: 200px;
+  .input-error {
+    color: mat.m2-get-color-from-palette($warn, 500);
   }
 }

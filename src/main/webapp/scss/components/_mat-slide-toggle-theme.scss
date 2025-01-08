@@ -17,10 +17,13 @@
  * under the License.
  */
 
+@use '@angular/material/index' as mat;
+
 /**
- * Component for that modify the theme of Angular Material mat-tab-group
+ * Component for that modify the theme of Angular Material mat-slide-toggle
  */
-@mixin custom-mat-tab-group-theme($theme) {
+@mixin custom-mat-slide-toggle-theme($theme) {
+  // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
@@ -28,8 +31,17 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-mdc-tab {
-    font-size: 1.2rem;
-    font-variant: all-small-caps;
+  .mat-slide-toggle {
+    &.mat-primary {
+      &.mat-checked {
+        .mat-slide-toggle-thumb {
+          background-color: mat.m2-get-color-from-palette($primary, A700);
+        }
+
+        .mat-slide-toggle-bar {
+          background-color: mat.m2-get-color-from-palette($primary, A700, 0.55);
+        }
+      }
+    }
   }
 }

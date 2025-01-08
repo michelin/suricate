@@ -17,7 +17,7 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+@use '@angular/material/index' as mat;
 
 /**
  * Component for that modify the theme of Angular Material sidenav
@@ -37,11 +37,9 @@
   $sidenav-text: #cfd2da;
 
   .mat-sidenav.menu-sidenav {
-    & {
-      background-color: $sidenav-background-primary;
-      color: $sidenav-text;
-      font-variant: all-small-caps;
-    }
+    background-color: $sidenav-background-primary;
+    color: $sidenav-text;
+    font-variant: all-small-caps;
 
     .mat-divider {
       width: 100%;
@@ -49,26 +47,20 @@
     }
 
     .sidenav-section {
-      & {
-        margin-bottom: 0 !important;
-      }
+      margin-bottom: 0 !important;
 
       &#user-section {
-        & {
-          padding-top: 15px;
-          margin: 0;
-          width: 100%;
-        }
+        padding-top: 15px;
+        margin: 0;
+        width: 100%;
 
         & > .avatar-container {
-          & {
-            margin: 0 auto;
-            width: 70px;
-            height: 70px;
-            overflow: hidden;
-            border-radius: 50%;
-            border: 1px solid #303030;
-          }
+          margin: 0 auto;
+          width: 70px;
+          height: 70px;
+          overflow: hidden;
+          border-radius: 50%;
+          border: 1px solid #303030;
 
           & > .avatar {
             height: 100%;
@@ -81,12 +73,10 @@
       }
 
       .common-icon-button {
-        & {
-          height: 48px;
-        }
+        height: 48px;
 
         &:hover {
-          background-color: mat.get-color-from-palette($primary, 400);
+          background-color: mat.m2-get-color-from-palette($primary, 400);
         }
 
         mat-icon {
@@ -109,26 +99,22 @@
     }
 
     .mat-list-item {
-      & {
-        color: $sidenav-text;
-        font-size: 1em;
-        height: 50px !important;
-      }
+      color: $sidenav-text;
+      font-size: 1em;
+      height: 50px !important;
 
       &:hover {
-        background-color: mat.get-color-from-palette($primary, 400);
+        background-color: mat.m2-get-color-from-palette($primary, 400);
       }
 
       &.active {
-        background-color: mat.get-color-from-palette($primary, 300);
+        background-color: mat.m2-get-color-from-palette($primary, 300);
       }
     }
 
     .mat-expansion-panel {
-      & {
-        background-color: $sidenav-background-primary;
-        color: $sidenav-text;
-      }
+      background-color: $sidenav-background-primary;
+      color: $sidenav-text;
 
       .mat-expansion-panel-header {
         .mat-content-hide-toggle {
@@ -148,11 +134,9 @@
       }
 
       .mat-expansion-panel-content {
-        & {
-          background-color: $sidenav-background-secondary;
-          font-variant: all-small-caps;
-          font-size: 1em;
-        }
+        background-color: $sidenav-background-secondary;
+        font-variant: all-small-caps;
+        font-size: 1em;
 
         span {
           color: $sidenav-text;
@@ -178,7 +162,7 @@
     }
 
     .mdc-list > .mdc-list-item:hover {
-      background-color: mat.get-color-from-palette($primary, 400);
+      background-color: mat.m2-get-color-from-palette($primary, 400);
     }
   }
 

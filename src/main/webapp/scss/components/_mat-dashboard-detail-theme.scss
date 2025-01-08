@@ -17,24 +17,29 @@
  * under the License.
  */
 
-.add-widget-grid {
-  color: inherit;
-  font-size: inherit;
+@use '@angular/material/index' as mat;
 
-  .grid-widget-tile {
-    margin-top: 4px;
-    margin-left: 4px;
-  }
-}
+@mixin dashboard-detail-component-theme($theme) {
+  $primary: map-get($theme, primary);
 
-.mat-grid-tile {
-  cursor: pointer;
+  .carousel-indicators {
+    display: flex;
+    list-style: none;
+    width: 500px;
+    margin: 15px auto;
+    justify-content: center;
 
-  &:hover {
-    box-shadow: 0 4px 5px -2px rgba(0, 0, 0, 0.2), 0 7px 10px 1px rgba(0, 0, 0, 0.14), 0 2px 16px 1px rgba(0, 0, 0, 0.12);
-  }
+    li {
+      background-color: mat.m2-get-color-from-palette($primary, 200);
+      cursor: pointer;
+      width: 30px;
+      height: 4px;
+      margin-right: 4px;
+      margin-left: 4px;
+    }
 
-  .grid-tile-body {
-    max-height: 200px;
+    .indicator-selected {
+      background-color: mat.m2-get-color-from-palette($primary, 900);
+    }
   }
 }

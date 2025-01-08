@@ -17,12 +17,12 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+@use '@angular/material/index' as mat;
 
 /**
- * Component for that modify the theme of Angular Material mat-slide-toggle
+ * Component for that modify the theme of Angular Material mat-button
  */
-@mixin custom-mat-slide-toggle-theme($theme) {
+@mixin custom-mat-button-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -31,17 +31,29 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-slide-toggle {
+  .mat-raised-button,
+  .mat-mini-fab {
     &.mat-primary {
-      &.mat-checked {
-        .mat-slide-toggle-thumb {
-          background-color: mat.get-color-from-palette($primary, A700);
-        }
+      background-color: mat.m2-get-color-from-palette($primary, A700);
+    }
+  }
 
-        .mat-slide-toggle-bar {
-          background-color: mat.get-color-from-palette($primary, A700, 0.55);
-        }
+  .mat-button,
+  .mat-icon-button {
+    &.mat-primary {
+      color: mat.m2-get-color-from-palette($primary, A700);
+
+      .mat-button-focus-overlay {
+        background-color: mat.m2-get-color-from-palette($primary, A700);
       }
+    }
+  }
+
+  .mat-mdc-outlined-button {
+    --mdc-outlined-button-outline-color: mat.m2-get-color-from-palette($primary, 500);
+
+    &.mat-warn {
+      border: 1px solid mat.m2-get-color-from-palette($warn, 500);
     }
   }
 }

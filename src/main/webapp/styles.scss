@@ -17,7 +17,7 @@
  * under the License.
  */
 
-@use "@angular/material" as mat;
+@use '@angular/material/index' as mat;
 
 // Font Awesome icons for widgets
 @import '@fortawesome/fontawesome-free/scss/fontawesome';
@@ -27,12 +27,12 @@
 
 @include mat.core();
 
-@import 'sass/global-styles';
-@import 'sass/dashboard-screen';
+@import 'scss/global-styles';
+@import 'scss/dashboard-screen';
 
-@import 'sass/themes/suricate-theme';
-@import 'sass/themes/light-theme/dashboard-light-palette';
-@import 'sass/themes/dark-theme/dashboard-dark-palette';
+@import 'scss/themes/suricate-theme';
+@import 'scss/themes/light-theme/dashboard-light-palette';
+@import 'scss/themes/dark-theme/dashboard-dark-palette';
 
 // Suricate typography
 $suricate-typography: mat.m2-define-typography-config(

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+@use '@angular/material/index' as mat;
 
 /**
  * Component for that modify the theme of Angular Material mat-stepper
@@ -52,20 +52,20 @@
   .mat-stepper-horizontal,
   .mat-stepper-vertical {
     min-height: 90%;
-    --mat-stepper-container-color: mat.get-color-from-palette($background, background);
+    --mat-stepper-container-color: mat.m2-get-color-from-palette($background, background);
 
     .mat-step-header {
       .mat-step-icon {
         width: 30px;
         height: 30px;
-        background-color: mat.get-color-from-palette($primary, A100);
+        background-color: mat.m2-get-color-from-palette($primary, A100);
 
         &.mat-step-icon-state-done {
           background-color: #8bc34a !important;
         }
 
         &.mat-step-icon-selected {
-          background-color: mat.get-color-from-palette($primary, A700);
+          background-color: mat.m2-get-color-from-palette($primary, A700);
         }
       }
 
@@ -90,7 +90,7 @@
 
         &.mat-step-label-selected {
           hr {
-            border-color: mat.get-color-from-palette($primary, A700);
+            border-color: mat.m2-get-color-from-palette($primary, A700);
           }
         }
       }
