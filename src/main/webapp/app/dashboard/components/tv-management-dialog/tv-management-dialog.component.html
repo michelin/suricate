@@ -40,16 +40,8 @@
       }
     </div>
   </div>
-
-  <!-- Show screen code -->
-  <div id="display-code-link">
-    <a (click)="displayScreenCode()">
-      <mat-icon> {{ materialIconRecords[iconEnum.ARROW_DOWN] }} </mat-icon>
-      <span> {{ 'screen.display.code' | translate }} </span>
-    </a>
-  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <suricate-buttons [configurations]="genericButtonsConfiguration" [mat-dialog-close]="false"></suricate-buttons>
+  <suricate-buttons [configurations]="genericButtonsConfiguration" matDialogClose></suricate-buttons>
 </mat-dialog-actions>

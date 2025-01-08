@@ -20,7 +20,7 @@
 import { GridRequest } from './grid-request';
 
 export class ProjectGridRequest {
-  [key: string]: any;
+  [key: string]: unknown;
   displayProgressBar: boolean;
   grids: GridRequest[];
 }

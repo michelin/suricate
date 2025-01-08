@@ -170,7 +170,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       .watch(projectWidgetSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: IMessage) => {
-        console.warn('Received a message from the websocket', stompMessage);
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         if (updateEvent.type === WebsocketUpdateTypeEnum.REFRESH_WIDGET) {

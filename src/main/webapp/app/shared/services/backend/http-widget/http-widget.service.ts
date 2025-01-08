@@ -91,7 +91,9 @@ export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest
   /**
    * Function used to delete a widget
    */
-  public delete(): Observable<void> {
-    return EMPTY;
+  public delete(id: number): Observable<void> {
+    const url = `${HttpWidgetService.widgetsApiEndpoint}/${id}`;
+
+    return this.httpClient.delete<void>(url);
   }
 }

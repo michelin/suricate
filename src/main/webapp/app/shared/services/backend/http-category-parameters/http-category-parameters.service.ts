@@ -19,7 +19,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
 import { HttpFilter } from '../../../models/backend/http-filter';
@@ -72,8 +72,10 @@ export class HttpCategoryParametersService extends AbstractHttpService<CategoryP
   /**
    * Function used to create a configuration
    */
-  public create(): Observable<CategoryParameter> {
-    return EMPTY;
+  public create(widgetConfigurationRequest: WidgetConfigurationRequest): Observable<CategoryParameter> {
+    const url = `${HttpCategoryParametersService.configurationsApiEndpoint}`;
+
+    return this.httpClient.post<CategoryParameter>(url, widgetConfigurationRequest);
   }
 
   /**

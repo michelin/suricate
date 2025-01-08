@@ -169,11 +169,11 @@ export class ProjectWidgetFormStepsService {
       };
 
       if (widgetParam.type === DataTypeEnum.MULTIPLE) {
-        formField.value = formField.value ? formField.value.split(',') : undefined;
+        formField.value = formField.value ? (formField.value as string).split(',') : undefined;
       }
 
       if (widgetParam.type === DataTypeEnum.BOOLEAN) {
-        formField.value = JSON.parse(formField.value ? formField.value : false);
+        formField.value = JSON.parse(String(formField.value ? formField.value : false));
       }
 
       formFields.push(formField);

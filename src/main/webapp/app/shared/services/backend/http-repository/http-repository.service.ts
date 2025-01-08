@@ -19,7 +19,6 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
@@ -102,7 +101,9 @@ export class HttpRepositoryService implements AbstractHttpService<Repository, Re
   /**
    * Delete a repository
    */
-  public delete(): Observable<void> {
-    return EMPTY;
+  public delete(id: number): Observable<void> {
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${id}`;
+
+    return this.httpClient.delete<void>(url);
   }
 }

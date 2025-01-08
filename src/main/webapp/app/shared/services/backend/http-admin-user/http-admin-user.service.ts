@@ -19,7 +19,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { Page } from '../../../models/backend/page';
@@ -45,6 +45,7 @@ export class HttpAdminUserService implements AbstractHttpService<User, UserReque
    */
   public getAll(filter?: HttpFilter): Observable<Page<User>> {
     const url = `${HttpAdminUserService.adminUsersApiEndpoint}`;
+
     return this.httpClient.get<Page<User>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
@@ -62,8 +63,10 @@ export class HttpAdminUserService implements AbstractHttpService<User, UserReque
   /**
    * Function used to create a new user
    */
-  public create(): Observable<User> {
-    return EMPTY;
+  public create(userRequest: UserRequest): Observable<User> {
+    const url = `${HttpUserService.usersApiEndpoint}`;
+
+    return this.httpClient.post<User>(url, userRequest);
   }
 
   /**

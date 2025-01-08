@@ -62,7 +62,7 @@ export class FileInputComponent extends InputComponent implements OnInit {
    * When the component is init
    */
   public override ngOnInit(): void {
-    this.setBase64File(this.field.value);
+    this.setBase64File(this.field.value as string);
   }
 
   /**

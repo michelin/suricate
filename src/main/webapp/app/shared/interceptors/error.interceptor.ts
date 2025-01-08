@@ -51,19 +51,17 @@ export class ErrorInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       tap({
-        error: (httpError: any) => {
-          if (httpError instanceof HttpErrorResponse) {
-            switch (httpError.status) {
-              // Authentication error, token invalid or expired
-              case 401:
-                AuthenticationService.logout();
-                this.router.navigate(['/login']);
-                break;
+        error: (httpError: HttpErrorResponse) => {
+          switch (httpError.status) {
+            // Authentication error, token invalid or expired
+            case 401:
+              AuthenticationService.logout();
+              this.router.navigate(['/login']);
+              break;
 
-              case 0:
-                this.displayUnknownErrorMessage();
-                break;
-            }
+            case 0:
+              this.displayUnknownErrorMessage();
+              break;
           }
         }
       })

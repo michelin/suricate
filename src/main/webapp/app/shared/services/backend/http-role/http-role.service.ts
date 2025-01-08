@@ -24,7 +24,6 @@ import { Observable } from 'rxjs';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { Page } from '../../../models/backend/page';
 import { Role } from '../../../models/backend/role/role';
-import { User } from '../../../models/backend/user/user';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilterService } from '../http-filter/http-filter.service';
 
@@ -35,7 +34,6 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
 export class HttpRoleService {
   /**
    * Global roles endpoint
-   * @type {string}
    */
   private static readonly rolesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/roles`;
 
@@ -55,27 +53,5 @@ export class HttpRoleService {
     const url = `${HttpRoleService.rolesApiEndpoint}`;
 
     return this.httpClient.get<Page<Role>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
-
-  /**
-   * Get a role by id
-   *
-   * @param roleId The role id
-   */
-  public getOneById(roleId: number): Observable<Role> {
-    const url = `${HttpRoleService.rolesApiEndpoint}/${roleId}`;
-
-    return this.httpClient.get<Role>(url);
-  }
-
-  /**
-   * Get a list of users for a role
-   *
-   * @param roleId The role id
-   */
-  public getUsersByRole(roleId: number): Observable<User[]> {
-    const url = `${HttpRoleService.rolesApiEndpoint}/${roleId}/users`;
-
-    return this.httpClient.get<User[]>(url);
   }
 }

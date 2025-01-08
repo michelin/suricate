@@ -19,7 +19,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { Page } from '../../../models/backend/page';
@@ -68,8 +68,10 @@ export class HttpUserService implements AbstractHttpService<User, UserRequest> {
   /**
    * Create a user
    */
-  public create(): Observable<User> {
-    return EMPTY;
+  public create(userRequest: UserRequest): Observable<User> {
+    const url = `${HttpUserService.usersApiEndpoint}`;
+
+    return this.httpClient.post<User>(url, userRequest);
   }
 
   /**

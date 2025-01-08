@@ -141,6 +141,13 @@ export class TvManagementDialogComponent implements OnInit {
 
     this.genericButtonsConfiguration = [
       {
+        label: 'screen.display.code',
+        icon: IconEnum.SHOW_PASSWORD,
+        color: 'primary',
+        type: ButtonTypeEnum.BUTTON,
+        callback: () => this.displayScreenCode()
+      },
+      {
         label: 'close',
         icon: IconEnum.CLOSE,
         color: 'warn'

@@ -7,7 +7,7 @@
     [cpDialogDisplay]="'inline'"
     [cpOutputFormat]="'hex'"
     [cpAlphaChannel]="'always'"
-    [colorPicker]="field.value"
+    [colorPicker]="getFieldValue()"
     (colorPickerChange)="colorChanged($event)"
   ></div>
 </div>

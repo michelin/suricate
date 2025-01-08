@@ -442,7 +442,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Get the project widget by its id
    * @param id The id of the project widget
    */
-  public getProjectWidgetById(id: any): ProjectWidget {
+  public getProjectWidgetById(id: string): ProjectWidget {
     return this.projectWidgets.find((projectWidget) => projectWidget.id === Number(id));
   }
 }

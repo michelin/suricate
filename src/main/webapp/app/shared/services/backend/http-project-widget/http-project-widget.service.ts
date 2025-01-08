@@ -32,7 +32,6 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 export class HttpProjectWidgetService {
   /**
    * Global endpoint for project widgets
-   * @type {string}
    */
   private static readonly projectWidgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projectWidgets`;
 

@@ -55,11 +55,6 @@ export class ButtonsComponent<T> {
   public materialIconRecords = MaterialIconRecords;
 
   /**
-   * Constructor
-   */
-  constructor() {}
-
-  /**
    * Used to know if the button should be hidden
    *
    * @param configuration The button configuration related to this button

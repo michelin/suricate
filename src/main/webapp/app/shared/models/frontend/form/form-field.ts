@@ -58,7 +58,7 @@ export class FormField {
   /**
    * The value to display
    */
-  value?: any;
+  value?: string | string[] | number | boolean;
 
   /**
    * If the type contains a list of values to display insert them in this attribute
