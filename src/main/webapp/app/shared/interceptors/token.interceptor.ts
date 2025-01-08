@@ -41,7 +41,7 @@ export class TokenInterceptor implements HttpInterceptor {
    * @param request The request sent
    * @param next The next interceptor
    */
-  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (
       !request ||
       !request.url ||

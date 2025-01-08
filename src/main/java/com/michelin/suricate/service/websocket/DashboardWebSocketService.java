@@ -84,8 +84,10 @@ public class DashboardWebSocketService {
             .content(projectMapper.toProjectDto(project))
             .build();
 
-        log.debug("Sending the event {} to the screen {}", updateEvent.getType(),
-            screenCode.replaceAll("[\n\r\t]", "_"));
+        log.debug("Sending the event {} to the screen {}",
+            updateEvent.getType(),
+            screenCode.replaceAll("[\n\r\t]", "_")
+        );
 
         simpMessagingTemplate.convertAndSendToUser(
             screenCode,
@@ -105,10 +107,14 @@ public class DashboardWebSocketService {
      * @param payload         The payload content
      */
     @Async
-    public void sendEventToWidgetInstanceSubscribers(final String projectToken, final Long projectWidgetId,
+    public void sendEventToWidgetInstanceSubscribers(final String projectToken,
+                                                     final Long projectWidgetId,
                                                      final UpdateEvent payload) {
-        log.debug("Sending the event {} for the widget instance {} of the project {}", payload.getType(),
-            projectWidgetId, projectToken);
+        log.debug("Sending the event {} for the widget instance {} of the project {}",
+            payload.getType(),
+            projectWidgetId,
+            projectToken
+        );
 
         if (projectToken == null) {
             log.error("Project token null for payload: {}", payload);
@@ -245,10 +251,15 @@ public class DashboardWebSocketService {
      */
     @Async
     public void disconnectClient(final String projectToken, final String screenCode) {
-        UpdateEvent payload = UpdateEvent.builder().type(UpdateType.DISCONNECT).build();
+        UpdateEvent payload = UpdateEvent.builder()
+            .type(UpdateType.DISCONNECT)
+            .build();
 
-        log.info("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken,
-            screenCode.replaceAll("[\n\r\t]", "_"));
+        log.info("Sending the event {} to the project {} of the screen {}",
+            payload.getType(),
+            projectToken,
+            screenCode.replaceAll("[\n\r\t]", "_")
+        );
 
         simpMessagingTemplate.convertAndSendToUser(
             projectToken.trim() + "-" + screenCode,
@@ -271,7 +282,10 @@ public class DashboardWebSocketService {
      */
     public void reloadAllConnectedClientsToProject(final String projectToken) {
         if (!websocketClientByProjectToken.get(projectToken).isEmpty()) {
-            sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.RELOAD).build());
+            sendEventToProjectSubscribers(projectToken, UpdateEvent.builder()
+                .type(UpdateType.RELOAD)
+                .build()
+            );
         }
     }
 }

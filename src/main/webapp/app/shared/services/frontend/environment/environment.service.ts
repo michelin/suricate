@@ -66,9 +66,4 @@ export class EnvironmentService {
    * Enable the debug logs for the websockets
    */
   public static readonly wsDebug = environment.wsDebug;
-
-  /**
-   * The constructor
-   */
-  constructor() {}
 }

@@ -101,10 +101,8 @@ export class HttpRepositoryService implements AbstractHttpService<Repository, Re
 
   /**
    * Delete a repository
-   *
-   * @param id The repository id to delete
    */
-  public delete(id: number): Observable<void> {
+  public delete(): Observable<void> {
     return EMPTY;
   }
 }

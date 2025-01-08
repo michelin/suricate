@@ -61,9 +61,8 @@ export class HttpAdminUserService implements AbstractHttpService<User, UserReque
 
   /**
    * Function used to create a new user
-   * @param entity The user to create
    */
-  public create(entity: User | UserRequest): Observable<User> {
+  public create(): Observable<User> {
     return EMPTY;
   }
 

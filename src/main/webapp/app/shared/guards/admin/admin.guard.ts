@@ -22,7 +22,7 @@ import { CanActivateFn, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../services/frontend/authentication/authentication.service';
 
-export const adminGuard: CanActivateFn = (route, state) => {
+export const adminGuard: CanActivateFn = () => {
   const router = inject(Router);
   if (AuthenticationService.isAdmin()) {
     return true;

@@ -45,11 +45,6 @@ export class DialogService {
   private actionsDialogSubject = new Subject<ActionsDialogConfiguration>();
 
   /**
-   * Constructor
-   */
-  constructor() {}
-
-  /**
    * Used to retrieve the messages
    */
   public listenConfirmationMessages(): Observable<ConfirmationDialogConfiguration> {

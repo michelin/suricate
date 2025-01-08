@@ -18,6 +18,8 @@
  */
 
 import { WebsocketUpdateTypeEnum } from '../../../enums/websocket-update-type.enum';
+import { Project } from '../../backend/project/project';
+import { ProjectWidget } from '../../backend/project-widget/project-widget';
 
 /**
  * The object WS Event
@@ -25,5 +27,5 @@ import { WebsocketUpdateTypeEnum } from '../../../enums/websocket-update-type.en
 export class WebsocketUpdateEvent {
   date: Date;
   type: WebsocketUpdateTypeEnum;
-  content: any;
+  content: Project | ProjectWidget | void;
 }

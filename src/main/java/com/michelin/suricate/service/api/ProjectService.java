@@ -278,8 +278,13 @@ public class ProjectService {
      */
     @Transactional
     public void deleteProject(Project project) {
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(),
-            UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
+        dashboardWebsocketService.sendEventToProjectSubscribers(
+            project.getToken(),
+            UpdateEvent.builder()
+                .type(UpdateType.DISCONNECT)
+                .build()
+        );
+
         projectRepository.delete(project);
     }
 

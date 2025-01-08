@@ -71,10 +71,8 @@ export class HttpCategoryParametersService extends AbstractHttpService<CategoryP
 
   /**
    * Function used to create a configuration
-   *
-   * @param configuration The configuration that we want to create
    */
-  public create(configuration: WidgetConfigurationRequest): Observable<CategoryParameter> {
+  public create(): Observable<CategoryParameter> {
     return EMPTY;
   }
 

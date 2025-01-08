@@ -23,7 +23,7 @@ import { MockModule } from '../../../../mock/mock.module';
 import { AbstractHttpService } from './abstract-http.service';
 
 describe('AbstractHttpService', () => {
-  let service: AbstractHttpService<any, any>;
+  let service: AbstractHttpService<string, string>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

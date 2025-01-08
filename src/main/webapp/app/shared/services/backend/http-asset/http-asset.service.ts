@@ -32,11 +32,6 @@ export class HttpAssetService {
   private static readonly assetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/assets`;
 
   /**
-   * Constructor
-   */
-  constructor() {}
-
-  /**
    * Get the asset content url
    *
    * @param assetToken The asset token

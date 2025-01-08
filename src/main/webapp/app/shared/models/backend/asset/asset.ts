@@ -26,9 +26,4 @@ export class Asset {
   contentType: string;
   size: number;
   lastUpdateDate: Date;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 }

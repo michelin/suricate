@@ -66,10 +66,9 @@ export class HttpUserService implements AbstractHttpService<User, UserRequest> {
   }
 
   /**
-   * Function used to create a new user
-   * @param entity The user to create
+   * Create a user
    */
-  public create(entity: UserRequest): Observable<User> {
+  public create(): Observable<User> {
     return EMPTY;
   }
 

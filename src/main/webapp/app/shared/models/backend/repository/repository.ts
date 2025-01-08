@@ -35,6 +35,4 @@ export class Repository {
   enabled: boolean;
   priority: number;
   createdDate: Date;
-
-  constructor() {}
 }

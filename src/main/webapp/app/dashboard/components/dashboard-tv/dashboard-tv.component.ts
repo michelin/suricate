@@ -145,7 +145,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
         // Received when synchronizing to a single dashboard
         if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_DASHBOARD) {
-          const project: Project = updateEvent.content;
+          const project: Project = updateEvent.content as Project;
           if (project) {
             this.router.navigate(['/tv'], { queryParams: { token: project.token } });
           }

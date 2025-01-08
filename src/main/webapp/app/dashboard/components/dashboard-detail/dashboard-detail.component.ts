@@ -422,10 +422,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           ImageUtils.getDataFromBase64URL(formData.image),
           ImageUtils.getContentTypeFromBase64URL(formData.image)
         );
-        const file: File = FileUtils.convertBlobToFile(
-          blob,
-          `${this.project.token}.${contentType.split('/')[1]}`
-        );
+        const file: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.${contentType.split('/')[1]}`);
 
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
       }

@@ -71,10 +71,8 @@ export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest
 
   /**
    * Create a widget
-   *
-   * @param widget The object that we want to create
    */
-  public create(widget: WidgetRequest): Observable<Widget> {
+  public create(): Observable<Widget> {
     return EMPTY;
   }
 
@@ -92,10 +90,8 @@ export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest
 
   /**
    * Function used to delete a widget
-   *
-   * @param widgetId The widget id
    */
-  public delete(widgetId: number): Observable<void> {
+  public delete(): Observable<void> {
     return EMPTY;
   }
 }

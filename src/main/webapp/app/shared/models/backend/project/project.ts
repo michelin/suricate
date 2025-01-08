@@ -33,9 +33,4 @@ export class Project {
   image: Asset = new Asset();
   grids: ProjectGrid[];
   displayProgressBar: boolean;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 }

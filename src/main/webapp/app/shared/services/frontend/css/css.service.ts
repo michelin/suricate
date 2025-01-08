@@ -29,11 +29,6 @@ import { CssSelector } from '../../../models/frontend/css-parser/css-selector';
 @Injectable({ providedIn: 'root' })
 export class CssService {
   /**
-   * Constructor
-   */
-  constructor() {}
-
-  /**
    * Extract the value of a property from the css file
    *
    * @param cssContent The css content

@@ -5,7 +5,7 @@
       >
       <div class="wrapper mat-elevation-z12">
         <div class="brand-image">
-          <img ngSrc="../../../../../assets/images/logo.png" width="282" height="282" alt="brand image" />
+          <img ngSrc="../../../../../assets/images/logo.png" width="282" height="282" alt="Suricate" priority />
         </div>
         @if (isDashboardLoading) {
           <suricate-spinner color="accent"></suricate-spinner>
@@ -32,7 +32,6 @@
       ></suricate-dashboard-screen>
     }
   }
-
 
   @if (project && project.grids.length > 1 && project.displayProgressBar) {
     <suricate-progress-bar class="rotation-progress-bar" [value]="timerPercentage"></suricate-progress-bar>
