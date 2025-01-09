@@ -99,7 +99,9 @@ You can define the DBMS you want to use in the `application.properties` file wit
 parameter:
 
 ```yaml
-spring.profiles.active: ### Provider should be 'h2' or 'postgresql'
+spring:
+  profiles:
+    active: ## Provider should be 'h2' or 'postgresql'
 ```
 
 It will activate the default `application-DBMS.properties` configuration file with the required properties for the chosen DBMS.
@@ -107,9 +109,11 @@ It will activate the default `application-DBMS.properties` configuration file wi
 You will still need to define your database connection properties in the `application.properties` file:
 
 ```yaml
-spring.datasource.url:
-spring.datasource.username:
-spring.datasource.password:
+spring:
+  datasource:
+    password: ''
+    url: ''
+    username: ''
 ```
 
 Please note that the `application-DBMS.properties` files activate Flyway to automatically set up the database
@@ -126,14 +130,18 @@ Depending on the database management system you use, Flyway will use the appropr
 
 Flyway stores the current version of the database in a table named `schema_version` defined by the following property:
 
-```yaml
-spring.flyway.table: schema_version
+```yml
+spring:
+  flyway:
+    table: 'schema_version'
 ```
 
 Flyway can be deactivated by setting the following property to `false`:
 
-```yaml
-spring.flyway.enabled: false
+```yml
+spring:
+  flyway:
+    enabled: false
 ```
 
 ### Authentication
@@ -143,9 +151,12 @@ Suricate provides multiple types of authentication that can be activated or deac
 All the authentication modes deliver a JWT token that is used to authenticate the user on the Back-End.
 You can configure the JWT token using the following properties:
 
-```yaml
-application.authentication.jwt.signingKey: 'changeitchangeitchangeitchangeit'
-application.authentication.jwt.tokenValidityMs: 86400000
+```yml
+application:
+  authentication:
+    jwt:
+      signingKey: 'changeitchangeitchangeitchangeit'
+      tokenValidityMs: 86400000
 ```
 
 The signing key should be at least 256 bits long (since Suricate v2.8.0) and should be changed for each environment.
@@ -156,8 +167,10 @@ You can log in to Suricate using the database after the sign-up step.
 
 You can choose this authentication mode using the following YAML property:
 
-```yaml
-application.authentication.provider: 'database'
+```yml
+application:
+  authentication:
+    provider: 'database'
 ```
 
 #### LDAP
@@ -166,22 +179,28 @@ You can log in to Suricate an LDAP.
 
 You can choose this authentication mode using the following YAML property:
 
-```yaml
-application.authentication.provider: 'ldap'
+```yml
+---
+application:
+  authentication:
+    provider: 'ldap'
 ```
 
 If you choose the ldap authentication mode, you must specify the following additional properties:
 
-```yaml
-application.authentication.ldap.url:
-application.authentication.ldap.userSearchFilter:
-application.authentication.ldap.firstNameAttributeName:
-application.authentication.ldap.lastNameAttributeName:
-application.authentication.ldap.mailAttributeName:
-application.authentication.ldap.username:
-application.authentication.ldap.password:
-application.authentication.ldap.userSearchBase:
-application.authentication.ldap.userDnPatterns:
+```yml
+application:
+  authentication:
+    ldap:
+      firstNameAttributeName: ''
+      lastNameAttributeName: ''
+      mailAttributeName: ''
+      password: ''
+      url: ''
+      userDnPatterns: ''
+      userSearchBase: ''
+      userSearchFilter: ''
+      username: ''
 ```
 
 #### Social Login
@@ -193,43 +212,67 @@ the `social-login` profile.
 When you activate social login, you can activate or deactivate a social login mode by adding or removing it from the
 property:
 
-```yaml
-application.authentication.socialProviders: gitlab,github
+```yml
+application:
+  authentication:
+    socialProviders: 'gitlab,github'
 ```
 
 ##### GitHub
 
 To log in using GitHub, you must specify the following properties:
 
-```yaml
-spring.security.oauth2.client.registration.github.client-id: <github-client-id>
-spring.security.oauth2.client.registration.github.client-secret: <github-client-id>
+```yml
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: '<github-client-id>'
+            client-secret: '<github-client-secret>'
 ```
 
 ##### GitLab
 
 To log in using GitLab with OIDC, you must specify the following properties:
 
-```yaml
-spring.security.oauth2.client.registration.gitlab.client-id: <gitlab-client-id>
-spring.security.oauth2.client.registration.gitlab.client-secret: <gitlab-client-secret>
-spring.security.oauth2.client.registration.gitlab.authorization-grant-type: authorization_code
-spring.security.oauth2.client.registration.gitlab.redirect-uri: http://localhost:8080/login/oauth2/code/gitlab
-spring.security.oauth2.client.provider.gitlab.issuer-uri: https://gitlab.com
-spring.security.oauth2.client.registration.gitlab.scope: read_user,openid,profile,email
+```yml
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          gitlab:
+            issuer-uri: 'https://gitlab.com'
+        registration:
+          gitlab:
+            authorization-grant-type: 'authorization_code'
+            client-id: '<gitlab-client-id>'
+            client-secret: '<gitlab-client-secret>'
+            redirect-uri: 'http://localhost:8080/login/oauth2/code/gitlab'
+            scope: 'read_user,openid,profile,email'
 ```
 
 To log in using GitLab with OAuth2, you must specify the following properties:
 
-```yaml
-spring.security.oauth2.client.registration.gitlab.client-id: <gitlab-client-id>
-spring.security.oauth2.client.registration.gitlab.client-secret: <gitlab-client-secret>
-spring.security.oauth2.client.registration.gitlab.authorization-grant-type: authorization_code
-spring.security.oauth2.client.registration.gitlab.redirect-uri: http://localhost:8080/login/oauth2/code/gitlab
-spring.security.oauth2.client.provider.gitlab.issuer-uri: https://gitlab.com
-spring.security.oauth2.client.registration.gitlab.scope: read_user
-spring.security.oauth2.client.provider.gitlab.user-info-uri: https://gitlab.com/api/v4/user
-spring.security.oauth2.client.provider.gitlab.user-name-attribute: username
+```yml
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          gitlab:
+            issuer-uri: 'https://gitlab.com'
+            user-info-uri: 'https://gitlab.com/api/v4/user'
+            user-name-attribute: 'username'
+        registration:
+          gitlab:
+            authorization-grant-type: 'authorization_code'
+            client-id: '<gitlab-client-id>'
+            client-secret: '<gitlab-client-secret>'
+            redirect-uri: 'http://localhost:8080/login/oauth2/code/gitlab'
+            scope: 'read_user'
 ```
 
 ##### Redirection to Front-End
@@ -249,9 +292,12 @@ The first option is currently used.
 
 The other options are defined by the following properties:
 
-```yaml
-application.authentication.oauth2.defaultTargetUrl: http://localhost:4200/login
-application.authentication.oauth2.useReferer: false
+```yml
+application:
+  authentication:
+    oauth2:
+      defaultTargetUrl: 'http://localhost:4200/login'
+      useReferer: false
 ```
 
 ##### Name Parsing Strategy
@@ -260,8 +306,12 @@ By default, Suricate parses the user's first name and last name from the ID prov
 Lastname". However, you can also configure Suricate to parse the first name and last name based on the case (
 upper/lower) using the following property:
 
-```yaml
-application.authentication.socialProvidersConfig.<provider>.nameCaseParse: true
+```yml
+application:
+  authentication:
+    socialProvidersConfig:
+      <provider>:
+        nameCaseParse: true
 ```
 
 Simply replace `<provider>` with the appropriate social provider, such as `github` or `gitlab`.
@@ -271,9 +321,12 @@ Simply replace `<provider>` with the appropriate social provider, such as `githu
 The application allows for the generation of personal access tokens, which can be used for authentication. The following
 properties are used for token generation and verification:
 
-```yaml
-application.authentication.pat.prefix: sup
-application.authentication.pat.checksumSecret: changeit
+```yml
+application:
+  authentication:
+    pat:
+      checksumSecret: 'changeit'
+      prefix: 'sup'
 ```
 
 It is recommended to update the _checksumSecret_ with a different secret for each environment, to enhance security.
@@ -289,8 +342,10 @@ Here is given the guidelines to configure the widgets.
 Sensitive widget parameters such as passwords or tokens are encrypted in the database. 
 You must change the encryption key for each environment using the following property: 
 
-```yaml
-jasypt.encryptor.password: changeitchangeitchangeitchangeit
+```yml
+jasypt:
+  encryptor:
+    password: 'changeitchangeitchangeitchangeit'
 ```
 
 #### Repositories
@@ -305,7 +360,7 @@ repository directly.
 
 To configure this repository in Suricate, use the following settings:
 
-```yaml
+```yml
 Name: [ Enter a name of your choice ]
 URL: https://github.com/michelin/suricate-widgets.git
 branch: master
