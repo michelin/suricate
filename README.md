@@ -57,11 +57,11 @@ Additionally, a Docker image is available on [Docker Hub](https://hub.docker.com
 ## Install
 
 Suricate is built on the [Spring Boot framework](https://spring.io/) and can be configured using a Spring Boot
-configuration file, which includes a sample file located at `src/main/resources/application.properties`.
+configuration file, which includes a sample file located at `src/main/resources/application.yml`.
 
-If necessary, you can override the properties from the default `application.properties` file by following
+If necessary, you can override the properties from the default `application.yml` file by following
 the [Spring Boot externalized configuration guide](https://docs.spring.io/spring-boot/reference/features/external-config.html).
-For example, you can create a custom  `/config/application.properties` or set the `--spring.config.location` system
+For example, you can create a custom  `/config/application.yml` or set the `--spring.config.location` system
 property when running the fat jar file:
 
 ```console
@@ -95,7 +95,7 @@ Suricate supports running on different database management systems (DBMS):
 - H2
 - PostgreSQL
 
-You can define the DBMS you want to use in the `application.properties` file with the `spring.profiles.active`
+You can define the DBMS you want to use in the `application.yml` file with the `spring.profiles.active`
 parameter:
 
 ```yaml
@@ -104,9 +104,9 @@ spring:
     active: ## Provider should be 'h2' or 'postgresql'
 ```
 
-It will activate the default `application-DBMS.properties` configuration file with the required properties for the chosen DBMS.
+It will activate the default `application-DBMS.yml` configuration file with the required properties for the chosen DBMS.
 
-You will still need to define your database connection properties in the `application.properties` file:
+You will still need to define your database connection properties in the `application.yml` file:
 
 ```yaml
 spring:
@@ -116,7 +116,7 @@ spring:
     username: ''
 ```
 
-Please note that the `application-DBMS.properties` files activate Flyway to automatically set up the database
+Please note that the `application-DBMS.yml` files activate Flyway to automatically set up the database
 structure (tables, constraints, etc.) and the minimum required functional data.
 
 #### Initialization with Flyway
@@ -206,7 +206,7 @@ application:
 #### Social Login
 
 Suricate supports authentication with GitHub and GitLab. You can configure social login using
-the `application-social-login.properties` file, which you can activate by running the application with
+the `application-social-login.yml` file, which you can activate by running the application with
 the `social-login` profile.
 
 When you activate social login, you can activate or deactivate a social login mode by adding or removing it from the
