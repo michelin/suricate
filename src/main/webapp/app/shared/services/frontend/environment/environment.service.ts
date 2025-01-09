@@ -19,7 +19,7 @@
 
 import { Injectable } from '@angular/core';
 
-import * as packageJson from '../../../../../../../../package.json';
+import packageJson from '../../../../../../../../package.json';
 import { environment } from '../../../../../environments/environment';
 
 /**

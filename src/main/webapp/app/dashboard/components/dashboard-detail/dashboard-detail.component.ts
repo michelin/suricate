@@ -455,10 +455,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   private editGrids(formGroup: UntypedFormGroup): void {
     const formData: ProjectGridRequest = formGroup.value;
-    const newTimes = Object.keys(formData)
+    const newTimes: number[] = Object.keys(formData)
       .filter((key) => key.includes(ProjectFormFieldsService.timeFormFieldKey))
-      .map((key) => formData[key]);
-
+      .map((key) => formData[key]) as number[];
+    
     formData.grids = [];
     this.project.grids.forEach((grid, index) => {
       formData.grids.push({

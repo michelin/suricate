@@ -27,5 +27,5 @@ export class ActionsDialogConfiguration extends DialogConfiguration {
   /**
    * Used to add actions buttons
    */
-  actions: ButtonConfiguration<unknown>[];
+  actions: ButtonConfiguration<void>[];
 }

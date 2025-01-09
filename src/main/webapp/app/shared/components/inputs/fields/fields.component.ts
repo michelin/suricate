@@ -37,7 +37,7 @@ import { InputComponent } from '../input/input.component';
 export class FieldsComponent extends InputComponent implements OnInit {
   @Input()
   public formArray: UntypedFormArray;
-  public deleteRowConfig: ButtonConfiguration<any>[];
+  public deleteRowConfig: ButtonConfiguration<{ formGroup: UntypedFormGroup; index: number }>[];
 
   /**
    * Constructor
@@ -75,7 +75,7 @@ export class FieldsComponent extends InputComponent implements OnInit {
    * Delete a row
    *
    * @param innerFormGroup The form group that reflect the row
-   * @param index The index of a the row in the parent form
+   * @param index The index of the row in the parent form
    */
   public deleteRow(innerFormGroup: UntypedFormGroup, index: number): void {
     this.field.deleteRow.callback(innerFormGroup.value[this.field.deleteRow.attribute]).subscribe(() => {
@@ -83,6 +83,9 @@ export class FieldsComponent extends InputComponent implements OnInit {
     });
   }
 
+  /**
+   * Init delete row configuration
+   */
   private initDeleteRowConfiguration(): void {
     this.deleteRowConfig = [
       {

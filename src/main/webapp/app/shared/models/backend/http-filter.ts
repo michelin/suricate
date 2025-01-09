@@ -21,22 +21,9 @@
  * Class that represent a filter request
  */
 export class HttpFilter {
-  [key: string]: any;
-
-  /**
-   * Search value
-   */
+  [key: string]: string | number | string[];
   search: string;
-  /**
-   * The requested page number
-   */
   page: number;
-  /**
-   * Number of elements per page
-   */
   size: number;
-  /**
-   * sort properties
-   */
   sort: string[];
 }

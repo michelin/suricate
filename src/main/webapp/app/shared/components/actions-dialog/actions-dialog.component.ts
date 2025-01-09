@@ -53,7 +53,7 @@ export class ActionsDialogComponent implements OnInit {
    * Init the buttons configurations
    */
   private initCloseButtonConfiguration(): void {
-    const closeButton: ButtonConfiguration<any> = {
+    const closeButton: ButtonConfiguration<void> = {
       label: 'close',
       icon: IconEnum.CLOSE,
       color: 'primary'

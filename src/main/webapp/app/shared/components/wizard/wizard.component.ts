@@ -224,22 +224,14 @@ export class WizardComponent implements OnInit {
    * Used to know if the back button should be displayed
    */
   private shouldDisplayNextButton(): boolean {
-    return (
-      this.wizardStepper &&
-      this.wizardStepper.steps &&
-      this.wizardStepper.selectedIndex < this.wizardStepper.steps.length - 1
-    );
+    return this.wizardStepper?.steps && this.wizardStepper.selectedIndex < this.wizardStepper.steps.length - 1;
   }
 
   /**
    * Used to know if the back button should be displayed
    */
   private shouldDisplayDoneButton(): boolean {
-    return (
-      this.wizardStepper &&
-      this.wizardStepper.steps &&
-      this.wizardStepper.selectedIndex === this.wizardStepper.steps.length - 1
-    );
+    return this.wizardStepper?.steps && this.wizardStepper.selectedIndex === this.wizardStepper.steps.length - 1;
   }
 
   /**
@@ -281,11 +273,10 @@ export class WizardComponent implements OnInit {
 
   /**
    * Hook used to save the wizard
-   * Implemented by child component
    *
-   * @param formGroup The form group
+   * @param ignoredFormGroup The form group
    */
-  protected saveWizard(formGroup: UntypedFormGroup): void {
+  protected saveWizard(ignoredFormGroup: UntypedFormGroup): void {
     // Implemented by child component
   }
 

@@ -231,9 +231,9 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Used to get the first label
    * Implemented by child component
    *
-   * @param object The object of the list
+   * @param ignoredObject The object of the list
    */
-  protected getFirstLabel(object: TRet): string {
+  protected getFirstLabel(ignoredObject: TRet): string {
     return '';
   }
 
@@ -241,9 +241,9 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Used to get the second label
    * Implemented by child component
    *
-   * @param object The object of the list
+   * @param ignoredObject The object of the list
    */
-  protected getSecondLabel(object: TRet): string {
+  protected getSecondLabel(ignoredObject: TRet): string {
     return '';
   }
 
@@ -251,9 +251,9 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Used to get the third label
    * Implemented by child component
    *
-   * @param object The object of the list
+   * @param ignoredObject The object of the list
    */
-  protected getThirdLabel(object: TRet): string {
+  protected getThirdLabel(ignoredObject: TRet): string {
     return '';
   }
 
@@ -261,24 +261,27 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Used to retrieve the url of the associated object
    * Implemented in child component
    *
-   * @param object The object of the list
+   * @param ignoredObject The object of the list
    */
-  public getObjectImageURL(object: TRet): string {
+  public getObjectImageURL(ignoredObject: TRet): string {
     return null;
   }
 
   /**
    * Redirect to bean detail
-   * Implemented in child component
    *
-   * @param object The object used for the redirection
+   * @param ignoredObject The object used for the redirection
    */
-  public redirectToBean(object: TRet): void {}
+  public redirectToBean(ignoredObject: TRet): void {
+    // Implemented in child component
+  }
 
   /**
    * Perform actions after items have been loaded
    */
-  protected onItemsLoaded(): void {}
+  protected onItemsLoaded(): void {
+    // Implemented in child component
+  }
 
   /**
    * Subscribe to input search event
