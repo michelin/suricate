@@ -1,16 +1,19 @@
 @if (!isDashboardLoading && project) {
   <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
-  <div class="grid-pagination">
-    <suricate-paginator
-      (pageChange)="redirectToGrid($event)"
-      [currentPage]="getGridIndex()"
-      [pageNbElements]="1"
-      [totalElements]="project.grids.length"
-      [hidePageSize]="true"
-    >
-    </suricate-paginator>
-  </div>
+  @if (project.grids.length > 1) {
+    <div class="grid-pagination">
+      <suricate-paginator
+        (pageChange)="redirectToGrid($event)"
+        [currentPage]="getGridIndex()"
+        [pageNbElements]="1"
+        [totalElements]="project.grids.length"
+        [hidePageSize]="true"
+      >
+      </suricate-paginator>
+    </div>
+  }
+
   <!-- Dashboard screen -->
   @if (currentWidgets?.length > 0) {
     <suricate-dashboard-screen

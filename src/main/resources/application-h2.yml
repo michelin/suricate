@@ -9,7 +9,3 @@ spring:
   h2:
     console:
       enabled: true
-  jpa:
-    properties:
-      hibernate:
-        dialect: 'org.hibernate.dialect.H2Dialect'

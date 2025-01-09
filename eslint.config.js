@@ -48,8 +48,7 @@ module.exports = tseslint.config(
           caughtErrors: "all",
           caughtErrorsIgnorePattern: "^ignored"
         }
-      ],
-      "@typescript-eslint/no-deprecated": "error"
+      ]
     },
   },
   {
