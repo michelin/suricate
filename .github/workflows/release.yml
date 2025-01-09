@@ -6,8 +6,8 @@ on:
       - 'v*.*.*'
 
 jobs:
-  build:
-    name: Build
+  release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
