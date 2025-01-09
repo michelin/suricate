@@ -28,6 +28,7 @@ import {
 } from '@angular/forms';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { UserProject } from '../../../models/backend/user/user-project';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { FormStep } from '../../../models/frontend/form/form-step';
 
@@ -138,9 +139,9 @@ export class FormService {
   private generateFormArrayForField(field: FormField): UntypedFormArray {
     const formArray = this.formBuilder.array([]);
 
-    if (field && field.fields && field.values) {
-      field.values.subscribe((values: any[]) => {
-        values.forEach((value: any) => {
+    if (field?.fields && field?.values) {
+      field.values.subscribe((values: UserProject[]) => {
+        values.forEach((value: UserProject) => {
           const formGroup = this.formBuilder.group({});
           field.fields.forEach((innerField: FormField) => {
             formGroup.addControl(
@@ -166,7 +167,7 @@ export class FormService {
    */
   private generateFormControl(field: FormField, value?: string | number): UntypedFormControl {
     return this.formBuilder.control(
-      { value: value ? value : field.value, disabled: field.disabled },
+      { value: value || field.value, disabled: field.disabled },
       field.validators,
       field.asyncValidators
     );

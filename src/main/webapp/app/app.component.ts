@@ -109,7 +109,8 @@ export class AppComponent implements OnInit, OnDestroy {
           role: 'dialog',
           width: '600px',
           height: '200px',
-          data: confirmationConfiguration
+          data: confirmationConfiguration,
+          autoFocus: false
         };
 
         this.matDialog.open(ConfirmDialogComponent, dialogConfig);
@@ -128,7 +129,8 @@ export class AppComponent implements OnInit, OnDestroy {
           role: 'dialog',
           width: '700px',
           height: '80%',
-          data: communicationDialogConfiguration
+          data: communicationDialogConfiguration,
+          autoFocus: false
         };
 
         this.matDialog.open(CommunicationDialogComponent, dialogConfig);

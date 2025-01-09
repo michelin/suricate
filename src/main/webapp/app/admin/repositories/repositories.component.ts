@@ -20,7 +20,7 @@
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { BehaviorSubject, EMPTY, forkJoin, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, forkJoin, ObservableInput, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 
 import { ListComponent } from '../../shared/components/list/list.component';
@@ -50,7 +50,7 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
   /**
    * Used to disable buttons during repos synchronization
    */
-  private disableAllReposSync = new BehaviorSubject<boolean>(false);
+  private readonly disableAllReposSync = new BehaviorSubject<boolean>(false);
 
   /**
    * Constructor
@@ -174,7 +174,7 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
     repository: Repository,
     saveCallback: (formGroup: UntypedFormGroup) => void
   ): void {
-    this.repository = repository ? Object.assign({}, repository) : new Repository();
+    this.repository = repository ? { ...repository } : new Repository();
 
     this.sidenavService.openFormSidenav({
       title: repository ? 'repository.edit' : 'repository.add',
@@ -251,7 +251,8 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
 
   /**
    * Function used to add a repository
-   * @param repositoryRequest The new repository to add with the modification made on the form
+   *
+   * @param fromGroup The new repository to add with the modification made on the form
    */
   private addRepository(fromGroup: UntypedFormGroup): void {
     const repositoryRequest: RepositoryRequest = fromGroup.value;
@@ -311,11 +312,11 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
     this.dragAndDropDisabled = true;
     this.toastService.sendMessage('repository.priority.running', ToastTypeEnum.INFO);
 
-    forkJoin(
-      this.objectsPaged.content.map((repository) =>
-        this.httpRepositoryService.update(repository.id, Object.assign({}, repository), true)
-      )
-    ).subscribe({
+    const repositoryUpdates: ObservableInput<void>[] = this.objectsPaged.content.map((repository) =>
+      this.httpRepositoryService.update(repository.id, { ...repository }, true)
+    );
+
+    forkJoin(repositoryUpdates).subscribe({
       next: () => {
         this.disableAllReposSync.next(false);
         this.dragAndDropDisabled = false;

@@ -26,7 +26,7 @@ import { Page } from '../../../models/backend/page';
 import { Project } from '../../../models/backend/project/project';
 import { ProjectRequest } from '../../../models/backend/project/project-request';
 import { ProjectWidgetPositionRequest } from '../../../models/backend/project-widget/project-widget-position-request';
-import { User } from '../../../models/backend/user/user';
+import { UserProject } from '../../../models/backend/user/user-project';
 import { WebsocketClient } from '../../../models/backend/websocket-client';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilterService } from '../http-filter/http-filter.service';
@@ -140,10 +140,10 @@ export class HttpProjectService implements AbstractHttpService<Project, ProjectR
    *
    * @param projectToken The project token
    */
-  public getProjectUsers(projectToken: string): Observable<User[]> {
+  public getProjectUsers(projectToken: string): Observable<UserProject[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/users`;
 
-    return this.httpClient.get<User[]>(url);
+    return this.httpClient.get<UserProject[]>(url);
   }
 
   /**

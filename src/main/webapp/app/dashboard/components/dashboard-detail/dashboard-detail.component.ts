@@ -363,7 +363,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService
-        .addUserToProject(this.project.token, valueChangedEvent.value)
+        .addUserToProject(this.project.token, valueChangedEvent.value as string)
         .pipe(
           switchMap(() => of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.project.token)))
         );

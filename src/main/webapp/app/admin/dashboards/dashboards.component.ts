@@ -221,7 +221,7 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
   private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService
-        .addUserToProject(this.projectSelected.token, valueChangedEvent.value)
+        .addUserToProject(this.projectSelected.token, valueChangedEvent.value as string)
         .pipe(
           switchMap(() =>
             of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.projectSelected.token))

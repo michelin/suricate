@@ -175,7 +175,7 @@ export class WizardComponent implements OnInit {
 
     this.currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
 
-    if (this.currentStep && this.currentStep.asyncFields) {
+    if (this.currentStep?.asyncFields) {
       this.currentStep
         .asyncFields(stepperSelectionEvent.selectedStep.stepControl as unknown as UntypedFormGroup, this.currentStep)
         .subscribe((formFields: FormField[]) => {

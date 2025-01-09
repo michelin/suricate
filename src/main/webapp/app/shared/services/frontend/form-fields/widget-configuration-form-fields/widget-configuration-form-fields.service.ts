@@ -107,7 +107,7 @@ export class WidgetConfigurationFormFieldsService {
         key: configuration.key,
         label: configuration.description,
         type: configuration.dataType,
-        value: backendConfigValue ? backendConfigValue : configuration.value,
+        value: backendConfigValue || configuration.value,
         iconPrefix: IconEnum.VALUE,
         iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
         validators: [Validators.required]

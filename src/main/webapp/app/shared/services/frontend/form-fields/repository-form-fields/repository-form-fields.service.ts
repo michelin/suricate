@@ -142,7 +142,7 @@ export class RepositoryFormFieldsService {
   public generateFormFields(repository?: Repository): FormField[] {
     let formFields = this.getGeneralFormFields(repository);
 
-    if (repository && repository.type) {
+    if (repository?.type) {
       formFields = [
         ...formFields,
         ...RepositoryFormFieldsService.repositoryTypeFormFieldsRecords[repository.type](repository)

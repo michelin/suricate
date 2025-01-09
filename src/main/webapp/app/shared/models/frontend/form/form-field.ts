@@ -22,6 +22,7 @@ import { Observable } from 'rxjs';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
+import { UserProject } from '../../backend/user/user-project';
 import { FormOption } from './form-option';
 import { MosaicFormOption } from './mosaic-form-option';
 
@@ -116,12 +117,12 @@ export class FormField {
   /**
    * The list of values to used in the array
    */
-  values?: Observable<any[]>;
+  values?: Observable<UserProject[]>;
 
   /**
    * Function used to delete a row
    */
-  deleteRow?: { attribute: string; callback: (object: any) => Observable<any> };
+  deleteRow?: { attribute: string; callback: (object: number) => Observable<void> };
 
   /* ***************************************************************************************************************** */
   /*                        Mosaic Field                                                                                */

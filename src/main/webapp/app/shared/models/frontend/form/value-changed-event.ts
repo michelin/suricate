@@ -27,10 +27,12 @@ export interface ValueChangedEvent {
    * The key of field
    */
   fieldKey: string;
+
   /**
    * The new value
    */
-  value: any;
+  value: number | string | boolean | Date;
+
   /**
    * The type of the event, if the user is typing or if an option as bean selected
    */

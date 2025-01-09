@@ -298,7 +298,7 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Emit a new event when a new value is typed in the search bar
    */
   public researchChangedEvent(event: ValueChangedEvent) {
-    this.researchChanged.next(event.value);
+    this.researchChanged.next(event.value as string);
   }
 
   /**
@@ -314,7 +314,8 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
 
   /**
    * Action to perform on drop
-   * Implemented in child component
    */
-  public drop(): void {}
+  public drop(): void {
+    // Implemented in child component
+  }
 }

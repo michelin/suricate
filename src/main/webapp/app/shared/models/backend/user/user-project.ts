@@ -17,60 +17,13 @@
  * under the License.
  */
 
-* {
-  font-family: Inter, sans-serif;
+/**
+ * The project user entity
+ */
+export class UserProject {
+  [key: string]: number | string;
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
 }
-
-body {
-  padding: 0;
-  margin: 0;
-  min-height: 100vh;
-
-  .mat-icon {
-    font-variant: none;
-  }
-
-  .container {
-    min-height: 89vh;
-
-    &.without-header {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-
-  h1.little {
-    font-size: 1.2em;
-    margin: 0;
-    font-variant: all-small-caps;
-  }
-
-  h2.little {
-    font-size: 1.3em;
-    margin: 0;
-    font-variant: all-small-caps;
-  }
-
-  a {
-    &, &:visited {
-      text-decoration: none;
-    }
-  }
-
-  .text-justify {
-    text-align: justify;
-    text-justify: inter-word;
-  }
-
-  .mat-table .mat-row .mat-cell {
-    font-size: 11px;
-  }
-
-  .mat-mdc-form-field-icon-suffix {
-    cursor: pointer;
-  }
-}
-
