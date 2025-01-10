@@ -11,76 +11,54 @@
         }
       </div>
     </div>
-
-    <mat-accordion hideToggle="true">
-      <mat-expansion-panel class="mat-elevation-z0">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <div class="names-idp-container">
-              <div class="names-container">
-                <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
-                <div>{{ connectedUser.username }}</div>
-              </div>
-              @if (isConnectedByIdp()) {
-                <div>
-                  @if (isConnectedWithGithub()) {
-                    <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub" />
-                  }
-                  @if (isConnectedWithGitlab()) {
-                    <img ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
-                  }
-                </div>
-              }
-            </div>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <mat-nav-list>
-          <mat-list-item>
-            <a class="submenu-item" [routerLink]="['/settings']">
-              <mat-icon> {{ materialIconRecords[iconEnum.SETTINGS] }} </mat-icon>
-              <span> {{ 'settings' | translate }} </span>
-            </a>
-          </mat-list-item>
-          <mat-list-item>
-            <a class="submenu-item" (click)="logout()">
-              <mat-icon> {{ materialIconRecords[iconEnum.LOGOUT] }} </mat-icon>
-              <span> {{ 'logout' | translate }} </span>
-            </a>
-          </mat-list-item>
-        </mat-nav-list>
-      </mat-expansion-panel>
-    </mat-accordion>
+    <div class="names-idp-container">
+      <div class="names-container">
+        <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
+        <div>{{ connectedUser.username }}</div>
+      </div>
+      @if (isConnectedByIdp()) {
+        <div>
+          @if (isConnectedWithGithub()) {
+            <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub" />
+          }
+          @if (isConnectedWithGitlab()) {
+            <img ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
+          }
+        </div>
+      }
+    </div>
   </div>
 
   @if (menu) {
     <div class="sidenav-section-container">
       <mat-divider></mat-divider>
-      <div class="sidenav-section home-tv-menu">
-        <a routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
-          <div class="common-icon-button">
+      <mat-nav-list class="home-tv-menu">
+        <mat-list-item>
+          <a matListItemTitle [routerLink]="['/home']" [matTooltip]="'home' | translate">
             <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
-          </div>
-        </a>
-        <a routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
-          <div class="common-icon-button">
-            <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
-          </div>
-        </a>
-      </div>
+          </a>
+        </mat-list-item>
+        <mat-list-item>
+          <a matListItemTitle [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
+            <mat-icon color="primary"> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
+          </a>
+        </mat-list-item>
+      </mat-nav-list>
       <mat-divider></mat-divider>
+      <mat-nav-list>
       @for (category of menu.categories; track category) {
-        <div class="sidenav-menu-section">
-          <h1 class="menu-title">{{ category.label | translate }}</h1>
-          <mat-nav-list>
-            @for (item of category.items; track item) {
-              <a mat-list-item routerLinkActive="active" [routerLink]="item.linkConfiguration.link">
-                {{ item.label | translate }}
-              </a>
-            }
-          </mat-nav-list>
-        </div>
+        @for (item of category.items; track item) {
+          <mat-list-item routerLinkActive
+                         #rla="routerLinkActive"
+                         [activated]="rla.isActive">
+            <mat-icon color="primary" matListItemIcon>{{ materialIconRecords[item.icon] }}</mat-icon>
+            <a matListItemTitle [routerLink]="item.linkConfiguration.link">
+              {{ item.label | translate }}
+            </a>
+          </mat-list-item>
+        }
       }
+      </mat-nav-list>
     </div>
   }
 

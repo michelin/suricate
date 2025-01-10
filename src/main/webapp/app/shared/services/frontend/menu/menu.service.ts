@@ -23,6 +23,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MenuCategoryConfiguration } from '../../../models/frontend/menu/menu-category-configuration';
 import { MenuConfiguration } from '../../../models/frontend/menu/menu-configuration';
 import { AuthenticationService } from '../authentication/authentication.service';
+import { MaterialIconRecords } from '../../../records/material-icon.record';
+import { IconEnum } from '../../../enums/icon.enum';
 
 /**
  * Service used to manage menu
@@ -45,16 +47,15 @@ export class MenuService {
 
   /**
    * Build the menu
-   * @param admin Is the user admin or not ?
    */
   public static buildMenu(): MenuConfiguration {
     const menuConfiguration = new MenuConfiguration();
 
+    menuConfiguration.categories.push(MenuService.buildWidgetMenu());
+
     if (AuthenticationService.isAdmin()) {
       menuConfiguration.categories.push(MenuService.buildAdminMenu());
     }
-
-    menuConfiguration.categories.push(MenuService.buildWidgetMenu());
 
     return menuConfiguration;
   }
@@ -64,23 +65,26 @@ export class MenuService {
    */
   private static buildAdminMenu(): MenuCategoryConfiguration {
     return {
-      label: 'admin',
       items: [
         {
           label: 'configuration.list',
-          linkConfiguration: { link: ['/admin', 'configurations'] }
+          linkConfiguration: { link: ['/admin', 'configurations'] },
+          icon: IconEnum.WIDGET_CONFIGURATION
         },
         {
           label: 'dashboard.list',
-          linkConfiguration: { link: ['/admin', 'dashboards'] }
+          linkConfiguration: { link: ['/admin', 'dashboards'] },
+          icon: IconEnum.DASHBOARD
         },
         {
           label: 'repository.list',
-          linkConfiguration: { link: ['/admin', 'repositories'] }
+          linkConfiguration: { link: ['/admin', 'repositories'] },
+          icon: IconEnum.REPOSITORY_TYPE
         },
         {
           label: 'user.list',
-          linkConfiguration: { link: ['/admin', 'users'] }
+          linkConfiguration: { link: ['/admin', 'users'] },
+          icon: IconEnum.USER
         }
       ]
     };
@@ -91,11 +95,11 @@ export class MenuService {
    */
   private static buildWidgetMenu(): MenuCategoryConfiguration {
     return {
-      label: 'widget.list',
       items: [
         {
           label: 'catalog',
-          linkConfiguration: { link: ['/widgets', 'catalog'] }
+          linkConfiguration: { link: ['/widgets', 'catalog'] },
+          icon: IconEnum.WIDGET
         }
       ]
     };

@@ -24,7 +24,6 @@ import { SettingsService } from '../../../core/services/settings.service';
 import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { HttpSettingService } from '../../../shared/services/backend/http-setting/http-setting.service';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 
@@ -60,12 +59,10 @@ export class MenuComponent implements OnInit {
   /**
    * Constructor
    * @param router Angular service used to manage routes
-   * @param httpSettingService Suricate service used to manage settings
    * @param settingsService Frontend service used to manage settings
    */
   constructor(
     private readonly router: Router,
-    private readonly httpSettingService: HttpSettingService,
     private readonly settingsService: SettingsService
   ) {}
 

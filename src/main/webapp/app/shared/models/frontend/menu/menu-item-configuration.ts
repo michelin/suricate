@@ -18,17 +18,13 @@
  */
 
 import { LinkConfiguration } from '../link/link-configuration';
+import { IconEnum } from '../../../enums/icon.enum';
 
 /**
  * Represent a category of the menu
  */
 export class MenuItemConfiguration {
-  /**
-   * The label key to use with the translate service
-   */
   label: string;
-  /**
-   * The link used to display the page of the entry
-   */
   linkConfiguration: LinkConfiguration;
+  icon: IconEnum;
 }

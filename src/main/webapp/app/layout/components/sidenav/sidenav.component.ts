@@ -45,7 +45,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private unsubscribe: Subject<void> = new Subject<void>();
+  private readonly unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * Used to hide or display the menu using activated routes
