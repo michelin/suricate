@@ -21,10 +21,12 @@
         @for (object of objectsPaged.content; track object) {
           <div
             (click)="redirectToBean(object)"
+            (keydown.enter)="redirectToBean(object)"
             [ngClass]="{ 'list-item-show': listConfiguration.enableShowBean, 'drag-drop-item': !dragAndDropDisabled }"
             class="list-item"
             cdkDrag
             cdkDragBoundary=".list-container"
+            [tabindex]="0"
             >
             @if (getObjectImageURL(object)) {
               <div class="list-image">
