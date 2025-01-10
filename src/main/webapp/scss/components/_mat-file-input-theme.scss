@@ -22,10 +22,6 @@
 @mixin custom-file-input-component-theme($theme) {
   $warn: map-get($theme, warn);
 
-  .file-input-button-error {
-    color: mat.m2-get-color-from-palette($warn, 500) !important;
-  }
-
   .file-input-error {
     color: mat.m2-get-color-from-palette($warn, 500);
   }

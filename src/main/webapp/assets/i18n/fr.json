@@ -76,6 +76,7 @@
   "password": "Mot de passe",
   "password.confirm": "Confirmation du mot de passe",
   "path.local": "Chemin local",
+  "preferences": "Préférences",
   "repositories.synchronize.all": "Synchroniser tous les dépots",
   "repositories.synchronize.failure": "Échec de synchronisation des dépôts",
   "repositories.synchronize.running": "Les dépôts sont en cours de synchronisation...",

@@ -88,4 +88,11 @@ export class MenuComponent implements OnInit {
     AuthenticationService.logout();
     this.router.navigate(['/login']);
   }
+
+  /**
+   * Open the settings
+   */
+  public openSettings(): void {
+    this.router.navigate(['/settings']);
+  }
 }

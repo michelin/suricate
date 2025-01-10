@@ -76,6 +76,7 @@
   "password": "Password",
   "password.confirm": "Confirm password",
   "path.local": "Local path",
+  "preferences": "Preferences",
   "repositories.synchronize.all": "Synchronize all repositories",
   "repositories.synchronize.failure": "Repositories synchronization failed",
   "repositories.synchronize.running": "Repositories are being synchronized...",

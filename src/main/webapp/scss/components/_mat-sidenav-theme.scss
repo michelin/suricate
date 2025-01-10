@@ -20,33 +20,12 @@
 @use '@angular/material' as mat;
 
 @mixin custom-mat-sidenav-theme($theme) {
-  // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   $is-dark: map-get($theme, is-dark);
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
-
-  // Custom colors
-  $sidenav-background-primary: #424242;
-  $sidenav-background-secondary: #5a5a5a;
-
-  .mat-sidenav.menu-sidenav {
-
-
-    .sidenav-section {
-      margin-bottom: 0 !important;
-
-      .common-icon-button {
-        height: 48px;
-
-        mat-icon {
-          font-size: 24px;
-        }
-      }
-    }
-  }
 
   .mat-sidenav-content {
     padding: 0 10px 0 10px;

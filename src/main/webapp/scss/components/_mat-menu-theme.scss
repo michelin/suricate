@@ -19,10 +19,7 @@
 
 @use '@angular/material' as mat;
 
-/**
- * Component for that modify the theme of Angular Material mat-checkbox
- */
-@mixin custom-mat-checkbox-theme($theme) {
+@mixin custom-mat-menu-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -31,20 +28,21 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-checkbox-indeterminate,
-  .mat-checkbox-checked {
-    &.mat-primary {
-      .mat-checkbox-background {
-        background-color: mat.m2-get-color-from-palette($primary, A700);
-      }
-    }
-  }
+  .avatar-container {
+    margin: 0 auto;
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-radius: 50%;
 
-  .mat-checkbox:not(.mat-checkbox-disabled) {
-    .mat-primary {
-      .mat-checkbox-ripple .mat-ripple-element {
-        background-color: mat.m2-get-color-from-palette($primary, A700, 0.55);
-      }
+    .avatar {
+      height: 100%;
+      font-size: 25px;
+      background: mat.m2-get-color-from-palette($primary, 500);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

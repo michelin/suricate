@@ -55,7 +55,6 @@
       .mat-step-icon {
         width: 30px;
         height: 30px;
-        background-color: mat.m2-get-color-from-palette($primary, A100);
 
         &.mat-step-icon-state-done {
           background-color: #8bc34a !important;

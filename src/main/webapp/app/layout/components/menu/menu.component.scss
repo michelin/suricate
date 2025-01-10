@@ -22,29 +22,26 @@
   display: flex;
   flex-direction: column;
 
-  .user-section {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  .user-section-container {
     padding-bottom: 10px;
-  }
 
-  .avatar-container {
-    margin: 0 auto;
-    width: 70px;
-    height: 70px;
-    overflow: hidden;
-    border-radius: 50%;
-    border: 1px solid #303030;
-
-    .avatar {
+    .user-section {
       height: 100%;
-      font-size: 25px;
-      background: #303030;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      width: 100%;
+      padding: 10px 0;
+
+      .names-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 400;
+        padding-top: 10px;
+      }
     }
   }
 
@@ -59,23 +56,6 @@
     a {
       flex: 1;
       text-align: center;
-    }
-  }
-
-  .names-idp-container {
-    display: flex;
-    gap: 5px;
-    text-align: center;
-    margin: auto;
-    align-items: center;
-    justify-content: center;
-
-    .names-container {
-      margin: 0 5px;
-    }
-
-    .firstname-lastname {
-      font-weight: 600;
     }
   }
 }
