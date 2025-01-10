@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { LinkConfiguration } from '../link/link-configuration';
 import { IconEnum } from '../../../enums/icon.enum';
+import { LinkConfiguration } from '../link/link-configuration';
 
 /**
  * Represent a category of the menu

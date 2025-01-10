@@ -21,7 +21,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { SettingsService } from '../../../core/services/settings.service';
-import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
@@ -88,26 +87,5 @@ export class MenuComponent implements OnInit {
   public logout(): void {
     AuthenticationService.logout();
     this.router.navigate(['/login']);
-  }
-
-  /**
-   * Is the connected user logged in by idp or not ?
-   */
-  public isConnectedByIdp(): boolean {
-    return this.isConnectedWithGithub() || this.isConnectedWithGitlab();
-  }
-
-  /**
-   * Is the connected user logged in with GitHub
-   */
-  public isConnectedWithGithub(): boolean {
-    return this.connectedUser.mode === AuthenticationProvider.GITHUB;
-  }
-
-  /**
-   * Is the connected user logged in with GitLab
-   */
-  public isConnectedWithGitlab(): boolean {
-    return this.connectedUser.mode === AuthenticationProvider.GITLAB;
   }
 }

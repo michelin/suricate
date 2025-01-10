@@ -1,13 +1,13 @@
 <!-- User Section -->
 <div class="suricate-menu">
-  <div id="user-section" class="sidenav-section">
+  <div class="sidenav-section user-section">
     <div class="avatar-container">
       <div class="avatar">
         @if (connectedUser.avatarUrl) {
           <img ngSrc="{{ connectedUser.avatarUrl }}" width="70" height="70" alt="avatar"/>
         }
         @if (!connectedUser.avatarUrl) {
-          <span>{{ getInitials() }}</span>
+          <div>{{ getInitials() }}</div>
         }
       </div>
     </div>
@@ -16,16 +16,6 @@
         <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
         <div>{{ connectedUser.username }}</div>
       </div>
-      @if (isConnectedByIdp()) {
-        <div>
-          @if (isConnectedWithGithub()) {
-            <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub" />
-          }
-          @if (isConnectedWithGitlab()) {
-            <img ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
-          }
-        </div>
-      }
     </div>
   </div>
 
@@ -33,29 +23,33 @@
     <div class="sidenav-section-container">
       <mat-divider></mat-divider>
       <mat-nav-list class="home-tv-menu">
-        <mat-list-item>
-          <a matListItemTitle [routerLink]="['/home']" [matTooltip]="'home' | translate">
+        <a [routerLink]="['/home']"
+           routerLinkActive
+           #rla="routerLinkActive"
+           [matTooltip]="'home' | translate">
+          <mat-list-item [activated]="rla.isActive">
             <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
-          </a>
-        </mat-list-item>
-        <mat-list-item>
-          <a matListItemTitle [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
-            <mat-icon color="primary"> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
-          </a>
-        </mat-list-item>
+          </mat-list-item>
+        </a>
+        <a [routerLink]="['/tv']"
+           [matTooltip]="'tv.view' | translate" target='_blank'>
+          <mat-list-item>
+            <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
+          </mat-list-item>
+        </a>
       </mat-nav-list>
       <mat-divider></mat-divider>
       <mat-nav-list>
       @for (category of menu.categories; track category) {
         @for (item of category.items; track item) {
-          <mat-list-item routerLinkActive
-                         #rla="routerLinkActive"
-                         [activated]="rla.isActive">
-            <mat-icon color="primary" matListItemIcon>{{ materialIconRecords[item.icon] }}</mat-icon>
-            <a matListItemTitle [routerLink]="item.linkConfiguration.link">
+          <a [routerLink]="item.linkConfiguration.link"
+             routerLinkActive
+             #rla="routerLinkActive">
+            <mat-list-item [activated]="rla.isActive">
+              <mat-icon matListItemIcon>{{ materialIconRecords[item.icon] }}</mat-icon>
               {{ item.label | translate }}
-            </a>
-          </mat-list-item>
+            </mat-list-item>
+          </a>
         }
       }
       </mat-nav-list>

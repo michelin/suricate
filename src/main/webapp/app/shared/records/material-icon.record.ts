@@ -25,24 +25,18 @@ import { IconEnum } from '../enums/icon.enum';
 type MaterialIcon = Record<string, string>;
 
 export const MaterialIconRecords: MaterialIcon = {
-  [IconEnum.ACCESS_TIME]: 'access_time',
   [IconEnum.ADD]: 'add',
   [IconEnum.ADD_GRID]: 'library_add',
-  [IconEnum.ARROW_DOWN]: 'keyboard_arrow_right',
   [IconEnum.BRANCH]: 'merge_type',
+  [IconEnum.CATALOG]: 'apps',
   [IconEnum.CATEGORY]: 'category',
   [IconEnum.CLOSE]: 'close',
   [IconEnum.COLUMN]: 'view_column',
-  [IconEnum.COPY]: 'content_copy',
   [IconEnum.DASHBOARD]: 'dashboard',
   [IconEnum.DELETE]: 'delete',
   [IconEnum.DELETE_FOREVER]: 'delete_forever',
   [IconEnum.EDIT]: 'edit',
   [IconEnum.EMAIL]: 'email',
-  [IconEnum.ERROR]: 'error',
-  [IconEnum.FILE_DOWNLOAD]: 'file_download',
-  [IconEnum.FILE_UPLOAD]: 'file_upload',
-  [IconEnum.GENERAL_INFORMATION]: 'menu_book',
   [IconEnum.GRID]: 'grid_view',
   [IconEnum.HEIGHT]: 'height',
   [IconEnum.HELP]: 'help',
@@ -56,6 +50,7 @@ export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.PASSWORD]: 'lock',
   [IconEnum.PROGRESS_BAR]: 'hourglass_bottom',
   [IconEnum.REFRESH]: 'refresh',
+  [IconEnum.REPOSITORY]: 'inventory',
   [IconEnum.REPOSITORY_TYPE]: 'cloud_queue',
   [IconEnum.REPOSITORY_PRIORITY]: 'low_priority',
   [IconEnum.SAVE]: 'done',
@@ -81,5 +76,5 @@ export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.VALUE]: 'input',
   [IconEnum.WARNING]: 'warning',
   [IconEnum.WIDGET]: 'widgets',
-  [IconEnum.WIDGET_CONFIGURATION]: 'list_alt'
+  [IconEnum.WIDGET_CONFIGURATION]: 'settings'
 };

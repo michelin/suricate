@@ -38,28 +38,6 @@
     .sidenav-section {
       margin-bottom: 0 !important;
 
-      &#user-section {
-        margin: 0;
-        width: 100%;
-
-        & > .avatar-container {
-          margin: 0 auto;
-          width: 70px;
-          height: 70px;
-          overflow: hidden;
-          border-radius: 50%;
-          border: 1px solid #303030;
-
-          & > .avatar {
-            height: 100%;
-            font-size: 25px;
-            line-height: 64px;
-            text-align: center;
-            background: #303030;
-          }
-        }
-      }
-
       .common-icon-button {
         height: 48px;
 

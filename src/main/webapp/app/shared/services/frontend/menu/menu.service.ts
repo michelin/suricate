@@ -20,11 +20,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { IconEnum } from '../../../enums/icon.enum';
 import { MenuCategoryConfiguration } from '../../../models/frontend/menu/menu-category-configuration';
 import { MenuConfiguration } from '../../../models/frontend/menu/menu-configuration';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { MaterialIconRecords } from '../../../records/material-icon.record';
-import { IconEnum } from '../../../enums/icon.enum';
 
 /**
  * Service used to manage menu
@@ -79,12 +78,12 @@ export class MenuService {
         {
           label: 'repository.list',
           linkConfiguration: { link: ['/admin', 'repositories'] },
-          icon: IconEnum.REPOSITORY_TYPE
+          icon: IconEnum.REPOSITORY
         },
         {
           label: 'user.list',
           linkConfiguration: { link: ['/admin', 'users'] },
-          icon: IconEnum.USER
+          icon: IconEnum.USERS
         }
       ]
     };
@@ -99,7 +98,7 @@ export class MenuService {
         {
           label: 'catalog',
           linkConfiguration: { link: ['/widgets', 'catalog'] },
-          icon: IconEnum.WIDGET
+          icon: IconEnum.CATALOG
         }
       ]
     };
