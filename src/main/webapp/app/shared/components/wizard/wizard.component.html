@@ -24,7 +24,7 @@
                 >
                 <div class="step-image-link">
                   @if (step.imageLink) {
-                    <img [ngSrc]="step.imageLink.link" fill="true" priority="true" alt="form image" />
+                    <img [ngSrc]="step.imageLink.link" fill="true" priority="true" alt="Widget" />
                   }
                 </div>
                 <div class="desc-info">
@@ -34,10 +34,10 @@
                       <div>{{ step.description | translate }}</div>
                     </div>
                   }
-                  @if (step.description) {
+                  @if (step.information) {
                     <div>
                       <div class="widget-data-title">{{ 'widget.information.title' | translate }}</div>
-                      <div>{{ step.description | translate }}</div>
+                      <div>{{ step.information | translate }}</div>
                     </div>
                   }
                 </div>
