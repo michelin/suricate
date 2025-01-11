@@ -35,6 +35,6 @@ export class ButtonConfiguration<T> {
   disabled?: Observable<boolean>;
   hidden?: (object?: T) => boolean;
   type?: ButtonTypeEnum;
-  variant?: 'stroked' | 'miniFab';
+  variant?: 'flat' | 'miniFab';
   tooltip?: TooltipConfiguration;
 }

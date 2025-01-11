@@ -1,14 +1,14 @@
 @for (configuration of configurations; track configuration) {
   @switch (configuration.variant) {
     <!-- Display stroked button -->
-    @case ('stroked') {
-      <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
+    @case ('flat') {
+      <ng-container *ngTemplateOutlet="flatButton; context: { configuration: configuration }"> </ng-container>
     }
     @case ('miniFab') {
       <ng-container *ngTemplateOutlet="miniFabButton; context: { configuration: configuration }"> </ng-container>
     }
     @default {
-      <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
+      <ng-container *ngTemplateOutlet="flatButton; context: { configuration: configuration }"> </ng-container>
     }
   }
 }
@@ -17,10 +17,10 @@
 <!--                                         BUTTON VARIANT                                                  -->
 <!------------------------------------------------------------------------------------------------------------->
 
-<ng-template #strokedButton let-configuration="configuration">
+<ng-template #flatButton let-configuration="configuration">
   @if (shouldDisplayButton(configuration, object)) {
     <button
-      mat-stroked-button
+      mat-flat-button
       [matTooltip]="configuration.tooltip?.message | translate"
       [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip.position) : 'below'"
       [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"

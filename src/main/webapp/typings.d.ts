@@ -17,10 +17,9 @@
  * under the License.
  */
 
-/* SystemJS module definition */
-declare let module: NodeModule;
-declare module 'sockjs-client';
+declare module 'sockjs-client/dist/sockjs' {
+  import SockJS from '@types/sockjs-client';
 
-interface NodeModule {
-  id: string;
+  export = SockJS;
+  export as namespace SockJS;
 }

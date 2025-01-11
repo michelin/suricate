@@ -20,7 +20,7 @@
 import { Injectable } from '@angular/core';
 import { IMessage, RxStompConfig } from '@stomp/rx-stomp';
 import { Observable } from 'rxjs';
-import SockJS from 'sockjs-client';
+import SockJS from 'sockjs-client/dist/sockjs';
 
 import { EnvironmentService } from '../environment/environment.service';
 import { RxStompService } from '../rx-stomp/rx-stomp.service';
