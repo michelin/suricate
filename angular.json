@@ -18,7 +18,8 @@
             "tsConfig": "src/main/webapp/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "src/main/webapp/polyfills.ts"
             ],
             "assets": [
               "src/main/webapp/assets"
