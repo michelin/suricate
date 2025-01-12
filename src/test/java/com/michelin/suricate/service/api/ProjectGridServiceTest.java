@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -154,9 +155,9 @@ class ProjectGridServiceTest {
 
         projectGridService.deleteByProjectIdAndId(new Project(), 1L);
 
-        verify(projectGridRepository, times(0))
+        verify(projectGridRepository, never())
             .deleteByProjectIdAndId(any(), any());
-        verify(dashboardWebsocketService, times(0))
+        verify(dashboardWebsocketService, never())
             .sendEventToProjectSubscribers(any(), any());
     }
 
@@ -210,7 +211,7 @@ class ProjectGridServiceTest {
             .sendEventToProjectSubscribers(eq("token"),
                 argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)
                     && event.getDate() != null));
-        verify(jsExecutionScheduler, times(0))
+        verify(jsExecutionScheduler, never())
             .cancelWidgetsExecutionByGrid(any());
     }
 }

@@ -281,13 +281,13 @@ class ProjectWidgetServiceTest {
 
         projectWidgetService.removeWidgetFromDashboard(1L);
 
-        verify(jsExecutionScheduler, times(0))
+        verify(jsExecutionScheduler, never())
             .cancelWidgetExecution(any());
-        verify(projectWidgetRepository, times(0))
+        verify(projectWidgetRepository, never())
             .deleteById(any());
-        verify(projectWidgetRepository, times(0))
+        verify(projectWidgetRepository, never())
             .flush();
-        verify(dashboardWebsocketService, times(0))
+        verify(dashboardWebsocketService, never())
             .sendEventToProjectSubscribers(any(), any());
         verify(projectWidgetRepository)
             .findById(1L);
@@ -335,7 +335,7 @@ class ProjectWidgetServiceTest {
 
         verify(projectWidgetRepository)
             .findById(1L);
-        verify(projectWidgetRepository, times(0))
+        verify(projectWidgetRepository, never())
             .saveAndFlush(any());
     }
 
@@ -627,7 +627,7 @@ class ProjectWidgetServiceTest {
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
-        verify(stringEncryptor, times(0))
+        verify(stringEncryptor, never())
             .decrypt(any());
     }
 
@@ -695,7 +695,7 @@ class ProjectWidgetServiceTest {
 
         verify(widgetService)
             .getWidgetParametersWithCategoryParameters(widget);
-        verify(stringEncryptor, times(0))
+        verify(stringEncryptor, never())
             .encrypt(any());
     }
 }

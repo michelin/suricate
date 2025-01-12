@@ -235,7 +235,7 @@ class LibraryServiceTest {
 
         verify(libraryRepository)
             .findByTechnicalName("technicalName");
-        verify(assetService, times(0))
+        verify(assetService, never())
             .save(any());
         verify(libraryRepository)
             .saveAll(Collections.singletonList(library));

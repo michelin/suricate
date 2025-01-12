@@ -96,7 +96,7 @@ public class Widget extends AbstractAuditingEntity<Long> {
     private Set<ProjectWidget> widgetInstances = new LinkedHashSet<>();
 
     @ToString.Exclude
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
         name = "widget_library",
         joinColumns = {@JoinColumn(name = "widget_id")},
@@ -126,6 +126,11 @@ public class Widget extends AbstractAuditingEntity<Long> {
         widgetParams.forEach(this::addWidgetParam);
     }
 
+    /**
+     * Add a widget param to the widget.
+     *
+     * @param widgetParam The widget param to add
+     */
     public void addWidgetParam(WidgetParam widgetParam) {
         widgetParams.add(widgetParam);
         widgetParam.setWidget(this);

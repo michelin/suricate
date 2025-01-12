@@ -228,11 +228,11 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
    */
   private updateRepository(formGroup: UntypedFormGroup): void {
     const repositoryRequest: RepositoryRequest = formGroup.value;
-    if (repositoryRequest.login.trim().length === 0) {
+    if (repositoryRequest.login?.trim().length === 0) {
       repositoryRequest.login = null;
     }
 
-    if (repositoryRequest.password.trim().length === 0) {
+    if (repositoryRequest.password?.trim().length === 0) {
       repositoryRequest.password = null;
     }
 

@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -73,7 +74,7 @@ class JsExecutionSchedulerTest {
     void shouldNotScheduleNullRequest() {
         scheduler.schedule(null, true);
 
-        verify(jsExecutionService, times(0)).isJsExecutable(any());
+        verify(jsExecutionService, never()).isJsExecutable(any());
     }
 
     @Test
@@ -168,7 +169,7 @@ class JsExecutionSchedulerTest {
             .getOne(1L);
         verify(widgetService)
             .getWidgetParametersForJsExecution(widget);
-        verify(projectWidgetService, times(0))
+        verify(projectWidgetService, never())
             .updateState(any(), any(), any());
     }
 
@@ -206,7 +207,7 @@ class JsExecutionSchedulerTest {
             .getOne(1L);
         verify(widgetService)
             .getWidgetParametersForJsExecution(widget);
-        verify(projectWidgetService, times(0))
+        verify(projectWidgetService, never())
             .updateState(any(), any(), any());
     }
 
@@ -231,13 +232,13 @@ class JsExecutionSchedulerTest {
 
         scheduler.scheduleJsRequests(Collections.singletonList(jsExecutionDto), true);
 
-        verify(jsExecutionService, times(0))
+        verify(jsExecutionService, never())
             .isJsExecutable(any());
-        verify(projectWidgetService, times(0))
+        verify(projectWidgetService, never())
             .getOne(any());
-        verify(widgetService, times(0))
+        verify(widgetService, never())
             .getWidgetParametersForJsExecution(any());
-        verify(projectWidgetService, times(0))
+        verify(projectWidgetService, never())
             .updateState(any(), any(), any());
     }
 
@@ -316,7 +317,7 @@ class JsExecutionSchedulerTest {
             .getOne(1L);
         verify(widgetService)
             .getWidgetParametersForJsExecution(widget);
-        verify(scheduler, times(0))
+        verify(scheduler, never())
             .cancelScheduledFutureTask(eq(1L), any());
         verify(projectWidgetService)
             .updateState(WidgetStateEnum.STOPPED, 1L);

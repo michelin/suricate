@@ -32,6 +32,7 @@ import com.michelin.suricate.model.enumeration.WidgetAvailabilityEnum;
 import com.michelin.suricate.repository.WidgetParamRepository;
 import com.michelin.suricate.repository.WidgetRepository;
 import com.michelin.suricate.service.specification.WidgetSearchSpecification;
+import io.jsonwebtoken.lang.Collections;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -201,9 +203,9 @@ public class WidgetService {
         }
 
         for (Widget widget : category.getWidgets()) {
-            Optional<Widget> currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
+            Optional<Widget> existingWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
 
-            if (widget.getLibraries() != null && !widget.getLibraries().isEmpty() && libraries != null) {
+            if (!Collections.isEmpty(widget.getLibraries()) && !Collections.isEmpty(libraries)) {
                 List<Library> widgetLibraries = new ArrayList<>(widget.getLibraries());
 
                 widgetLibraries.replaceAll(widgetLibrary -> libraries
@@ -215,19 +217,17 @@ public class WidgetService {
             }
 
             if (widget.getImage() != null) {
-                if (currentWidget.isPresent() && currentWidget.get().getImage() != null) {
-                    widget.getImage().setId(currentWidget.get().getImage().getId());
+                if (existingWidget.isPresent() && existingWidget.get().getImage() != null) {
+                    widget.getImage().setId(existingWidget.get().getImage().getId());
                 }
 
                 assetService.save(widget.getImage());
             }
 
             // Replace the existing list of params and values by the new one
-            if (widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty()
-                && currentWidget.isPresent() && currentWidget.get().getWidgetParams() != null
-                && !currentWidget.get().getWidgetParams().isEmpty()) {
-
-                Set<WidgetParam> currentWidgetParams = currentWidget.get().getWidgetParams();
+            if (!Collections.isEmpty(widget.getWidgetParams()) && existingWidget.isPresent()
+                && !Collections.isEmpty(existingWidget.get().getWidgetParams())) {
+                Set<WidgetParam> currentWidgetParams = existingWidget.get().getWidgetParams();
 
                 widget.getWidgetParams().forEach(widgetParam -> {
                     Optional<WidgetParam> widgetParamToFind = currentWidgetParams
@@ -240,22 +240,21 @@ public class WidgetService {
                         widgetParam.setId(currentWidgetParamFound.getId());
 
                         // Search params with the current WidgetParam in DB
-                        if (widgetParam.getPossibleValuesMap() != null
-                            && !widgetParam.getPossibleValuesMap().isEmpty()
-                            && currentWidgetParamFound.getPossibleValuesMap() != null
-                            && !currentWidgetParamFound.getPossibleValuesMap().isEmpty()) {
+                        if (!Collections.isEmpty(widgetParam.getPossibleValuesMap())
+                            && !Collections.isEmpty(currentWidgetParamFound.getPossibleValuesMap())) {
 
                             widgetParam.getPossibleValuesMap().forEach(possibleValueMap -> {
-                                //Search the current widget possible values in DB
+                                // Search the current widget possible values in DB
                                 Optional<WidgetParamValue> possibleValueMapToFind =
                                     currentWidgetParamFound.getPossibleValuesMap()
                                         .stream()
                                         .filter(currentPossibleValueMap -> currentPossibleValueMap.getJsKey()
                                             .equals(possibleValueMap.getJsKey()))
                                         .findAny();
-                                //Set ID of the new object with the current one in DB
+                                // Set ID of the new object with the current one in DB
                                 possibleValueMapToFind.ifPresent(
-                                    possibleValueMapFound -> possibleValueMap.setId(possibleValueMapFound.getId()));
+                                    possibleValueMapFound -> possibleValueMap.setId(possibleValueMapFound.getId())
+                                );
                             });
                         }
                     });
@@ -263,15 +262,21 @@ public class WidgetService {
             }
 
             // Set ID and remove parameters which are not present anymore
-            if (currentWidget.isPresent()) {
-                widget.setWidgetAvailability(
-                    currentWidget.get().getWidgetAvailability()); // Keep the previous widget state
-                widget.setId(currentWidget.get().getId());
+            if (existingWidget.isPresent()) {
+                // Keep the previous widget state
+                widget.setWidgetAvailability(existingWidget.get().getWidgetAvailability());
+                widget.setId(existingWidget.get().getId());
 
-                for (WidgetParam oldWidgetParameter : currentWidget.get().getWidgetParams()) {
-                    if (!widget.getWidgetParams().contains(oldWidgetParameter)) {
-                        widgetParamRepository.deleteById(oldWidgetParameter.getId());
-                    }
+                List<Long> idsToDelete = existingWidget.get().getWidgetParams()
+                    .stream()
+                    .filter(oldWidgetParameter -> widget.getWidgetParams()
+                        .stream()
+                        .noneMatch(newWidgetParam -> newWidgetParam.getName().equals(oldWidgetParameter.getName())))
+                    .map(WidgetParam::getId)
+                    .toList();
+
+                if (!Collections.isEmpty(idsToDelete)) {
+                    widgetParamRepository.deleteAllById(idsToDelete);
                 }
             }
 
