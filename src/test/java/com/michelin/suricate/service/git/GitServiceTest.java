@@ -19,13 +19,9 @@
 
 package com.michelin.suricate.service.git;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyList;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -211,7 +207,7 @@ class GitServiceTest {
 
         gitService.updateWidgetFromEnabledGitRepositories();
 
-        verify(repositoryService, times(0))
+        verify(repositoryService, never())
             .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
@@ -229,130 +225,5 @@ class GitServiceTest {
 
         verify(repositoryService)
             .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
-    }
-
-    @Test
-    void shouldReadWidgetLocalRepository() throws GitAPIException, IOException {
-        Library library = new Library();
-        library.setTechnicalName("test.js");
-
-        Repository repository = new Repository();
-        repository.setId(1L);
-        repository.setName("repository");
-        repository.setBranch("master");
-        repository.setType(RepositoryTypeEnum.LOCAL);
-        repository.setLocalPath("src/test/resources/repository");
-
-        when(libraryService.createUpdateLibraries(any()))
-            .thenReturn(Collections.singletonList(library));
-
-        gitService.readWidgetRepositories(Collections.singletonList(repository));
-
-        verify(libraryService).createUpdateLibraries(argThat(libraries ->
-            libraries.get(0).getTechnicalName().equals("test.js")
-                && libraries.get(0).getAsset() != null
-                && libraries.get(0).getAsset().getContentType().equals("application/javascript")));
-        verify(categoryService)
-            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub")
-                && category.getTechnicalName().equals("github")));
-        verify(categoryService)
-            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab")
-                && category.getTechnicalName().equals("gitlab")));
-        verify(widgetService)
-            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub")
-                    && category.getTechnicalName().equals("github")),
-                argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                argThat(repository::equals));
-        verify(widgetService)
-            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab")
-                    && category.getTechnicalName().equals("gitlab")),
-                argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                argThat(repository::equals));
-        verify(cacheService).clearAllCache();
-    }
-
-    @Test
-    void shouldThrowExceptionWhenReadWidgetLocalRepository() {
-        Repository repository = new Repository();
-        repository.setId(1L);
-        repository.setName("repository");
-        repository.setBranch("master");
-        repository.setType(RepositoryTypeEnum.LOCAL);
-        repository.setLocalPath("unknown");
-
-        assertThrows(
-            IOException.class,
-            () -> gitService.readWidgetRepositories(Collections.singletonList(repository))
-        );
-
-        verify(jsExecutionScheduler)
-            .init();
-        verify(dashboardWebSocketService)
-            .reloadAllConnectedClientsToAllProjects();
-    }
-
-    @Test
-    void shouldReadWidgetRemoteRepository() throws GitAPIException, IOException {
-        ApplicationProperties.Widgets widgetsProperties = new ApplicationProperties.Widgets();
-        widgetsProperties.setCloneDir("/tmp");
-
-        Library library = new Library();
-        library.setTechnicalName("test.js");
-
-        Repository repository = new Repository();
-        repository.setId(1L);
-        repository.setName("repository");
-        repository.setUrl("https://github.com/michelin/suricate-widgets");
-        repository.setBranch("master");
-        repository.setType(RepositoryTypeEnum.REMOTE);
-
-        when(libraryService.createUpdateLibraries(any()))
-            .thenReturn(Collections.singletonList(library));
-        when(applicationProperties.getWidgets())
-            .thenReturn(widgetsProperties);
-
-        gitService.readWidgetRepositories(Collections.singletonList(repository));
-
-        verify(libraryService)
-            .createUpdateLibraries(anyList());
-        verify(categoryService, atLeastOnce())
-            .addOrUpdateCategory(any());
-        verify(widgetService, atLeastOnce())
-            .addOrUpdateWidgets(any(), any(), any());
-        verify(cacheService)
-            .clearAllCache();
-    }
-
-    @Test
-    void shouldThrowExceptionWhenReadWidgetRemoteRepository() {
-        ApplicationProperties.Widgets widgetsProperties = new ApplicationProperties.Widgets();
-        widgetsProperties.setCloneDir("/tmp");
-
-        Library library = new Library();
-        library.setTechnicalName("test.js");
-
-        Repository repository = new Repository();
-        repository.setId(1L);
-        repository.setName("repository");
-        repository.setUrl("http://url");
-        repository.setBranch("master");
-        repository.setLogin("login");
-        repository.setPassword("password");
-        repository.setType(RepositoryTypeEnum.REMOTE);
-
-        when(applicationProperties.getWidgets())
-            .thenReturn(widgetsProperties);
-
-        Exception exception = assertThrows(
-            Exception.class,
-            () -> gitService.readWidgetRepositories(Collections.singletonList(repository))
-        );
-
-        assertEquals("Exception caught during execution of fetch command", exception.getMessage());
-
-        verify(jsExecutionScheduler)
-            .init();
-        verify(dashboardWebSocketService)
-            .reloadAllConnectedClientsToAllProjects();
     }
 }

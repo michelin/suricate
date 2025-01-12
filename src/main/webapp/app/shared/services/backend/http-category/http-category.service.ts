@@ -16,16 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Category } from '../../../models/backend/category/category';
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { PageModel } from '../../../models/backend/page-model';
 import { Widget } from '../../../models/backend/widget/widget';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
 
 /**
  * Manage the widget Http calls
@@ -50,10 +50,10 @@ export class HttpCategoryService {
    *
    * @returns The categories as observable
    */
-  public getAll(filter?: HttpFilter): Observable<Page<Category>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<Category>> {
     const url = `${HttpCategoryService.categoriesApiEndpoint}`;
 
-    return this.httpClient.get<Page<Category>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<Category>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

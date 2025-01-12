@@ -18,6 +18,7 @@
  */
 
 import { Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+
 import { ProjectWidget } from '../../models/backend/project-widget/project-widget';
 
 /**
@@ -56,9 +57,9 @@ export class WidgetHtmlDirective implements OnChanges {
    * This is called once the HTML of the widget is fully loaded.
    */
   private reapplyJSScripts() {
-    const scripts: HTMLScriptElement[] = (<HTMLScriptElement[]>(
-      Array.from(this.elementRef.nativeElement.getElementsByTagName('script'))
-    )).filter(currentScript => currentScript.innerHTML);
+    const scripts: HTMLScriptElement[] = (
+      Array.from(this.elementRef.nativeElement.getElementsByTagName('script')) as HTMLScriptElement[]
+    ).filter((currentScript) => currentScript.innerHTML);
 
     Array.from(Array(scripts.length).keys()).forEach((index: number) => {
       const script = scripts[index];

@@ -66,20 +66,8 @@ h1 {
       padding: 10px 0;
     }
   }
-
-  #display-code-link {
-    margin-top: 10px;
-
-    a {
-      text-decoration: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-  }
 }
 
 .mat-mdc-dialog-actions {
-  padding: 24px;
+  padding: 0 24px 24px;
 }

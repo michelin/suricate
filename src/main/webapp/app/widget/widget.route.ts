@@ -27,6 +27,6 @@ export const widgetRoutes: Routes = [
     path: 'widgets/catalog',
     component: CatalogComponent,
     canActivate: [authGuard],
-    canActivateChild: [authGuard],
+    canActivateChild: [authGuard]
   }
 ];

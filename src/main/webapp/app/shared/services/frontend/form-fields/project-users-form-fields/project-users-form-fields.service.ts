@@ -18,18 +18,19 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { FormField } from '../../../../models/frontend/form/form-field';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { HttpProjectService } from '../../../backend/http-project/http-project.service';
-import { FormOption } from '../../../../models/frontend/form/form-option';
-import { HttpUserService } from '../../../backend/http-user/http-user.service';
-import { User } from '../../../../models/backend/user/user';
 import { IconEnum } from '../../../../enums/icon.enum';
+import { PageModel } from '../../../../models/backend/page-model';
+import { User } from '../../../../models/backend/user/user';
+import { FormField } from '../../../../models/frontend/form/form-field';
+import { FormOption } from '../../../../models/frontend/form/form-option';
 import { HttpFilterService } from '../../../backend/http-filter/http-filter.service';
-import { Page } from '../../../../models/backend/page';
+import { HttpProjectService } from '../../../backend/http-project/http-project.service';
+import { HttpUserService } from '../../../backend/http-user/http-user.service';
 
 /**
  * Service used to build the form fields related to project users
@@ -110,7 +111,7 @@ export class ProjectUsersFormFieldsService {
    */
   private getUsersAutocomplete(usernameFilter: string): Observable<FormOption[]> {
     return this.httpUserService.getAll(HttpFilterService.getDefaultFilter(usernameFilter)).pipe(
-      map((usersPaged: Page<User>) => {
+      map((usersPaged: PageModel<User>) => {
         const formOptions: FormOption[] = [];
         usersPaged.content.forEach((user: User) => {
           formOptions.push({

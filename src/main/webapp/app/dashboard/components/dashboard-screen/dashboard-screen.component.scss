@@ -18,14 +18,12 @@
  */
 
 #screen-code-div {
-  & {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    height: 220px;
-    font-size: 8em;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  height: 220px;
+  font-size: 8em;
 
   mat-icon {
     height: auto;

@@ -18,30 +18,27 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { RxStompConfig, StompHeaders } from '@stomp/rx-stomp';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MockRxStompService {
   /**
-   * Constructor
-   */
-  constructor() {}
-
-  /**
    * Mocked initAndConnect method for the unit tests
    */
-  public activate(): void {}
+  public activate(): void {
+    // Mock, no implementation
+  }
 
   /**
    * Mocked subscribe method for the unit tests
    *
-   * @param queueName The name of the queue
-   * @param headers Any optional headers
+   * @param ignoredQueueName The name of the queue
+   * @param ignoredHeaders Any optional headers
    */
-  public watch(queueName: string, headers?: StompHeaders): Observable<void> {
+  public watch(ignoredQueueName: string, ignoredHeaders?: StompHeaders): Observable<void> {
     return of();
   }
 
@@ -55,7 +52,9 @@ export class MockRxStompService {
   /**
    * Mocked configure method for the unit tests
    *
-   * @param rxStompConfig The configuration
+   * @param ignoredRxStompConfig The configuration
    */
-  public configure(rxStompConfig: RxStompConfig): void {}
+  public configure(ignoredRxStompConfig: RxStompConfig): void {
+    // Mock, no implementation
+  }
 }

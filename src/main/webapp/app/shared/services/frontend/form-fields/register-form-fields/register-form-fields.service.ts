@@ -18,21 +18,17 @@
  */
 
 import { Injectable } from '@angular/core';
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { Validators } from '@angular/forms';
-import { FormField } from '../../../../models/frontend/form/form-field';
+
+import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { IconEnum } from '../../../../enums/icon.enum';
+import { FormField } from '../../../../models/frontend/form/form-field';
 
 /**
  * Service used to build the form fields related to the register page
  */
 @Injectable({ providedIn: 'root' })
 export class RegisterFormFieldsService {
-  /**
-   * Constructor
-   */
-  constructor() {}
-
   /**
    * Get the list of fields for the register page
    */

@@ -18,20 +18,19 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { mergeMap, takeUntil, tap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Project } from '../../../shared/models/backend/project/project';
-import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
-import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
-import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { DashboardService } from '../../services/dashboard/dashboard.service';
-import {
-  HttpProjectWidgetService
-} from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { IMessage } from '@stomp/rx-stomp';
+import { Observable, Subject } from 'rxjs';
+import { mergeMap, takeUntil, tap } from 'rxjs/operators';
+
+import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
+import { Project } from '../../../shared/models/backend/project/project';
+import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
+import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 
 /**
  * Dashboard TV Management
@@ -146,7 +145,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
         // Received when synchronizing to a single dashboard
         if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_DASHBOARD) {
-          const project: Project = updateEvent.content;
+          const project: Project = updateEvent.content as Project;
           if (project) {
             this.router.navigate(['/tv'], { queryParams: { token: project.token } });
           }
@@ -195,10 +194,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
     return this.httpProjectWidgetsService.getAllByProjectToken(dashboardToken).pipe(
       tap((projectWidgets: ProjectWidget[]) => {
-        this.project.grids.forEach(projectGrid => {
+        this.project.grids.forEach((projectGrid) => {
           this.projectWidgetsByGrid.set(
             projectGrid.id,
-            projectWidgets.filter(projectWidget => projectWidget.gridId === projectGrid.id)
+            projectWidgets.filter((projectWidget) => projectWidget.gridId === projectGrid.id)
           );
         });
 
@@ -237,13 +236,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       if (this.project.displayProgressBar) {
         this.startTimer();
       }
-      
+
       this.rotationInterval = setInterval(() => {
         this.rotationIndex = this.rotationIndex === this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
 
         clearInterval(this.rotationInterval);
         this.scheduleRotation();
-
       }, this.project.grids[this.rotationIndex].time * 1000);
     }
   }

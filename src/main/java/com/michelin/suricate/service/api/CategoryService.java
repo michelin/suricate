@@ -25,6 +25,7 @@ import com.michelin.suricate.model.entity.Widget;
 import com.michelin.suricate.model.entity.WidgetParam;
 import com.michelin.suricate.repository.CategoryRepository;
 import com.michelin.suricate.service.specification.CategorySearchSpecification;
+import io.jsonwebtoken.lang.Collections;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -108,7 +109,7 @@ public class CategoryService {
         categoryRepository.save(category);
 
         // Create/Update configurations
-        if (categoryNewConfigurations != null && !categoryNewConfigurations.isEmpty()) {
+        if (!Collections.isEmpty(categoryNewConfigurations)) {
             List<String> categoryNewConfigurationsKeys = categoryNewConfigurations
                 .stream()
                 .map(CategoryParameter::getId)

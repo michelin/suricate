@@ -49,7 +49,7 @@ In general, we follow the ["fork-and-pull" Git workflow](https://github.com/susa
 
 ## Style Guide
 
-### Code Style
+### Back-End
 
 We maintain a consistent code style using [Checkstyle](https://checkstyle.sourceforge.io/).
 
@@ -65,4 +65,10 @@ Before you start contributing new code, it is recommended to:
 - Install the IntelliJ [CheckStyle-IDEA](https://plugins.jetbrains.com/plugin/1065-checkstyle-idea) plugin.
 - Configure the plugin to use Suricate's Checkstyle configuration file.
 
-Adhering to this code style ensures consistency and helps maintain code quality throughout the project.
+### Front-End
+
+We maintain a consistent code style using [ESLint](https://eslint.org) and [Prettier](https://prettier.io).
+
+We use [Husky](https://typicode.github.io/husky/) and [Lint-Staged](https://github.com/lint-staged/lint-staged) to perform linting and formatting checks before committing.
+
+After the first `npm install`, everything should be set up automatically.

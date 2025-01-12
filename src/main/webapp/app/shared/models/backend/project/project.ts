@@ -18,8 +18,8 @@
  */
 
 import { Asset } from '../asset/asset';
-import { GridProperties } from './grid-properties';
 import { ProjectGrid } from '../project-grid/project-grid';
+import { GridProperties } from './grid-properties';
 
 /**
  * The project entity
@@ -33,9 +33,4 @@ export class Project {
   image: Asset = new Asset();
   grids: ProjectGrid[];
   displayProgressBar: boolean;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 }

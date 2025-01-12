@@ -17,23 +17,62 @@
  * under the License.
  */
 
-import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { TvManagementDialogComponent } from './tv-management-dialog.component';
 import { MockModule } from '../../../mock/mock.module';
-import { AbstractHttpService } from '../../../shared/services/backend/abstract-http/abstract-http.service';
+import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
+import { Project } from '../../../shared/models/backend/project/project';
+import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
+import { TvManagementDialogComponent } from './tv-management-dialog.component';
 
 describe('TvManagementDialogComponent', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [TvManagementDialogComponent]
-      }).compileComponents();
-    })
-  );
+  let component: TvManagementDialogComponent;
+  let fixture: ComponentFixture<TvManagementDialogComponent>;
 
-  it('should create', inject([AbstractHttpService], (component: TvManagementDialogComponent) => {
-    expect(component).toBeTruthy();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [TvManagementDialogComponent],
+      providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TvManagementDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   }));
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  function buildProject(): Project {
+    const gridProperties: GridProperties = {
+      maxColumn: 5,
+      widgetHeight: 300,
+      cssStyle: ''
+    };
+
+    const grid: ProjectGrid = {
+      id: 1,
+      time: 30
+    };
+
+    return {
+      gridProperties: gridProperties,
+      librariesToken: ['Token1', 'Token2'],
+      name: 'ProjectName',
+      screenshotToken: 'ScreenToken',
+      image: {
+        content: 'content',
+        contentType: 'image/png',
+        id: 'id',
+        lastUpdateDate: new Date(),
+        size: 10
+      },
+      token: 'Token',
+      displayProgressBar: false,
+      grids: [grid]
+    };
+  }
 });

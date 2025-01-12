@@ -17,13 +17,13 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
 import { AbstractHttpService } from '../services/backend/abstract-http/abstract-http.service';
-import { Router } from '@angular/router';
+import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
 
 /**
  * Used to put the token in the request
@@ -34,18 +34,18 @@ export class TokenInterceptor implements HttpInterceptor {
    * Constructor
    * @param router The router
    */
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   /**
    * Intercept the HTTP requests and add the token to them
    * @param request The request sent
    * @param next The next interceptor
    */
-  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (
-      !request ||
-      !request.url ||
-      (/^http/.test(request.url) && !(AbstractHttpService.baseApiEndpoint && request.url.startsWith(AbstractHttpService.baseApiEndpoint)))
+      !request?.url ||
+      (request.url.startsWith('http') &&
+        !(AbstractHttpService.baseApiEndpoint && request.url.startsWith(AbstractHttpService.baseApiEndpoint)))
     ) {
       return next.handle(request);
     }
@@ -58,7 +58,7 @@ export class TokenInterceptor implements HttpInterceptor {
           }
         });
       }
-    } catch (error) {
+    } catch (ignoredError) {
       // Catch "isLoggedIn" errors. Token probably has been tampered
       AuthenticationService.logout();
       this.router.navigate(['/login']);

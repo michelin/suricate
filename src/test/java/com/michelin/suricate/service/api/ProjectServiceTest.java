@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -209,7 +209,7 @@ class ProjectServiceTest {
         assertNotNull(actual);
         assertEquals("token", actual.getToken());
 
-        verify(stringEncryptor, times(0))
+        verify(stringEncryptor, never())
             .encrypt(any(String.class));
         verify(projectRepository)
             .save(project);
@@ -233,7 +233,7 @@ class ProjectServiceTest {
         assertEquals(1, actual.getUsers().size());
         assertTrue(actual.getUsers().contains(user));
 
-        verify(stringEncryptor, times(0))
+        verify(stringEncryptor, never())
             .encrypt(any(String.class));
         verify(projectRepository)
             .save(project);
@@ -555,7 +555,7 @@ class ProjectServiceTest {
             .save(argThat(asset -> asset.getSize() == 10L
                 && asset.getContentType().equals("contentType")
                 && Arrays.equals(asset.getContent(), new byte[10])));
-        verify(projectRepository, times(0))
+        verify(projectRepository, never())
             .save(any());
     }
 }

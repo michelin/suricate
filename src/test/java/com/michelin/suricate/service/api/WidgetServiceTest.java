@@ -37,6 +37,7 @@ import com.michelin.suricate.model.entity.Widget;
 import com.michelin.suricate.model.entity.WidgetParam;
 import com.michelin.suricate.model.entity.WidgetParamValue;
 import com.michelin.suricate.model.enumeration.DataTypeEnum;
+import com.michelin.suricate.model.enumeration.RepositoryTypeEnum;
 import com.michelin.suricate.model.enumeration.WidgetAvailabilityEnum;
 import com.michelin.suricate.repository.WidgetParamRepository;
 import com.michelin.suricate.repository.WidgetRepository;
@@ -318,7 +319,8 @@ class WidgetServiceTest {
         Repository repository = new Repository();
         repository.setId(1L);
         repository.setName("repository");
-        repository.setBranch("master");
+        repository.setLocalPath("/tmp");
+        repository.setType(RepositoryTypeEnum.LOCAL);
 
         Asset asset = new Asset();
         asset.setId(1L);
@@ -398,7 +400,90 @@ class WidgetServiceTest {
         verify(assetService)
             .save(widgetImage);
         verify(widgetParamRepository)
-            .deleteById(13L);
+            .deleteAllById(List.of(13L));
+        verify(widgetRepository)
+            .save(widget);
+    }
+
+    @Test
+    void shouldNotDeleteWidgetParamWhenNameDoesNotChange() {
+        Repository repository = new Repository();
+        repository.setId(1L);
+        repository.setName("repository");
+        repository.setBranch("master");
+        repository.setType(RepositoryTypeEnum.REMOTE);
+
+        Asset asset = new Asset();
+        asset.setId(1L);
+        asset.setContent(new byte[1]);
+
+        Library library = new Library();
+        library.setId(1L);
+        library.setTechnicalName("technicalName");
+        library.setAsset(asset);
+
+        WidgetParamValue currentWidgetParamValue = new WidgetParamValue();
+        currentWidgetParamValue.setId(12L);
+        currentWidgetParamValue.setJsKey("widgetParamKey");
+
+        WidgetParam currentWidgetParam = new WidgetParam();
+        currentWidgetParam.setId(13L);
+        currentWidgetParam.setName("widgetParam");
+        currentWidgetParam.setDescription("description");
+
+        Asset currentWidgetImage = new Asset();
+        currentWidgetImage.setId(10L);
+
+        Widget currentWidget = new Widget();
+        currentWidget.setId(1L);
+        currentWidget.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
+        currentWidget.setImage(currentWidgetImage);
+        currentWidget.setWidgetParams(List.of(currentWidgetParam));
+
+        Library widgetLibrary = new Library();
+        widgetLibrary.setTechnicalName("technicalName");
+
+        WidgetParamValue widgetParamValue = new WidgetParamValue();
+        widgetParamValue.setJsKey("widgetParamKey");
+
+        WidgetParam widgetParam = new WidgetParam();
+        widgetParam.setName("widgetParam");
+        // Only the description has changed. This will not trigger the deletion of the widget param
+        currentWidgetParam.setDescription("descriptionUpdated");
+
+        Asset widgetImage = new Asset();
+
+        Widget widget = new Widget();
+        widget.setTechnicalName("widgetTechnicalName");
+        widget.setLibraries(Collections.singleton(widgetLibrary));
+        widget.setImage(widgetImage);
+        widget.setWidgetParams(Collections.singletonList(widgetParam));
+
+        Category category = new Category();
+        category.setId(1L);
+        category.setWidgets(Collections.singleton(widget));
+
+        when(widgetRepository.findByTechnicalName(any()))
+            .thenReturn(Optional.of(currentWidget));
+        when(assetService.save(any()))
+            .thenAnswer(answer -> answer.getArgument(0));
+
+        widgetService.addOrUpdateWidgets(category, Collections.singletonList(library), repository);
+
+        assertEquals(1L, widget.getId());
+        assertEquals(WidgetAvailabilityEnum.ACTIVATED, widget.getWidgetAvailability());
+        assertEquals(category, widget.getCategory());
+        assertEquals(repository, widget.getRepository());
+        assertTrue(widget.getLibraries().contains(library));
+        assertEquals(10L, widget.getImage().getId());
+        assertEquals(13L, new ArrayList<>(widget.getWidgetParams()).getFirst().getId());
+
+        verify(widgetRepository)
+            .findByTechnicalName("widgetTechnicalName");
+        verify(assetService)
+            .save(widgetImage);
+        verify(widgetParamRepository, never())
+            .deleteAllById(List.of(13L));
         verify(widgetRepository)
             .save(widget);
     }
@@ -409,6 +494,7 @@ class WidgetServiceTest {
         repository.setId(1L);
         repository.setName("repository");
         repository.setBranch("master");
+        repository.setType(RepositoryTypeEnum.REMOTE);
 
         Asset asset = new Asset();
         asset.setId(1L);
@@ -488,7 +574,7 @@ class WidgetServiceTest {
         verify(assetService)
             .save(widgetImage);
         verify(widgetParamRepository)
-            .deleteById(13L);
+            .deleteAllById(List.of(13L));
         verify(widgetRepository)
             .save(widget);
     }

@@ -17,10 +17,9 @@
  * under the License.
  */
 
-/**
- * Component for that modify the theme of Angular Material mat-button
- */
-@mixin custom-mat-form-field-theme($theme) {
+@use '@angular/material' as mat;
+
+@mixin custom-mat-menu-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -29,29 +28,21 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-form-field {
-    &.mat-form-field-readonly {
-      .mat-form-field-outline {
-        background-color: #7f7f7f0f;
-      }
-    }
+  .avatar-container {
+    margin: 0 auto;
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-radius: 50%;
 
-    .mat-icon.prefix {
-      margin-right: 10px;
+    .avatar {
+      height: 100%;
+      font-size: 25px;
+      background: mat.m2-get-color-from-palette($primary, 500);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-
-    .mat-icon.suffix {
-      margin-left: 10px;
-      cursor: pointer;
-    }
-  }
-
-  // Stylize the autofill suggestions of the browser
-  input:-webkit-autofill::first-line,
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    font: 15px Roboto, sans-serif !important;
   }
 }

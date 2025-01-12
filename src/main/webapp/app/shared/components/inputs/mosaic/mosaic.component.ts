@@ -18,8 +18,9 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { InputComponent } from '../input/input.component';
+
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
+import { InputComponent } from '../input/input.component';
 
 /**
  * Component used to display the mosaic input type

@@ -17,19 +17,18 @@
  * under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { ListComponent } from '../../shared/components/list/list.component';
-import { User } from '../../shared/models/backend/user/user';
-import { Role } from '../../shared/models/backend/role/role';
-import { IconEnum } from '../../shared/enums/icon.enum';
 import { TitleCasePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+
+import { ListComponent } from '../../shared/components/list/list.component';
+import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
-import {
-  UserFormFieldsService
-} from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
+import { Role } from '../../shared/models/backend/role/role';
+import { User } from '../../shared/models/backend/user/user';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
-import { UntypedFormGroup } from '@angular/forms';
+import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
 
 /**
  * Component used to display the list of users
@@ -52,7 +51,7 @@ export class UsersComponent extends ListComponent<User, UserRequest> implements 
    */
   constructor(
     private readonly httpAdminUserService: HttpAdminUserService,
-    private readonly userFormFieldsService: UserFormFieldsService,
+    private readonly userFormFieldsService: UserFormFieldsService
   ) {
     super(httpAdminUserService);
 

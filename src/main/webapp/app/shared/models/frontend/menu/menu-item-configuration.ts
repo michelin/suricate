@@ -17,18 +17,14 @@
  * under the License.
  */
 
+import { IconEnum } from '../../../enums/icon.enum';
 import { LinkConfiguration } from '../link/link-configuration';
 
 /**
  * Represent a category of the menu
  */
 export class MenuItemConfiguration {
-  /**
-   * The label key to use with the translate service
-   */
   label: string;
-  /**
-   * The link used to display the page of the entry
-   */
   linkConfiguration: LinkConfiguration;
+  icon: IconEnum;
 }

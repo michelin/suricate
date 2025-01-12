@@ -17,7 +17,10 @@
  * under the License.
  */
 
-@use '@angular/material' as mat;
+.grid-pagination {
+  display: flex;
+  justify-content: center;
+}
 
 .add-widget-grid {
   color: inherit;
@@ -38,30 +41,5 @@
 
   .grid-tile-body {
     max-height: 200px;
-  }
-}
-
-@mixin dashboard-detail-component-theme($theme) {
-  $primary: map-get($theme, primary);
-
-  .carousel-indicators {
-    display: flex;
-    list-style: none;
-    width: 500px;
-    margin: 15px auto;
-    justify-content: center;
-
-    li {
-      background-color: mat.get-color-from-palette($primary, 200);
-      cursor: pointer;
-      width: 30px;
-      height: 4px;
-      margin-right: 4px;
-      margin-left: 4px;
-    }
-
-    .indicator-selected {
-      background-color: mat.get-color-from-palette($primary, 900);
-    }
   }
 }

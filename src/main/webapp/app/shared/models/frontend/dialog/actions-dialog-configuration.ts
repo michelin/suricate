@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { DialogConfiguration } from './dialog-configuration';
 import { ButtonConfiguration } from '../button/button-configuration';
+import { DialogConfiguration } from './dialog-configuration';
 
 /**
  * Configuration used by the actions dialog
@@ -27,5 +27,5 @@ export class ActionsDialogConfiguration extends DialogConfiguration {
   /**
    * Used to add actions buttons
    */
-  actions: ButtonConfiguration<unknown>[];
+  actions: ButtonConfiguration<void>[];
 }

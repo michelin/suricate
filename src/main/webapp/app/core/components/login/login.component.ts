@@ -17,25 +17,21 @@
  * under the License.
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
-import { FormService } from '../../../shared/services/frontend/form/form.service';
+import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import {
-  LoginFormFieldsService
-} from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
-import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import {
-  HttpConfigurationService
-} from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { FormService } from '../../../shared/services/frontend/form/form.service';
+import { LoginFormFieldsService } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
-import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Manage the login page
@@ -96,7 +92,7 @@ export class LoginComponent implements OnInit {
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
-    private readonly toastService: ToastService,
+    private readonly toastService: ToastService
   ) {}
 
   /**

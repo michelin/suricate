@@ -8,7 +8,7 @@ on:
 
 jobs:
   back-end:
-    name: Build back-end
+    name: Back-End
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -48,7 +48,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   front-end:
-    name: Build front-end
+    name: Front-End
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project

@@ -18,6 +18,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 @Component({
@@ -30,11 +31,6 @@ export class SettingsComponent implements OnInit {
    * Configuration of the header
    */
   public headerConfiguration: HeaderConfiguration;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 
   /**
    * Init method

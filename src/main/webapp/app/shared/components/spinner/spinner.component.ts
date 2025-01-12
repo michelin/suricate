@@ -34,9 +34,4 @@ export class SpinnerComponent {
    */
   @Input()
   public color: ThemePalette;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 }

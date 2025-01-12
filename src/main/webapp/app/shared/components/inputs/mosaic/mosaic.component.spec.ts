@@ -19,31 +19,29 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { MosaicComponent } from './mosaic.component';
+import { MockModule } from '../../../../mock/mock.module';
 import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { MockModule } from '../../../../mock/mock.module';
+import { MosaicComponent } from './mosaic.component';
 
 describe('MosaicComponent', () => {
   let component: MosaicComponent;
   let fixture: ComponentFixture<MosaicComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [MosaicComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [MosaicComponent]
+    }).compileComponents();
 
-      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-      fixture = TestBed.createComponent(MosaicComponent);
-      component = fixture.componentInstance;
-      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.MOSAIC);
+    fixture = TestBed.createComponent(MosaicComponent);
+    component = fixture.componentInstance;
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.MOSAIC);
 
-      fixture.detectChanges();
-    })
-  );
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

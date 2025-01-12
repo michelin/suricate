@@ -24,7 +24,7 @@ import { ActivatedRoute } from '@angular/router';
  * Service used to manage global routes
  */
 @Injectable({ providedIn: 'root' })
-export class RoutesService {
+export class RouteService {
   /**
    * Get the deeper activated route from the current route
    *

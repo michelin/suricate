@@ -20,18 +20,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { LayoutModule } from '../layout/layout.module';
 import { SharedModule } from '../shared/shared.module';
+import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { LayoutModule } from '../layout/layout.module';
-import { coreRoutes } from './core.route';
-import { HomeComponent } from './components/home/home.component';
+import { SecuritySettingsComponent } from './components/settings/security-settings/security-settings.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UxSettingsComponent } from './components/settings/ux-settings/ux-settings.component';
-import { SecuritySettingsComponent } from './components/settings/security-settings/security-settings.component';
+import { coreRoutes } from './core.route';
 
 @NgModule({
   imports: [RouterModule.forChild(coreRoutes), LayoutModule, SharedModule],
-  declarations: [LoginComponent, RegisterComponent, HomeComponent, SettingsComponent, UxSettingsComponent, SecuritySettingsComponent]
+  declarations: [
+    LoginComponent,
+    RegisterComponent,
+    HomeComponent,
+    SettingsComponent,
+    UxSettingsComponent,
+    SecuritySettingsComponent
+  ]
 })
 export class CoreModule {}

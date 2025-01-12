@@ -27,7 +27,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -235,7 +234,7 @@ class LibraryServiceTest {
 
         verify(libraryRepository)
             .findByTechnicalName("technicalName");
-        verify(assetService, times(0))
+        verify(assetService, never())
             .save(any());
         verify(libraryRepository)
             .saveAll(Collections.singletonList(library));

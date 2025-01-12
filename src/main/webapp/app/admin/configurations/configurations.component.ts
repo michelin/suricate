@@ -18,21 +18,16 @@
  */
 
 import { Component } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+
 import { ListComponent } from '../../shared/components/list/list.component';
+import { DataTypeEnum } from '../../shared/enums/data-type.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
-import {
-  WidgetConfigurationFormFieldsService
-} from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import {
-  HttpCategoryParametersService
-} from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
-import { DataTypeEnum } from '../../shared/enums/data-type.enum';
-import {
-  WidgetConfigurationRequest
-} from '../../shared/models/backend/widget-configuration/widget-configuration-request';
-import { UntypedFormGroup } from '@angular/forms';
+import { WidgetConfigurationRequest } from '../../shared/models/backend/widget-configuration/widget-configuration-request';
+import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
+import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 
 /**
  * Component used to display the list of widgets
@@ -148,7 +143,11 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter, Wi
    * @param configuration The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, configuration: CategoryParameter, saveCallback: (formGroup: UntypedFormGroup) => void): void {
+  private openFormSidenav(
+    event: Event,
+    configuration: CategoryParameter,
+    saveCallback: (formGroup: UntypedFormGroup) => void
+  ): void {
     this.sidenavService.openFormSidenav({
       title: 'configuration.edit',
       formFields: this.widgetConfigurationFormFieldsService.generateFormFields(configuration),

@@ -58,14 +58,9 @@ export class FileUtils {
    *
    * @param blob The Blob file
    * @param filename The filename
-   * @param lastModifiedDate The last modified date
    */
-  public static convertBlobToFile(blob: Blob, filename: string, lastModifiedDate: Date): File {
-    const file: any = blob;
-    file.lastModified = lastModifiedDate;
-    file.name = filename;
-
-    return file as File;
+  public static convertBlobToFile(blob: Blob, filename: string): File {
+    return new File([blob], filename, { type: blob.type });
   }
 
   /**

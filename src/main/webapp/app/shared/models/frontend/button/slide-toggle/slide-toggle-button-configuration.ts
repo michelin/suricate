@@ -17,9 +17,10 @@
  * under the License.
  */
 
-import { FormField } from '../../form/form-field';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UntypedFormGroup } from '@angular/forms';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+
+import { FormField } from '../../form/form-field';
 
 export class SlideToggleButtonConfiguration {
   /**

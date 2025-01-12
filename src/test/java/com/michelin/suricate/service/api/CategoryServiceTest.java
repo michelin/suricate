@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -113,13 +113,13 @@ class CategoryServiceTest {
     void shouldAddCategoryWhenNull() {
         categoryService.addOrUpdateCategory(null);
 
-        verify(assetService, times(0))
+        verify(assetService, never())
             .save(any());
-        verify(categoryRepository, times(0))
+        verify(categoryRepository, never())
             .save(any());
-        verify(categoryParametersService, times(0))
+        verify(categoryParametersService, never())
             .deleteOneByKey(any());
-        verify(categoryParametersService, times(0))
+        verify(categoryParametersService, never())
             .addOrUpdateCategoryConfiguration(any(), any());
     }
 
@@ -146,7 +146,7 @@ class CategoryServiceTest {
             .save(asset);
         verify(categoryRepository)
             .save(category);
-        verify(categoryParametersService, times(0))
+        verify(categoryParametersService, never())
             .deleteOneByKey("key");
         verify(categoryParametersService)
             .addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
@@ -163,13 +163,13 @@ class CategoryServiceTest {
 
         categoryService.addOrUpdateCategory(category);
 
-        verify(assetService, times(0))
+        verify(assetService, never())
             .save(any());
         verify(categoryRepository)
             .save(category);
-        verify(categoryParametersService, times(0))
+        verify(categoryParametersService, never())
             .deleteOneByKey(any());
-        verify(categoryParametersService, times(0))
+        verify(categoryParametersService, never())
             .addOrUpdateCategoryConfiguration(any(), any());
     }
 

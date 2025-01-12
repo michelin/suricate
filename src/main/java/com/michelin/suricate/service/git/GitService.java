@@ -103,30 +103,27 @@ public class GitService {
             return;
         }
 
-        Optional<List<Repository>> optionalRepositories =
-            repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        Optional<List<Repository>> optionalRepositories = repositoryService
+            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+
         if (optionalRepositories.isEmpty()) {
             log.info("No remote or local repository found");
             return;
         }
 
-        readWidgetRepositories(optionalRepositories.get());
-    }
-
-    /**
-     * Clone and update the widgets from the given list of repositories.
-     */
-    @Transactional
-    public void readWidgetRepositories(final List<Repository> repositories) throws GitAPIException, IOException {
         try {
-            for (Repository repository : repositories) {
+            for (Repository repository : optionalRepositories.get()) {
                 if (repository.getType() == RepositoryTypeEnum.LOCAL) {
                     log.info("Loading widgets from the local folder {}", repository.getLocalPath());
 
                     updateWidgetsFromRepositoryFolder(new File(repository.getLocalPath()), true, repository);
                 } else {
-                    File remoteFolder = cloneRemoteRepository(repository.getUrl(), repository.getBranch(),
-                        repository.getLogin(), repository.getPassword());
+                    File remoteFolder = cloneRemoteRepository(
+                        repository.getUrl(),
+                        repository.getBranch(),
+                        repository.getLogin(),
+                        repository.getPassword()
+                    );
 
                     updateWidgetsFromRepositoryFolder(remoteFolder, false, repository);
                 }

@@ -1,57 +1,53 @@
-<ng-container *ngIf="!isDashboardLoading && project">
+@if (!isDashboardLoading && project) {
   <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
-  <ol class="carousel-indicators">
-    <li *ngFor="let grid of project.grids" (click)="redirectToGrid(grid.id)" [ngClass]="{ 'indicator-selected': grid.id === gridId }"></li>
-    <li (click)="redirectToAddGrid()" [ngClass]="{ 'indicator-selected': !gridId }"></li>
-  </ol>
+  @if (project.grids.length > 1) {
+    <div class="grid-pagination">
+      <suricate-paginator
+        (pageChange)="redirectToGrid($event)"
+        [currentPage]="getGridIndex()"
+        [pageNbElements]="1"
+        [totalElements]="project.grids.length"
+        [hidePageSize]="true"
+      >
+      </suricate-paginator>
+    </div>
+  }
 
   <!-- Dashboard screen -->
-  <suricate-dashboard-screen
-    #dashboardScreen
-    *ngIf="currentWidgets?.length > 0"
-    [project]="project"
-    [projectWidgets]="currentWidgets"
-    [screenCode]="screenCode"
-    [readOnly]="isReadOnly"
-    (refreshAllProjectWidgets)="refreshAllProjectWidgets()"
-    (disconnectEvent)="handlingDashboardDisconnect()"
-  ></suricate-dashboard-screen>
-
+  @if (currentWidgets?.length > 0) {
+    <suricate-dashboard-screen
+      #dashboardScreen
+      [project]="project"
+      [projectWidgets]="currentWidgets"
+      [screenCode]="screenCode"
+      [readOnly]="isReadOnly"
+      (refreshAllProjectWidgets)="refreshAllProjectWidgets()"
+      (disconnectEvent)="handlingDashboardDisconnect()"
+    ></suricate-dashboard-screen>
+  }
   <!-- Display the add card, if no widget inside the current grid -->
-  <div *ngIf="!isDashboardLoading && (!currentWidgets || currentWidgets.length === 0)" class="grid add-widget-grid">
-    <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
-    <mat-grid-list *ngIf="gridId" cols="4" rowHeight="250px" gutterSize="17px">
-      <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="displayProjectWidgetWizard()">
-        <div class="grid-tile-content-wrapper">
-          <div class="grid-tile-body">
-            <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+  @if (!isDashboardLoading && (!currentWidgets || currentWidgets.length === 0)) {
+    <div class="grid add-widget-grid">
+      <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
+      <mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
+        <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="displayProjectWidgetWizard()">
+          <div class="grid-tile-content-wrapper">
+            <div class="grid-tile-body">
+              <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+            </div>
+            <div class="grid-tile-footer">
+              {{ 'widget.add' | translate }}
+            </div>
           </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  }
+}
 
-          <div class="grid-tile-footer">
-            {{ 'widget.add' | translate }}
-          </div>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-
-    <!-- Display the add grid -->
-    <mat-grid-list *ngIf="!gridId" cols="4" rowHeight="250px" gutterSize="17px">
-      <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="openAddGridFormSidenav()">
-        <div class="grid-tile-content-wrapper">
-          <div class="grid-tile-body">
-            <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
-          </div>
-
-          <div class="grid-tile-footer">
-            {{ 'grid.add' | translate }}
-          </div>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
+@if (isDashboardLoading) {
+  <div class="container without-header">
+    <suricate-spinner></suricate-spinner>
   </div>
-</ng-container>
-
-<div *ngIf="isDashboardLoading" class="container without-header">
-  <suricate-spinner></suricate-spinner>
-</div>
+}

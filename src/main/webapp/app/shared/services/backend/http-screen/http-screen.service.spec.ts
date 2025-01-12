@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { HttpScreenService } from './http-screen.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpScreenService } from './http-screen.service';
 
 describe('HttpScreenService', () => {
+  let service: HttpScreenService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HttpScreenService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(HttpScreenService);
   });
 
-  it('should create', inject([HttpScreenService], (service: HttpScreenService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

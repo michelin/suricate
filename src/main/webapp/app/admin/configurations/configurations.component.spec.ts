@@ -19,25 +19,23 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { ConfigurationsComponent } from './configurations.component';
 import { MockModule } from '../../mock/mock.module';
+import { ConfigurationsComponent } from './configurations.component';
 
 describe('ConfigurationsComponent', () => {
   let component: ConfigurationsComponent;
   let fixture: ComponentFixture<ConfigurationsComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [ConfigurationsComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [ConfigurationsComponent]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ConfigurationsComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ConfigurationsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

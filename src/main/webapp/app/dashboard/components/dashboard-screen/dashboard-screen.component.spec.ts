@@ -19,32 +19,30 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { DashboardScreenComponent } from './dashboard-screen.component';
-import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
-import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../mock/mock.module';
+import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
+import { DashboardScreenComponent } from './dashboard-screen.component';
 
 describe('DashboardScreenComponent', () => {
   let component: DashboardScreenComponent;
   let fixture: ComponentFixture<DashboardScreenComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [DashboardScreenComponent, SafeHtmlPipe]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [DashboardScreenComponent, SafeHtmlPipe]
+    }).compileComponents();
 
-      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-      fixture = TestBed.createComponent(DashboardScreenComponent);
-      component = fixture.componentInstance;
-      component.project = mockedModelBuilderService.buildMockedProject();
-      component.gridOptions = mockedModelBuilderService.buildGridOptions();
+    fixture = TestBed.createComponent(DashboardScreenComponent);
+    component = fixture.componentInstance;
+    component.project = mockedModelBuilderService.buildMockedProject();
+    component.gridOptions = mockedModelBuilderService.buildGridOptions();
 
-      fixture.detectChanges();
-    })
-  );
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

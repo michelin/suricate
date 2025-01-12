@@ -17,11 +17,12 @@
  * under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { InputComponent } from '../input/input.component';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { FileUtils } from '../../../utils/file.utils';
+import { Component, OnInit } from '@angular/core';
 import html2canvas from 'html2canvas';
+
+import { FileUtils } from '../../../utils/file.utils';
+import { InputComponent } from '../input/input.component';
 
 /**
  * Component that manage the file input
@@ -61,7 +62,7 @@ export class FileInputComponent extends InputComponent implements OnInit {
    * When the component is init
    */
   public override ngOnInit(): void {
-    this.setBase64File(this.field.value);
+    this.setBase64File(this.field.value as string);
   }
 
   /**

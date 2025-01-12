@@ -17,19 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { SettingsService } from './settings.service';
 import { MockModule } from '../../mock/mock.module';
+import { SettingsService } from './settings.service';
 
 describe('SettingsService', () => {
+  let service: SettingsService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockModule]
     });
+    service = TestBed.inject(SettingsService);
   });
 
-  it('should create', inject([SettingsService], (service: SettingsService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

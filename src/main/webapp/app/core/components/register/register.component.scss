@@ -22,11 +22,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 550px;
-  padding: 10px 6%;
+  max-width: 310px;
+  padding: 10px 100px;
 
   .brand-image {
-    max-height: 40%;
+    padding: 22px 0;
   }
 
   .register-form {
@@ -36,6 +36,7 @@
     suricate-buttons {
       display: flex;
       justify-content: center;
+      padding-bottom: 16px;
     }
   }
 }

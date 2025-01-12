@@ -2,63 +2,66 @@
 
 <section class="container">
   <mat-horizontal-stepper #wizardStepper [linear]="true" labelPosition="bottom" (selectionChange)="onStepChanged($event)">
-    <ng-container *ngFor="let step of wizardConfiguration?.steps; let index = index">
+    @for (step of wizardConfiguration?.steps; track step; let index = $index) {
       <ng-template [matStepperIcon]="step.icon">
         <mat-icon> {{ materialIconRecords[step.icon] }} </mat-icon>
       </ng-template>
-
       <mat-step
         [stepControl]="$any(getFormGroupOfStep(step))"
         [optional]="step.optional"
         [state]="step.icon"
-      >
+        >
         <ng-template matStepLabel>
           <div class="step-index">Step {{ index + 1 }}</div>
           <div>{{ step.title | translate }}</div>
           <hr />
         </ng-template>
-
-        <ng-container *ngIf="this.currentStep.key === step.key">
+        @if (this.currentStep.key === step.key) {
           <div class="widget-config-step">
-            <div
-              *ngIf="step.imageLink || step.description || step.information || step.category"
-              class="step-detail"
-            >
-              <div class="step-image-link">
-                <img *ngIf="step.imageLink" [ngSrc]="step.imageLink.link" fill="true" priority="true" alt="form image" />
-              </div>
-
-              <div class="desc-info">
-                <div *ngIf="step.description">
-                  <div class="widget-data-title">{{ 'widget.description.title' | translate }}</div>
-                  <div>{{ step.description | translate }}</div>
+            @if (step.imageLink || step.description || step.information || step.category) {
+              <div
+                class="step-detail"
+                >
+                <div class="step-image-link">
+                  @if (step.imageLink) {
+                    <img [ngSrc]="step.imageLink.link" fill="true" priority="true" alt="Widget" />
+                  }
                 </div>
-
-                <div *ngIf="step.description">
-                  <div class="widget-data-title">{{ 'widget.information.title' | translate }}</div>
-                  <div>{{ step.description | translate }}</div>
+                <div class="desc-info">
+                  @if (step.description) {
+                    <div>
+                      <div class="widget-data-title">{{ 'widget.description.title' | translate }}</div>
+                      <div>{{ step.description | translate }}</div>
+                    </div>
+                  }
+                  @if (step.information) {
+                    <div>
+                      <div class="widget-data-title">{{ 'widget.information.title' | translate }}</div>
+                      <div>{{ step.information | translate }}</div>
+                    </div>
+                  }
                 </div>
               </div>
-            </div>
-
-            <suricate-slide-toggle
-              *ngIf="isWidgetConfigurationStep(step) && step.category?.categoryParameters.length > 0"
-              [label]="'widget.parameters.category.override.title'"
-              (slideToggleButtonPressed)="displayCategorySettings($event)"
-            ></suricate-slide-toggle>
-
+            }
+            @if (isWidgetConfigurationStep() && step.category?.categoryParameters.length > 0) {
+              <suricate-slide-toggle
+                [label]="'widget.parameters.category.override.title'"
+                (slideToggleButtonPressed)="displayCategorySettings($event)"
+              ></suricate-slide-toggle>
+            }
             <form [formGroup]="getFormGroupOfStep(step)">
-              <suricate-input
-                *ngFor="let field of step.fields"
-                [formGroup]="getFormGroupOfStep(step)"
-                [field]="field"
-                (valueChangeEvent)="onValueChanged($event)"
-              ></suricate-input>
+              @for (field of step.fields; track field) {
+                <suricate-input
+                  [formGroup]="getFormGroupOfStep(step)"
+                  [field]="field"
+                  (valueChangeEvent)="onValueChanged($event)"
+                ></suricate-input>
+              }
             </form>
           </div>
-        </ng-container>
+        }
       </mat-step>
-    </ng-container>
+    }
   </mat-horizontal-stepper>
 
   <div class="stepper-actions-wrapper">

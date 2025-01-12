@@ -19,16 +19,17 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Credentials } from '../../../models/backend/user/credentials';
-import { AuthenticationResponse } from '../../../models/backend/authentication/authentication-response';
-import { User } from '../../../models/backend/user/user';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { AccessTokenDecoded } from '../../../models/frontend/token/access-token-decoded';
-import { Role } from '../../../models/backend/role/role';
+
 import { RoleEnum } from '../../../enums/role.enum';
+import { AuthenticationResponse } from '../../../models/backend/authentication/authentication-response';
+import { Role } from '../../../models/backend/role/role';
+import { Credentials } from '../../../models/backend/user/credentials';
+import { User } from '../../../models/backend/user/user';
 import { UserRequest } from '../../../models/backend/user/user-request';
+import { AccessTokenDecoded } from '../../../models/frontend/token/access-token-decoded';
 import { AbstractHttpService } from '../../backend/abstract-http/abstract-http.service';
 import { HttpUserService } from '../../backend/http-user/http-user.service';
 import { EnvironmentService } from '../environment/environment.service';

@@ -18,8 +18,8 @@
  */
 
 import { WidgetAvailabilityEnum } from '../../../enums/widget-availability.enum';
-import { WidgetParam } from './widget-param';
 import { Category } from '../category/category';
+import { WidgetParam } from './widget-param';
 
 /**
  * The widget entity

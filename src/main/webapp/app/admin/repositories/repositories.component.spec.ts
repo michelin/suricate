@@ -19,25 +19,23 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { RepositoriesComponent } from './repositories.component';
 import { MockModule } from '../../mock/mock.module';
+import { RepositoriesComponent } from './repositories.component';
 
 describe('RepositoriesComponent', () => {
   let component: RepositoriesComponent;
   let fixture: ComponentFixture<RepositoriesComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [RepositoriesComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [RepositoriesComponent]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(RepositoriesComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(RepositoriesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

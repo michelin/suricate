@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -115,7 +114,7 @@ class DashboardWebSocketServiceTest {
 
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(null, 1L, updateEvent);
 
-        verify(simpMessagingTemplate, times(0))
+        verify(simpMessagingTemplate, never())
             .convertAndSendToUser(any(), any(), any());
     }
 
@@ -128,7 +127,7 @@ class DashboardWebSocketServiceTest {
 
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers("token", null, updateEvent);
 
-        verify(simpMessagingTemplate, times(0))
+        verify(simpMessagingTemplate, never())
             .convertAndSendToUser(any(), any(), any());
     }
 
@@ -154,7 +153,7 @@ class DashboardWebSocketServiceTest {
 
         dashboardWebSocketService.sendEventToProjectSubscribers(null, updateEvent);
 
-        verify(simpMessagingTemplate, times(0))
+        verify(simpMessagingTemplate, never())
             .convertAndSendToUser(any(), any(), any());
     }
 
@@ -370,9 +369,9 @@ class DashboardWebSocketServiceTest {
             .getJsExecutionsByProject(project);
         verify(jsExecutionScheduler)
             .scheduleJsRequests(jsExecutionDtos, true);
-        verify(projectService, times(0))
+        verify(projectService, never())
             .getOneByToken(any());
-        verify(jsExecutionScheduler, times(0))
+        verify(jsExecutionScheduler, never())
             .cancelWidgetsExecutionByProject(any());
     }
 

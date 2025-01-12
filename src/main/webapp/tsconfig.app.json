@@ -3,10 +3,10 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "../../../out-tsc/app",
-    "types": []
+    "types": ["node"]
   },
-  "files": ["main.ts", "polyfills.ts"],
+  "files": ["main.ts"],
   "include": [
-    "src/main/webapp/**/*.d.ts"
+    "**/*.d.ts"
   ]
 }

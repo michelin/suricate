@@ -17,16 +17,18 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+@use '@angular/material' as mat;
 
-@mixin custom-file-input-component-theme($theme) {
+@mixin custom-mat-sidenav-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
+  $is-dark: map-get($theme, is-dark);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
 
-  .file-input-button-error {
-    color: mat.get-color-from-palette($warn, 500) !important;
-  }
-
-  .file-input-error {
-    color: mat.get-color-from-palette($warn, 500);
+  .mat-sidenav-content {
+    padding: 0 10px 0 10px;
+    min-height: 100vh;
   }
 }

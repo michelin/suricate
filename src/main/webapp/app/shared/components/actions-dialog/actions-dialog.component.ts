@@ -19,9 +19,10 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
-import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+
 import { IconEnum } from '../../enums/icon.enum';
+import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
 
 @Component({
   templateUrl: './actions-dialog.component.html',
@@ -52,7 +53,7 @@ export class ActionsDialogComponent implements OnInit {
    * Init the buttons configurations
    */
   private initCloseButtonConfiguration(): void {
-    const closeButton: ButtonConfiguration<any> = {
+    const closeButton: ButtonConfiguration<void> = {
       label: 'close',
       icon: IconEnum.CLOSE,
       color: 'primary'

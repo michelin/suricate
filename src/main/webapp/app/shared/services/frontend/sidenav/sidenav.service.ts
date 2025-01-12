@@ -19,6 +19,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+
 import { FormSidenavConfiguration } from '../../../models/frontend/sidenav/form-sidenav-configuration';
 
 /**
@@ -30,11 +31,6 @@ export class SidenavService {
    * Subject used to manage form sidenav messages
    */
   private formSidenavSubject = new Subject<FormSidenavConfiguration>();
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 
   /**
    * Function used to listen for new form sidenav request

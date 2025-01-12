@@ -18,14 +18,15 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Project } from '../../../../models/backend/project/project';
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { Validators } from '@angular/forms';
-import { FormField } from '../../../../models/frontend/form/form-field';
-import { IconEnum } from '../../../../enums/icon.enum';
-import { CssService } from '../../css/css.service';
-import { CustomValidator } from '../../../../validators/custom-validator';
 import { TranslateService } from '@ngx-translate/core';
+
+import { DataTypeEnum } from '../../../../enums/data-type.enum';
+import { IconEnum } from '../../../../enums/icon.enum';
+import { Project } from '../../../../models/backend/project/project';
+import { FormField } from '../../../../models/frontend/form/form-field';
+import { CustomValidator } from '../../../../validators/custom-validator';
+import { CssService } from '../../css/css.service';
 
 /**
  * Service used to build the form fields related to a project

@@ -17,19 +17,19 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { PageModel } from '../../../models/backend/page-model';
 import { Project } from '../../../models/backend/project/project';
 import { ProjectRequest } from '../../../models/backend/project/project-request';
 import { ProjectWidgetPositionRequest } from '../../../models/backend/project-widget/project-widget-position-request';
-import { User } from '../../../models/backend/user/user';
+import { UserProject } from '../../../models/backend/user/user-project';
 import { WebsocketClient } from '../../../models/backend/websocket-client';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectService implements AbstractHttpService<Project, ProjectRequest> {
@@ -50,10 +50,10 @@ export class HttpProjectService implements AbstractHttpService<Project, ProjectR
    *
    * @param filter The research/pagination filter
    */
-  public getAll(filter?: HttpFilter): Observable<Page<Project>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<Project>> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
 
-    return this.httpClient.get<Page<Project>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<Project>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**
@@ -140,18 +140,18 @@ export class HttpProjectService implements AbstractHttpService<Project, ProjectR
    *
    * @param projectToken The project token
    */
-  public getProjectUsers(projectToken: string): Observable<User[]> {
+  public getProjectUsers(projectToken: string): Observable<UserProject[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/users`;
 
-    return this.httpClient.get<User[]>(url);
+    return this.httpClient.get<UserProject[]>(url);
   }
 
   /**
    * Add a user to a project
    *
-   * @param {string} projectToken The projectToken
-   * @param {string} username The username to add
-   * @returns {Observable<Project>} The project as observable
+   * @param projectToken The projectToken
+   * @param username The username to add
+   * @returns The project as observable
    */
   public addUserToProject(projectToken: string, username: string): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/users`;

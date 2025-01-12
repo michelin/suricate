@@ -1,35 +1,38 @@
-<div *ngIf="createdToken" class="security-settings-container">
-  <mat-card class="token-created">
-    <mat-card-title>
+@if (createdToken) {
+  <div class="security-settings-container">
+    <mat-card class="token-created">
+      <mat-card-title>
         <mat-icon>done</mat-icon>
         <div>{{ 'settings.security.token.created.title' | translate: { tokenName: createdToken.name } }}</div>
-    </mat-card-title>
+      </mat-card-title>
+      <mat-card-content>
+        {{ createdToken.value }}
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-stroked-button class="copy-token-button" (click)="copy()" color="primary">
+          <mat-icon>{{ materialIconRecords[iconEnum.COPY] }}</mat-icon>
+          {{ 'copy' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+}
 
-    <mat-card-content>
-      {{ createdToken.value }}
-    </mat-card-content>
-
-    <mat-card-actions>
-      <button mat-stroked-button class="copy-token-button" (click)="copy()" color="primary">
-        <mat-icon>{{ materialIconRecords[iconEnum.COPY] }}</mat-icon>
-        {{ 'copy' | translate }}
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
-
-<div *ngIf="formGroup" class="form-container security-settings-container">
-  <h2 class="little">{{ 'settings.security.generate.tokens.title' | translate }}</h2>
-  <div>
+@if (formGroup) {
+  <div class="form-container security-settings-container">
+    <h2 class="little">{{ 'settings.security.generate.tokens.title' | translate }}</h2>
     <div>
-      <suricate-input *ngFor="let field of formFields" [formGroup]="formGroup" [field]="field"> </suricate-input>
-    </div>
-
-    <div class="save-security-settings-button">
-      <suricate-buttons [configurations]="[generateTokenButton]"> </suricate-buttons>
+      <div>
+        @for (field of formFields; track field) {
+          <suricate-input [formGroup]="formGroup" [field]="field"> </suricate-input>
+        }
+      </div>
+      <div class="save-security-settings-button">
+        <suricate-buttons [configurations]="[generateTokenButton]"> </suricate-buttons>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <div class="security-settings-container">
   <table mat-table [dataSource]="tokens" class="mat-elevation-z8">

@@ -19,9 +19,10 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ConfirmationDialogConfiguration } from '../../../models/frontend/dialog/confirmation-dialog-configuration';
-import { CommunicationDialogConfiguration } from '../../../models/frontend/dialog/communication-dialog-configuration';
+
 import { ActionsDialogConfiguration } from '../../../models/frontend/dialog/actions-dialog-configuration';
+import { CommunicationDialogConfiguration } from '../../../models/frontend/dialog/communication-dialog-configuration';
+import { ConfirmationDialogConfiguration } from '../../../models/frontend/dialog/confirmation-dialog-configuration';
 
 /**
  * Service used to manage confirmation dialog
@@ -31,22 +32,17 @@ export class DialogService {
   /**
    * Subject used to manage confirmation dialog message
    */
-  private confirmationDialogSubject = new Subject<ConfirmationDialogConfiguration>();
+  private readonly confirmationDialogSubject = new Subject<ConfirmationDialogConfiguration>();
 
   /**
    * Subject used to manage the communication dialog message
    */
-  private communicationDialogSubject = new Subject<CommunicationDialogConfiguration>();
+  private readonly communicationDialogSubject = new Subject<CommunicationDialogConfiguration>();
 
   /**
    * Subject used to manage the actions' dialog message
    */
-  private actionsDialogSubject = new Subject<ActionsDialogConfiguration>();
-
-  /**
-   * Constructor
-   */
-  constructor() {}
+  private readonly actionsDialogSubject = new Subject<ActionsDialogConfiguration>();
 
   /**
    * Used to retrieve the messages

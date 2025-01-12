@@ -17,13 +17,14 @@
  * under the License.
  */
 
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpClient } from '@angular/common/http';
+
+import { GridRequest } from '../../../models/backend/project-grid/grid-request';
 import { ProjectGrid } from '../../../models/backend/project-grid/project-grid';
 import { ProjectGridRequest } from '../../../models/backend/project-grid/project-grid-request';
-import { GridRequest } from '../../../models/backend/project-grid/grid-request';
+import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectGridService {

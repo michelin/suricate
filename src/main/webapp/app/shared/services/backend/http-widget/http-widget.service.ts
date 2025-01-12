@@ -17,16 +17,16 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { PageModel } from '../../../models/backend/page-model';
 import { Widget } from '../../../models/backend/widget/widget';
 import { WidgetRequest } from '../../../models/backend/widget/widget-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
 
 /**
  * Manage the Http widget calls
@@ -53,9 +53,9 @@ export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest
    * @param {HttpFilter} filter Used to filter the result
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  public getAll(filter?: HttpFilter): Observable<Page<Widget>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<Widget>> {
     const url = `${HttpWidgetService.widgetsApiEndpoint}`;
-    return this.httpClient.get<Page<Widget>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<Widget>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**
@@ -71,10 +71,8 @@ export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest
 
   /**
    * Create a widget
-   *
-   * @param widget The object that we want to create
    */
-  public create(widget: WidgetRequest): Observable<Widget> {
+  public create(): Observable<Widget> {
     return EMPTY;
   }
 
@@ -92,10 +90,10 @@ export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest
 
   /**
    * Function used to delete a widget
-   *
-   * @param widgetId The widget id
    */
-  public delete(widgetId: number): Observable<void> {
-    return EMPTY;
+  public delete(id: number): Observable<void> {
+    const url = `${HttpWidgetService.widgetsApiEndpoint}/${id}`;
+
+    return this.httpClient.delete<void>(url);
   }
 }

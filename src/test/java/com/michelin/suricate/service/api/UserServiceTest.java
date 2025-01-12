@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -166,9 +166,9 @@ class UserServiceTest {
             .count();
         verify(roleService)
             .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository, times(0))
+        verify(userRepository, never())
             .save(any());
-        verify(userSettingService, times(0))
+        verify(userSettingService, never())
             .createDefaultSettingsForUser(any());
     }
 
@@ -599,9 +599,9 @@ class UserServiceTest {
 
         verify(userRepository)
             .findById(1L);
-        verify(roleService, times(0))
+        verify(roleService, never())
             .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository, times(0))
+        verify(userRepository, never())
             .save(argThat(user -> user.getId().equals(1L)
                 && user.getUsername().equals("username")
                 && user.getFirstname().equals("firstname")

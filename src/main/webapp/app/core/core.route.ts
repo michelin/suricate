@@ -19,11 +19,11 @@
 
 import { Routes } from '@angular/router';
 
-import { RegisterComponent } from './components/register/register.component';
-import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
-import { SettingsComponent } from './components/settings/settings.component';
 import { authGuard } from '../shared/guards/auth/auth.guard';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 export const coreRoutes: Routes = [
   {

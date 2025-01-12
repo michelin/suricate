@@ -2,11 +2,19 @@
   "arrowParens": "always",
   "bracketSpacing": true,
   "endOfLine": "auto",
-  "printWidth": 140,
+  "printWidth": 120,
   "quoteProps": "consistent",
   "semi": true,
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "none",
-  "useTabs": false
+  "useTabs": false,
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    }
+  ]
 }

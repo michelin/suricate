@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { AbstractHttpService } from './abstract-http.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { AbstractHttpService } from './abstract-http.service';
 
 describe('AbstractHttpService', () => {
+  let service: AbstractHttpService<string, string>;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [AbstractHttpService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(AbstractHttpService);
   });
 
-  it('should create', inject([AbstractHttpService], (service: AbstractHttpService<any, any>) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { HttpCategoryService } from './http-category.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpCategoryService } from './http-category.service';
 
 describe('HttpCategoryService', () => {
+  let service: HttpCategoryService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HttpCategoryService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(HttpCategoryService);
   });
 
-  it('should create', inject([HttpCategoryService], (service: HttpCategoryService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

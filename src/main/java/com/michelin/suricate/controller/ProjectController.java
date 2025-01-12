@@ -117,8 +117,8 @@ public class ProjectController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "204", description = "No Content"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -141,12 +141,12 @@ public class ProjectController {
     @Operation(summary = "Create a new project for the current user")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Current user not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Current user not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PostMapping(value = "/v1/projects")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -159,8 +159,10 @@ public class ProjectController {
             throw new ObjectNotFoundException(User.class, connectedUser.getUsername());
         }
 
-        Project project = projectService.createProjectForUser(userOptional.get(),
-            projectMapper.toProjectEntity(projectRequestDto));
+        Project project = projectService.createProjectForUser(
+            userOptional.get(),
+            projectMapper.toProjectEntity(projectRequestDto)
+        );
 
         project.getGrids().add(projectGridService.create(projectGridMapper.toProjectGridEntity(project)));
 
@@ -185,12 +187,12 @@ public class ProjectController {
     @Operation(summary = "Retrieve the project information by token")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/projects/{projectToken}")
     @PermitAll
@@ -220,12 +222,12 @@ public class ProjectController {
     @Operation(summary = "Update an existing project by the project token")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Project updated"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -259,12 +261,12 @@ public class ProjectController {
     @Operation(summary = "Add/Update a project screenshot")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Screenshot updated"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/projects/{projectToken}/screenshot")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -285,8 +287,11 @@ public class ProjectController {
         }
 
         try {
-            projectService.addOrUpdateScreenshot(project, screenshot.getBytes(),
-                screenshot.getContentType(), screenshot.getSize());
+            projectService.addOrUpdateScreenshot(project,
+                screenshot.getBytes(),
+                screenshot.getContentType(),
+                screenshot.getSize()
+            );
         } catch (IOException e) {
             throw new InvalidFileException(screenshot.getOriginalFilename(), Project.class, project.getId());
         }
@@ -304,12 +309,12 @@ public class ProjectController {
     @Operation(summary = "Delete a project by the project token")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Project deleted"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -343,12 +348,12 @@ public class ProjectController {
     @Operation(summary = "Update the project widget positions for a project")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Widget position updated"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/projects/{projectToken}/projectWidgetPositions")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -381,8 +386,8 @@ public class ProjectController {
     @Operation(summary = "Retrieve project users")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -413,14 +418,14 @@ public class ProjectController {
     @Operation(summary = "Add a user to a project")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "User not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "User not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PostMapping(value = "/v1/projects/{projectToken}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -461,14 +466,14 @@ public class ProjectController {
     @Operation(summary = "Delete a user from a project")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "User removed from project"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "User not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "User not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -505,8 +510,8 @@ public class ProjectController {
     @Operation(summary = "Retrieve connected websocket clients for a project")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -535,12 +540,12 @@ public class ProjectController {
     @Operation(summary = "Get the list of projects related to the current user")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Current user not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Current user not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/projects/currentUser")
     @PreAuthorize("hasRole('ROLE_USER')")

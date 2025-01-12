@@ -18,10 +18,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { EnvironmentService } from '../environment/environment.service';
-import SockJS from 'sockjs-client';
 import { IMessage, RxStompConfig } from '@stomp/rx-stomp';
+import { Observable } from 'rxjs';
+import SockJS from 'sockjs-client/dist/sockjs';
+
+import { EnvironmentService } from '../environment/environment.service';
 import { RxStompService } from '../rx-stomp/rx-stomp.service';
 
 /**
@@ -53,7 +54,9 @@ export class WebsocketService {
     configuration.heartbeatIncoming = EnvironmentService.wsHeartbeatIncoming;
     configuration.heartbeatOutgoing = EnvironmentService.wsHeartbeatOutgoing;
     configuration.reconnectDelay = EnvironmentService.wsReconnectDelay;
-    configuration.debug = EnvironmentService.wsDebug ? (str: string) => console.log(new Date(), str) : () => {};
+    if (EnvironmentService.wsDebug) {
+      configuration.debug = (str: string) => console.log(new Date(), str);
+    }
 
     return configuration;
   }

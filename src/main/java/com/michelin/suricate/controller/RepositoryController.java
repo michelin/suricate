@@ -87,8 +87,8 @@ public class RepositoryController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "204", description = "No Content"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -113,8 +113,8 @@ public class RepositoryController {
     @Operation(summary = "Create a new repository, and load it automatically if enable is selected")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Created"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -151,12 +151,12 @@ public class RepositoryController {
     @Operation(summary = "Retrieve an existing repository by id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Repository not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Repository not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/repositories/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -181,12 +181,12 @@ public class RepositoryController {
     @Operation(summary = "Update an existing repository by id, and load it automatically if enable is selected")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Repository updated"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Repository not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Repository not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/repositories/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -219,8 +219,8 @@ public class RepositoryController {
     @Operation(summary = "Synchronize all repositories")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Repositories synchronized"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -240,12 +240,12 @@ public class RepositoryController {
     @Operation(summary = "Retrieve a list of widget by repository")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Repository not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Repository not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/repositories/{repositoryId}/widgets")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

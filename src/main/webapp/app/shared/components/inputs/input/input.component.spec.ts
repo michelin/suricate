@@ -19,32 +19,30 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { InputComponent } from './input.component';
+import { MockModule } from '../../../../mock/mock.module';
 import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { MockModule } from '../../../../mock/mock.module';
+import { InputComponent } from './input.component';
 
 describe('InputComponent', () => {
   let component: InputComponent;
   let fixture: ComponentFixture<InputComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [InputComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [InputComponent]
+    }).compileComponents();
 
-      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-      fixture = TestBed.createComponent(InputComponent);
-      component = fixture.componentInstance;
-      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.TEXT);
-      component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.TEXT);
+    fixture = TestBed.createComponent(InputComponent);
+    component = fixture.componentInstance;
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.TEXT);
+    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.TEXT);
 
-      fixture.detectChanges();
-    })
-  );
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

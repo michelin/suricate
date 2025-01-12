@@ -17,12 +17,13 @@
  * under the License.
  */
 
-import { FormField } from './form-field';
-import { IconEnum } from '../../../enums/icon.enum';
-import { Observable } from 'rxjs';
 import { UntypedFormGroup } from '@angular/forms';
-import { LinkConfiguration } from '../link/link-configuration';
+import { Observable } from 'rxjs';
+
+import { IconEnum } from '../../../enums/icon.enum';
 import { Category } from '../../backend/category/category';
+import { LinkConfiguration } from '../link/link-configuration';
+import { FormField } from './form-field';
 
 /**
  * Describe a step of the wizard

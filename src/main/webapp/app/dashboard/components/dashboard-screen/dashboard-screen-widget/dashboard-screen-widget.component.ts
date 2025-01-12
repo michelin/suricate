@@ -17,43 +17,36 @@
  * under the License.
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
-import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav.service';
-import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
-import {
-  ProjectWidgetFormStepsService
-} from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { IconEnum } from '../../../../shared/enums/icon.enum';
-import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
-import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
-import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
-import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
-import {
-  WidgetConfigurationFormFieldsService
-} from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
-import { Widget } from '../../../../shared/models/backend/widget/widget';
-import { WidgetStateEnum } from '../../../../shared/enums/widget-sate.enum';
-import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget.service';
-import {
-  HttpProjectWidgetService
-} from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
-import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket.service';
-import { LibraryService } from '../../../services/library/library.service';
-import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
-import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
+import { TranslateService } from '@ngx-translate/core';
+import { IMessage } from '@stomp/rx-stomp';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  SlideToggleButtonConfiguration
-} from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
+
+import { IconEnum } from '../../../../shared/enums/icon.enum';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
+import { WidgetStateEnum } from '../../../../shared/enums/widget-sate.enum';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
-import { IMessage } from '@stomp/rx-stomp';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
+import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
+import { Widget } from '../../../../shared/models/backend/widget/widget';
+import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
+import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
+import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget.service';
+import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
+import { WidgetConfigurationFormFieldsService } from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav.service';
+import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
+import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket.service';
+import { LibraryService } from '../../../services/library/library.service';
 
 /**
  * Display the grid stack widgets
@@ -85,7 +78,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private unsubscribe: Subject<void> = new Subject<void>();
+  private readonly unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * The widget related to this project widget
@@ -189,7 +182,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Refresh this project widget
    */
   private refreshProjectWidget(): void {
-    this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
+    this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe((projectWidget) => {
       this.projectWidget = projectWidget;
     });
   }
@@ -257,8 +250,11 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     return {
       displaySlideToggleButton: categoryParameters.length > 0,
       toggleChecked:
-        categoryParameters.filter(categorySetting =>
-          this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(categorySetting.key, this.projectWidget.backendConfig)
+        categoryParameters.filter((categorySetting) =>
+          this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(
+            categorySetting.key,
+            this.projectWidget.backendConfig
+          )
         ).length > 0,
       slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: UntypedFormGroup, formFields: FormField[]) =>
         this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(

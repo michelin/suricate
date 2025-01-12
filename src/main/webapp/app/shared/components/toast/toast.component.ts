@@ -22,11 +22,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ToastService } from '../../services/frontend/toast/toast.service';
-import { ToastMessage } from '../../models/frontend/toast/toast-message';
-import { ToastTypeEnum } from '../../enums/toast-type.enum';
 import { IconEnum } from '../../enums/icon.enum';
+import { ToastTypeEnum } from '../../enums/toast-type.enum';
+import { ToastMessage } from '../../models/frontend/toast/toast-message';
 import { MaterialIconRecords } from '../../records/material-icon.record';
+import { ToastService } from '../../services/frontend/toast/toast.service';
 
 /**
  * Component that display toast notification messages
@@ -41,16 +41,16 @@ import { MaterialIconRecords } from '../../records/material-icon.record';
         'in',
         style({
           'max-height': '500px',
-          opacity: '1',
-          visibility: 'visible'
+          'opacity': '1',
+          'visibility': 'visible'
         })
       ),
       state(
         'out',
         style({
           'max-height': '0px',
-          opacity: '0',
-          visibility: 'hidden'
+          'opacity': '0',
+          'visibility': 'hidden'
         })
       ),
       transition('in => out', [

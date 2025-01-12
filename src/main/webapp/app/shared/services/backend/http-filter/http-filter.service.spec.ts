@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { HttpFilterService } from './http-filter.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpFilterService } from './http-filter.service';
 
 describe('HttpFilterService', () => {
+  let service: HttpFilterService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HttpFilterService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(HttpFilterService);
   });
 
-  it('should create', inject([HttpFilterService], (service: HttpFilterService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

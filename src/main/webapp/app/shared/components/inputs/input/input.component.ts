@@ -17,17 +17,17 @@
  * under the License.
  */
 
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { animate, style, transition, trigger } from '@angular/animations';
+import { TranslateService } from '@ngx-translate/core';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { ValueChangedEvent, ValueChangedType } from '../../../models/frontend/form/value-changed-event';
-import { FormOption } from '../../../models/frontend/form/form-option';
-import { FormField } from '../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../enums/icon.enum';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { FormOption } from '../../../models/frontend/form/form-option';
+import { ValueChangedEvent, ValueChangedType } from '../../../models/frontend/form/value-changed-event';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
-import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Manage the instantiation of different form inputs
@@ -195,7 +195,7 @@ export class InputComponent implements OnInit {
     if (this.field.options && this.field.type === DataTypeEnum.TEXT) {
       const inputValue = this.formGroup.value[this.field.key];
 
-      this.field.options(inputValue).subscribe(options => {
+      this.field.options(inputValue).subscribe((options) => {
         this.options = options;
       });
     }

@@ -81,12 +81,12 @@ public class ProjectGridController {
     @Operation(summary = "Create a new grid")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Current user not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Current user not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PostMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -126,14 +126,14 @@ public class ProjectGridController {
     @Operation(summary = "Update an existing project by the project token")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Project updated"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Grid not found for the project", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "Grid not found for the project",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -176,14 +176,14 @@ public class ProjectGridController {
     @Operation(summary = "Delete a grid by the grid id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Project deleted"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Grid not found for the project", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "Grid not found for the project",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @DeleteMapping(value = "/v1/projectGrids/{projectToken}/{gridId}")
     @PreAuthorize("hasRole('ROLE_USER')")

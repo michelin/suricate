@@ -19,19 +19,20 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { MenuService } from './menu.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { MenuService } from './menu.service';
 
 describe('MenuService', () => {
+  let service: MenuService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [MenuService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(MenuService);
   });
 
   it('should create', () => {
-    const service: MenuService = TestBed.inject(MenuService);
     expect(service).toBeTruthy();
   });
 });

@@ -137,8 +137,11 @@ public class DashboardScheduleService {
             .content(projectWidgetMapper.toProjectWidgetDto(projectWidget))
             .build();
 
-        dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(projectService.getTokenByProjectId(projectId),
-            projectWidgetId, event);
+        dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(
+            projectService.getTokenByProjectId(projectId),
+            projectWidgetId,
+            event
+        );
     }
 
     /**

@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { ToastService } from './toast.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { ToastService } from './toast.service';
 
 describe('ToastService', () => {
+  let service: ToastService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [ToastService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(ToastService);
   });
 
-  it('should create', inject([ToastService], (service: ToastService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

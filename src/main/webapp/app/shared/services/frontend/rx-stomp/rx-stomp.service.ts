@@ -24,7 +24,6 @@ import { RxStomp } from '@stomp/rx-stomp';
   providedIn: 'root'
 })
 export class RxStompService extends RxStomp {
-
   constructor() {
     super();
   }

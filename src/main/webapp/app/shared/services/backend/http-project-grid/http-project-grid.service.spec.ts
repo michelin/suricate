@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { HttpProjectGridService } from './http-project-grid.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { HttpProjectGridService } from './http-project-grid.service';
 
 describe('HttpProjectGridService', () => {
+  let service: HttpProjectGridService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HttpProjectGridService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(HttpProjectGridService);
   });
 
-  it('should create', inject([HttpProjectGridService], (service: HttpProjectGridService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

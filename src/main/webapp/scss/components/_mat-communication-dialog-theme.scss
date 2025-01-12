@@ -17,34 +17,12 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+@use '@angular/material' as mat;
 
-/**
- * Component for that modify the theme of Angular Material mat-checkbox
- */
-@mixin custom-mat-checkbox-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
+@mixin custom-communication-dialog-component-theme($theme) {
   $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
 
-  .mat-checkbox-indeterminate,
-  .mat-checkbox-checked {
-    &.mat-primary {
-      .mat-checkbox-background {
-        background-color: mat.get-color-from-palette($primary, A700);
-      }
-    }
-  }
-
-  .mat-checkbox:not(.mat-checkbox-disabled) {
-    .mat-primary {
-      .mat-checkbox-ripple .mat-ripple-element {
-        background-color: mat.get-color-from-palette($primary, A700, 0.55);
-      }
-    }
+  .communication-dialog-wrapper .mat-mdc-dialog-content.communication-dialog-error {
+    color: mat.m2-get-color-from-palette($warn, 500);
   }
 }

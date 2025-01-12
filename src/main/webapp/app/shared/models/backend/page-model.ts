@@ -17,12 +17,19 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+import { Page } from './page';
 
-@mixin custom-communication-dialog-component-theme($theme) {
-  $warn: map-get($theme, warn);
+/**
+ * Class that represent a page from the backend
+ */
+export class PageModel<T> {
+  /**
+   * The list of object in this page
+   */
+  content: T[];
 
-  .communication-dialog-wrapper .mat-mdc-dialog-content.communication-dialog-error {
-    color: mat.get-color-from-palette($warn, 500);
-  }
+  /**
+   * The page information
+   */
+  page: Page;
 }

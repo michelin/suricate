@@ -17,12 +17,14 @@
  * under the License.
  */
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { Observable } from 'rxjs';
-import { FormOption } from './form-option';
 import { AsyncValidatorFn, UntypedFormGroup, ValidatorFn } from '@angular/forms';
-import { MosaicFormOption } from './mosaic-form-option';
+import { Observable } from 'rxjs';
+
+import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
+import { UserProject } from '../../backend/user/user-project';
+import { FormOption } from './form-option';
+import { MosaicFormOption } from './mosaic-form-option';
 
 /**
  * Describe a field used to manage the form
@@ -57,7 +59,7 @@ export class FormField {
   /**
    * The value to display
    */
-  value?: any;
+  value?: string | string[] | number | boolean;
 
   /**
    * If the type contains a list of values to display insert them in this attribute
@@ -115,12 +117,12 @@ export class FormField {
   /**
    * The list of values to used in the array
    */
-  values?: Observable<any[]>;
+  values?: Observable<UserProject[]>;
 
   /**
    * Function used to delete a row
    */
-  deleteRow?: { attribute: string; callback: (object: any) => Observable<any> };
+  deleteRow?: { attribute: string; callback: (object: number) => Observable<void> };
 
   /* ***************************************************************************************************************** */
   /*                        Mosaic Field                                                                                */

@@ -21,9 +21,4 @@ export class GridProperties {
   maxColumn: number;
   widgetHeight: number;
   cssStyle: string;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 }

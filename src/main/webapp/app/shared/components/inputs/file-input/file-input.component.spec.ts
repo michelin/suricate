@@ -19,32 +19,30 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { FileInputComponent } from './file-input.component';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
+import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { FileInputComponent } from './file-input.component';
 
 describe('FileInputComponent', () => {
   let component: FileInputComponent;
   let fixture: ComponentFixture<FileInputComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [FileInputComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [FileInputComponent]
+    }).compileComponents();
 
-      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-      fixture = TestBed.createComponent(FileInputComponent);
-      component = fixture.componentInstance;
-      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.FILE);
-      component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.FILE);
+    fixture = TestBed.createComponent(FileInputComponent);
+    component = fixture.componentInstance;
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.FILE);
+    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.FILE);
 
-      fixture.detectChanges();
-    })
-  );
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

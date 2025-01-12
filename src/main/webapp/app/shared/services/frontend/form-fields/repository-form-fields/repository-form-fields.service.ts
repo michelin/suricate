@@ -17,21 +17,20 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { FormField } from '../../../../models/frontend/form/form-field';
-import { RepositoryTypeEnum } from '../../../../enums/repository-type.enum';
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { AbstractControl, Validators } from '@angular/forms';
-import { Repository } from '../../../../models/backend/repository/repository';
-import { FormOption } from '../../../../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
-import { IconEnum } from '../../../../enums/icon.enum';
+import { Injectable } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { CustomValidator } from '../../../../validators/custom-validator';
-import { HttpRepositoryService } from '../../../backend/http-repository/http-repository.service';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+
+import { DataTypeEnum } from '../../../../enums/data-type.enum';
+import { IconEnum } from '../../../../enums/icon.enum';
+import { RepositoryTypeEnum } from '../../../../enums/repository-type.enum';
+import { Repository } from '../../../../models/backend/repository/repository';
+import { FormField } from '../../../../models/frontend/form/form-field';
+import { FormOption } from '../../../../models/frontend/form/form-option';
 import { CustomAsyncValidatorService } from '../../../../validators/custom-async-validator.service';
+import { CustomValidator } from '../../../../validators/custom-validator';
 
 /**
  * Service used to build the form fields related to a repository
@@ -41,10 +40,13 @@ export class RepositoryFormFieldsService {
   /**
    * Records used to manage the creation of the form fields related to the repository type
    */
-  private static repositoryTypeFormFieldsRecords: Record<RepositoryTypeEnum, (repository: Repository) => FormField[]> = {
-    [RepositoryTypeEnum.LOCAL]: (repository: Repository) => RepositoryFormFieldsService.getLocalFormFields(repository),
-    [RepositoryTypeEnum.REMOTE]: (repository: Repository) => RepositoryFormFieldsService.getRemoteFormFields(repository)
-  };
+  private static repositoryTypeFormFieldsRecords: Record<RepositoryTypeEnum, (repository: Repository) => FormField[]> =
+    {
+      [RepositoryTypeEnum.LOCAL]: (repository: Repository) =>
+        RepositoryFormFieldsService.getLocalFormFields(repository),
+      [RepositoryTypeEnum.REMOTE]: (repository: Repository) =>
+        RepositoryFormFieldsService.getRemoteFormFields(repository)
+    };
 
   /**
    * Constructor
@@ -122,7 +124,7 @@ export class RepositoryFormFieldsService {
     const titleCasePipe = new TitleCasePipe();
     const typeOptions: FormOption[] = [];
 
-    Object.keys(RepositoryTypeEnum).forEach(repositoryType => {
+    Object.keys(RepositoryTypeEnum).forEach((repositoryType) => {
       typeOptions.push({
         label: titleCasePipe.transform(repositoryType),
         value: repositoryType
@@ -140,8 +142,11 @@ export class RepositoryFormFieldsService {
   public generateFormFields(repository?: Repository): FormField[] {
     let formFields = this.getGeneralFormFields(repository);
 
-    if (repository && repository.type) {
-      formFields = [...formFields, ...RepositoryFormFieldsService.repositoryTypeFormFieldsRecords[repository.type](repository)];
+    if (repository?.type) {
+      formFields = [
+        ...formFields,
+        ...RepositoryFormFieldsService.repositoryTypeFormFieldsRecords[repository.type](repository)
+      ];
     }
 
     return formFields;

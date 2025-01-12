@@ -17,16 +17,16 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import { User } from '../../../models/backend/user/user';
-import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { Page } from '../../../models/backend/page';
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { HttpFilterService } from '../http-filter/http-filter.service';
+import { PageModel } from '../../../models/backend/page-model';
+import { User } from '../../../models/backend/user/user';
 import { UserRequest } from '../../../models/backend/user/user-request';
+import { AbstractHttpService } from '../abstract-http/abstract-http.service';
+import { HttpFilterService } from '../http-filter/http-filter.service';
 import { HttpUserService } from '../http-user/http-user.service';
 
 @Injectable({ providedIn: 'root' })
@@ -43,9 +43,10 @@ export class HttpAdminUserService implements AbstractHttpService<User, UserReque
    * Get the list of users
    * @returns The list of users
    */
-  public getAll(filter?: HttpFilter): Observable<Page<User>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<User>> {
     const url = `${HttpAdminUserService.adminUsersApiEndpoint}`;
-    return this.httpClient.get<Page<User>>(HttpFilterService.getFilteredUrl(url, filter));
+
+    return this.httpClient.get<PageModel<User>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**
@@ -61,10 +62,11 @@ export class HttpAdminUserService implements AbstractHttpService<User, UserReque
 
   /**
    * Function used to create a new user
-   * @param entity The user to create
    */
-  public create(entity: User | UserRequest): Observable<User> {
-    return EMPTY;
+  public create(userRequest: UserRequest): Observable<User> {
+    const url = `${HttpUserService.usersApiEndpoint}`;
+
+    return this.httpClient.post<User>(url, userRequest);
   }
 
   /**

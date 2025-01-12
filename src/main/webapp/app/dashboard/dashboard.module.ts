@@ -20,26 +20,26 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { LayoutModule } from '../layout/layout.module';
 import { SharedModule } from '../shared/shared.module';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
 import { DashboardScreenComponent } from './components/dashboard-screen/dashboard-screen.component';
-import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
-import { LayoutModule } from '../layout/layout.module';
-import { DashboardRoutes } from './dashboard.route';
 import { DashboardScreenWidgetComponent } from './components/dashboard-screen/dashboard-screen-widget/dashboard-screen-widget.component';
-import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
+import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
 import { TvManagementDialogComponent } from './components/tv-management-dialog/tv-management-dialog.component';
+import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
+import { DashboardRoutes } from './dashboard.route';
 
 @NgModule({
-    imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
-    declarations: [
-        DashboardDetailComponent,
-        DashboardScreenComponent,
-        DashboardScreenWidgetComponent,
-        DashboardTvComponent,
-        AddWidgetToProjectWizardComponent,
-        TvManagementDialogComponent
-    ],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
+  declarations: [
+    DashboardDetailComponent,
+    DashboardScreenComponent,
+    DashboardScreenWidgetComponent,
+    DashboardTvComponent,
+    AddWidgetToProjectWizardComponent,
+    TvManagementDialogComponent
+  ],
+  exports: [RouterModule]
 })
 export class DashboardModule {}

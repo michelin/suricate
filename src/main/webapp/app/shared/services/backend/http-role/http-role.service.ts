@@ -17,16 +17,15 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Role } from '../../../models/backend/role/role';
-import { User } from '../../../models/backend/user/user';
-import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
+import { PageModel } from '../../../models/backend/page-model';
+import { Role } from '../../../models/backend/role/role';
+import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
 
 /**
  * Manage the http role calls
@@ -35,7 +34,6 @@ import { Page } from '../../../models/backend/page';
 export class HttpRoleService {
   /**
    * Global roles endpoint
-   * @type {string}
    */
   private static readonly rolesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/roles`;
 
@@ -51,31 +49,9 @@ export class HttpRoleService {
    *
    * @returns {Observable<Role[]>}
    */
-  public getRoles(filter?: HttpFilter): Observable<Page<Role>> {
+  public getRoles(filter?: HttpFilter): Observable<PageModel<Role>> {
     const url = `${HttpRoleService.rolesApiEndpoint}`;
 
-    return this.httpClient.get<Page<Role>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
-
-  /**
-   * Get a role by id
-   *
-   * @param roleId The role id
-   */
-  public getOneById(roleId: number): Observable<Role> {
-    const url = `${HttpRoleService.rolesApiEndpoint}/${roleId}`;
-
-    return this.httpClient.get<Role>(url);
-  }
-
-  /**
-   * Get a list of users for a role
-   *
-   * @param roleId The role id
-   */
-  public getUsersByRole(roleId: number): Observable<User[]> {
-    const url = `${HttpRoleService.rolesApiEndpoint}/${roleId}/users`;
-
-    return this.httpClient.get<User[]>(url);
+    return this.httpClient.get<PageModel<Role>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 }

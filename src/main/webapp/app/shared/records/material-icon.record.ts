@@ -20,31 +20,24 @@
 import { IconEnum } from '../enums/icon.enum';
 
 /**
- * Records used to store related material icons from https://material.io/resources/icons
+ * Records used to store related material icons from https://fonts.google.com/icons
  */
-type MaterialIcon = {
-  [key: string]: string;
-};
+type MaterialIcon = Record<string, string>;
 
 export const MaterialIconRecords: MaterialIcon = {
-  [IconEnum.ACCESS_TIME]: 'access_time',
   [IconEnum.ADD]: 'add',
-  [IconEnum.ARROW_DOWN]: 'keyboard_arrow_right',
+  [IconEnum.ADD_GRID]: 'library_add',
   [IconEnum.BRANCH]: 'merge_type',
+  [IconEnum.CATALOG]: 'apps',
   [IconEnum.CATEGORY]: 'category',
   [IconEnum.CLOSE]: 'close',
   [IconEnum.COLUMN]: 'view_column',
-  [IconEnum.COPY]: 'content_copy',
   [IconEnum.DASHBOARD]: 'dashboard',
   [IconEnum.DELETE]: 'delete',
   [IconEnum.DELETE_FOREVER]: 'delete_forever',
   [IconEnum.EDIT]: 'edit',
   [IconEnum.EMAIL]: 'email',
-  [IconEnum.ERROR]: 'error',
-  [IconEnum.FILE_DOWNLOAD]: 'file_download',
-  [IconEnum.FILE_UPLOAD]: 'file_upload',
-  [IconEnum.GENERAL_INFORMATION]: 'menu_book',
-  [IconEnum.GRID]: 'view_carousel',
+  [IconEnum.GRID]: 'grid_view',
   [IconEnum.HEIGHT]: 'height',
   [IconEnum.HELP]: 'help',
   [IconEnum.HIDE_PASSWORD]: 'visibility_off',
@@ -55,14 +48,15 @@ export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.LOGOUT]: 'exit_to_app',
   [IconEnum.NAME]: 'short_text',
   [IconEnum.PASSWORD]: 'lock',
+  [IconEnum.PREFERENCES]: 'tune',
   [IconEnum.PROGRESS_BAR]: 'hourglass_bottom',
   [IconEnum.REFRESH]: 'refresh',
+  [IconEnum.REPOSITORY]: 'inventory',
   [IconEnum.REPOSITORY_TYPE]: 'cloud_queue',
   [IconEnum.REPOSITORY_PRIORITY]: 'low_priority',
   [IconEnum.SAVE]: 'done',
   [IconEnum.SCREENSHOT]: 'screenshot',
   [IconEnum.SEARCH]: 'search',
-  [IconEnum.SETTINGS]: 'settings',
   [IconEnum.SHARE_SCREEN]: 'screen_share',
   [IconEnum.SHOW_PASSWORD]: 'visibility',
   [IconEnum.SPEED]: 'speed',
@@ -82,5 +76,5 @@ export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.VALUE]: 'input',
   [IconEnum.WARNING]: 'warning',
   [IconEnum.WIDGET]: 'widgets',
-  [IconEnum.WIDGET_CONFIGURATION]: 'list_alt'
+  [IconEnum.WIDGET_CONFIGURATION]: 'settings'
 };

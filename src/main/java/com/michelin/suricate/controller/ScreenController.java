@@ -66,12 +66,12 @@ public class ScreenController {
     @Operation(summary = "Send the notification to connected a new screen")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Screen connected"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "404", description = "Project not found", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+        @ApiResponse(responseCode = "404", description = "Project not found",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/screens/{projectToken}/connect")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -95,8 +95,8 @@ public class ScreenController {
     @Operation(summary = "Send the notification to disconnect a new screen")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Screen disconnected"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -119,8 +119,8 @@ public class ScreenController {
     @Operation(summary = "Refresh every connected client for this project")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Screens refresh"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -141,8 +141,8 @@ public class ScreenController {
     @Operation(summary = "Send the notification to the project screens to display their screen code")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Screen code displayed"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
@@ -172,8 +172,8 @@ public class ScreenController {
     @Operation(summary = "Count the number of connected dashboards through websockets")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = {
-            @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
         @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })

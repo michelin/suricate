@@ -17,17 +17,16 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { PageModel } from '../../../models/backend/page-model';
 import { Repository } from '../../../models/backend/repository/repository';
 import { RepositoryRequest } from '../../../models/backend/repository/repository-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { EMPTY } from 'rxjs';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
-import { Page } from '../../../models/backend/page';
 
 /**
  * Service that manage HTTP repository calls
@@ -49,10 +48,10 @@ export class HttpRepositoryService implements AbstractHttpService<Repository, Re
   /**
    * Return the list of every repository
    */
-  public getAll(filter?: HttpFilter): Observable<Page<Repository>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<Repository>> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
 
-    return this.httpClient.get<Page<Repository>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<Repository>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**
@@ -84,7 +83,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository, Re
    * @param repositoryRequest The repository with information updated
    * @param disableSync Disable the synchronization of the repository
    */
-  public update(repositoryId: number, repositoryRequest: RepositoryRequest, disableSync: boolean = false): Observable<void> {
+  public update(repositoryId: number, repositoryRequest: RepositoryRequest, disableSync = false): Observable<void> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}?disableSync=${disableSync}`;
 
     return this.httpClient.put<void>(url, repositoryRequest);
@@ -101,10 +100,10 @@ export class HttpRepositoryService implements AbstractHttpService<Repository, Re
 
   /**
    * Delete a repository
-   *
-   * @param id The repository id to delete
    */
   public delete(id: number): Observable<void> {
-    return EMPTY;
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${id}`;
+
+    return this.httpClient.delete<void>(url);
   }
 }

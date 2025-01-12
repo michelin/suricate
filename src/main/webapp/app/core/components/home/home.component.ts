@@ -18,25 +18,24 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import {
-  ProjectFormFieldsService
-} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
-import { CssService } from '../../../shared/services/frontend/css/css.service';
-import { Project } from '../../../shared/models/backend/project/project';
-import { ImageUtils } from '../../../shared/utils/image.utils';
-import { FileUtils } from '../../../shared/utils/file.utils';
+import { UntypedFormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
+import { IconEnum } from '../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { Project } from '../../../shared/models/backend/project/project';
+import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { CssService } from '../../../shared/services/frontend/css/css.service';
+import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
-import { Router } from '@angular/router';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { UntypedFormGroup } from '@angular/forms';
+import { FileUtils } from '../../../shared/utils/file.utils';
+import { ImageUtils } from '../../../shared/utils/image.utils';
 
 @Component({
   selector: 'suricate-my-dashboards',
@@ -144,7 +143,8 @@ export class HomeComponent implements OnInit {
           ImageUtils.getDataFromBase64URL(formData.image),
           ImageUtils.getContentTypeFromBase64URL(formData.image)
         );
-        const file: File = FileUtils.convertBlobToFile(blob, `${project.token}.${contentType.split('/')[1]}`, new Date());
+
+        const file: File = FileUtils.convertBlobToFile(blob, `${project.token}.${contentType.split('/')[1]}`);
 
         this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();
       }

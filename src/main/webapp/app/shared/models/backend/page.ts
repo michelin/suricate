@@ -17,40 +17,17 @@
  * under the License.
  */
 
-/**
- * Class that represent a page from the backend
- */
-export class Page<T> {
+export class Page {
   /**
-   * The list of object in this page
-   */
-  content: T[];
-  /**
-   * The number of elements on every pages
-   */
-  totalElements: number;
-  /**
-   * The number of elements in the page
-   */
-  numberOfElements: number;
-  /**
-   * The number of pages
-   */
-  totalPages: number;
-  /**
-   * The current page number
+   * The number of the current page
    */
   number: number;
   /**
-   * True it's the last page
-   */
-  last: boolean;
-  /**
-   * True if it's the first page
-   */
-  first: boolean;
-  /**
-   * Requested number of elements per pages
+   * The requested size of the page
    */
   size: number;
+  /**
+   * The total number of elements available
+   */
+  totalElements: number;
 }

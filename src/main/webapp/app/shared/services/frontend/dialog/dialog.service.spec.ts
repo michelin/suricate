@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { DialogService } from './dialog.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { DialogService } from './dialog.service';
 
 describe('DialogService', () => {
+  let service: DialogService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [DialogService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(DialogService);
   });
 
-  it('should create', inject([DialogService], (service: DialogService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

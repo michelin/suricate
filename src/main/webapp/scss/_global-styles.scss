@@ -17,31 +17,60 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+* {
+  font-family: Inter, sans-serif;
+}
 
-/**
- * Component for that modify the theme of Angular Material mat-slide-toggle
- */
-@mixin custom-mat-slide-toggle-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
 
-  .mat-slide-toggle {
-    &.mat-primary {
-      &.mat-checked {
-        .mat-slide-toggle-thumb {
-          background-color: mat.get-color-from-palette($primary, A700);
-        }
+  .mat-icon {
+    font-variant: none;
+  }
 
-        .mat-slide-toggle-bar {
-          background-color: mat.get-color-from-palette($primary, A700, 0.55);
-        }
-      }
+  .container {
+    min-height: 89vh;
+
+    &.without-header {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
   }
+
+  h1.little {
+    font-size: 20px;
+    margin: 0;
+    font-variant: all-small-caps;
+  }
+
+  h2.little {
+    font-size: 22px;
+    margin: 0;
+    font-variant: all-small-caps;
+  }
+
+  a {
+    &, &:visited {
+      text-decoration: none;
+    }
+  }
+
+  .text-justify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  .mat-table .mat-row .mat-cell {
+    font-size: 11px;
+  }
+
+  .mat-mdc-form-field-icon-suffix {
+    cursor: pointer;
+  }
 }
+

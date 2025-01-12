@@ -27,9 +27,10 @@ import {
   ValidatorFn
 } from '@angular/forms';
 
+import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { UserProject } from '../../../models/backend/user/user-project';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { FormStep } from '../../../models/frontend/form/form-step';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
 
 /**
  * Service class that manage the instantiations of forms
@@ -49,7 +50,7 @@ export class FormService {
    * @param formGroup The form to validate
    */
   public validate(formGroup: UntypedFormGroup): void {
-    Object.keys(formGroup.controls).forEach(field => {
+    Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);
 
       if (control instanceof UntypedFormControl) {
@@ -86,7 +87,7 @@ export class FormService {
     const formGroup = this.formBuilder.group({});
 
     if (fields) {
-      fields.forEach(field => {
+      fields.forEach((field) => {
         if (field.type === DataTypeEnum.FIELDS) {
           formGroup.addControl(field.key, this.generateFormArrayForField(field));
         } else {
@@ -106,7 +107,7 @@ export class FormService {
    */
   public addControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
     if (fields) {
-      fields.forEach(field => {
+      fields.forEach((field) => {
         if (field.type === DataTypeEnum.FIELDS) {
           form.addControl(field.key, this.generateFormArrayForField(field));
         } else {
@@ -124,7 +125,7 @@ export class FormService {
    */
   public removeControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
     if (fields) {
-      fields.forEach(field => {
+      fields.forEach((field) => {
         form.removeControl(field.key);
       });
     }
@@ -138,12 +139,15 @@ export class FormService {
   private generateFormArrayForField(field: FormField): UntypedFormArray {
     const formArray = this.formBuilder.array([]);
 
-    if (field && field.fields && field.values) {
-      field.values.subscribe((values: any[]) => {
-        values.forEach((value: any) => {
+    if (field?.fields && field?.values) {
+      field.values.subscribe((values: UserProject[]) => {
+        values.forEach((value: UserProject) => {
           const formGroup = this.formBuilder.group({});
           field.fields.forEach((innerField: FormField) => {
-            formGroup.addControl(innerField.key, this.generateFormControl(innerField, value[innerField.key] ? value[innerField.key] : ''));
+            formGroup.addControl(
+              innerField.key,
+              this.generateFormControl(innerField, value[innerField.key] ? value[innerField.key] : '')
+            );
           });
 
           formArray.push(formGroup);
@@ -163,7 +167,7 @@ export class FormService {
    */
   private generateFormControl(field: FormField, value?: string | number): UntypedFormControl {
     return this.formBuilder.control(
-      { value: value ? value : field.value, disabled: field.disabled },
+      { value: value || field.value, disabled: field.disabled },
       field.validators,
       field.asyncValidators
     );

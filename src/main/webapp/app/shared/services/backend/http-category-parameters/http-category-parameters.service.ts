@@ -17,15 +17,16 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { PageModel } from '../../../models/backend/page-model';
 import { WidgetConfigurationRequest } from '../../../models/backend/widget-configuration/widget-configuration-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
-import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
 
 /**
  * Configuration services manage http calls
@@ -51,10 +52,10 @@ export class HttpCategoryParametersService extends AbstractHttpService<CategoryP
    *
    * @param filter The filter
    */
-  public getAll(filter?: HttpFilter): Observable<Page<CategoryParameter>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<CategoryParameter>> {
     const url = `${HttpCategoryParametersService.configurationsApiEndpoint}`;
 
-    return this.httpClient.get<Page<CategoryParameter>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<CategoryParameter>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**
@@ -70,11 +71,11 @@ export class HttpCategoryParametersService extends AbstractHttpService<CategoryP
 
   /**
    * Function used to create a configuration
-   *
-   * @param configuration The configuration that we want to create
    */
-  public create(configuration: WidgetConfigurationRequest): Observable<CategoryParameter> {
-    return EMPTY;
+  public create(widgetConfigurationRequest: WidgetConfigurationRequest): Observable<CategoryParameter> {
+    const url = `${HttpCategoryParametersService.configurationsApiEndpoint}`;
+
+    return this.httpClient.post<CategoryParameter>(url, widgetConfigurationRequest);
   }
 
   /**

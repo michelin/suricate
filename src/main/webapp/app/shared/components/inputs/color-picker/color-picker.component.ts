@@ -18,6 +18,7 @@
  */
 
 import { Component } from '@angular/core';
+
 import { InputComponent } from '../input/input.component';
 
 /**
@@ -43,5 +44,12 @@ export class ColorPickerComponent extends InputComponent {
    */
   public colorChanged(color: string): void {
     this.getFormControl().setValue(color);
+  }
+
+  /**
+   * Get the field value
+   */
+  public getFieldValue(): string {
+    return this.field.value as string;
   }
 }

@@ -19,19 +19,20 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { RoutesService } from './route.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { RouteService } from './route.service';
 
-describe('RoutesService', () => {
+describe('RouteService', () => {
+  let service: RouteService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [RoutesService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(RouteService);
   });
 
   it('should create', () => {
-    const service: RoutesService = TestBed.inject(RoutesService);
     expect(service).toBeTruthy();
   });
 });

@@ -17,11 +17,8 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
+@use '@angular/material' as mat;
 
-/**
- * Component for that modify the theme of Angular Material mat-card
- */
 @mixin custom-mat-grid-list-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
@@ -32,7 +29,7 @@
   $background: map-get($theme, background);
 
   .grid-widget-tile {
-    background: mat.get-color-from-palette($background, background);
+    background: mat.m2-get-color-from-palette($background, background);
   }
 
   .mat-grid-tile {

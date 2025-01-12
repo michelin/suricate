@@ -17,11 +17,12 @@
  * under the License.
  */
 
+import { ThemePalette } from '@angular/material/core';
+import { Observable } from 'rxjs';
+
 import { ButtonTypeEnum } from '../../../enums/button-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
-import { ThemePalette } from '@angular/material/core';
 import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
-import { Observable } from 'rxjs';
 
 /**
  * Model of Button
@@ -34,6 +35,6 @@ export class ButtonConfiguration<T> {
   disabled?: Observable<boolean>;
   hidden?: (object?: T) => boolean;
   type?: ButtonTypeEnum;
-  variant?: 'stroked' | 'miniFab';
+  variant?: 'flat' | 'miniFab';
   tooltip?: TooltipConfiguration;
 }

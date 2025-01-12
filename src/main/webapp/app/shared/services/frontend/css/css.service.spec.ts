@@ -17,20 +17,22 @@
  * under the License.
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { CssService } from './css.service';
 import { MockModule } from '../../../../mock/mock.module';
+import { CssService } from './css.service';
 
 describe('CssService', () => {
+  let service: CssService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [CssService]
+      imports: [MockModule]
     });
+    service = TestBed.inject(CssService);
   });
 
-  it('should create', inject([CssService], (service: CssService) => {
+  it('should create', () => {
     expect(service).toBeTruthy();
-  }));
+  });
 });

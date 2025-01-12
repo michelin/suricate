@@ -17,14 +17,13 @@
  * under the License.
  */
 
-@use '../../../../../node_modules/@angular/material/index' as mat;
-
-@mixin custom-list-component-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
-  .list-item {
-    color: mat.get-color-from-palette($foreground, text);
-    background-color: mat.get-color-from-palette($background, background);
-  }
+/**
+ * The project user entity
+ */
+export class UserProject {
+  [key: string]: number | string;
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
 }

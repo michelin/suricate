@@ -18,14 +18,13 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { Router } from '@angular/router';
-import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
+
+import { SettingsService } from '../../../core/services/settings.service';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { HttpSettingService } from '../../../shared/services/backend/http-setting/http-setting.service';
-import { SettingsService } from '../../../core/services/settings.service';
-import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 
 /**
  * Display the menu on the sidenav
@@ -59,12 +58,10 @@ export class MenuComponent implements OnInit {
   /**
    * Constructor
    * @param router Angular service used to manage routes
-   * @param httpSettingService Suricate service used to manage settings
    * @param settingsService Frontend service used to manage settings
    */
   constructor(
     private readonly router: Router,
-    private readonly httpSettingService: HttpSettingService,
     private readonly settingsService: SettingsService
   ) {}
 
@@ -93,23 +90,9 @@ export class MenuComponent implements OnInit {
   }
 
   /**
-   * Is the connected user logged in by idp or not ?
+   * Open the settings
    */
-  public isConnectedByIdp(): boolean {
-    return this.isConnectedWithGithub() || this.isConnectedWithGitlab();
-  }
-
-  /**
-   * Is the connected user logged in with GitHub
-   */
-  public isConnectedWithGithub(): boolean {
-    return this.connectedUser.mode === AuthenticationProvider.GITHUB;
-  }
-
-  /**
-   * Is the connected user logged in with GitLab
-   */
-  public isConnectedWithGitlab(): boolean {
-    return this.connectedUser.mode === AuthenticationProvider.GITLAB;
+  public openSettings(): void {
+    this.router.navigate(['/settings']);
   }
 }

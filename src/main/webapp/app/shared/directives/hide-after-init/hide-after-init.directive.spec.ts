@@ -18,6 +18,7 @@
  */
 
 import { TestBed } from '@angular/core/testing';
+
 import { MockModule } from '../../../mock/mock.module';
 import { HideAfterInitDirective } from './hide-after-init.directive';
 

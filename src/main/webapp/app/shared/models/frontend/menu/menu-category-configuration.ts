@@ -24,10 +24,6 @@ import { MenuItemConfiguration } from './menu-item-configuration';
  */
 export class MenuCategoryConfiguration {
   /**
-   * The label key to use with the translate service
-   */
-  label: string;
-  /**
    * The list of items in this category
    */
   items: MenuItemConfiguration[] = [];

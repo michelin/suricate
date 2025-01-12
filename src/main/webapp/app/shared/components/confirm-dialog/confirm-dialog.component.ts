@@ -19,9 +19,10 @@
 
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/confirmation-dialog-configuration';
-import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+
 import { IconEnum } from '../../enums/icon.enum';
+import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/confirmation-dialog-configuration';
 
 /**
  * Confirmation dialog

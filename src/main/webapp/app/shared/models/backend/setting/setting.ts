@@ -17,9 +17,9 @@
  * under the License.
  */
 
-import { AllowedSettingValue } from './allowed-setting-value';
-import { SettingsTypeEnum } from '../../../enums/settings-type.enum';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { SettingsTypeEnum } from '../../../enums/settings-type.enum';
+import { AllowedSettingValue } from './allowed-setting-value';
 
 /**
  * Represent a setting for the users

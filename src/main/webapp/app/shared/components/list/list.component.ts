@@ -17,28 +17,29 @@
  * under the License.
  */
 
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ListConfiguration } from '../../models/frontend/list/list-configuration';
-import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
-import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
-import { ToastService } from '../../services/frontend/toast/toast.service';
-import { DialogService } from '../../services/frontend/dialog/dialog.service';
-import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
-import { Page } from '../../models/backend/page';
-import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
-import { PageEvent } from '@angular/material/paginator';
-import { MaterialIconRecords } from '../../records/material-icon.record';
-import { IconEnum } from '../../enums/icon.enum';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+
 import { DataTypeEnum } from '../../enums/data-type.enum';
-import { UntypedFormGroup } from '@angular/forms';
+import { IconEnum } from '../../enums/icon.enum';
+import { PageModel } from '../../models/backend/page-model';
 import { FormField } from '../../models/frontend/form/form-field';
-import { FormService } from '../../services/frontend/form/form.service';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
+import { ListConfiguration } from '../../models/frontend/list/list-configuration';
+import { MaterialIconRecords } from '../../records/material-icon.record';
+import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
+import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
+import { DialogService } from '../../services/frontend/dialog/dialog.service';
+import { FormService } from '../../services/frontend/form/form.service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
+import { ToastService } from '../../services/frontend/toast/toast.service';
 
 /**
  * Generic component used to display and manage lists
@@ -111,7 +112,7 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   /**
    * The object list to display
    */
-  public objectsPaged: Page<TRet>;
+  public objectsPaged: PageModel<TRet>;
 
   /**
    * Display the loader when it's true, end hide when it's false
@@ -194,7 +195,8 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   protected refreshList(): void {
     this.displayLoader();
 
-    this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<TRet>) => {
+    this.childService.getAll(this.httpFilter).subscribe((objectsPaged: PageModel<TRet>) => {
+      console.warn(objectsPaged);
       this.objectsPaged = objectsPaged;
       this.hideLoader();
       this.onItemsLoaded();
@@ -218,7 +220,7 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   /**
    * Called when we change page from paginator
    *
-   * @param pageEvent The angular material page event
+   * @param pageEvent The page event
    */
   public pageChanged(pageEvent: PageEvent): void {
     this.httpFilter.page = pageEvent.pageIndex;
@@ -230,9 +232,9 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Used to get the first label
    * Implemented by child component
    *
-   * @param object The object of the list
+   * @param ignoredObject The object of the list
    */
-  protected getFirstLabel(object: TRet): string {
+  protected getFirstLabel(ignoredObject: TRet): string {
     return '';
   }
 
@@ -240,9 +242,9 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Used to get the second label
    * Implemented by child component
    *
-   * @param object The object of the list
+   * @param ignoredObject The object of the list
    */
-  protected getSecondLabel(object: TRet): string {
+  protected getSecondLabel(ignoredObject: TRet): string {
     return '';
   }
 
@@ -250,9 +252,9 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Used to get the third label
    * Implemented by child component
    *
-   * @param object The object of the list
+   * @param ignoredObject The object of the list
    */
-  protected getThirdLabel(object: TRet): string {
+  protected getThirdLabel(ignoredObject: TRet): string {
     return '';
   }
 
@@ -260,42 +262,47 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * Used to retrieve the url of the associated object
    * Implemented in child component
    *
-   * @param object The object of the list
+   * @param ignoredObject The object of the list
    */
-  public getObjectImageURL(object: TRet): string {
+  public getObjectImageURL(ignoredObject: TRet): string {
     return null;
   }
 
   /**
    * Redirect to bean detail
-   * Implemented in child component
    *
-   * @param object The object used for the redirection
+   * @param ignoredObject The object used for the redirection
    */
-  public redirectToBean(object: TRet): void {}
+  public redirectToBean(ignoredObject: TRet): void {
+    // Implemented in child component
+  }
 
   /**
    * Perform actions after items have been loaded
    */
-  protected onItemsLoaded(): void {}
+  protected onItemsLoaded(): void {
+    // Implemented in child component
+  }
 
   /**
    * Subscribe to input search event
    * Wait for a few time before triggering the refresh
    */
   private subscribeToInputSearchElement(): void {
-    this.researchChanged.pipe(takeUntil(this.unsubscribe), debounceTime(500), distinctUntilChanged()).subscribe((searchValue: string) => {
-      this.httpFilter.page = 0;
-      this.httpFilter.search = searchValue;
-      this.refreshList();
-    });
+    this.researchChanged
+      .pipe(takeUntil(this.unsubscribe), debounceTime(500), distinctUntilChanged())
+      .subscribe((searchValue: string) => {
+        this.httpFilter.page = 0;
+        this.httpFilter.search = searchValue;
+        this.refreshList();
+      });
   }
 
   /**
    * Emit a new event when a new value is typed in the search bar
    */
   public researchChangedEvent(event: ValueChangedEvent) {
-    this.researchChanged.next(event.value);
+    this.researchChanged.next(event.value as string);
   }
 
   /**
@@ -311,7 +318,8 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
 
   /**
    * Action to perform on drop
-   * Implemented in child component
    */
-  public drop(): void {}
+  public drop(): void {
+    // Implemented in child component
+  }
 }

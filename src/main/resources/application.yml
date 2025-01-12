@@ -71,11 +71,12 @@ logging:
 management:
   endpoint:
     flyway:
-      enabled: true
+      access: unrestricted
     health:
-      enabled: true
+      access: unrestricted
   endpoints:
-    enabled-by-default: false
+    access:
+      default: unrestricted
   health:
     ldap:
       enabled: false

@@ -18,79 +18,45 @@
  */
 
 .suricate-menu {
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-}
 
-.sidenav-section-container {
-  flex-grow: 1;
+  .user-section-container {
+    padding-bottom: 10px;
+
+    .user-section {
+      height: 100%;
+      width: 100%;
+      padding: 10px 0;
+
+      .names-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 400;
+        padding-top: 10px;
+      }
+    }
+  }
+
+  .sidenav-section-container {
+    flex-grow: 1;
+  }
 
   .home-tv-menu {
     display: flex;
+    width: 100%;
 
     a {
-      flex-grow: 1;
-    }
-
-    .common-icon-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-}
-
-.mdc-list {
-  padding: 0;
-}
-
-.submenu-item {
-  display: flex;
-  align-items: center;
-}
-
-.mat-expansion-panel-header {
-  padding: 0;
-  height: 64px;
-
-  .mat-expansion-panel-header-title {
-    margin: 0;
-    align-items: center;
-    min-width: 22px;
-
-    .names-idp-container {
-      display: flex;
-      gap: 5px;
-      font-size: 16px;
+      flex: 1;
       text-align: center;
-      margin: auto;
-      align-items: center;
-
-      .names-container {
-        margin: 0 5px;
-      }
-
-      .firstname-lastname {
-        font-weight: 600;
-      }
     }
   }
-
-  .mat-expansion-panel-header-description {
-    margin: 0;
-  }
 }
 
-.sidenav-menu-section {
-  & {
-    margin-bottom: 0 !important;
-  }
-
-  .menu-title {
-    padding: 0 16px;
-    font-size: 16px;
-    letter-spacing: 2px;
-  }
-}

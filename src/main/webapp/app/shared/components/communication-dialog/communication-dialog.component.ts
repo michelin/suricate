@@ -19,6 +19,9 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { IconEnum } from '../../enums/icon.enum';
+import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
 
 /**
@@ -36,16 +39,34 @@ export class CommunicationDialogComponent implements OnInit {
   public configuration: CommunicationDialogConfiguration;
 
   /**
+   * The buttons
+   */
+  public buttons: ButtonConfiguration<unknown>[] = [];
+
+  /**
    * Constructor
    *
    * @param data The data object that contains every information to display
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private readonly data: CommunicationDialogConfiguration) {}
+  constructor(@Inject(MAT_DIALOG_DATA) private readonly data: CommunicationDialogConfiguration) {
+    this.initButtons();
+  }
 
   /**
    * Called when the dialog is init
    */
   public ngOnInit(): void {
     this.configuration = this.data;
+  }
+
+  /**
+   * Init the buttons
+   */
+  private initButtons(): void {
+    this.buttons.push({
+      label: 'close',
+      icon: IconEnum.CLOSE,
+      color: 'warn'
+    });
   }
 }

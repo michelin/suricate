@@ -19,25 +19,23 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { AddWidgetToProjectWizardComponent } from './add-widget-to-project-wizard.component';
 import { MockModule } from '../../../../mock/mock.module';
+import { AddWidgetToProjectWizardComponent } from './add-widget-to-project-wizard.component';
 
 describe('ProjectWidgetWizardComponent', () => {
   let component: AddWidgetToProjectWizardComponent;
   let fixture: ComponentFixture<AddWidgetToProjectWizardComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MockModule],
-        declarations: [AddWidgetToProjectWizardComponent]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      declarations: [AddWidgetToProjectWizardComponent]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(AddWidgetToProjectWizardComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(AddWidgetToProjectWizardComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
