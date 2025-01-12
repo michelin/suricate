@@ -10,7 +10,8 @@
     "test": "ng test",
     "test-ci": "ng test --no-watch --no-progress --code-coverage --browsers=ChromeHeadlessNoSandbox",
     "lint": "ng lint",
-    "prettyformat": "pretty-quick --staged"
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
   },
   "private": true,
   "dependencies": {
@@ -73,11 +74,15 @@
     "karma-coverage": "^2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.7.0",
+    "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "prettier-eslint": "^16.3.0",
     "pretty-quick": "^4.0.0",
     "ts-node": "~10.9.1",
     "typescript": "~5.5.4",
     "typescript-eslint": "^8.0.0"
+  },
+  "lint-staged": {
+    "**/*.{js,mjs,cjs,ts}": "eslint --cache --fix --max-warnings 0 src/main/webapp"
   }
 }

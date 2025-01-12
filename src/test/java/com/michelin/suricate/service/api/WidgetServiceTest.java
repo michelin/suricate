@@ -37,6 +37,7 @@ import com.michelin.suricate.model.entity.Widget;
 import com.michelin.suricate.model.entity.WidgetParam;
 import com.michelin.suricate.model.entity.WidgetParamValue;
 import com.michelin.suricate.model.enumeration.DataTypeEnum;
+import com.michelin.suricate.model.enumeration.RepositoryTypeEnum;
 import com.michelin.suricate.model.enumeration.WidgetAvailabilityEnum;
 import com.michelin.suricate.repository.WidgetParamRepository;
 import com.michelin.suricate.repository.WidgetRepository;
@@ -318,7 +319,8 @@ class WidgetServiceTest {
         Repository repository = new Repository();
         repository.setId(1L);
         repository.setName("repository");
-        repository.setBranch("master");
+        repository.setLocalPath("/tmp");
+        repository.setType(RepositoryTypeEnum.LOCAL);
 
         Asset asset = new Asset();
         asset.setId(1L);
@@ -409,6 +411,7 @@ class WidgetServiceTest {
         repository.setId(1L);
         repository.setName("repository");
         repository.setBranch("master");
+        repository.setType(RepositoryTypeEnum.REMOTE);
 
         Asset asset = new Asset();
         asset.setId(1L);
@@ -491,6 +494,7 @@ class WidgetServiceTest {
         repository.setId(1L);
         repository.setName("repository");
         repository.setBranch("master");
+        repository.setType(RepositoryTypeEnum.REMOTE);
 
         Asset asset = new Asset();
         asset.setId(1L);
