@@ -60,7 +60,7 @@ export class FileUtils {
    * @param filename The filename
    */
   public static convertBlobToFile(blob: Blob, filename: string): File {
-    return new File([blob], filename);
+    return new File([blob], filename, { type: blob.type });
   }
 
   /**
