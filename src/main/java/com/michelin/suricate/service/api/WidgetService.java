@@ -43,7 +43,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -291,7 +290,8 @@ public class WidgetService {
             widgetRepository.save(widget);
 
             String type = repository.getType().equals(RepositoryTypeEnum.LOCAL) ? "local path" : "branch";
-            String where = repository.getType().equals(RepositoryTypeEnum.LOCAL) ? repository.getLocalPath() : repository.getBranch();
+            String where = repository.getType().equals(RepositoryTypeEnum.LOCAL)
+                ? repository.getLocalPath() : repository.getBranch();
             log.info("Widget {} updated from the {} {} of the repository {}",
                 widget.getTechnicalName(),
                 type,
