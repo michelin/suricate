@@ -48,9 +48,9 @@
       </div>
       <suricate-paginator
         (pageChange)="pageChanged($event)"
-        [currentPage]="objectsPaged.number"
-        [pageNbElements]="objectsPaged.size"
-        [totalElements]="objectsPaged.totalElements"
+        [currentPage]="objectsPaged.page.number"
+        [pageNbElements]="objectsPaged.page.size"
+        [totalElements]="objectsPaged.page.totalElements"
         [hidePageSize]="false"
         >
       </suricate-paginator>

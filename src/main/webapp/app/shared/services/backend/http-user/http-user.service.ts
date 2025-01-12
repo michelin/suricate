@@ -22,7 +22,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { Page } from '../../../models/backend/page';
+import { PageModel } from '../../../models/backend/page-model';
 import { PersonalAccessToken } from '../../../models/backend/personal-access-token/personal-access-token';
 import { PersonalAccessTokenRequest } from '../../../models/backend/personal-access-token/personal-access-token-request';
 import { UserSetting } from '../../../models/backend/setting/user-setting';
@@ -49,9 +49,9 @@ export class HttpUserService implements AbstractHttpService<User, UserRequest> {
    * Get the list of users
    * @returns The list of users
    */
-  public getAll(filter?: HttpFilter): Observable<Page<User>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<User>> {
     const url = `${HttpUserService.usersApiEndpoint}`;
-    return this.httpClient.get<Page<User>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<User>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

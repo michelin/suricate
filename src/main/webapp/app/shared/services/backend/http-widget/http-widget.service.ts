@@ -22,7 +22,7 @@ import { Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { Page } from '../../../models/backend/page';
+import { PageModel } from '../../../models/backend/page-model';
 import { Widget } from '../../../models/backend/widget/widget';
 import { WidgetRequest } from '../../../models/backend/widget/widget-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
@@ -53,9 +53,9 @@ export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest
    * @param {HttpFilter} filter Used to filter the result
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  public getAll(filter?: HttpFilter): Observable<Page<Widget>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<Widget>> {
     const url = `${HttpWidgetService.widgetsApiEndpoint}`;
-    return this.httpClient.get<Page<Widget>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<Widget>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

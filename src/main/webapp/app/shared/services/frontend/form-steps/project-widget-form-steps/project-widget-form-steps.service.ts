@@ -26,7 +26,7 @@ import { map, switchMap, tap, toArray } from 'rxjs/operators';
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { Category } from '../../../../models/backend/category/category';
-import { Page } from '../../../../models/backend/page';
+import { PageModel } from '../../../../models/backend/page-model';
 import { Widget } from '../../../../models/backend/widget/widget';
 import { WidgetParam } from '../../../../models/backend/widget/widget-param';
 import { WidgetParamValue } from '../../../../models/backend/widget/widget-param-value';
@@ -187,7 +187,7 @@ export class ProjectWidgetFormStepsService {
    */
   private getAvailableCategories(): Observable<MosaicFormOption[]> {
     return this.httpCategoryService.getAll(HttpFilterService.getInfiniteFilter(['name,asc'])).pipe(
-      switchMap((categoriesPaged: Page<Category>) => {
+      switchMap((categoriesPaged: PageModel<Category>) => {
         return from(categoriesPaged.content).pipe(
           map((category: Category) => {
             return {

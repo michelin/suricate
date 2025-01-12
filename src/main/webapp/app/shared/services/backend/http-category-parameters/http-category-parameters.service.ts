@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
 
 import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { Page } from '../../../models/backend/page';
+import { PageModel } from '../../../models/backend/page-model';
 import { WidgetConfigurationRequest } from '../../../models/backend/widget-configuration/widget-configuration-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilterService } from '../http-filter/http-filter.service';
@@ -52,10 +52,10 @@ export class HttpCategoryParametersService extends AbstractHttpService<CategoryP
    *
    * @param filter The filter
    */
-  public getAll(filter?: HttpFilter): Observable<Page<CategoryParameter>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<CategoryParameter>> {
     const url = `${HttpCategoryParametersService.configurationsApiEndpoint}`;
 
-    return this.httpClient.get<Page<CategoryParameter>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<CategoryParameter>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

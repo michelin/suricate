@@ -22,7 +22,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { Page } from '../../../models/backend/page';
+import { PageModel } from '../../../models/backend/page-model';
 import { Role } from '../../../models/backend/role/role';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilterService } from '../http-filter/http-filter.service';
@@ -49,9 +49,9 @@ export class HttpRoleService {
    *
    * @returns {Observable<Role[]>}
    */
-  public getRoles(filter?: HttpFilter): Observable<Page<Role>> {
+  public getRoles(filter?: HttpFilter): Observable<PageModel<Role>> {
     const url = `${HttpRoleService.rolesApiEndpoint}`;
 
-    return this.httpClient.get<Page<Role>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<Role>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 }

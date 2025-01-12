@@ -17,17 +17,19 @@
  * under the License.
  */
 
-export class Page {
+import { Page } from './page';
+
+/**
+ * Class that represent a page from the backend
+ */
+export class PageModel<T> {
   /**
-   * The number of the current page
+   * The list of object in this page
    */
-  number: number;
+  content: T[];
+
   /**
-   * The requested size of the page
+   * The page information
    */
-  size: number;
-  /**
-   * The total number of elements available
-   */
-  totalElements: number;
+  page: Page;
 }

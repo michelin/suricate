@@ -22,7 +22,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { Page } from '../../../models/backend/page';
+import { PageModel } from '../../../models/backend/page-model';
 import { Project } from '../../../models/backend/project/project';
 import { ProjectRequest } from '../../../models/backend/project/project-request';
 import { ProjectWidgetPositionRequest } from '../../../models/backend/project-widget/project-widget-position-request';
@@ -50,10 +50,10 @@ export class HttpProjectService implements AbstractHttpService<Project, ProjectR
    *
    * @param filter The research/pagination filter
    */
-  public getAll(filter?: HttpFilter): Observable<Page<Project>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<Project>> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
 
-    return this.httpClient.get<Page<Project>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<Project>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

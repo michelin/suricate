@@ -22,7 +22,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { Page } from '../../../models/backend/page';
+import { PageModel } from '../../../models/backend/page-model';
 import { User } from '../../../models/backend/user/user';
 import { UserRequest } from '../../../models/backend/user/user-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
@@ -43,10 +43,10 @@ export class HttpAdminUserService implements AbstractHttpService<User, UserReque
    * Get the list of users
    * @returns The list of users
    */
-  public getAll(filter?: HttpFilter): Observable<Page<User>> {
+  public getAll(filter?: HttpFilter): Observable<PageModel<User>> {
     const url = `${HttpAdminUserService.adminUsersApiEndpoint}`;
 
-    return this.httpClient.get<Page<User>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<PageModel<User>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

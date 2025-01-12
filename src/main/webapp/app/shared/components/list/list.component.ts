@@ -28,7 +28,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import { DataTypeEnum } from '../../enums/data-type.enum';
 import { IconEnum } from '../../enums/icon.enum';
-import { Page } from '../../models/backend/page';
+import { PageModel } from '../../models/backend/page-model';
 import { FormField } from '../../models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
@@ -112,7 +112,7 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   /**
    * The object list to display
    */
-  public objectsPaged: Page<TRet>;
+  public objectsPaged: PageModel<TRet>;
 
   /**
    * Display the loader when it's true, end hide when it's false
@@ -195,7 +195,8 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   protected refreshList(): void {
     this.displayLoader();
 
-    this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<TRet>) => {
+    this.childService.getAll(this.httpFilter).subscribe((objectsPaged: PageModel<TRet>) => {
+      console.warn(objectsPaged);
       this.objectsPaged = objectsPaged;
       this.hideLoader();
       this.onItemsLoaded();

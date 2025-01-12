@@ -24,7 +24,7 @@ import { map } from 'rxjs/operators';
 
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { IconEnum } from '../../../../enums/icon.enum';
-import { Page } from '../../../../models/backend/page';
+import { PageModel } from '../../../../models/backend/page-model';
 import { Role } from '../../../../models/backend/role/role';
 import { User } from '../../../../models/backend/user/user';
 import { FormField } from '../../../../models/frontend/form/form-field';
@@ -100,7 +100,7 @@ export class UserFormFieldsService {
    */
   getRoleOptions(): Observable<FormOption[]> {
     return this.httpRoleService.getRoles(HttpFilterService.getInfiniteFilter()).pipe(
-      map((rolesPaged: Page<Role>) => {
+      map((rolesPaged: PageModel<Role>) => {
         const roleOptions: FormOption[] = [];
         rolesPaged.content.forEach((role: Role) => {
           roleOptions.push({

@@ -21,7 +21,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
-import { Page } from '../../../models/backend/page';
+import { PageModel } from '../../../models/backend/page-model';
 import { EnvironmentService } from '../../frontend/environment/environment.service';
 
 /**
@@ -37,7 +37,7 @@ export abstract class AbstractHttpService<TRet, TReq> {
   /**
    * Function used to retrieve the list of Objects
    */
-  abstract getAll(filter?: HttpFilter): Observable<Page<TRet>>;
+  abstract getAll(filter?: HttpFilter): Observable<PageModel<TRet>>;
 
   /**
    * Function used to retrieve an Object of type T

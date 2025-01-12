@@ -24,7 +24,7 @@ import { map } from 'rxjs/operators';
 
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { IconEnum } from '../../../../enums/icon.enum';
-import { Page } from '../../../../models/backend/page';
+import { PageModel } from '../../../../models/backend/page-model';
 import { User } from '../../../../models/backend/user/user';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { FormOption } from '../../../../models/frontend/form/form-option';
@@ -111,7 +111,7 @@ export class ProjectUsersFormFieldsService {
    */
   private getUsersAutocomplete(usernameFilter: string): Observable<FormOption[]> {
     return this.httpUserService.getAll(HttpFilterService.getDefaultFilter(usernameFilter)).pipe(
-      map((usersPaged: Page<User>) => {
+      map((usersPaged: PageModel<User>) => {
         const formOptions: FormOption[] = [];
         usersPaged.content.forEach((user: User) => {
           formOptions.push({
