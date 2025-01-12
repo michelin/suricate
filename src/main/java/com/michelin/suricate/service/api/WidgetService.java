@@ -28,6 +28,7 @@ import com.michelin.suricate.model.entity.Widget;
 import com.michelin.suricate.model.entity.WidgetParam;
 import com.michelin.suricate.model.entity.WidgetParamValue;
 import com.michelin.suricate.model.enumeration.DataTypeEnum;
+import com.michelin.suricate.model.enumeration.RepositoryTypeEnum;
 import com.michelin.suricate.model.enumeration.WidgetAvailabilityEnum;
 import com.michelin.suricate.repository.WidgetParamRepository;
 import com.michelin.suricate.repository.WidgetRepository;
@@ -289,8 +290,14 @@ public class WidgetService {
 
             widgetRepository.save(widget);
 
-            log.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
-                widget.getRepository().getBranch(), widget.getRepository().getName());
+            String type = repository.getType().equals(RepositoryTypeEnum.LOCAL) ? "local path" : "branch";
+            String where = repository.getType().equals(RepositoryTypeEnum.LOCAL) ? repository.getLocalPath() : repository.getBranch();
+            log.info("Widget {} updated from the {} {} of the repository {}",
+                widget.getTechnicalName(),
+                type,
+                where,
+                widget.getRepository().getName()
+            );
         }
     }
 
