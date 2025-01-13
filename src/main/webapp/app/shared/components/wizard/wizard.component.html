@@ -1,6 +1,6 @@
 <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
-<section class="container">
+<section class="container stepper-container">
   <mat-horizontal-stepper #wizardStepper [linear]="true" labelPosition="bottom" (selectionChange)="onStepChanged($event)">
     @for (step of wizardConfiguration?.steps; track step; let index = $index) {
       <ng-template [matStepperIcon]="step.icon">
@@ -12,7 +12,6 @@
         [state]="step.icon"
         >
         <ng-template matStepLabel>
-          <div class="step-index">Step {{ index + 1 }}</div>
           <div>{{ step.title | translate }}</div>
           <hr />
         </ng-template>

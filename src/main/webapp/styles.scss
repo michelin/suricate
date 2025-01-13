@@ -32,20 +32,21 @@
 
 @import 'scss/themes/suricate-theme';
 @import 'scss/themes/light-theme';
-@import 'scss/themes/dark-theme';
 
 html {
   @include mat.core-theme($light-theme);
   @include mat.all-component-themes($light-theme);
   @include mat.system-level-colors($light-theme);
   @include suricate-theme($light-theme);
+}
 
-  /*@media (prefers-color-scheme: dark) {
+.dark-theme {
+  @media (prefers-color-scheme: dark) {
     @include mat.core-theme($dark-theme);
+    @include mat.all-component-themes($dark-theme);
     @include mat.system-level-colors($dark-theme);
-    @include mat.system-level-typography($dark-theme);
-    //@include suricate-theme($dark-theme);z
-  }*/
+    @include suricate-theme($dark-theme);
+  }
 }
 
 

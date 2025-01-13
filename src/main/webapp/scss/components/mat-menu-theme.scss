@@ -20,8 +20,6 @@
 @use '@angular/material' as mat;
 
 @mixin custom-mat-menu-theme($theme) {
-  $primary: map-get($theme, primary);
-
   .avatar-container {
     margin: 0 auto;
     width: 80px;
