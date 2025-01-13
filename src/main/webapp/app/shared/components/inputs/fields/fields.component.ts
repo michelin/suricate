@@ -25,6 +25,7 @@ import { IconEnum } from '../../../enums/icon.enum';
 import { ButtonConfiguration } from '../../../models/frontend/button/button-configuration';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { InputComponent } from '../input/input.component';
+import { ButtonColorEnum } from '../../../enums/button-color.enum';
 
 /**
  * Used to display fields of type Fields
@@ -90,7 +91,7 @@ export class FieldsComponent extends InputComponent implements OnInit {
     this.deleteRowConfig = [
       {
         icon: IconEnum.DELETE,
-        color: 'warn',
+        color: ButtonColorEnum.WARN,
         variant: 'miniFab',
         callback: (event: Event, object: { formGroup: UntypedFormGroup; index: number }) => {
           this.deleteRow(object.formGroup, object.index);

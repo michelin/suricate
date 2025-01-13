@@ -33,6 +33,7 @@ import { HttpProjectService } from '../../shared/services/backend/http-project/h
 import { CssService } from '../../shared/services/frontend/css/css.service';
 import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',
@@ -111,21 +112,19 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
         {
           icon: IconEnum.USERS,
           tooltip: { message: 'user.edit' },
-          color: 'primary',
           variant: 'miniFab',
           callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project)
         },
         {
           icon: IconEnum.EDIT,
           tooltip: { message: 'dashboard.edit' },
-          color: 'primary',
           variant: 'miniFab',
           callback: (event: Event, project: Project) => this.openFormSidenav(event, project)
         },
         {
           icon: IconEnum.DELETE,
           tooltip: { message: 'dashboard.delete' },
-          color: 'warn',
+          color: ButtonColorEnum.WARN,
           variant: 'miniFab',
           callback: (event: Event, project: Project) => this.deleteProject(event, project)
         }

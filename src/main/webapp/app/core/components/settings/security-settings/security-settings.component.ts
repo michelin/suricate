@@ -35,6 +35,7 @@ import { HttpUserService } from '../../../../shared/services/backend/http-user/h
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
 import { FormService } from '../../../../shared/services/frontend/form/form.service';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
+import { ButtonColorEnum } from '../../../../shared/enums/button-color.enum';
 
 @Component({
   selector: 'suricate-security-settings',
@@ -121,13 +122,12 @@ export class SecuritySettingsComponent implements OnInit {
     this.generateTokenButton = {
       label: 'settings.security.generate.tokens.button.label',
       icon: IconEnum.SAVE,
-      color: 'primary',
       callback: () => this.save()
     };
 
     this.revokeButton = {
       label: 'revoke',
-      color: 'warn',
+      color: ButtonColorEnum.WARN,
       callback: (event: Event, token: PersonalAccessToken) => this.revokeToken(token)
     };
   }

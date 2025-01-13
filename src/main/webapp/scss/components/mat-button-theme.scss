@@ -19,23 +19,17 @@
 
 @use '@angular/material' as mat;
 
-@mixin custom-mat-menu-theme($theme) {
-  $primary: map-get($theme, primary);
+@mixin custom-button-theme($theme) {
+  $error: map-get($theme, error);
 
-  .avatar-container {
-    margin: 0 auto;
-    width: 80px;
-    height: 80px;
-    overflow: hidden;
-    border-radius: 50%;
+  // Replace old M2 warning color
+  .button-warn-color {
+    @include mat.fab-overrides((
+      container-color: mat.get-theme-color($theme, 'error', 50),
+    ));
 
-    .avatar {
-      height: 100%;
-      font-size: 25px;
-      background: mat.get-theme-color($theme, 'primary', 90);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    @include mat.button-overrides((
+      container-color: mat.get-theme-color($theme, 'error', 50),
+    ));
   }
 }

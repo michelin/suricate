@@ -33,6 +33,7 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
 import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
+import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 
 @Component({
   selector: 'suricate-tv-management-dialog',
@@ -120,7 +121,6 @@ export class TvManagementDialogComponent implements OnInit {
     this.shareButtonsConfiguration = [
       {
         icon: IconEnum.SHARE_SCREEN,
-        color: 'primary',
         variant: 'miniFab',
         type: ButtonTypeEnum.SUBMIT,
         tooltip: { message: 'screen.subscribe' },
@@ -131,7 +131,6 @@ export class TvManagementDialogComponent implements OnInit {
     this.connectedScreenButtonsConfiguration = [
       {
         icon: IconEnum.STOP_SHARE_SCREEN,
-        color: 'primary',
         type: ButtonTypeEnum.BUTTON,
         variant: 'miniFab',
         tooltip: { message: 'screen.unsubscribe' },
@@ -143,14 +142,13 @@ export class TvManagementDialogComponent implements OnInit {
       {
         label: 'screen.display.code',
         icon: IconEnum.SHOW_PASSWORD,
-        color: 'primary',
         type: ButtonTypeEnum.BUTTON,
         callback: () => this.displayScreenCode()
       },
       {
         label: 'close',
         icon: IconEnum.CLOSE,
-        color: 'warn'
+        color: ButtonColorEnum.WARN,
       }
     ];
   }

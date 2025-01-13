@@ -23,6 +23,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 
 /**
  * This component is used to display information (without actions to do)
@@ -66,7 +67,7 @@ export class CommunicationDialogComponent implements OnInit {
     this.buttons.push({
       label: 'close',
       icon: IconEnum.CLOSE,
-      color: 'warn'
+      color: ButtonColorEnum.WARN
     });
   }
 }

@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import { ThemePalette } from '@angular/material/core';
 import { Observable } from 'rxjs';
 
 import { ButtonTypeEnum } from '../../../enums/button-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
 import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
+import { ButtonColorEnum } from '../../../enums/button-color.enum';
 
 /**
  * Model of Button
@@ -30,7 +30,7 @@ import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
 export class ButtonConfiguration<T> {
   label?: string;
   icon?: IconEnum;
-  color: ThemePalette;
+  color?: ButtonColorEnum;
   callback?: (event: Event, object?: T) => void;
   disabled?: Observable<boolean>;
   hidden?: (object?: T) => boolean;

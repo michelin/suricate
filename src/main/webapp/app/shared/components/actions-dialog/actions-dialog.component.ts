@@ -23,6 +23,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 
 @Component({
   templateUrl: './actions-dialog.component.html',
@@ -56,7 +57,7 @@ export class ActionsDialogComponent implements OnInit {
     const closeButton: ButtonConfiguration<void> = {
       label: 'close',
       icon: IconEnum.CLOSE,
-      color: 'primary'
+      color: ButtonColorEnum.WARN
     };
 
     this.configuration.actions = [closeButton].concat(this.configuration.actions);

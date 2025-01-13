@@ -17,25 +17,9 @@
  * under the License.
  */
 
-@use '@angular/material' as mat;
-
-@mixin custom-mat-menu-theme($theme) {
-  $primary: map-get($theme, primary);
-
-  .avatar-container {
-    margin: 0 auto;
-    width: 80px;
-    height: 80px;
-    overflow: hidden;
-    border-radius: 50%;
-
-    .avatar {
-      height: 100%;
-      font-size: 25px;
-      background: mat.get-theme-color($theme, 'primary', 90);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
+/**
+ * Color used for buttons
+ */
+export enum ButtonColorEnum {
+  WARN = 'WARN'
 }

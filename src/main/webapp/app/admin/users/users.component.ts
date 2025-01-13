@@ -29,6 +29,7 @@ import { User } from '../../shared/models/backend/user/user';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
 import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
+import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 
 /**
  * Component used to display the list of users
@@ -83,14 +84,13 @@ export class UsersComponent extends ListComponent<User, UserRequest> implements 
         {
           icon: IconEnum.EDIT,
           tooltip: { message: 'user.edit' },
-          color: 'primary',
           variant: 'miniFab',
           callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser.bind(this))
         },
         {
           icon: IconEnum.DELETE,
           tooltip: { message: 'user.delete' },
-          color: 'warn',
+          color: ButtonColorEnum.WARN,
           variant: 'miniFab',
           callback: (event: Event, user: User) => this.deleteUser(event, user)
         }

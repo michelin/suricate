@@ -23,6 +23,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/confirmation-dialog-configuration';
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 
 /**
  * Confirmation dialog
@@ -64,12 +65,11 @@ export class ConfirmDialogComponent {
       {
         label: 'no',
         icon: IconEnum.CLOSE,
-        color: 'primary'
       },
       {
         label: 'yes',
         icon: IconEnum.SAVE,
-        color: 'warn',
+        color: ButtonColorEnum.WARN,
         callback: () => this.configuration.accept()
       }
     ];

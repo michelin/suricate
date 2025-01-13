@@ -109,7 +109,6 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
         {
           icon: IconEnum.SYNCHRONIZE,
           variant: 'miniFab',
-          color: 'primary',
           callback: () => this.reloadAllRepositories(),
           tooltip: { message: 'repositories.synchronize.all' },
           hidden: () => !this.objectsPaged.content || this.objectsPaged.content.length === 0,
@@ -118,7 +117,6 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
         {
           icon: IconEnum.ADD,
           variant: 'miniFab',
-          color: 'primary',
           callback: (event: Event) => this.openFormSidenav(event, null, this.addRepository.bind(this)),
           tooltip: { message: 'repository.add' },
           disabled: this.disableAllReposSync.asObservable()
@@ -137,7 +135,6 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
         {
           icon: IconEnum.EDIT,
           tooltip: { message: 'repository.edit' },
-          color: 'primary',
           variant: 'miniFab',
           callback: (event: Event, repository: Repository) =>
             this.openFormSidenav(event, repository, this.updateRepository.bind(this)),

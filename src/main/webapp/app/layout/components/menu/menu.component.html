@@ -1,6 +1,6 @@
 <!-- User Section -->
 <div class="suricate-menu">
-  <mat-menu #userMenu="matMenu" xPosition="after">
+  <mat-menu #userMenu="matMenu" xPosition="before">
     <button mat-menu-item (click)="openSettings()">
       <mat-icon> {{ materialIconRecords[iconEnum.PREFERENCES] }} </mat-icon>
       <span> {{ 'preferences' | translate }} </span>
@@ -16,7 +16,7 @@
       <div class="avatar-container">
         <div class="avatar">
           @if (connectedUser.avatarUrl) {
-            <img ngSrc="{{ connectedUser.avatarUrl }}" width="70" height="70" alt="avatar"/>
+            <img ngSrc="{{ connectedUser.avatarUrl }}" fill="true" alt="avatar"/>
           }
           @if (!connectedUser.avatarUrl) {
             <div>{{ getInitials() }}</div>

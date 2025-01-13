@@ -34,6 +34,7 @@ import { MaterialIconRecords } from '../../records/material-icon.record';
 import { FormService } from '../../services/frontend/form/form.service';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 
 /**
  * Generic component used to display wizards
@@ -138,24 +139,21 @@ export class WizardComponent implements OnInit {
     this.wizardButtons = [
       {
         label: 'close',
-        color: 'warn',
+        color: ButtonColorEnum.WARN,
         callback: () => this.closeWizard()
       },
       {
         label: 'back',
-        color: 'primary',
         hidden: () => !this.shouldDisplayBackButton(),
         callback: () => this.backAction()
       },
       {
         label: 'next',
-        color: 'primary',
         hidden: () => !this.shouldDisplayNextButton(),
         callback: () => this.nextAction()
       },
       {
         label: 'done',
-        color: 'primary',
         hidden: () => !this.shouldDisplayDoneButton(),
         callback: () => this.validateFormBeforeSave()
       }

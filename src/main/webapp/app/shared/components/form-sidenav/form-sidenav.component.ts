@@ -30,6 +30,7 @@ import { ValueChangedEvent } from '../../models/frontend/form/value-changed-even
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 
 /**
  * Component used to display the form sidenav
@@ -124,13 +125,12 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
       {
         label: 'close',
         icon: IconEnum.CLOSE,
-        color: 'warn',
+        color: ButtonColorEnum.WARN,
         callback: () => this.closeSidenav()
       },
       {
         label: 'save',
         icon: IconEnum.SAVE,
-        color: 'primary',
         hidden: () => this.configuration.hideSaveAction,
         callback: () => this.save()
       }

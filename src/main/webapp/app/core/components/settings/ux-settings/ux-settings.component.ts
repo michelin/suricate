@@ -99,7 +99,6 @@ export class UxSettingsComponent implements OnInit {
     this.buttons.push({
       label: 'save',
       icon: IconEnum.SAVE,
-      color: 'primary',
       callback: () => this.save()
     });
   }

@@ -18,6 +18,7 @@
  */
 
 @import '../components/mat-stepper-theme';
+@import '../components/mat-button-theme';
 @import '../components/mat-grid-list-theme';
 @import '../components/mat-communication-dialog-theme';
 @import '../components/mat-menu-theme';
@@ -27,7 +28,8 @@
  */
 @mixin suricate-theme($theme) {
   //@include custom-mat-stepper-theme($theme);
-  @include custom-mat-grid-list-theme($theme);
   //@include custom-communication-dialog-component-theme($theme);
+  @include custom-button-theme($theme);
+  @include custom-mat-grid-list-theme($theme);
   @include custom-mat-menu-theme($theme);
 }
