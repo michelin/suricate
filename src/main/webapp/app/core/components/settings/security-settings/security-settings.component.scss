@@ -30,6 +30,8 @@
   }
 
   .token-created {
+    text-align: center;
+
     .mat-card-title {
       align-items: center;
       font-size: 16px;
@@ -41,6 +43,10 @@
 
     .mat-mdc-card-actions {
       padding: 16px;
+    }
+
+    .copy-token-button-container {
+      justify-content: center;
     }
   }
 
@@ -67,5 +73,9 @@ table {
 
   .mat-column-revoke {
     width: 90px;
+  }
+
+  .actions-container {
+    text-align: center;
   }
 }

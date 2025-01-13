@@ -126,8 +126,10 @@ export class SecuritySettingsComponent implements OnInit {
     };
 
     this.revokeButton = {
-      label: 'revoke',
       color: ButtonColorEnum.WARN,
+      tooltip: { message: 'revoke' },
+      variant: 'miniFab',
+      icon: IconEnum.DELETE,
       callback: (event: Event, token: PersonalAccessToken) => this.revokeToken(token)
     };
   }

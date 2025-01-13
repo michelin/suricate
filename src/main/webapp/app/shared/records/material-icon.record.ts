@@ -32,6 +32,7 @@ export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.CATEGORY]: 'category',
   [IconEnum.CLOSE]: 'close',
   [IconEnum.COLUMN]: 'view_column',
+  [IconEnum.COPY]: 'content_copy',
   [IconEnum.DASHBOARD]: 'dashboard',
   [IconEnum.DELETE]: 'delete',
   [IconEnum.DELETE_FOREVER]: 'delete_forever',
