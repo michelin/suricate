@@ -12,7 +12,6 @@
         <!-- Mat Icon prefix -->
         @if (field.iconPrefix) {
           <mat-icon
-            class="prefix"
             matPrefix
             color="primary"
             [matTooltip]="field.iconPrefixTooltip"
@@ -79,7 +78,7 @@
           }
           <!-- Mat Icon suffix -->
           @if (field.iconSuffix) {
-            <mat-icon (click)="suffixActions()" matTooltip="" class="suffix" matSuffix color="primary">
+            <mat-icon (click)="suffixActions()" matTooltip="" matSuffix color="primary">
               {{ materialIconRecords[field.iconSuffix] }}
             </mat-icon>
           }
@@ -89,8 +88,13 @@
               <span> {{ field.hint | translate }}</span>
             </mat-hint>
           }
-        </mat-form-field>
-      }
+        @if (dataType.FILE !== field.type && isInputFieldOnError()) {
+          <mat-error>
+            {{ getInputErrors() | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+    }
       <!------------------------------------------------------------------------------------------------------->
       <!---                        OTHER FIELDS                                                             --->
       <!------------------------------------------------------------------------------------------------------->
@@ -113,16 +117,6 @@
       }
       @if (dataType.COLOR_PICKER === field.type) {
         <suricate-color-picker [field]="field" [formGroup]="formGroup"> </suricate-color-picker>
-      }
-      <!------------------------------------------------------------------------------------------------------->
-      <!---                        FIELDS ERROR MANAGEMENT                                                  --->
-      <!------------------------------------------------------------------------------------------------------->
-      @if (dataType.FILE !== field.type && isInputFieldOnError()) {
-        <div [@animationError] class="input-error">
-          <div>
-            {{ getInputErrors() | translate }}
-          </div>
-        </div>
       }
     </div>
   }

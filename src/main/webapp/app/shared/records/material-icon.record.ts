@@ -67,7 +67,7 @@ export const MaterialIconRecords: MaterialIcon = {
   [IconEnum.THEME]: 'color_lens',
   [IconEnum.TV]: 'tv',
   [IconEnum.TV_LIVE]: 'live_tv',
-  [IconEnum.UPLOAD]: 'cloud_upload',
+  [IconEnum.UPLOAD]: 'upload_file',
   [IconEnum.URL]: 'link',
   [IconEnum.USERNAME]: 'face',
   [IconEnum.USERS]: 'people',

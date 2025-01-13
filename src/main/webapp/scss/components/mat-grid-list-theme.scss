@@ -20,17 +20,6 @@
 @use '@angular/material' as mat;
 
 @mixin custom-mat-grid-list-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
-  .grid-widget-tile {
-    background: mat.m2-get-color-from-palette($background, background);
-  }
 
   .mat-grid-tile {
     .grid-tile-content-wrapper,

@@ -17,6 +17,11 @@
  * under the License.
  */
 
+.mat-sidenav-content {
+  padding: 0 10px 0 10px;
+  min-height: 100vh;
+}
+
 .menu-sidenav {
   display: flex;
   flex: 1 1 256px;

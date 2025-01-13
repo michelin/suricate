@@ -58,7 +58,7 @@
              #rla="routerLinkActive">
             <mat-list-item [activated]="rla.isActive">
               <mat-icon matListItemIcon>{{ materialIconRecords[item.icon] }}</mat-icon>
-              {{ item.label | translate }}
+              <div matListItemTitle>{{ item.label | translate }}</div>
             </mat-list-item>
           </a>
         }

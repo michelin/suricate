@@ -19,7 +19,8 @@
 
 @use '@angular/material' as mat;
 
-@mixin custom-mat-sidenav-theme($theme) {
+@mixin custom-mat-menu-theme($theme) {
+  // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
@@ -27,8 +28,20 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-sidenav-content {
-    padding: 0 10px 0 10px;
-    min-height: 100vh;
+  .avatar-container {
+    margin: 0 auto;
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 50%;
+
+    .avatar {
+      height: 100%;
+      font-size: 25px;
+      background: mat.get-theme-color($theme, 'primary', 90);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
