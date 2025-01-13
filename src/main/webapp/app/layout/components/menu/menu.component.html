@@ -14,7 +14,7 @@
   <div class="user-section-container" [matMenuTriggerFor]="userMenu">
     <button mat-button class="user-section">
       <div class="avatar-container">
-        <div class="avatar">
+        <div class="avatar avatar-color">
           @if (connectedUser.avatarUrl) {
             <img ngSrc="{{ connectedUser.avatarUrl }}" fill="true" alt="avatar"/>
           }
@@ -33,37 +33,44 @@
   @if (menu) {
     <div class="sidenav-section-container">
       <mat-divider></mat-divider>
-      <mat-nav-list class="home-tv-menu">
-        <a [routerLink]="['/home']"
-           routerLinkActive
-           #rla="routerLinkActive"
-           [matTooltip]="'home' | translate">
-          <mat-list-item [activated]="rla.isActive">
-            <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
-          </mat-list-item>
-        </a>
-        <a [routerLink]="['/tv']"
-           [matTooltip]="'tv.view' | translate" target='_blank'>
-          <mat-list-item>
-            <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
-          </mat-list-item>
-        </a>
-      </mat-nav-list>
-      <mat-divider></mat-divider>
-      <mat-nav-list>
-      @for (category of menu.categories; track category) {
-        @for (item of category.items; track item) {
-          <a [routerLink]="item.linkConfiguration.link"
+      <div class="home-tv-menu-container">
+        <mat-nav-list class="home-tv-menu">
+          <a [routerLink]="['/home']"
              routerLinkActive
-             #rla="routerLinkActive">
+             #rla="routerLinkActive"
+             [matTooltip]="'home' | translate"
+             class="home">
             <mat-list-item [activated]="rla.isActive">
-              <mat-icon matListItemIcon>{{ materialIconRecords[item.icon] }}</mat-icon>
-              <div matListItemTitle>{{ item.label | translate }}</div>
+              <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
             </mat-list-item>
           </a>
+          <a [routerLink]="['/tv']"
+             [matTooltip]="'tv.view' | translate"
+             class="tv"
+             target="_blank">
+            <mat-list-item>
+              <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
+            </mat-list-item>
+          </a>
+        </mat-nav-list>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="menu-container">
+        <mat-nav-list>
+        @for (category of menu.categories; track category) {
+          @for (item of category.items; track item) {
+            <a [routerLink]="item.linkConfiguration.link"
+               routerLinkActive
+               #rla="routerLinkActive">
+              <mat-list-item [activated]="rla.isActive">
+                <mat-icon matListItemIcon>{{ materialIconRecords[item.icon] }}</mat-icon>
+                <div matListItemTitle>{{ item.label | translate }}</div>
+              </mat-list-item>
+            </a>
+          }
         }
-      }
-      </mat-nav-list>
+        </mat-nav-list>
+      </div>
     </div>
   }
 

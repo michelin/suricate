@@ -30,10 +30,17 @@
     .avatar {
       height: 100%;
       font-size: 25px;
-      background: mat.get-theme-color($theme, 'primary', 90);
       display: flex;
       justify-content: center;
       align-items: center;
     }
+
+    .avatar-color {
+      background: mat.get-theme-color($theme, 'primary', 90);
+    }
+  }
+
+  .dark-theme .avatar-container .avatar-color {
+    background: mat.get-theme-color($theme, 'primary', 30);
   }
 }

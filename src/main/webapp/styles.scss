@@ -43,7 +43,7 @@ html {
 .dark-theme {
   @media (prefers-color-scheme: dark) {
     @include mat.core-theme($dark-theme);
-    @include mat.all-component-themes($dark-theme);
+    @include mat.all-component-colors($dark-theme);
     @include mat.system-level-colors($dark-theme);
     @include suricate-theme($dark-theme);
   }
