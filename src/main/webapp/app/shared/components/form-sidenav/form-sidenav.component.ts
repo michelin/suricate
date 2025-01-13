@@ -23,6 +23,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { FormField } from '../../models/frontend/form/form-field';
@@ -124,13 +125,12 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
       {
         label: 'close',
         icon: IconEnum.CLOSE,
-        color: 'warn',
+        color: ButtonColorEnum.WARN,
         callback: () => this.closeSidenav()
       },
       {
         label: 'save',
         icon: IconEnum.SAVE,
-        color: 'primary',
         hidden: () => this.configuration.hideSaveAction,
         callback: () => this.save()
       }

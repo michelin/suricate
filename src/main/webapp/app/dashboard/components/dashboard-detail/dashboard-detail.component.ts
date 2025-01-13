@@ -26,6 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
 
+import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -262,7 +263,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       actions: [
         {
           icon: IconEnum.ADD,
-          color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'widget.add' },
           hidden: () => this.isReadOnly,
@@ -270,7 +270,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           icon: IconEnum.ADD_GRID,
-          color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'grid.add' },
           hidden: () => this.isReadOnly,
@@ -278,7 +277,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           icon: IconEnum.EDIT,
-          color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.edit' },
           hidden: () => this.isReadOnly,
@@ -286,7 +284,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           icon: IconEnum.GRID,
-          color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.grid.management' },
           hidden: () => this.isReadOnly || this.project.grids.length === 1,
@@ -294,7 +291,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           icon: IconEnum.USERS,
-          color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'user.edit' },
           hidden: () => this.isReadOnly,
@@ -302,7 +298,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           icon: IconEnum.REFRESH,
-          color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.refresh' },
           hidden: () => this.isReadOnly || !this.allWidgets || this.allWidgets.length === 0,
@@ -310,7 +305,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           icon: IconEnum.TV,
-          color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'tv.view' },
           hidden: () => !this.allWidgets || this.allWidgets.length === 0,
@@ -318,7 +312,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           icon: IconEnum.TV_LIVE,
-          color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.management' },
           hidden: () => this.isReadOnly || !this.allWidgets || this.allWidgets.length === 0,
@@ -326,7 +319,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           icon: IconEnum.DELETE_FOREVER,
-          color: 'warn',
+          color: ButtonColorEnum.WARN,
           variant: 'miniFab',
           tooltip: { message: this.project.grids.length === 1 ? 'dashboard.delete' : 'dashboard.grid.delete' },
           hidden: () => this.isReadOnly,
@@ -528,7 +521,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         {
           label: 'dashboard.grid.delete.dialog.select.grid',
           icon: IconEnum.GRID,
-          color: 'warn',
+          color: ButtonColorEnum.WARN,
           callback: () => {
             this.httpProjectGridsService.delete(this.project.token, this.gridId).subscribe(() => {
               this.refreshProject().subscribe(() => {
@@ -541,7 +534,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         {
           label: 'dashboard.grid.delete.dialog.select.dashboard',
           icon: IconEnum.DASHBOARD,
-          color: 'warn',
+          color: ButtonColorEnum.WARN,
           callback: () => {
             this.httpProjectService.delete(this.project.token).subscribe(() => {
               this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);

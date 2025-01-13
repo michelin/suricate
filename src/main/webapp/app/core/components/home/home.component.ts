@@ -106,7 +106,6 @@ export class HomeComponent implements OnInit {
       actions: [
         {
           icon: IconEnum.ADD,
-          color: 'primary',
           variant: 'miniFab',
           type: ButtonTypeEnum.BUTTON,
           tooltip: { message: 'dashboard.create' },

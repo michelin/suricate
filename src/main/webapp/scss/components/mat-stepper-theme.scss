@@ -20,13 +20,6 @@
 @use '@angular/material' as mat;
 
 @mixin custom-mat-stepper-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
 
   .mat-stepper-horizontal {
     display: flex;
@@ -49,7 +42,6 @@
   .mat-stepper-horizontal,
   .mat-stepper-vertical {
     min-height: 90%;
-    --mat-stepper-container-color: mat.m2-get-color-from-palette($background, background);
 
     .mat-step-header {
       .mat-step-icon {
@@ -58,10 +50,6 @@
 
         &.mat-step-icon-state-done {
           background-color: #8bc34a !important;
-        }
-
-        &.mat-step-icon-selected {
-          background-color: mat.m2-get-color-from-palette($primary, A700);
         }
       }
 
@@ -81,12 +69,6 @@
         &.mat-step-label-active {
           hr {
             border-color: #8bc34a;
-          }
-        }
-
-        &.mat-step-label-selected {
-          hr {
-            border-color: mat.m2-get-color-from-palette($primary, A700);
           }
         }
       }

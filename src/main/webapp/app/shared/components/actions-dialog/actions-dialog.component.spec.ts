@@ -55,7 +55,6 @@ describe('ActionsDialogComponent', () => {
       actions: [
         {
           icon: IconEnum.ADD,
-          color: 'primary',
           variant: 'miniFab'
         }
       ]

@@ -53,7 +53,6 @@ body .grid {
   margin: 0;
   font-size: 20px;
   color: #fff;
-  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   min-height: 100vh !important;
 }
 
@@ -64,8 +63,7 @@ body .grid {
     }
   }
 
-  b,
-  strong {
+  b, strong {
     font-weight: bold;
   }
 
@@ -149,19 +147,15 @@ body .grid {
   }
 
   .widget {
-    & {
-      text-align: center;
-      cursor: move;
-      background-color: #dfdfdf;
-    }
+    text-align: center;
+    cursor: move;
+    background-color: #dfdfdf;
 
     &.status-warning {
-      & {
-        background-color: #eeae32;
-        -webkit-animation: status-warning-background 2s ease infinite;
-        -moz-animation: status-warning-background 2s ease infinite;
-        -ms-animation: status-warning-background 2s ease infinite;
-      }
+      background-color: #eeae32;
+      -webkit-animation: status-warning-background 2s ease infinite;
+      -moz-animation: status-warning-background 2s ease infinite;
+      -ms-animation: status-warning-background 2s ease infinite;
 
       .icon-warning-sign {
         display: inline-block;
@@ -245,45 +239,16 @@ body .grid {
     right: 0;
   }
 
-  #lean_overlay {
-    position: fixed;
-    z-index: 100;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: #000;
-    display: none;
-  }
-
-  clearfix:before,
-  .clearfix:after {
-    content: '\0020';
-    display: block;
-    height: 0;
-    overflow: hidden;
-  }
-
-  .clearfix:after {
-    clear: both;
-  }
-
-  .clearfix {
-    zoom: 1;
-  }
-
   .ui-icon {
     background-image: none;
   }
 
   .grid-stack-item-content {
-    & {
-      position: absolute;
-      top: 0;
-      overflow: hidden;
-      height: 100%;
-      width: 100%;
-    }
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
 
     .grid-stack-item-content-inner {
       position: absolute;

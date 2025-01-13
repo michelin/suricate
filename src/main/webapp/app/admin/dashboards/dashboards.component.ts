@@ -23,6 +23,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { ListComponent } from '../../shared/components/list/list.component';
+import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Project } from '../../shared/models/backend/project/project';
@@ -111,21 +112,19 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
         {
           icon: IconEnum.USERS,
           tooltip: { message: 'user.edit' },
-          color: 'primary',
           variant: 'miniFab',
           callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project)
         },
         {
           icon: IconEnum.EDIT,
           tooltip: { message: 'dashboard.edit' },
-          color: 'primary',
           variant: 'miniFab',
           callback: (event: Event, project: Project) => this.openFormSidenav(event, project)
         },
         {
           icon: IconEnum.DELETE,
           tooltip: { message: 'dashboard.delete' },
-          color: 'warn',
+          color: ButtonColorEnum.WARN,
           variant: 'miniFab',
           callback: (event: Event, project: Project) => this.deleteProject(event, project)
         }

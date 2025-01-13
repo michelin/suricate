@@ -21,6 +21,7 @@ import { Component } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
 import { ListComponent } from '../../shared/components/list/list.component';
+import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 import { DataTypeEnum } from '../../shared/enums/data-type.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
@@ -95,7 +96,6 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter, Wi
         {
           icon: IconEnum.SHOW_PASSWORD,
           tooltip: { message: 'configuration.show.password' },
-          color: 'primary',
           variant: 'miniFab',
           hidden: (configuration: CategoryParameter) =>
             !configuration.value || configuration.dataType !== DataTypeEnum.PASSWORD || configuration.showValue,
@@ -104,7 +104,6 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter, Wi
         {
           icon: IconEnum.HIDE_PASSWORD,
           tooltip: { message: 'configuration.hide.password' },
-          color: 'primary',
           variant: 'miniFab',
           hidden: (configuration: CategoryParameter) =>
             !configuration.value || configuration.dataType !== DataTypeEnum.PASSWORD || !configuration.showValue,
@@ -113,7 +112,6 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter, Wi
         {
           icon: IconEnum.EDIT,
           tooltip: { message: 'configuration.edit' },
-          color: 'primary',
           variant: 'miniFab',
           callback: (event: Event, configuration: CategoryParameter) =>
             this.openFormSidenav(event, configuration, this.updateConfiguration.bind(this))
@@ -121,7 +119,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter, Wi
         {
           icon: IconEnum.DELETE,
           tooltip: { message: 'configuration.delete' },
-          color: 'warn',
+          color: ButtonColorEnum.WARN,
           variant: 'miniFab',
           callback: (event: Event, configuration: CategoryParameter) => this.deleteConfiguration(event, configuration)
         }

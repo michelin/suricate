@@ -20,9 +20,11 @@
 @use '@angular/material' as mat;
 
 @mixin custom-communication-dialog-component-theme($theme) {
-  $warn: map-get($theme, warn);
-
   .communication-dialog-wrapper .mat-mdc-dialog-content.communication-dialog-error {
-    color: mat.m2-get-color-from-palette($warn, 500);
+    @if mat.get-theme-type($theme) == dark {
+      color: mat.get-theme-color($theme, 'error', 80),
+    } @else {
+      color: mat.get-theme-color($theme, 'error', 20),
+    }
   }
 }

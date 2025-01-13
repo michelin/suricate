@@ -19,16 +19,16 @@
 
 @use '@angular/material' as mat;
 
-@mixin custom-mat-sidenav-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
-  .mat-sidenav-content {
-    padding: 0 10px 0 10px;
-    min-height: 100vh;
+@mixin custom-mat-list-theme($theme) {
+  @if mat.get-theme-type($theme) == dark {
+    @include mat.list-overrides((
+      list-item-hover-leading-icon-color: mat.get-theme-color($theme, 'neutral', 90),
+      list-item-leading-icon-color: mat.get-theme-color($theme, 'neutral', 90)
+    ));
+  } @else {
+    @include mat.list-overrides((
+      list-item-hover-leading-icon-color: mat.get-theme-color($theme, 'neutral', 10),
+      list-item-leading-icon-color: mat.get-theme-color($theme, 'neutral', 10)
+    ));
   }
 }

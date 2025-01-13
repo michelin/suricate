@@ -17,25 +17,23 @@
  * under the License.
  */
 
+@import '../components/mat-button-theme';
+@import '../components/mat-communication-dialog-theme';
+@import '../components/mat-grid-list-theme';
+@import '../components/mat-list-theme';
+@import '../components/mat-menu-theme';
 @import '../components/mat-sidenav-theme';
 @import '../components/mat-stepper-theme';
-@import '../components/mat-form-field-theme';
-@import '../components/mat-grid-list-theme';
-@import '../components/mat-input-theme';
-@import '../components/mat-file-input-theme';
-@import '../components/mat-communication-dialog-theme';
-@import '../components/mat-menu-theme';
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
  */
 @mixin suricate-theme($theme) {
-  @include custom-mat-sidenav-theme($theme);
-  @include custom-mat-stepper-theme($theme);
-  @include custom-mat-grid-list-theme($theme);
-  @include custom-mat-form-field-theme($theme);
-  @include custom-input-component-theme($theme);
-  @include custom-file-input-component-theme($theme);
+  @include custom-button-theme($theme);
   @include custom-communication-dialog-component-theme($theme);
+  @include custom-mat-grid-list-theme($theme);
+  @include custom-mat-list-theme($theme);
+  @include custom-mat-stepper-theme($theme);
+  @include custom-sidenav-theme($theme);
   @include custom-mat-menu-theme($theme);
 }

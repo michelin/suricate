@@ -19,10 +19,12 @@
 
 @use '@angular/material' as mat;
 
-@mixin custom-file-input-component-theme($theme) {
-  $warn: map-get($theme, warn);
+@mixin custom-sidenav-theme($theme) {
+  .menu-sidenav {
+    border-radius: initial;
 
-  .file-input-error {
-    color: mat.m2-get-color-from-palette($warn, 500);
+    @include mat.sidenav-overrides((
+      container-divider-color: mat.get-theme-color($theme, 'neutral-variant', 50),
+    ));
   }
 }

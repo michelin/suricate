@@ -20,6 +20,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
+import { ButtonColorEnum } from '../../../enums/button-color.enum';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
 import { ButtonConfiguration } from '../../../models/frontend/button/button-configuration';
@@ -90,7 +91,7 @@ export class FieldsComponent extends InputComponent implements OnInit {
     this.deleteRowConfig = [
       {
         icon: IconEnum.DELETE,
-        color: 'warn',
+        color: ButtonColorEnum.WARN,
         variant: 'miniFab',
         callback: (event: Event, object: { formGroup: UntypedFormGroup; index: number }) => {
           this.deleteRow(object.formGroup, object.index);

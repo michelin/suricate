@@ -20,29 +20,28 @@
 @use '@angular/material' as mat;
 
 @mixin custom-mat-menu-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .avatar-container {
     margin: 0 auto;
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     overflow: hidden;
     border-radius: 50%;
 
     .avatar {
       height: 100%;
       font-size: 25px;
-      background: mat.m2-get-color-from-palette($primary, 500);
-      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+
+    .avatar-color {
+      @if mat.get-theme-type($theme) == dark {
+        background: mat.get-theme-color($theme, 'primary', 30);
+      } @else {
+        background: mat.get-theme-color($theme, 'primary', 90);
+      }
+
     }
   }
 }

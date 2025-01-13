@@ -17,12 +17,16 @@
  * under the License.
  */
 
+.mat-sidenav-content {
+  min-height: 100vh;
+  padding: 0 10px 0 10px;
+}
+
 .menu-sidenav {
   display: flex;
   flex: 1 1 256px;
   max-width: 256px;
   min-width: 256px;
-  padding: 10px;
 }
 
 .form-sidenav {

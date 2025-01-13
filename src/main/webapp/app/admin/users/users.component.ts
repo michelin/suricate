@@ -22,6 +22,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
 import { ListComponent } from '../../shared/components/list/list.component';
+import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Role } from '../../shared/models/backend/role/role';
@@ -83,14 +84,13 @@ export class UsersComponent extends ListComponent<User, UserRequest> implements 
         {
           icon: IconEnum.EDIT,
           tooltip: { message: 'user.edit' },
-          color: 'primary',
           variant: 'miniFab',
           callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser.bind(this))
         },
         {
           icon: IconEnum.DELETE,
           tooltip: { message: 'user.delete' },
-          color: 'warn',
+          color: ButtonColorEnum.WARN,
           variant: 'miniFab',
           callback: (event: Event, user: User) => this.deleteUser(event, user)
         }

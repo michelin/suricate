@@ -1,0 +1,175 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+$_palettes: (
+  primary: (
+    0: #000000,
+    10: #2e1500,
+    20: #4d2600,
+    25: #5d3000,
+    30: #6d3900,
+    35: #7e4300,
+    40: #904d00,
+    50: #b46200,
+    60: #da7700,
+    70: #fd8f19,
+    80: #ffb77c,
+    90: #ffdcc2,
+    95: #ffede2,
+    98: #fff8f5,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+  secondary: (
+    0: #000000,
+    10: #2f1500,
+    20: #4d2701,
+    25: #5a3109,
+    30: #683c14,
+    35: #76481e,
+    40: #835329,
+    50: #a06b3f,
+    60: #bd8456,
+    70: #db9e6e,
+    80: #f9b986,
+    90: #ffdcc3,
+    95: #ffede3,
+    98: #fff8f5,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+  tertiary: (
+    0: #000000,
+    10: #1a1e00,
+    20: #2e3300,
+    25: #383f00,
+    30: #434b00,
+    35: #4f5700,
+    40: #5a6400,
+    50: #727e00,
+    60: #8a9900,
+    70: #a4b414,
+    80: #bfd035,
+    90: #dbed51,
+    95: #eafc5e,
+    98: #f8ffb8,
+    99: #fdffd9,
+    100: #ffffff,
+  ),
+  neutral: (
+    0: #000000,
+    4: #0e0a07,
+    6: #15100b,
+    10: #231a12,
+    12: #271e16,
+    17: #322820,
+    20: #392e26,
+    22: #3e322a,
+    24: #43372f,
+    25: #453931,
+    30: #51443c,
+    35: #5d5047,
+    40: #6a5c52,
+    50: #83746a,
+    60: #9e8e83,
+    70: #b9a89d,
+    80: #d5c3b7,
+    87: #e9d7cb,
+    90: #f2dfd3,
+    92: #f7e5d9,
+    94: #fceae0,
+    95: #ffede3,
+    96: #fff1e9,
+    98: #fff8f5,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+  neutral-variant: (
+    0: #000000,
+    10: #27180d,
+    20: #3d2d20,
+    25: #49382a,
+    30: #564335,
+    35: #624f40,
+    40: #6f5a4b,
+    50: #897363,
+    60: #a48c7b,
+    70: #c0a695,
+    80: #dcc2af,
+    90: #f9ddca,
+    95: #ffede2,
+    98: #fff8f5,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+  error: (
+    0: #000000,
+    10: #410002,
+    20: #690005,
+    25: #7e0007,
+    30: #93000a,
+    35: #a80710,
+    40: #ba1a1a,
+    50: #de3730,
+    60: #ff5449,
+    70: #ff897d,
+    80: #ffb4ab,
+    90: #ffdad6,
+    95: #ffedea,
+    98: #fff8f7,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+);
+
+$_rest: (
+  secondary: map.get($_palettes, secondary),
+  neutral: map.get($_palettes, neutral),
+  neutral-variant: map.get($_palettes,  neutral-variant),
+  error: map.get($_palettes, error),
+);
+$_primary: map.merge(map.get($_palettes, primary), $_rest);
+$_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
+
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: $_primary,
+    tertiary: $_tertiary,
+    use-system-variables: true,
+  ),
+  typography: (
+    use-system-variables: true,
+  ),
+));
+
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: $_primary,
+    tertiary: $_tertiary,
+    use-system-variables: true,
+  ),
+  typography: (
+    use-system-variables: true,
+  ),
+));

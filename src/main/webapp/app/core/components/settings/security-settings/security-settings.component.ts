@@ -23,6 +23,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
+import { ButtonColorEnum } from '../../../../shared/enums/button-color.enum';
 import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
 import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
@@ -121,13 +122,14 @@ export class SecuritySettingsComponent implements OnInit {
     this.generateTokenButton = {
       label: 'settings.security.generate.tokens.button.label',
       icon: IconEnum.SAVE,
-      color: 'primary',
       callback: () => this.save()
     };
 
     this.revokeButton = {
-      label: 'revoke',
-      color: 'warn',
+      color: ButtonColorEnum.WARN,
+      tooltip: { message: 'revoke' },
+      variant: 'miniFab',
+      icon: IconEnum.DELETE,
       callback: (event: Event, token: PersonalAccessToken) => this.revokeToken(token)
     };
   }

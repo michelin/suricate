@@ -17,7 +17,10 @@
  * under the License.
  */
 
-::ng-deep .mat-horizontal-stepper-content {
+.stepper-container {
+  display: flex;
+  flex-direction: column;
+
   .step-detail {
     display: flex;
     gap: 50px;
@@ -34,36 +37,37 @@
       }
     }
   }
-}
 
-.widget-config-step {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-
-  .desc-info {
+  .widget-config-step {
     display: flex;
     flex-direction: column;
     gap: 30px;
 
-    div {
+    .desc-info {
       display: flex;
       flex-direction: column;
+      gap: 30px;
+
+      div {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  }
+
+  .stepper-actions-wrapper {
+    padding: 10px 24px;
+    display: flex;
+    justify-content: flex-end;
+
+    .stepper-actions {
+      display: flex;
       gap: 10px;
     }
   }
-}
 
-.stepper-actions-wrapper {
-  padding-left: 24px;
-  margin-block-end: 40px;
-
-  .stepper-actions {
-    display: flex;
-    gap: 10px;
+  .widget-data-title {
+    font-weight: bold;
   }
-}
-
-.widget-data-title {
-  font-weight: bold;
 }

@@ -18,30 +18,10 @@
  */
 
 .input-wrapper {
-  & {
-    height: max-content;
-    width: 100%;
-  }
+  height: max-content;
+  width: 100%;
 
   & > * {
     width: 100%;
   }
-
-  .mat-form-field {
-    min-height: 73px;
-  }
-
-  .input-error {
-    top: -20px;
-    margin-bottom: -10px;
-    position: relative;
-    box-sizing: border-box;
-    width: 100%;
-    overflow: hidden;
-    font-size: 75%;
-  }
-}
-
-::ng-deep .icon-prefix-tooltip {
-  font-size: 12px;
 }

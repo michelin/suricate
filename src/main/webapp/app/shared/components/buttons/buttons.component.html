@@ -24,7 +24,7 @@
       [matTooltip]="configuration.tooltip?.message | translate"
       [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip.position) : 'below'"
       [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
-      [color]="$any(configuration.color)"
+      [class.button-warn-color]="configuration.color === buttonColorEnum.WARN"
       [disabled]="configuration.disabled | async"
       (click)="configuration.callback ? configuration.callback($event, object) : null"
       >
@@ -47,7 +47,7 @@
       [matTooltip]="configuration.tooltip?.message | translate"
       [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip?.position) : 'below'"
       [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
-      [color]="$any(configuration.color)"
+      [class.button-warn-color]="configuration.color === buttonColorEnum.WARN"
       [disabled]="configuration.disabled | async"
       (click)="configuration.callback ? configuration.callback($event, object) : null"
       >

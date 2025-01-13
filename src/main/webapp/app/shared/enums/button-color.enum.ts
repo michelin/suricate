@@ -17,29 +17,9 @@
  * under the License.
  */
 
-@mixin custom-mat-form-field-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
-  .mat-form-field {
-    &.mat-form-field-readonly {
-      .mat-form-field-outline {
-        background-color: #7f7f7f0f;
-      }
-    }
-
-    .mat-icon.prefix {
-      margin-right: 10px;
-    }
-
-    .mat-icon.suffix {
-      margin-left: 10px;
-      cursor: pointer;
-    }
-  }
+/**
+ * Color used for buttons
+ */
+export enum ButtonColorEnum {
+  WARN = 'WARN'
 }

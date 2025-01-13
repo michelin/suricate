@@ -146,7 +146,6 @@ export class RegisterComponent implements OnInit {
   private initButtons(): void {
     this.buttonConfigurations = [
       {
-        color: 'primary',
         label: 'sign.up',
         type: ButtonTypeEnum.SUBMIT
       }
