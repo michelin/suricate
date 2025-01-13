@@ -31,7 +31,7 @@
 @import 'scss/dashboard-screen';
 
 @import 'scss/themes/suricate-theme';
-@import 'scss/themes/light-theme';
+@import 'scss/themes/light-and-dark-themes';
 
 html {
   @include mat.core-theme($light-theme);

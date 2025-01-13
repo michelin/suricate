@@ -33,22 +33,16 @@ import { HeaderConfiguration } from '../../../shared/models/frontend/header/head
 export class HeaderComponent implements OnInit {
   /**
    * The configuration of the header
-   * @type {HeaderConfiguration}
-   * @public
    */
   @Input()
   public configuration: HeaderConfiguration;
   /**
    * True if the menu should be display on the page
-   * @type {boolean}
-   * @public
    */
   @Input()
   public showMenu = true;
   /**
    * The page name
-   * @type {string}
-   * @protected
    */
   public pageName: string;
 

@@ -21,6 +21,10 @@
 
 @mixin custom-communication-dialog-component-theme($theme) {
   .communication-dialog-wrapper .mat-mdc-dialog-content.communication-dialog-error {
-    color: mat.get-theme-color($theme, 'error', 50),
+    color: mat.get-theme-color($theme, 'error', 20),
+  }
+
+  .dark-theme .communication-dialog-wrapper .mat-mdc-dialog-content.communication-dialog-error {
+    color: mat.get-theme-color($theme, 'error', 80),
   }
 }

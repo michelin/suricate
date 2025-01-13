@@ -20,16 +20,24 @@
 @use '@angular/material' as mat;
 
 @mixin custom-button-theme($theme) {
-  $error: map-get($theme, error);
-
   // Replace old M2 warning color
   .button-warn-color {
     @include mat.fab-overrides((
-      container-color: mat.get-theme-color($theme, 'error', 50),
+      container-color: mat.get-theme-color($theme, 'error', 80),
     ));
 
     @include mat.button-overrides((
-      container-color: mat.get-theme-color($theme, 'error', 50),
+      container-color: mat.get-theme-color($theme, 'error', 20),
+    ));
+  }
+
+  .dark-theme .button-warn-color {
+    @include mat.fab-overrides((
+      container-color: mat.get-theme-color($theme, 'error', 20),
+    ));
+
+    @include mat.button-overrides((
+      container-color: mat.get-theme-color($theme, 'error', 80),
     ));
   }
 }
