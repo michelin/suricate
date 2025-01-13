@@ -24,6 +24,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormStep } from '../../models/frontend/form/form-step';
@@ -34,7 +35,6 @@ import { MaterialIconRecords } from '../../records/material-icon.record';
 import { FormService } from '../../services/frontend/form/form.service';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { ButtonColorEnum } from '../../enums/button-color.enum';
 
 /**
  * Generic component used to display wizards

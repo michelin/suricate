@@ -21,6 +21,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
@@ -33,7 +34,6 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
 import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
-import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 
 @Component({
   selector: 'suricate-tv-management-dialog',
@@ -148,7 +148,7 @@ export class TvManagementDialogComponent implements OnInit {
       {
         label: 'close',
         icon: IconEnum.CLOSE,
-        color: ButtonColorEnum.WARN,
+        color: ButtonColorEnum.WARN
       }
     ];
   }

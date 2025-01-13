@@ -19,10 +19,10 @@
 
 import { Observable } from 'rxjs';
 
+import { ButtonColorEnum } from '../../../enums/button-color.enum';
 import { ButtonTypeEnum } from '../../../enums/button-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
 import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
-import { ButtonColorEnum } from '../../../enums/button-color.enum';
 
 /**
  * Model of Button

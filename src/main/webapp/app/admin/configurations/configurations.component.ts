@@ -21,20 +21,14 @@ import { Component } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
 import { ListComponent } from '../../shared/components/list/list.component';
+import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 import { DataTypeEnum } from '../../shared/enums/data-type.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
-import {
-  WidgetConfigurationRequest
-} from '../../shared/models/backend/widget-configuration/widget-configuration-request';
-import {
-  HttpCategoryParametersService
-} from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
-import {
-  WidgetConfigurationFormFieldsService
-} from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
+import { WidgetConfigurationRequest } from '../../shared/models/backend/widget-configuration/widget-configuration-request';
+import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
+import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 
 /**
  * Component used to display the list of widgets

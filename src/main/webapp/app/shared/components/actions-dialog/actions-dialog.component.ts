@@ -20,10 +20,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
-import { ButtonColorEnum } from '../../enums/button-color.enum';
 
 @Component({
   templateUrl: './actions-dialog.component.html',

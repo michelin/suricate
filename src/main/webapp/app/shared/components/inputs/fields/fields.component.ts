@@ -20,12 +20,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
+import { ButtonColorEnum } from '../../../enums/button-color.enum';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
 import { ButtonConfiguration } from '../../../models/frontend/button/button-configuration';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { InputComponent } from '../input/input.component';
-import { ButtonColorEnum } from '../../../enums/button-color.enum';
 
 /**
  * Used to display fields of type Fields

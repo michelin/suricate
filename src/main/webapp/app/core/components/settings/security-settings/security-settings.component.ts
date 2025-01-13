@@ -23,6 +23,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
+import { ButtonColorEnum } from '../../../../shared/enums/button-color.enum';
 import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
 import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
@@ -35,7 +36,6 @@ import { HttpUserService } from '../../../../shared/services/backend/http-user/h
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
 import { FormService } from '../../../../shared/services/frontend/form/form.service';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
-import { ButtonColorEnum } from '../../../../shared/enums/button-color.enum';
 
 @Component({
   selector: 'suricate-security-settings',

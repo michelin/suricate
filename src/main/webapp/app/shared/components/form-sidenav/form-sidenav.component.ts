@@ -23,6 +23,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { FormField } from '../../models/frontend/form/form-field';
@@ -30,7 +31,6 @@ import { ValueChangedEvent } from '../../models/frontend/form/value-changed-even
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
-import { ButtonColorEnum } from '../../enums/button-color.enum';
 
 /**
  * Component used to display the form sidenav

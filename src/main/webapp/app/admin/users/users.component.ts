@@ -22,6 +22,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
 import { ListComponent } from '../../shared/components/list/list.component';
+import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Role } from '../../shared/models/backend/role/role';
@@ -29,7 +30,6 @@ import { User } from '../../shared/models/backend/user/user';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
 import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
-import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 
 /**
  * Component used to display the list of users

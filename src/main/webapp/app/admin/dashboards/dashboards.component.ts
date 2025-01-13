@@ -23,6 +23,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { ListComponent } from '../../shared/components/list/list.component';
+import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Project } from '../../shared/models/backend/project/project';
@@ -33,7 +34,6 @@ import { HttpProjectService } from '../../shared/services/backend/http-project/h
 import { CssService } from '../../shared/services/frontend/css/css.service';
 import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
-import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',

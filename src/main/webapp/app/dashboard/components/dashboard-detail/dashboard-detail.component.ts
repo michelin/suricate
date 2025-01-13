@@ -26,6 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
 
+import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -52,7 +53,6 @@ import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
-import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 
 /**
  * Component used to display a specific dashboard
