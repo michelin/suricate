@@ -22,22 +22,22 @@
 @mixin custom-button-theme($theme) {
   // Replace old M2 warning color
   .button-warn-color {
-    @include mat.fab-overrides((
-      container-color: mat.get-theme-color($theme, 'error', 80),
-    ));
+    @if mat.get-theme-type($theme) == dark {
+      @include mat.fab-overrides((
+        container-color: mat.get-theme-color($theme, 'error', 20),
+      ));
 
-    @include mat.button-overrides((
-      container-color: mat.get-theme-color($theme, 'error', 20),
-    ));
-  }
+      @include mat.button-overrides((
+        container-color: mat.get-theme-color($theme, 'error', 80),
+      ));
+    } @else {
+      @include mat.fab-overrides((
+        container-color: mat.get-theme-color($theme, 'error', 80),
+      ));
 
-  .dark-theme .button-warn-color {
-    @include mat.fab-overrides((
-      container-color: mat.get-theme-color($theme, 'error', 20),
-    ));
-
-    @include mat.button-overrides((
-      container-color: mat.get-theme-color($theme, 'error', 80),
-    ));
+      @include mat.button-overrides((
+        container-color: mat.get-theme-color($theme, 'error', 20),
+      ));
+    }
   }
 }

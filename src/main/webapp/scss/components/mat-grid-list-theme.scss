@@ -20,7 +20,6 @@
 @use '@angular/material' as mat;
 
 @mixin custom-mat-grid-list-theme($theme) {
-
   .mat-grid-tile {
     .grid-tile-content-wrapper,
     .grid-tile-content-wrapper > a {

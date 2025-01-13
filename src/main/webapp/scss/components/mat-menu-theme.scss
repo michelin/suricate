@@ -36,11 +36,12 @@
     }
 
     .avatar-color {
-      background: mat.get-theme-color($theme, 'primary', 90);
-    }
-  }
+      @if mat.get-theme-type($theme) == dark {
+        background: mat.get-theme-color($theme, 'primary', 30);
+      } @else {
+        background: mat.get-theme-color($theme, 'primary', 90);
+      }
 
-  .dark-theme .avatar-container .avatar-color {
-    background: mat.get-theme-color($theme, 'primary', 30);
+    }
   }
 }
