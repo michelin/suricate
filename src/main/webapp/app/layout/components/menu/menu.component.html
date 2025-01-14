@@ -16,7 +16,7 @@
       <div class="avatar-container">
         <div class="avatar avatar-color">
           @if (connectedUser.avatarUrl) {
-            <img ngSrc="{{ connectedUser.avatarUrl }}" fill="true" alt="avatar"/>
+            <img ngSrc="{{ connectedUser.avatarUrl }}" width="80" height="80" alt="avatar"/>
           }
           @if (!connectedUser.avatarUrl) {
             <div>{{ getInitials() }}</div>
