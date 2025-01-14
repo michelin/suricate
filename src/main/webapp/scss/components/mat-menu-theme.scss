@@ -41,7 +41,14 @@
       } @else {
         background: mat.get-theme-color($theme, 'primary', 90);
       }
+    }
+  }
 
+  .menu-subheader {
+    @if mat.get-theme-type($theme) == dark {
+      color: mat.get-theme-color($theme, 'neutral', 60);
+    } @else {
+      color: mat.get-theme-color($theme, 'neutral', 22);
     }
   }
 }

@@ -50,11 +50,11 @@ export class MenuService {
   public static buildMenu(): MenuConfiguration {
     const menuConfiguration = new MenuConfiguration();
 
-    menuConfiguration.categories.push(MenuService.buildWidgetMenu());
-
     if (AuthenticationService.isAdmin()) {
       menuConfiguration.categories.push(MenuService.buildAdminMenu());
     }
+
+    menuConfiguration.categories.push(MenuService.buildWidgetMenu());
 
     return menuConfiguration;
   }
@@ -64,6 +64,7 @@ export class MenuService {
    */
   private static buildAdminMenu(): MenuCategoryConfiguration {
     return {
+      label: 'admin',
       items: [
         {
           label: 'configuration.list',
@@ -94,6 +95,7 @@ export class MenuService {
    */
   private static buildWidgetMenu(): MenuCategoryConfiguration {
     return {
+      label: 'widget.list',
       items: [
         {
           label: 'catalog',
