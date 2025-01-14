@@ -1,4 +1,5 @@
 {
+  "admin": "Admin",
   "authentication.failed.with.providers": "Échec d'authentification",
   "authentication.bad.credentials": "Les identifiants sont erronés",
   "back": "Retour",
@@ -156,6 +157,7 @@
   "widget.edit.success": "Widget mise à jour avec succès",
   "widget.execution.error": "Erreur d'éxécution du widget",
   "widget.information.title": "Informations d'utilisation",
+  "widget.list": "Widget",
   "widget.list.import": "Importer la liste des widgets",
   "widget.list.import.success": "Widgets importés avec succès",
   "widget.log": "Widget logs",

@@ -20,6 +20,14 @@
 @use '@angular/material' as mat;
 
 @mixin custom-mat-menu-theme($theme) {
+  .names-container, .avatar-color {
+    @if mat.get-theme-type($theme) == dark {
+      color: mat.get-theme-color($theme, 'neutral', 90);
+    } @else {
+      color: mat.get-theme-color($theme, 'neutral', 10);
+    }
+  }
+
   .avatar-container {
     margin: 0 auto;
     width: 80px;
@@ -41,7 +49,14 @@
       } @else {
         background: mat.get-theme-color($theme, 'primary', 90);
       }
+    }
+  }
 
+  .menu-subheader {
+    @if mat.get-theme-type($theme) == dark {
+      color: mat.get-theme-color($theme, 'neutral', 60);
+    } @else {
+      color: mat.get-theme-color($theme, 'neutral', 22);
     }
   }
 }

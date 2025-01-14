@@ -1,4 +1,5 @@
 {
+  "admin": "Admin",
   "authentication.failed.with.providers": "Authentication failed",
   "authentication.bad.credentials": "The credentials are wrong",
   "back": "Back",
@@ -156,6 +157,7 @@
   "widget.edit.success": "Widget updated successfully",
   "widget.execution.error": "Widget execution error",
   "widget.information.title": "Usage information",
+  "widget.list": "Widget",
   "widget.list.import": "Import widgets",
   "widget.list.import.success": "Widgets successfully imported",
   "widget.log": "Widget logs",

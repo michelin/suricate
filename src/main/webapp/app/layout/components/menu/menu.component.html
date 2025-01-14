@@ -16,7 +16,7 @@
       <div class="avatar-container">
         <div class="avatar avatar-color">
           @if (connectedUser.avatarUrl) {
-            <img ngSrc="{{ connectedUser.avatarUrl }}" fill="true" alt="avatar"/>
+            <img ngSrc="{{ connectedUser.avatarUrl }}" width="80" height="80" alt="avatar"/>
           }
           @if (!connectedUser.avatarUrl) {
             <div>{{ getInitials() }}</div>
@@ -58,6 +58,7 @@
       <div class="menu-container">
         <mat-nav-list>
         @for (category of menu.categories; track category) {
+          <h5 matSubheader class="menu-subheader">{{ category.label | translate }}</h5>
           @for (item of category.items; track item) {
             <a [routerLink]="item.linkConfiguration.link"
                routerLinkActive
