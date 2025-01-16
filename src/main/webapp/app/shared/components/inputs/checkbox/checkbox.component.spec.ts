@@ -30,8 +30,8 @@ describe('CheckboxComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, CheckboxComponent]
-}).compileComponents();
+      imports: [MockModule, CheckboxComponent]
+    }).compileComponents();
 
     const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 

@@ -29,7 +29,15 @@ import { RepositoriesComponent } from './repositories/repositories.component';
 import { UsersComponent } from './users/users.component';
 
 @NgModule({
-    imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule, UsersComponent, RepositoriesComponent, DashboardsComponent, ConfigurationsComponent],
-    exports: [RouterModule]
+  imports: [
+    RouterModule.forChild(adminRoutes),
+    LayoutModule,
+    SharedModule,
+    UsersComponent,
+    RepositoriesComponent,
+    DashboardsComponent,
+    ConfigurationsComponent
+  ],
+  exports: [RouterModule]
 })
 export class AdminModule {}

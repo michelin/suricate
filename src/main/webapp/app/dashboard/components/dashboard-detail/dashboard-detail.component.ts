@@ -20,12 +20,17 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { MatIcon } from '@angular/material/icon';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
 
+import { HeaderComponent } from '../../../layout/components/header/header.component';
+import { PaginatorComponent } from '../../../shared/components/paginator/paginator.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
@@ -38,6 +43,7 @@ import { ProjectWidget } from '../../../shared/models/backend/project-widget/pro
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid.service';
@@ -52,24 +58,28 @@ import { WebsocketService } from '../../../shared/services/frontend/websocket/we
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
-import { HeaderComponent } from '../../../layout/components/header/header.component';
-import { PaginatorComponent } from '../../../shared/components/paginator/paginator.component';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
-import { MatGridList, MatGridTile } from '@angular/material/grid-list';
-import { MatIcon } from '@angular/material/icon';
-import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
-import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
+import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
 
 /**
  * Component used to display a specific dashboard
  */
 @Component({
-    selector: 'suricate-dashboard-detail',
-    templateUrl: './dashboard-detail.component.html',
-    styleUrls: ['./dashboard-detail.component.scss'],
-    standalone: true,
-    imports: [HeaderComponent, PaginatorComponent, DashboardScreenComponent, MatGridList, MatGridTile, MatIcon, SpinnerComponent, SafeHtmlPipe, TranslatePipe]
+  selector: 'suricate-dashboard-detail',
+  templateUrl: './dashboard-detail.component.html',
+  styleUrls: ['./dashboard-detail.component.scss'],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    PaginatorComponent,
+    DashboardScreenComponent,
+    MatGridList,
+    MatGridTile,
+    MatIcon,
+    SpinnerComponent,
+    SafeHtmlPipe,
+    TranslatePipe
+  ]
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**

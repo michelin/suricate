@@ -17,33 +17,57 @@
  * under the License.
  */
 
+import { NgOptimizedImage } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLinkActive, RouterLink } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatListItem,
+  MatListItemIcon,
+  MatListItemTitle,
+  MatListSubheaderCssMatStyler,
+  MatNavList
+} from '@angular/material/list';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { SettingsService } from '../../../core/services/settings.service';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
-import { MatButton } from '@angular/material/button';
-import { NgOptimizedImage } from '@angular/common';
-import { MatDivider } from '@angular/material/divider';
-import { MatNavList, MatListItem, MatListSubheaderCssMatStyler, MatListItemIcon, MatListItemTitle } from '@angular/material/list';
-import { MatTooltip } from '@angular/material/tooltip';
 import { FooterComponent } from '../footer/footer.component';
-import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Display the menu on the sidenav
  */
 @Component({
-    selector: 'suricate-menu',
-    templateUrl: './menu.component.html',
-    styleUrls: ['./menu.component.scss'],
-    standalone: true,
-    imports: [MatMenu, MatMenuItem, MatIcon, MatMenuTrigger, MatButton, NgOptimizedImage, MatDivider, MatNavList, RouterLinkActive, RouterLink, MatTooltip, MatListItem, MatListSubheaderCssMatStyler, MatListItemIcon, MatListItemTitle, FooterComponent, TranslatePipe]
+  selector: 'suricate-menu',
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.scss'],
+  standalone: true,
+  imports: [
+    MatMenu,
+    MatMenuItem,
+    MatIcon,
+    MatMenuTrigger,
+    MatButton,
+    NgOptimizedImage,
+    MatDivider,
+    MatNavList,
+    RouterLinkActive,
+    RouterLink,
+    MatTooltip,
+    MatListItem,
+    MatListSubheaderCssMatStyler,
+    MatListItemIcon,
+    MatListItemTitle,
+    FooterComponent,
+    TranslatePipe
+  ]
 })
 export class MenuComponent implements OnInit {
   /**

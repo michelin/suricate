@@ -28,8 +28,8 @@ describe('LoginComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, LoginComponent]
-}).compileComponents();
+      imports: [MockModule, LoginComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;

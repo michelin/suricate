@@ -28,8 +28,8 @@ describe('ToastComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, ToastComponent]
-}).compileComponents();
+      imports: [MockModule, ToastComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ToastComponent);
     component = fixture.componentInstance;

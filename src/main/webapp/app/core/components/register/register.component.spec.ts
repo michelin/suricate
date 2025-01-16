@@ -28,8 +28,8 @@ describe('RegisterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, RegisterComponent]
-}).compileComponents();
+      imports: [MockModule, RegisterComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;

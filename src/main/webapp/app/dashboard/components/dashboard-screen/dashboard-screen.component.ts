@@ -30,6 +30,8 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { KtdGridComponent, KtdGridItemComponent, KtdGridItemPlaceholder } from '@katoid/angular-grid-layout';
 import { KtdGridLayout } from '@katoid/angular-grid-layout/lib/grid.definitions';
 import { IMessage } from '@stomp/rx-stomp';
 import { Subject } from 'rxjs';
@@ -42,16 +44,14 @@ import { ProjectWidget } from '../../../shared/models/backend/project-widget/pro
 import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
 import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { LibraryService } from '../../services/library/library.service';
-import { MatIcon } from '@angular/material/icon';
-import { KtdGridComponent, KtdGridItemComponent, KtdGridItemPlaceholder } from '@katoid/angular-grid-layout';
 import { DashboardScreenWidgetComponent } from './dashboard-screen-widget/dashboard-screen-widget.component';
-import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
 
 declare global {
   interface Window {
@@ -63,11 +63,18 @@ declare global {
  * Display the grid stack widgets
  */
 @Component({
-    selector: 'suricate-dashboard-screen',
-    templateUrl: './dashboard-screen.component.html',
-    styleUrls: ['./dashboard-screen.component.scss'],
-    standalone: true,
-    imports: [MatIcon, KtdGridComponent, KtdGridItemComponent, DashboardScreenWidgetComponent, KtdGridItemPlaceholder, SafeHtmlPipe]
+  selector: 'suricate-dashboard-screen',
+  templateUrl: './dashboard-screen.component.html',
+  styleUrls: ['./dashboard-screen.component.scss'],
+  standalone: true,
+  imports: [
+    MatIcon,
+    KtdGridComponent,
+    KtdGridItemComponent,
+    DashboardScreenWidgetComponent,
+    KtdGridItemPlaceholder,
+    SafeHtmlPipe
+  ]
 })
 export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDestroy {
   /**

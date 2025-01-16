@@ -17,11 +17,17 @@
  * under the License.
  */
 
+import { NgOptimizedImage } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { MatDivider } from '@angular/material/divider';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../../shared/components/inputs/input/input.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
@@ -32,22 +38,26 @@ import { AuthenticationService } from '../../../shared/services/frontend/authent
 import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { LoginFormFieldsService } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { NgOptimizedImage } from '@angular/common';
-import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
-import { InputComponent } from '../../../shared/components/inputs/input/input.component';
-import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
-import { MatDivider } from '@angular/material/divider';
-import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Manage the login page
  */
 @Component({
-    selector: 'suricate-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: true,
-    imports: [NgOptimizedImage, SpinnerComponent, FormsModule, ReactiveFormsModule, InputComponent, ButtonsComponent, RouterLink, MatDivider, TranslatePipe]
+  selector: 'suricate-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [
+    NgOptimizedImage,
+    SpinnerComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    InputComponent,
+    ButtonsComponent,
+    RouterLink,
+    MatDivider,
+    TranslatePipe
+  ]
 })
 export class LoginComponent implements OnInit {
   /**

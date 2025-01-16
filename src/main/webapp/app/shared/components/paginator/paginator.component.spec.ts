@@ -28,8 +28,8 @@ describe('PaginatorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, PaginatorComponent]
-}).compileComponents();
+      imports: [MockModule, PaginatorComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PaginatorComponent);
     component = fixture.componentInstance;

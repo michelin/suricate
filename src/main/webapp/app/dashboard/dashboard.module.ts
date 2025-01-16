@@ -31,12 +31,17 @@ import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widge
 import { DashboardRoutes } from './dashboard.route';
 
 @NgModule({
-    imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule, DashboardDetailComponent,
-        DashboardScreenComponent,
-        DashboardScreenWidgetComponent,
-        DashboardTvComponent,
-        AddWidgetToProjectWizardComponent,
-        TvManagementDialogComponent],
-    exports: [RouterModule]
+  imports: [
+    RouterModule.forChild(DashboardRoutes),
+    LayoutModule,
+    SharedModule,
+    DashboardDetailComponent,
+    DashboardScreenComponent,
+    DashboardScreenWidgetComponent,
+    DashboardTvComponent,
+    AddWidgetToProjectWizardComponent,
+    TvManagementDialogComponent
+  ],
+  exports: [RouterModule]
 })
 export class DashboardModule {}

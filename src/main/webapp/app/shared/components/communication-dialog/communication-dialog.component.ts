@@ -17,27 +17,42 @@
  * under the License.
  */
 
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgClass } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle
+} from '@angular/material/dialog';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgClass } from '@angular/common';
 import { ButtonsComponent } from '../buttons/buttons.component';
-import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * This component is used to display information (without actions to do)
  */
 @Component({
-    selector: 'suricate-communication-dialog',
-    templateUrl: './communication-dialog.component.html',
-    styleUrls: ['./communication-dialog.component.scss'],
-    standalone: true,
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgClass, MatDialogActions, ButtonsComponent, MatDialogClose, TranslatePipe]
+  selector: 'suricate-communication-dialog',
+  templateUrl: './communication-dialog.component.html',
+  styleUrls: ['./communication-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    NgClass,
+    MatDialogActions,
+    ButtonsComponent,
+    MatDialogClose,
+    TranslatePipe
+  ]
 })
 export class CommunicationDialogComponent implements OnInit {
   /**

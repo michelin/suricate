@@ -17,11 +17,17 @@
  * under the License.
  */
 
-import { TitleCasePipe, NgClass, NgOptimizedImage } from '@angular/common';
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { NgClass, NgOptimizedImage, TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 
+import { HeaderComponent } from '../../layout/components/header/header.component';
+import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../shared/components/inputs/input/input.component';
 import { ListComponent } from '../../shared/components/list/list.component';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
@@ -30,21 +36,27 @@ import { User } from '../../shared/models/backend/user/user';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
 import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
-import { HeaderComponent } from '../../layout/components/header/header.component';
-import { InputComponent } from '../../shared/components/inputs/input/input.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
-import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
-import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 
 /**
  * Component used to display the list of users
  */
 @Component({
-    templateUrl: '../../shared/components/list/list.component.html',
-    styleUrls: ['../../shared/components/list/list.component.scss'],
-    standalone: true,
-    imports: [HeaderComponent, InputComponent, FormsModule, ReactiveFormsModule, SpinnerComponent, CdkDropList, CdkDrag, NgClass, NgOptimizedImage, ButtonsComponent, PaginatorComponent]
+  templateUrl: '../../shared/components/list/list.component.html',
+  styleUrls: ['../../shared/components/list/list.component.scss'],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    InputComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    SpinnerComponent,
+    CdkDropList,
+    CdkDrag,
+    NgClass,
+    NgOptimizedImage,
+    ButtonsComponent,
+    PaginatorComponent
+  ]
 })
 export class UsersComponent extends ListComponent<User, UserRequest> implements OnInit {
   /**

@@ -28,8 +28,8 @@ describe('DashboardsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, DashboardsComponent]
-}).compileComponents();
+      imports: [MockModule, DashboardsComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardsComponent);
     component = fixture.componentInstance;

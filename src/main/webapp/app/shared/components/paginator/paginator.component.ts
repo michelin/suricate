@@ -18,7 +18,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
 
@@ -26,11 +26,11 @@ import { HttpFilterService } from '../../services/backend/http-filter/http-filte
  * Component used to display the paginator
  */
 @Component({
-    selector: 'suricate-paginator',
-    templateUrl: './paginator.component.html',
-    styleUrls: ['./paginator.component.scss'],
-    standalone: true,
-    imports: [MatPaginator]
+  selector: 'suricate-paginator',
+  templateUrl: './paginator.component.html',
+  styleUrls: ['./paginator.component.scss'],
+  standalone: true,
+  imports: [MatPaginator]
 })
 export class PaginatorComponent {
   /**

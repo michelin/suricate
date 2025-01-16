@@ -28,8 +28,8 @@ describe('SidenavComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, SidenavComponent]
-}).compileComponents();
+      imports: [MockModule, SidenavComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SidenavComponent);
     component = fixture.componentInstance;

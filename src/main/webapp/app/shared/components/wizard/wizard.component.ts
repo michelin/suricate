@@ -40,9 +40,9 @@ import { ProjectWidgetFormStepsService } from '../../services/frontend/form-step
  * Generic component used to display wizards
  */
 @Component({
-    template: '',
-    styleUrls: ['./wizard.component.scss'],
-    standalone: true
+  template: '',
+  styleUrls: ['./wizard.component.scss'],
+  standalone: true
 })
 export class WizardComponent implements OnInit {
   /**

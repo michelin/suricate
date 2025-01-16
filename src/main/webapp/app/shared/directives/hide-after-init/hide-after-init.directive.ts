@@ -20,8 +20,8 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Directive({
-    selector: '[hideAfterInit]',
-    standalone: true
+  selector: '[hideAfterInit]',
+  standalone: true
 })
 export class HideAfterInitDirective implements OnChanges, AfterViewInit {
   /**

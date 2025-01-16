@@ -17,9 +17,17 @@
  * under the License.
  */
 
+import { NgOptimizedImage } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatStep, MatStepLabel, MatStepper, MatStepperIcon } from '@angular/material/stepper';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { HeaderComponent } from '../../../../layout/components/header/header.component';
+import { ButtonsComponent } from '../../../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../../../shared/components/inputs/input/input.component';
+import { SlideToggleComponent } from '../../../../shared/components/inputs/slide-toggle/slide-toggle.component';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 import { Project } from '../../../../shared/models/backend/project/project';
@@ -30,20 +38,26 @@ import { HttpProjectService } from '../../../../shared/services/backend/http-pro
 import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
-import { HeaderComponent } from '../../../../layout/components/header/header.component';
-import { MatStepper, MatStepperIcon, MatStep, MatStepLabel } from '@angular/material/stepper';
-import { MatIcon } from '@angular/material/icon';
-import { NgOptimizedImage } from '@angular/common';
-import { SlideToggleComponent } from '../../../../shared/components/inputs/slide-toggle/slide-toggle.component';
-import { InputComponent } from '../../../../shared/components/inputs/input/input.component';
-import { ButtonsComponent } from '../../../../shared/components/buttons/buttons.component';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    templateUrl: '../../../../shared/components/wizard/wizard.component.html',
-    styleUrls: ['../../../../shared/components/wizard/wizard.component.scss'],
-    standalone: true,
-    imports: [HeaderComponent, MatStepper, MatStepperIcon, MatIcon, MatStep, MatStepLabel, NgOptimizedImage, SlideToggleComponent, FormsModule, ReactiveFormsModule, InputComponent, ButtonsComponent, TranslatePipe]
+  templateUrl: '../../../../shared/components/wizard/wizard.component.html',
+  styleUrls: ['../../../../shared/components/wizard/wizard.component.scss'],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    MatStepper,
+    MatStepperIcon,
+    MatIcon,
+    MatStep,
+    MatStepLabel,
+    NgOptimizedImage,
+    SlideToggleComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    InputComponent,
+    ButtonsComponent,
+    TranslatePipe
+  ]
 })
 export class AddWidgetToProjectWizardComponent extends WizardComponent implements OnInit {
   /**

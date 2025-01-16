@@ -28,8 +28,8 @@ describe('HeaderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, HeaderComponent]
-}).compileComponents();
+      imports: [MockModule, HeaderComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;

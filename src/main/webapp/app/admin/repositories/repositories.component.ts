@@ -17,13 +17,19 @@
  * under the License.
  */
 
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
-import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject, EMPTY, forkJoin, ObservableInput, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 
+import { HeaderComponent } from '../../layout/components/header/header.component';
+import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../shared/components/inputs/input/input.component';
 import { ListComponent } from '../../shared/components/list/list.component';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
@@ -33,21 +39,27 @@ import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
 import { HttpRepositoryService } from '../../shared/services/backend/http-repository/http-repository.service';
 import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
-import { HeaderComponent } from '../../layout/components/header/header.component';
-import { InputComponent } from '../../shared/components/inputs/input/input.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
-import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
-import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 
 /**
  * Component used to display the list of git repositories
  */
 @Component({
-    templateUrl: '../../shared/components/list/list.component.html',
-    styleUrls: ['../../shared/components/list/list.component.scss'],
-    standalone: true,
-    imports: [HeaderComponent, InputComponent, FormsModule, ReactiveFormsModule, SpinnerComponent, CdkDropList, CdkDrag, NgClass, NgOptimizedImage, ButtonsComponent, PaginatorComponent]
+  templateUrl: '../../shared/components/list/list.component.html',
+  styleUrls: ['../../shared/components/list/list.component.scss'],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    InputComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    SpinnerComponent,
+    CdkDropList,
+    CdkDrag,
+    NgClass,
+    NgOptimizedImage,
+    ButtonsComponent,
+    PaginatorComponent
+  ]
 })
 export class RepositoriesComponent extends ListComponent<Repository, RepositoryRequest> {
   /**

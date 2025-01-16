@@ -18,10 +18,12 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { from, mergeMap } from 'rxjs';
 import { toArray } from 'rxjs/operators';
 
+import { ButtonsComponent } from '../../../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../../../shared/components/inputs/input/input.component';
 import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { AllowedSettingValue } from '../../../../shared/models/backend/setting/allowed-setting-value';
 import { Setting } from '../../../../shared/models/backend/setting/setting';
@@ -34,15 +36,13 @@ import { AuthenticationService } from '../../../../shared/services/frontend/auth
 import { FormService } from '../../../../shared/services/frontend/form/form.service';
 import { SettingsFormFieldsService } from '../../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields.service';
 import { SettingsService } from '../../../services/settings.service';
-import { InputComponent } from '../../../../shared/components/inputs/input/input.component';
-import { ButtonsComponent } from '../../../../shared/components/buttons/buttons.component';
 
 @Component({
-    selector: 'suricate-ux-settings',
-    templateUrl: './ux-settings.component.html',
-    styleUrls: ['./ux-settings.component.scss'],
-    standalone: true,
-    imports: [InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent]
+  selector: 'suricate-ux-settings',
+  templateUrl: './ux-settings.component.html',
+  styleUrls: ['./ux-settings.component.scss'],
+  standalone: true,
+  imports: [InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent]
 })
 export class UxSettingsComponent implements OnInit {
   /**

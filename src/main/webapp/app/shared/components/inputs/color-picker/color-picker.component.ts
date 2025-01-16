@@ -18,21 +18,21 @@
  */
 
 import { Component } from '@angular/core';
+import { MatLabel } from '@angular/material/form-field';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { InputComponent } from '../input/input.component';
-import { MatLabel } from '@angular/material/form-field';
-import { ColorPickerModule } from 'ngx-color-picker';
-import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Component used to display the color picker
  */
 @Component({
-    selector: 'suricate-color-picker',
-    templateUrl: './color-picker.component.html',
-    styleUrls: ['./color-picker.component.scss'],
-    standalone: true,
-    imports: [MatLabel, ColorPickerModule, TranslatePipe]
+  selector: 'suricate-color-picker',
+  templateUrl: './color-picker.component.html',
+  styleUrls: ['./color-picker.component.scss'],
+  standalone: true,
+  imports: [MatLabel, ColorPickerModule, TranslatePipe]
 })
 export class ColorPickerComponent extends InputComponent {
   /**

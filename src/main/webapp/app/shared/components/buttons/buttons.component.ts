@@ -17,27 +17,27 @@
  * under the License.
  */
 
+import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { ButtonTypeEnum } from '../../enums/button-type.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { MaterialIconRecords } from '../../records/material-icon.record';
-import { NgTemplateOutlet, NgClass, AsyncPipe } from '@angular/common';
-import { MatButton, MatMiniFabButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Component used to generate buttons
  */
 @Component({
-    selector: 'suricate-buttons',
-    templateUrl: './buttons.component.html',
-    styleUrls: ['./buttons.component.scss'],
-    standalone: true,
-    imports: [NgTemplateOutlet, MatButton, MatTooltip, MatIcon, NgClass, MatMiniFabButton, AsyncPipe, TranslatePipe]
+  selector: 'suricate-buttons',
+  templateUrl: './buttons.component.html',
+  styleUrls: ['./buttons.component.scss'],
+  standalone: true,
+  imports: [NgTemplateOutlet, MatButton, MatTooltip, MatIcon, NgClass, MatMiniFabButton, AsyncPipe, TranslatePipe]
 })
 export class ButtonsComponent<T> {
   /**

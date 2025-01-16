@@ -45,9 +45,9 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
  * Generic component used to display and manage lists
  */
 @Component({
-    template: '',
-    styleUrls: ['./list.component.scss'],
-    standalone: true
+  template: '',
+  styleUrls: ['./list.component.scss'],
+  standalone: true
 })
 export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   /**

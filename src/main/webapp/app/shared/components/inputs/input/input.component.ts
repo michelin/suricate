@@ -18,9 +18,17 @@
  */
 
 import { animate, style, transition, trigger } from '@angular/animations';
+import { NgClass } from '@angular/common';
 import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { AbstractControl, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatOption } from '@angular/material/core';
+import { MatError, MatFormField, MatHint, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
@@ -28,38 +36,53 @@ import { FormField } from '../../../models/frontend/form/form-field';
 import { FormOption } from '../../../models/frontend/form/form-option';
 import { ValueChangedEvent, ValueChangedType } from '../../../models/frontend/form/value-changed-event';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
-import { MatFormField, MatPrefix, MatLabel, MatSuffix, MatHint, MatError } from '@angular/material/form-field';
-import { NgClass } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatInput } from '@angular/material/input';
-import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
-import { MatOption } from '@angular/material/core';
-import { MatSelect } from '@angular/material/select';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { FileInputComponent } from '../file-input/file-input.component';
 import { ColorPickerComponent } from '../color-picker/color-picker.component';
 import { FieldsComponent } from '../fields/fields.component';
+import { FileInputComponent } from '../file-input/file-input.component';
 import { MosaicComponent } from '../mosaic/mosaic.component';
 
 /**
  * Manage the instantiation of different form inputs
  */
 @Component({
-    selector: 'suricate-input',
-    templateUrl: './input.component.html',
-    styleUrls: ['./input.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations: [
-        trigger('animationError', [
-            transition(':enter', [
-                style({ opacity: 0, transform: 'translateY(-100%)' }),
-                animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({ opacity: 1, transform: 'translateY(0%)' }))
-            ])
-        ])
-    ],
-    standalone: true,
-    imports: [MatFormField, NgClass, MatIcon, MatPrefix, MatTooltip, MatLabel, MatInput, FormsModule, MatAutocompleteTrigger, ReactiveFormsModule, MatAutocomplete, MatOption, MatSelect, MatSuffix, MatHint, MatError, CheckboxComponent, FileInputComponent, ColorPickerComponent, FieldsComponent, MosaicComponent, TranslatePipe]
+  selector: 'suricate-input',
+  templateUrl: './input.component.html',
+  styleUrls: ['./input.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: [
+    trigger('animationError', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-100%)' }),
+        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({ opacity: 1, transform: 'translateY(0%)' }))
+      ])
+    ])
+  ],
+  standalone: true,
+  imports: [
+    MatFormField,
+    NgClass,
+    MatIcon,
+    MatPrefix,
+    MatTooltip,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatAutocomplete,
+    MatOption,
+    MatSelect,
+    MatSuffix,
+    MatHint,
+    MatError,
+    CheckboxComponent,
+    FileInputComponent,
+    ColorPickerComponent,
+    FieldsComponent,
+    MosaicComponent,
+    TranslatePipe
+  ]
 })
 export class InputComponent implements OnInit {
   /**

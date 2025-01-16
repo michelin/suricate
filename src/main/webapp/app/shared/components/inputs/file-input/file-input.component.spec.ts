@@ -30,8 +30,8 @@ describe('FileInputComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, FileInputComponent]
-}).compileComponents();
+      imports: [MockModule, FileInputComponent]
+    }).compileComponents();
 
     const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 

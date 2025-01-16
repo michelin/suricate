@@ -28,8 +28,8 @@ describe('FormSidenavComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, FormSidenavComponent]
-}).compileComponents();
+      imports: [MockModule, FormSidenavComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FormSidenavComponent);
     component = fixture.componentInstance;

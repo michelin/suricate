@@ -29,8 +29,8 @@ describe('DashboardScreenWidgetComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, DashboardScreenWidgetComponent]
-}).compileComponents();
+      imports: [MockModule, DashboardScreenWidgetComponent]
+    }).compileComponents();
 
     const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 

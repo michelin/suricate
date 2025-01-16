@@ -28,8 +28,8 @@ describe('ConfigurationsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, ConfigurationsComponent]
-}).compileComponents();
+      imports: [MockModule, ConfigurationsComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ConfigurationsComponent);
     component = fixture.componentInstance;

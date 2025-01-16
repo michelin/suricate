@@ -18,26 +18,26 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormArray, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { ButtonColorEnum } from '../../../enums/button-color.enum';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
 import { ButtonConfiguration } from '../../../models/frontend/button/button-configuration';
 import { FormField } from '../../../models/frontend/form/form-field';
-import { InputComponent } from '../input/input.component';
 import { ButtonsComponent } from '../../buttons/buttons.component';
-import { TranslatePipe } from '@ngx-translate/core';
+import { InputComponent } from '../input/input.component';
 
 /**
  * Used to display fields of type Fields
  */
 @Component({
-    selector: 'suricate-fields',
-    templateUrl: './fields.component.html',
-    styleUrls: ['./fields.component.scss'],
-    standalone: true,
-    imports: [InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent, TranslatePipe]
+  selector: 'suricate-fields',
+  templateUrl: './fields.component.html',
+  styleUrls: ['./fields.component.scss'],
+  standalone: true,
+  imports: [InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent, TranslatePipe]
 })
 export class FieldsComponent extends InputComponent implements OnInit {
   @Input()

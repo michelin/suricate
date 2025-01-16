@@ -28,8 +28,8 @@ describe('ProjectWidgetWizardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, AddWidgetToProjectWizardComponent]
-}).compileComponents();
+      imports: [MockModule, AddWidgetToProjectWizardComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AddWidgetToProjectWizardComponent);
     component = fixture.componentInstance;

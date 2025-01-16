@@ -28,8 +28,8 @@ describe('SlideToggleComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, SlideToggleComponent]
-}).compileComponents();
+      imports: [MockModule, SlideToggleComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SlideToggleComponent);
     component = fixture.componentInstance;

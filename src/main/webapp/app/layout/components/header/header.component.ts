@@ -18,22 +18,22 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
-import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
 import { MatDivider } from '@angular/material/divider';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 /**
  * The page header component
  */
 @Component({
-    selector: 'suricate-pages-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    standalone: true,
-    imports: [ButtonsComponent, MatDivider, TranslatePipe]
+  selector: 'suricate-pages-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
+  standalone: true,
+  imports: [ButtonsComponent, MatDivider, TranslatePipe]
 })
 export class HeaderComponent implements OnInit {
   /**

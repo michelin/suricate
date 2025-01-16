@@ -28,8 +28,8 @@ describe('SpinnerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [MockModule, SpinnerComponent]
-}).compileComponents();
+      imports: [MockModule, SpinnerComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SpinnerComponent);
     component = fixture.componentInstance;

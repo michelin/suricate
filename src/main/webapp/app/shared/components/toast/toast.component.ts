@@ -18,7 +18,11 @@
  */
 
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
+import { NgClass } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -27,60 +31,80 @@ import { ToastTypeEnum } from '../../enums/toast-type.enum';
 import { ToastMessage } from '../../models/frontend/toast/toast-message';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { ToastService } from '../../services/frontend/toast/toast.service';
-import { NgClass } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { MatIconButton } from '@angular/material/button';
-import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Component that display toast notification messages
  */
 @Component({
-    selector: 'suricate-toast-messages',
-    templateUrl: './toast.component.html',
-    styleUrls: ['./toast.component.scss'],
-    animations: [
-        trigger('slideInOut', [
-            state('in', style({
-                'max-height': '500px',
-                'opacity': '1',
-                'visibility': 'visible'
-            })),
-            state('out', style({
-                'max-height': '0px',
-                'opacity': '0',
-                'visibility': 'hidden'
-            })),
-            transition('in => out', [
-                group([
-                    animate('400ms ease-in-out', style({
-                        opacity: '0'
-                    })),
-                    animate('600ms ease-in-out', style({
-                        'max-height': '0px'
-                    })),
-                    animate('700ms ease-in-out', style({
-                        visibility: 'hidden'
-                    }))
-                ])
-            ]),
-            transition('out => in', [
-                group([
-                    animate('1ms ease-in-out', style({
-                        visibility: 'visible'
-                    })),
-                    animate('600ms ease-in-out', style({
-                        'max-height': '500px'
-                    })),
-                    animate('800ms ease-in-out', style({
-                        opacity: '1'
-                    }))
-                ])
-            ])
+  selector: 'suricate-toast-messages',
+  templateUrl: './toast.component.html',
+  styleUrls: ['./toast.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      state(
+        'in',
+        style({
+          'max-height': '500px',
+          'opacity': '1',
+          'visibility': 'visible'
+        })
+      ),
+      state(
+        'out',
+        style({
+          'max-height': '0px',
+          'opacity': '0',
+          'visibility': 'hidden'
+        })
+      ),
+      transition('in => out', [
+        group([
+          animate(
+            '400ms ease-in-out',
+            style({
+              opacity: '0'
+            })
+          ),
+          animate(
+            '600ms ease-in-out',
+            style({
+              'max-height': '0px'
+            })
+          ),
+          animate(
+            '700ms ease-in-out',
+            style({
+              visibility: 'hidden'
+            })
+          )
         ])
-    ],
-    standalone: true,
-    imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
+      ]),
+      transition('out => in', [
+        group([
+          animate(
+            '1ms ease-in-out',
+            style({
+              visibility: 'visible'
+            })
+          ),
+          animate(
+            '600ms ease-in-out',
+            style({
+              'max-height': '500px'
+            })
+          ),
+          animate(
+            '800ms ease-in-out',
+            style({
+              opacity: '1'
+            })
+          )
+        ])
+      ])
+    ])
+  ],
+  standalone: true,
+  imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
 })
 export class ToastComponent implements OnInit, OnDestroy {
   /**
