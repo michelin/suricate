@@ -18,8 +18,8 @@
  */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 
 import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
@@ -34,11 +34,19 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
 import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { InputComponent } from '../../../shared/components/inputs/input/input.component';
+import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'suricate-tv-management-dialog',
-  templateUrl: './tv-management-dialog.component.html',
-  styleUrls: ['./tv-management-dialog.component.scss']
+    selector: 'suricate-tv-management-dialog',
+    templateUrl: './tv-management-dialog.component.html',
+    styleUrls: ['./tv-management-dialog.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, InputComponent, ReactiveFormsModule, ButtonsComponent, MatDivider, MatIcon, MatDialogActions, MatDialogClose, TranslatePipe]
 })
 export class TvManagementDialogComponent implements OnInit {
   /**

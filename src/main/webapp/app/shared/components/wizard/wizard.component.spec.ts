@@ -29,9 +29,8 @@ describe('WizardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [WizardComponent]
-    }).compileComponents();
+    imports: [MockModule, WizardComponent]
+}).compileComponents();
 
     const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 

@@ -28,9 +28,8 @@ describe('UsersComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [UsersComponent]
-    }).compileComponents();
+    imports: [MockModule, UsersComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(UsersComponent);
     component = fixture.componentInstance;

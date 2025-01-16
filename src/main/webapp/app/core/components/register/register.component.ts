@@ -19,7 +19,7 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
@@ -37,14 +37,20 @@ import { FormService } from '../../../shared/services/frontend/form/form.service
 import { RegisterFormFieldsService } from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
+import { NgOptimizedImage } from '@angular/common';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { InputComponent } from '../../../shared/components/inputs/input/input.component';
+import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
 
 /**
  * Component used to register a new user
  */
 @Component({
-  selector: 'suricate-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+    selector: 'suricate-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
+    standalone: true,
+    imports: [NgOptimizedImage, SpinnerComponent, FormsModule, ReactiveFormsModule, InputComponent, ButtonsComponent]
 })
 export class RegisterComponent implements OnInit {
   /**

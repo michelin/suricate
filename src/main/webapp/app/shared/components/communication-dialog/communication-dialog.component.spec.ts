@@ -30,10 +30,9 @@ describe('CommunicationDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [CommunicationDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: buildCommunicationDialogConfiguration() }]
-    }).compileComponents();
+    imports: [MockModule, CommunicationDialogComponent],
+    providers: [{ provide: MAT_DIALOG_DATA, useValue: buildCommunicationDialogConfiguration() }]
+}).compileComponents();
 
     fixture = TestBed.createComponent(CommunicationDialogComponent);
     component = fixture.componentInstance;

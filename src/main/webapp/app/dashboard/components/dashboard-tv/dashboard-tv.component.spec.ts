@@ -28,9 +28,8 @@ describe('DashboardTvComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [DashboardTvComponent]
-    }).compileComponents();
+    imports: [MockModule, DashboardTvComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DashboardTvComponent);
     component = fixture.componentInstance;

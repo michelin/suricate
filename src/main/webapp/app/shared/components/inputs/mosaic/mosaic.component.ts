@@ -21,14 +21,20 @@ import { Component, OnInit } from '@angular/core';
 
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
 import { InputComponent } from '../input/input.component';
+import { SpinnerComponent } from '../../spinner/spinner.component';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { NgClass, NgOptimizedImage } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 /**
  * Component used to display the mosaic input type
  */
 @Component({
-  selector: 'suricate-mosaic',
-  templateUrl: './mosaic.component.html',
-  styleUrls: ['./mosaic.component.scss']
+    selector: 'suricate-mosaic',
+    templateUrl: './mosaic.component.html',
+    styleUrls: ['./mosaic.component.scss'],
+    standalone: true,
+    imports: [SpinnerComponent, MatGridList, MatGridTile, NgClass, NgOptimizedImage, MatIcon]
 })
 export class MosaicComponent extends InputComponent implements OnInit {
   /**

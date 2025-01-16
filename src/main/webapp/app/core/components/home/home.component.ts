@@ -19,7 +19,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
@@ -36,11 +36,19 @@ import { SidenavService } from '../../../shared/services/frontend/sidenav/sidena
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
+import { HeaderComponent } from '../../../layout/components/header/header.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { MatIcon } from '@angular/material/icon';
+import { NgOptimizedImage } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'suricate-my-dashboards',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+    selector: 'suricate-my-dashboards',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    standalone: true,
+    imports: [HeaderComponent, SpinnerComponent, MatGridList, MatGridTile, MatIcon, RouterLink, NgOptimizedImage, TranslatePipe]
 })
 export class HomeComponent implements OnInit {
   /**

@@ -17,11 +17,11 @@
  * under the License.
  */
 
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe, NgClass } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { IMessage } from '@stomp/rx-stomp';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -47,14 +47,21 @@ import { SidenavService } from '../../../../shared/services/frontend/sidenav/sid
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket.service';
 import { LibraryService } from '../../../services/library/library.service';
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
+import { WidgetHtmlDirective } from '../../../../shared/directives/widget-html/widget-html.directive';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SafeHtmlPipe } from '../../../../shared/pipes/safe-html/safe-html.pipe';
 
 /**
  * Display the grid stack widgets
  */
 @Component({
-  selector: 'suricate-dashboard-screen-widget',
-  templateUrl: './dashboard-screen-widget.component.html',
-  styleUrls: ['./dashboard-screen-widget.component.scss']
+    selector: 'suricate-dashboard-screen-widget',
+    templateUrl: './dashboard-screen-widget.component.html',
+    styleUrls: ['./dashboard-screen-widget.component.scss'],
+    standalone: true,
+    imports: [NgClass, SpinnerComponent, WidgetHtmlDirective, MatIcon, MatTooltip, SafeHtmlPipe, TranslatePipe]
 })
 export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**

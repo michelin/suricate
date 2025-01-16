@@ -31,10 +31,9 @@ describe('ActionsDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [ActionsDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }]
-    }).compileComponents();
+    imports: [MockModule, ActionsDialogComponent],
+    providers: [{ provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ActionsDialogComponent);
     component = fixture.componentInstance;

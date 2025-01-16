@@ -32,10 +32,9 @@ describe('TvManagementDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [TvManagementDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }]
-    }).compileComponents();
+    imports: [MockModule, TvManagementDialogComponent],
+    providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }]
+}).compileComponents();
 
     fixture = TestBed.createComponent(TvManagementDialogComponent);
     component = fixture.componentInstance;

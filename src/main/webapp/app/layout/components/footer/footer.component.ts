@@ -20,14 +20,17 @@
 import { Component } from '@angular/core';
 
 import { EnvironmentService } from '../../../shared/services/frontend/environment/environment.service';
+import { NgOptimizedImage } from '@angular/common';
 
 /**
  * The footer of the application
  */
 @Component({
-  selector: 'suricate-pages-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+    selector: 'suricate-pages-footer',
+    templateUrl: './footer.component.html',
+    styleUrls: ['./footer.component.scss'],
+    standalone: true,
+    imports: [NgOptimizedImage]
 })
 export class FooterComponent {
   /**

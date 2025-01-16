@@ -20,8 +20,8 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 import { ButtonColorEnum } from '../../../../shared/enums/button-color.enum';
 import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
@@ -36,11 +36,20 @@ import { HttpUserService } from '../../../../shared/services/backend/http-user/h
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
 import { FormService } from '../../../../shared/services/frontend/form/form.service';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
+import { MatCard, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { InputComponent } from '../../../../shared/components/inputs/input/input.component';
+import { ButtonsComponent } from '../../../../shared/components/buttons/buttons.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'suricate-security-settings',
-  templateUrl: './security-settings.component.html',
-  styleUrls: ['./security-settings.component.scss']
+    selector: 'suricate-security-settings',
+    templateUrl: './security-settings.component.html',
+    styleUrls: ['./security-settings.component.scss'],
+    standalone: true,
+    imports: [MatCard, MatCardTitle, MatIcon, MatCardContent, MatCardActions, MatButton, InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, DatePipe, TranslatePipe]
 })
 export class SecuritySettingsComponent implements OnInit {
   /**

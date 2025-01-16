@@ -18,12 +18,16 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSlideToggleChange, MatSlideToggle } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'suricate-slide-toggle',
-  templateUrl: './slide-toggle.component.html',
-  styleUrls: ['./slide-toggle.component.scss']
+    selector: 'suricate-slide-toggle',
+    templateUrl: './slide-toggle.component.html',
+    styleUrls: ['./slide-toggle.component.scss'],
+    standalone: true,
+    imports: [MatSlideToggle, FormsModule, TranslatePipe]
 })
 export class SlideToggleComponent {
   /**

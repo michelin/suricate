@@ -22,7 +22,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
 
@@ -53,14 +53,23 @@ import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
+import { HeaderComponent } from '../../../layout/components/header/header.component';
+import { PaginatorComponent } from '../../../shared/components/paginator/paginator.component';
+import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { MatIcon } from '@angular/material/icon';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
 
 /**
  * Component used to display a specific dashboard
  */
 @Component({
-  selector: 'suricate-dashboard-detail',
-  templateUrl: './dashboard-detail.component.html',
-  styleUrls: ['./dashboard-detail.component.scss']
+    selector: 'suricate-dashboard-detail',
+    templateUrl: './dashboard-detail.component.html',
+    styleUrls: ['./dashboard-detail.component.scss'],
+    standalone: true,
+    imports: [HeaderComponent, PaginatorComponent, DashboardScreenComponent, MatGridList, MatGridTile, MatIcon, SpinnerComponent, SafeHtmlPipe, TranslatePipe]
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**

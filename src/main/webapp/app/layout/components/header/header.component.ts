@@ -21,14 +21,19 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
+import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * The page header component
  */
 @Component({
-  selector: 'suricate-pages-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'suricate-pages-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: true,
+    imports: [ButtonsComponent, MatDivider, TranslatePipe]
 })
 export class HeaderComponent implements OnInit {
   /**

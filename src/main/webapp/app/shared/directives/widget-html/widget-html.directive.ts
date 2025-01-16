@@ -24,7 +24,10 @@ import { ProjectWidget } from '../../models/backend/project-widget/project-widge
 /**
  * Directive for Widget's JS scripts
  */
-@Directive({ selector: '[widgetHtmlDirective]' })
+@Directive({
+    selector: '[widgetHtmlDirective]',
+    standalone: true
+})
 export class WidgetHtmlDirective implements OnChanges {
   /**
    * The rendered project widget

@@ -30,9 +30,8 @@ describe('MosaicComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [MosaicComponent]
-    }).compileComponents();
+    imports: [MockModule, MosaicComponent]
+}).compileComponents();
 
     const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 

@@ -30,9 +30,8 @@ describe('ColorPickerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [ColorPickerComponent]
-    }).compileComponents();
+    imports: [MockModule, ColorPickerComponent]
+}).compileComponents();
 
     const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 

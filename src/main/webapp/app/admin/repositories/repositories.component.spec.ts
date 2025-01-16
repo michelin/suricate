@@ -28,9 +28,8 @@ describe('RepositoriesComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [RepositoriesComponent]
-    }).compileComponents();
+    imports: [MockModule, RepositoriesComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(RepositoriesComponent);
     component = fixture.componentInstance;

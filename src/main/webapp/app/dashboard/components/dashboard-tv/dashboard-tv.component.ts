@@ -31,15 +31,22 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { NgOptimizedImage, KeyValuePipe } from '@angular/common';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
+import { HideAfterInitDirective } from '../../../shared/directives/hide-after-init/hide-after-init.directive';
+import { ProgressBarComponent } from '../../../shared/components/progress-bar/progress-bar.component';
 
 /**
  * Dashboard TV Management
  */
 @Component({
-  selector: 'suricate-code-view',
-  templateUrl: './dashboard-tv.component.html',
-  styleUrls: ['./dashboard-tv.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'suricate-code-view',
+    templateUrl: './dashboard-tv.component.html',
+    styleUrls: ['./dashboard-tv.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [NgOptimizedImage, SpinnerComponent, DashboardScreenComponent, HideAfterInitDirective, ProgressBarComponent, KeyValuePipe]
 })
 export class DashboardTvComponent implements OnInit, OnDestroy {
   /**

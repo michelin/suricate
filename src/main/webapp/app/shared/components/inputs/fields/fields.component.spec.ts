@@ -30,9 +30,8 @@ describe('FieldsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [FieldsComponent]
-    }).compileComponents();
+    imports: [MockModule, FieldsComponent]
+}).compileComponents();
 
     const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 

@@ -26,8 +26,7 @@ import { MenuComponent } from './components/menu/menu.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 @NgModule({
-  imports: [SharedModule],
-  declarations: [FooterComponent, HeaderComponent, SidenavComponent, MenuComponent],
-  exports: [FooterComponent, HeaderComponent, SidenavComponent]
+    imports: [SharedModule, FooterComponent, HeaderComponent, SidenavComponent, MenuComponent],
+    exports: [FooterComponent, HeaderComponent, SidenavComponent]
 })
 export class LayoutModule {}

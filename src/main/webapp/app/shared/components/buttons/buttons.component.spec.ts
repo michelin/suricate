@@ -28,9 +28,8 @@ describe('ButtonsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [ButtonsComponent]
-    }).compileComponents();
+    imports: [MockModule, ButtonsComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ButtonsComponent);
     component = fixture.componentInstance;

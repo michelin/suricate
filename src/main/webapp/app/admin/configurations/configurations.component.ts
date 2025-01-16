@@ -18,7 +18,7 @@
  */
 
 import { Component } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ListComponent } from '../../shared/components/list/list.component';
 import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
@@ -29,13 +29,22 @@ import { CategoryParameter } from '../../shared/models/backend/category-paramete
 import { WidgetConfigurationRequest } from '../../shared/models/backend/widget-configuration/widget-configuration-request';
 import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { HeaderComponent } from '../../layout/components/header/header.component';
+import { InputComponent } from '../../shared/components/inputs/input/input.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
+import { NgClass, NgOptimizedImage } from '@angular/common';
+import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 
 /**
  * Component used to display the list of widgets
  */
 @Component({
-  templateUrl: '../../shared/components/list/list.component.html',
-  styleUrls: ['../../shared/components/list/list.component.scss']
+    templateUrl: '../../shared/components/list/list.component.html',
+    styleUrls: ['../../shared/components/list/list.component.scss'],
+    standalone: true,
+    imports: [HeaderComponent, InputComponent, FormsModule, ReactiveFormsModule, SpinnerComponent, CdkDropList, CdkDrag, NgClass, NgOptimizedImage, ButtonsComponent, PaginatorComponent]
 })
 export class ConfigurationsComponent extends ListComponent<CategoryParameter, WidgetConfigurationRequest> {
   /**

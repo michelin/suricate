@@ -23,22 +23,29 @@ import html2canvas from 'html2canvas';
 
 import { FileUtils } from '../../../utils/file.utils';
 import { InputComponent } from '../input/input.component';
+import { MatButton } from '@angular/material/button';
+import { NgClass } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatError } from '@angular/material/form-field';
+import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Component that manage the file input
  */
 @Component({
-  selector: 'suricate-file-input',
-  templateUrl: './file-input.component.html',
-  styleUrls: ['./file-input.component.scss'],
-  animations: [
-    trigger('animationError', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(-100%)' }),
-        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({ opacity: 1, transform: 'translateY(0%)' }))
-      ])
-    ])
-  ]
+    selector: 'suricate-file-input',
+    templateUrl: './file-input.component.html',
+    styleUrls: ['./file-input.component.scss'],
+    animations: [
+        trigger('animationError', [
+            transition(':enter', [
+                style({ opacity: 0, transform: 'translateY(-100%)' }),
+                animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({ opacity: 1, transform: 'translateY(0%)' }))
+            ])
+        ])
+    ],
+    standalone: true,
+    imports: [MatButton, NgClass, MatIcon, MatError, TranslatePipe]
 })
 export class FileInputComponent extends InputComponent implements OnInit {
   /**

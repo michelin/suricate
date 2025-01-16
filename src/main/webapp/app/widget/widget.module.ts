@@ -26,7 +26,6 @@ import { CatalogComponent } from './catalog/catalog.component';
 import { widgetRoutes } from './widget.route';
 
 @NgModule({
-  imports: [LayoutModule, SharedModule, RouterModule.forChild(widgetRoutes)],
-  declarations: [CatalogComponent]
+    imports: [LayoutModule, SharedModule, RouterModule.forChild(widgetRoutes), CatalogComponent]
 })
 export class WidgetModule {}

@@ -48,6 +48,10 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { LibraryService } from '../../services/library/library.service';
+import { MatIcon } from '@angular/material/icon';
+import { KtdGridComponent, KtdGridItemComponent, KtdGridItemPlaceholder } from '@katoid/angular-grid-layout';
+import { DashboardScreenWidgetComponent } from './dashboard-screen-widget/dashboard-screen-widget.component';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
 
 declare global {
   interface Window {
@@ -59,9 +63,11 @@ declare global {
  * Display the grid stack widgets
  */
 @Component({
-  selector: 'suricate-dashboard-screen',
-  templateUrl: './dashboard-screen.component.html',
-  styleUrls: ['./dashboard-screen.component.scss']
+    selector: 'suricate-dashboard-screen',
+    templateUrl: './dashboard-screen.component.html',
+    styleUrls: ['./dashboard-screen.component.scss'],
+    standalone: true,
+    imports: [MatIcon, KtdGridComponent, KtdGridItemComponent, DashboardScreenWidgetComponent, KtdGridItemPlaceholder, SafeHtmlPipe]
 })
 export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDestroy {
   /**

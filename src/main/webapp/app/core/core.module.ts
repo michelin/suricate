@@ -31,14 +31,11 @@ import { UxSettingsComponent } from './components/settings/ux-settings/ux-settin
 import { coreRoutes } from './core.route';
 
 @NgModule({
-  imports: [RouterModule.forChild(coreRoutes), LayoutModule, SharedModule],
-  declarations: [
-    LoginComponent,
-    RegisterComponent,
-    HomeComponent,
-    SettingsComponent,
-    UxSettingsComponent,
-    SecuritySettingsComponent
-  ]
+    imports: [RouterModule.forChild(coreRoutes), LayoutModule, SharedModule, LoginComponent,
+        RegisterComponent,
+        HomeComponent,
+        SettingsComponent,
+        UxSettingsComponent,
+        SecuritySettingsComponent]
 })
 export class CoreModule {}
