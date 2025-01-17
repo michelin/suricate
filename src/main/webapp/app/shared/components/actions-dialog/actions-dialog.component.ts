@@ -17,17 +17,36 @@
  * under the License.
  */
 
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle
+} from '@angular/material/dialog';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
+import { ButtonsComponent } from '../buttons/buttons.component';
 
 @Component({
   templateUrl: './actions-dialog.component.html',
-  styleUrls: ['./actions-dialog.component.scss']
+  styleUrls: ['./actions-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatDialogActions,
+    ButtonsComponent,
+    MatDialogClose,
+    TranslatePipe
+  ]
 })
 export class ActionsDialogComponent implements OnInit {
   /**

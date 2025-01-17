@@ -18,8 +18,11 @@
  */
 
 import { Component } from '@angular/core';
+import { MatLabel } from '@angular/material/form-field';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ColorPickerModule } from 'ngx-color-picker';
 
-import { InputComponent } from '../input/input.component';
+import { BaseInputComponent } from '../base-input/base-input/base-input.component';
 
 /**
  * Component used to display the color picker
@@ -27,16 +30,11 @@ import { InputComponent } from '../input/input.component';
 @Component({
   selector: 'suricate-color-picker',
   templateUrl: './color-picker.component.html',
-  styleUrls: ['./color-picker.component.scss']
+  styleUrls: ['./color-picker.component.scss'],
+  standalone: true,
+  imports: [MatLabel, ColorPickerModule, TranslatePipe]
 })
-export class ColorPickerComponent extends InputComponent {
-  /**
-   * Constructor
-   */
-  constructor() {
-    super();
-  }
-
+export class ColorPickerComponent extends BaseInputComponent {
   /**
    * Notification change when the color as changed
    *

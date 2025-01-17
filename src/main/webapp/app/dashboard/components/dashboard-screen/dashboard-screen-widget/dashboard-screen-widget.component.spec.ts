@@ -17,32 +17,70 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../../mock/mock.module';
-import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
+import { WidgetStateEnum } from '../../../../shared/enums/widget-sate.enum';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
+import { ProjectWidgetPosition } from '../../../../shared/models/backend/project-widget/project-widget-position';
 import { DashboardScreenWidgetComponent } from './dashboard-screen-widget.component';
 
 describe('DashboardScreenWidgetComponent', () => {
   let component: DashboardScreenWidgetComponent;
   let fixture: ComponentFixture<DashboardScreenWidgetComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [DashboardScreenWidgetComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        DashboardScreenWidgetComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
-
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(DashboardScreenWidgetComponent);
     component = fixture.componentInstance;
-    component.projectWidget = mockedModelBuilderService.buildMockedProjectWidget();
+    component.projectWidget = buildMockedProjectWidget();
 
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  function buildMockedProjectWidget(): ProjectWidget {
+    const widgetPosition: ProjectWidgetPosition = {
+      gridColumn: 1,
+      gridRow: 1,
+      width: 200,
+      height: 200
+    };
+
+    return {
+      id: 1,
+      data: 'Data',
+      widgetPosition: widgetPosition,
+      customStyle: '',
+      instantiateHtml: '',
+      backendConfig: '',
+      log: '',
+      lastExecutionDate: '',
+      lastSuccessDate: '',
+      globalConfigOverridden: true,
+      state: WidgetStateEnum.RUNNING,
+      projectToken: 'Token',
+      widgetId: 1,
+      gridId: 1
+    };
+  }
 });

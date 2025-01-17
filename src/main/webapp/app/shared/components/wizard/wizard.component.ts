@@ -41,7 +41,8 @@ import { ProjectWidgetFormStepsService } from '../../services/frontend/form-step
  */
 @Component({
   template: '',
-  styleUrls: ['./wizard.component.scss']
+  styleUrls: ['./wizard.component.scss'],
+  standalone: true
 })
 export class WizardComponent implements OnInit {
   /**

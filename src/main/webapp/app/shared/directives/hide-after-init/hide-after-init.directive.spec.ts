@@ -17,9 +17,9 @@
  * under the License.
  */
 
+import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../mock/mock.module';
 import { HideAfterInitDirective } from './hide-after-init.directive';
 
 describe('HideAfterInit', () => {
@@ -27,8 +27,7 @@ describe('HideAfterInit', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [HideAfterInitDirective]
+      providers: [HideAfterInitDirective, { provide: ElementRef, useClass: MockElementRef }]
     });
 
     directive = TestBed.inject(HideAfterInitDirective);
@@ -38,3 +37,5 @@ describe('HideAfterInit', () => {
     expect(directive).toBeTruthy();
   });
 });
+
+class MockElementRef extends ElementRef {}

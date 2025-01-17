@@ -19,7 +19,6 @@
 
 import { Injectable } from '@angular/core';
 import { UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, from, Observable, of } from 'rxjs';
 import { map, switchMap, tap, toArray } from 'rxjs/operators';
 
@@ -70,12 +69,10 @@ export class ProjectWidgetFormStepsService {
    *
    * @param httpCategoryService HTTP category service
    * @param httpWidgetService HTTP widget service
-   * @param translateService Translate service
    */
   constructor(
     private readonly httpCategoryService: HttpCategoryService,
-    private readonly httpWidgetService: HttpWidgetService,
-    private readonly translateService: TranslateService
+    private readonly httpWidgetService: HttpWidgetService
   ) {}
 
   /**

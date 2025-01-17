@@ -17,9 +17,9 @@
  * under the License.
  */
 
+import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../mock/mock.module';
 import { WidgetHtmlDirective } from './widget-html.directive';
 
 describe('WidgetHtmlDirective', () => {
@@ -27,8 +27,7 @@ describe('WidgetHtmlDirective', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
-      providers: [WidgetHtmlDirective]
+      providers: [WidgetHtmlDirective, { provide: ElementRef, useClass: MockElementRef }]
     });
 
     directive = TestBed.inject(WidgetHtmlDirective);
@@ -38,3 +37,5 @@ describe('WidgetHtmlDirective', () => {
     expect(directive).toBeTruthy();
   });
 });
+
+class MockElementRef extends ElementRef {}

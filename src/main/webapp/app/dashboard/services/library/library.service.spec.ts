@@ -19,16 +19,13 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../mock/mock.module';
 import { LibraryService } from './library.service';
 
 describe('LibraryService', () => {
   let service: LibraryService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule]
-    });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(LibraryService);
   });
 

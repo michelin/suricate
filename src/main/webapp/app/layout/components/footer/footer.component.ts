@@ -17,6 +17,7 @@
  * under the License.
  */
 
+import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { EnvironmentService } from '../../../shared/services/frontend/environment/environment.service';
@@ -27,7 +28,9 @@ import { EnvironmentService } from '../../../shared/services/frontend/environmen
 @Component({
   selector: 'suricate-pages-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  styleUrls: ['./footer.component.scss'],
+  standalone: true,
+  imports: [NgOptimizedImage]
 })
 export class FooterComponent {
   /**

@@ -18,11 +18,16 @@
  */
 
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatError } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 import html2canvas from 'html2canvas';
 
 import { FileUtils } from '../../../utils/file.utils';
-import { InputComponent } from '../input/input.component';
+import { BaseInputComponent } from '../base-input/base-input/base-input.component';
 
 /**
  * Component that manage the file input
@@ -38,9 +43,17 @@ import { InputComponent } from '../input/input.component';
         animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({ opacity: 1, transform: 'translateY(0%)' }))
       ])
     ])
-  ]
+  ],
+  standalone: true,
+  imports: [MatButton, NgClass, MatIcon, MatError, TranslatePipe]
 })
-export class FileInputComponent extends InputComponent implements OnInit {
+export class FileInputComponent extends BaseInputComponent implements OnInit {
+  /**
+   * A reference to a component. Used to take screenshot
+   */
+  @Input()
+  public componentRef: ElementRef;
+
   /**
    * The image as base 64
    */
@@ -52,16 +65,9 @@ export class FileInputComponent extends InputComponent implements OnInit {
   public filename: string;
 
   /**
-   * Constructor
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * When the component is init
    */
-  public override ngOnInit(): void {
+  public ngOnInit(): void {
     this.setBase64File(this.field.value as string);
   }
 
@@ -107,11 +113,11 @@ export class FileInputComponent extends InputComponent implements OnInit {
       const fileName = file.name;
 
       this.setBase64File(base64String, fileName);
-      super.getFormControl().setValue(base64String);
-      super.getFormControl().markAsDirty();
-      super.getFormControl().markAsTouched();
+      this.getFormControl().setValue(base64String);
+      this.getFormControl().markAsDirty();
+      this.getFormControl().markAsTouched();
 
-      this.emitValueChange('fileChanged');
+      this.emitValueChangeEventFromType('fileChanged');
     });
   }
 
@@ -127,11 +133,11 @@ export class FileInputComponent extends InputComponent implements OnInit {
     }).then((htmlCanvasElement: HTMLCanvasElement) => {
       const b64: string = htmlCanvasElement.toDataURL('image/png');
       this.setBase64File(b64);
-      super.getFormControl().setValue(b64);
-      super.getFormControl().markAsDirty();
-      super.getFormControl().markAsTouched();
+      this.getFormControl().setValue(b64);
+      this.getFormControl().markAsDirty();
+      this.getFormControl().markAsTouched();
 
-      this.emitValueChange('fileChanged');
+      this.emitValueChangeEventFromType('fileChanged');
     });
   }
 }

@@ -17,9 +17,17 @@
  * under the License.
  */
 
+import { NgOptimizedImage } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatStep, MatStepLabel, MatStepper, MatStepperIcon } from '@angular/material/stepper';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { HeaderComponent } from '../../../../layout/components/header/header.component';
+import { ButtonsComponent } from '../../../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../../../shared/components/inputs/input/input.component';
+import { SlideToggleComponent } from '../../../../shared/components/inputs/slide-toggle/slide-toggle.component';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 import { Project } from '../../../../shared/models/backend/project/project';
@@ -33,7 +41,23 @@ import { ToastService } from '../../../../shared/services/frontend/toast/toast.s
 
 @Component({
   templateUrl: '../../../../shared/components/wizard/wizard.component.html',
-  styleUrls: ['../../../../shared/components/wizard/wizard.component.scss']
+  styleUrls: ['../../../../shared/components/wizard/wizard.component.scss'],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    MatStepper,
+    MatStepperIcon,
+    MatIcon,
+    MatStep,
+    MatStepLabel,
+    NgOptimizedImage,
+    SlideToggleComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    InputComponent,
+    ButtonsComponent,
+    TranslatePipe
+  ]
 })
 export class AddWidgetToProjectWizardComponent extends WizardComponent implements OnInit {
   /**

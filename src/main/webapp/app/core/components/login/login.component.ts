@@ -17,11 +17,17 @@
  * under the License.
  */
 
+import { NgOptimizedImage } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { MatDivider } from '@angular/material/divider';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../../shared/components/inputs/input/input.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
@@ -39,7 +45,19 @@ import { ToastService } from '../../../shared/services/frontend/toast/toast.serv
 @Component({
   selector: 'suricate-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [
+    NgOptimizedImage,
+    SpinnerComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    InputComponent,
+    ButtonsComponent,
+    RouterLink,
+    MatDivider,
+    TranslatePipe
+  ]
 })
 export class LoginComponent implements OnInit {
   /**

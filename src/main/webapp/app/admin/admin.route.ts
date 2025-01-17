@@ -37,10 +37,7 @@ export const adminRoutes: Routes = [
     path: 'admin/users',
     component: UsersComponent,
     canActivate: [authGuard, adminGuard],
-    canActivateChild: [authGuard, adminGuard],
-    data: {
-      breadcrumb: 'Users'
-    }
+    canActivateChild: [authGuard, adminGuard]
   },
   {
     path: 'admin/repositories',

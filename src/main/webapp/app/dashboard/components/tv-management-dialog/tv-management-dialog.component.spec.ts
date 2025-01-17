@@ -17,10 +17,14 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../mock/mock.module';
 import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
@@ -30,17 +34,30 @@ describe('TvManagementDialogComponent', () => {
   let component: TvManagementDialogComponent;
   let fixture: ComponentFixture<TvManagementDialogComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [TvManagementDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        TvManagementDialogComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideAnimationsAsync(),
+        { provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TvManagementDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

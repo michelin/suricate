@@ -17,25 +17,45 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideRouter } from '@angular/router';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../../mock/mock.module';
+import { appRoutes } from '../../../../app.routes';
 import { AddWidgetToProjectWizardComponent } from './add-widget-to-project-wizard.component';
 
 describe('ProjectWidgetWizardComponent', () => {
   let component: AddWidgetToProjectWizardComponent;
   let fixture: ComponentFixture<AddWidgetToProjectWizardComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [AddWidgetToProjectWizardComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        AddWidgetToProjectWizardComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideAnimationsAsync(),
+        provideRouter(appRoutes)
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddWidgetToProjectWizardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

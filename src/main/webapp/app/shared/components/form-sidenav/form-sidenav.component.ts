@@ -17,9 +17,11 @@
  * under the License.
  */
 
+import { UpperCasePipe } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -31,6 +33,9 @@ import { ValueChangedEvent } from '../../models/frontend/form/value-changed-even
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
+import { ButtonsComponent } from '../buttons/buttons.component';
+import { InputComponent } from '../inputs/input/input.component';
+import { SlideToggleComponent } from '../inputs/slide-toggle/slide-toggle.component';
 
 /**
  * Component used to display the form sidenav
@@ -38,7 +43,17 @@ import { SidenavService } from '../../services/frontend/sidenav/sidenav.service'
 @Component({
   selector: 'suricate-form-sidenav',
   templateUrl: './form-sidenav.component.html',
-  styleUrls: ['./form-sidenav.component.scss']
+  styleUrls: ['./form-sidenav.component.scss'],
+  standalone: true,
+  imports: [
+    SlideToggleComponent,
+    InputComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonsComponent,
+    UpperCasePipe,
+    TranslatePipe
+  ]
 })
 export class FormSidenavComponent implements OnInit, OnDestroy {
   /**

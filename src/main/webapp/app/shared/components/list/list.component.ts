@@ -46,7 +46,8 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
  */
 @Component({
   template: '',
-  styleUrls: ['./list.component.scss']
+  styleUrls: ['./list.component.scss'],
+  standalone: true
 })
 export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   /**

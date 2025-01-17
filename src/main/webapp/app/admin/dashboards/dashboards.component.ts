@@ -17,12 +17,19 @@
  * under the License.
  */
 
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
+import { HeaderComponent } from '../../layout/components/header/header.component';
+import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../shared/components/inputs/input/input.component';
 import { ListComponent } from '../../shared/components/list/list.component';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
@@ -37,7 +44,21 @@ import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/fo
 
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',
-  styleUrls: ['../../shared/components/list/list.component.scss']
+  styleUrls: ['../../shared/components/list/list.component.scss'],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    InputComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    SpinnerComponent,
+    CdkDropList,
+    CdkDrag,
+    NgClass,
+    NgOptimizedImage,
+    ButtonsComponent,
+    PaginatorComponent
+  ]
 })
 export class DashboardsComponent extends ListComponent<Project, ProjectRequest> {
   /**

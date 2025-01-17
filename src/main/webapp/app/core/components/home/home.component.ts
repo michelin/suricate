@@ -17,10 +17,16 @@
  * under the License.
  */
 
+import { NgOptimizedImage } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { MatIcon } from '@angular/material/icon';
+import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { HeaderComponent } from '../../../layout/components/header/header.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
@@ -38,9 +44,20 @@ import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 
 @Component({
-  selector: 'suricate-my-dashboards',
+  selector: 'suricate-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    SpinnerComponent,
+    MatGridList,
+    MatGridTile,
+    MatIcon,
+    RouterLink,
+    NgOptimizedImage,
+    TranslatePipe
+  ]
 })
 export class HomeComponent implements OnInit {
   /**

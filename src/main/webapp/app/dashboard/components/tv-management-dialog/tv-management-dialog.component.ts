@@ -17,10 +17,22 @@
  * under the License.
  */
 
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle
+} from '@angular/material/dialog';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../../shared/components/inputs/input/input.component';
 import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
@@ -38,7 +50,22 @@ import { CustomValidator } from '../../../shared/validators/custom-validator';
 @Component({
   selector: 'suricate-tv-management-dialog',
   templateUrl: './tv-management-dialog.component.html',
-  styleUrls: ['./tv-management-dialog.component.scss']
+  styleUrls: ['./tv-management-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    FormsModule,
+    InputComponent,
+    ReactiveFormsModule,
+    ButtonsComponent,
+    MatDivider,
+    MatIcon,
+    MatDialogActions,
+    MatDialogClose,
+    TranslatePipe
+  ]
 })
 export class TvManagementDialogComponent implements OnInit {
   /**

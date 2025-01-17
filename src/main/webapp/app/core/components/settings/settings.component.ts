@@ -18,13 +18,20 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { HeaderComponent } from '../../../layout/components/header/header.component';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { SecuritySettingsComponent } from './security-settings/security-settings.component';
+import { UxSettingsComponent } from './ux-settings/ux-settings.component';
 
 @Component({
   selector: 'suricate-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
+  standalone: true,
+  imports: [HeaderComponent, MatTabGroup, MatTab, UxSettingsComponent, SecuritySettingsComponent, TranslatePipe]
 })
 export class SettingsComponent implements OnInit {
   /**

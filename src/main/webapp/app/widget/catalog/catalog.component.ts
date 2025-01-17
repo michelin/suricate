@@ -17,9 +17,17 @@
  * under the License.
  */
 
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { HeaderComponent } from '../../layout/components/header/header.component';
+import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
+import { InputComponent } from '../../shared/components/inputs/input/input.component';
 import { ListComponent } from '../../shared/components/list/list.component';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { Widget } from '../../shared/models/backend/widget/widget';
 import { WidgetRequest } from '../../shared/models/backend/widget/widget-request';
 import { HttpAssetService } from '../../shared/services/backend/http-asset/http-asset.service';
@@ -30,7 +38,21 @@ import { HttpWidgetService } from '../../shared/services/backend/http-widget/htt
  */
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',
-  styleUrls: ['../../shared/components/list/list.component.scss']
+  styleUrls: ['../../shared/components/list/list.component.scss'],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    InputComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    SpinnerComponent,
+    CdkDropList,
+    CdkDrag,
+    NgClass,
+    NgOptimizedImage,
+    ButtonsComponent,
+    PaginatorComponent
+  ]
 })
 export class CatalogComponent extends ListComponent<Widget, WidgetRequest> {
   /**

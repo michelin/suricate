@@ -20,7 +20,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CanActivateFn } from '@angular/router';
 
-import { MockModule } from '../../../mock/mock.module';
 import { authGuard } from './auth.guard';
 
 describe('AuthGuard', () => {
@@ -28,9 +27,7 @@ describe('AuthGuard', () => {
     TestBed.runInInjectionContext(() => authGuard(...guardParameters));
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule]
-    });
+    TestBed.configureTestingModule({});
   });
 
   it('should be created', () => {

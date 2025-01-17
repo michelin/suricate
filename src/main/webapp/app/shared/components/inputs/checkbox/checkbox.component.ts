@@ -18,8 +18,11 @@
  */
 
 import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import { InputComponent } from '../input/input.component';
+import { BaseInputComponent } from '../base-input/base-input/base-input.component';
 
 /**
  * Manage the instantiation of the checkbox
@@ -27,20 +30,15 @@ import { InputComponent } from '../input/input.component';
 @Component({
   selector: 'suricate-checkbox',
   templateUrl: './checkbox.component.html',
-  styleUrls: ['./checkbox.component.scss']
+  styleUrls: ['./checkbox.component.scss'],
+  standalone: true,
+  imports: [MatCheckbox, FormsModule, ReactiveFormsModule, TranslatePipe]
 })
-export class CheckboxComponent extends InputComponent {
-  /**
-   * Constructor
-   */
-  constructor() {
-    super();
-  }
-
+export class CheckboxComponent extends BaseInputComponent {
   /**
    * Manage the changes on checkbox
    */
   public checkboxChange(): void {
-    this.emitValueChange('checkbox');
+    this.emitValueChangeEventFromType('checkbox');
   }
 }

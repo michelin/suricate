@@ -17,25 +17,36 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../mock/mock.module';
+import { SidenavComponent } from '../../../layout/components/sidenav/sidenav.component';
 import { ButtonsComponent } from './buttons.component';
 
 describe('ButtonsComponent', () => {
   let component: ButtonsComponent<unknown>;
   let fixture: ComponentFixture<ButtonsComponent<unknown>>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [ButtonsComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        SidenavComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

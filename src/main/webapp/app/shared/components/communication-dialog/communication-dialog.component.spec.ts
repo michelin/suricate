@@ -17,10 +17,13 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../mock/mock.module';
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
 import { CommunicationDialogComponent } from './communication-dialog.component';
 
@@ -28,17 +31,29 @@ describe('CommunicationDialogComponent', () => {
   let component: CommunicationDialogComponent;
   let fixture: ComponentFixture<CommunicationDialogComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [CommunicationDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: buildCommunicationDialogConfiguration() }]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        CommunicationDialogComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        { provide: MAT_DIALOG_DATA, useValue: buildCommunicationDialogConfiguration() }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CommunicationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

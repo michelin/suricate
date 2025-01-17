@@ -89,6 +89,7 @@ export class FormService {
     if (fields) {
       fields.forEach((field) => {
         if (field.type === DataTypeEnum.FIELDS) {
+          // TODO: Delete this. FIELDS does not exist anymore I think
           formGroup.addControl(field.key, this.generateFormArrayForField(field));
         } else {
           formGroup.addControl(field.key, this.generateFormControl(field));

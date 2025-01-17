@@ -17,33 +17,41 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../../mock/mock.module';
-import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { FormField } from '../../../models/frontend/form/form-field';
 import { MosaicComponent } from './mosaic.component';
 
 describe('MosaicComponent', () => {
   let component: MosaicComponent;
   let fixture: ComponentFixture<MosaicComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [MosaicComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MosaicComponent]
     }).compileComponents();
-
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(MosaicComponent);
     component = fixture.componentInstance;
-    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.MOSAIC);
+    component.field = buildMockedFormField(DataTypeEnum.MOSAIC);
 
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  /**
+   * Build a mocked FormField for the unit tests
+   *
+   * @param type The type of the field to create
+   */
+  function buildMockedFormField(type: DataTypeEnum): FormField {
+    return {
+      key: 'Key',
+      type: type
+    };
+  }
 });

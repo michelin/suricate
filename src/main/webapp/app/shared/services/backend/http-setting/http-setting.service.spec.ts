@@ -17,9 +17,10 @@
  * under the License.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../../mock/mock.module';
 import { HttpSettingService } from './http-setting.service';
 
 describe('HttpSettingService', () => {
@@ -27,7 +28,7 @@ describe('HttpSettingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     service = TestBed.inject(HttpSettingService);
   });

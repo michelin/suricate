@@ -19,7 +19,10 @@
 
 import { AfterViewInit, Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-@Directive({ selector: '[hideAfterInit]' })
+@Directive({
+  selector: '[hideAfterInit]',
+  standalone: true
+})
 export class HideAfterInitDirective implements OnChanges, AfterViewInit {
   /**
    * True if the element should be hidden

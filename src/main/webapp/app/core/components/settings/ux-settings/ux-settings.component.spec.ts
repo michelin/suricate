@@ -17,9 +17,12 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../../mock/mock.module';
 import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication.service';
 import { UxSettingsComponent } from './ux-settings.component';
 
@@ -27,10 +30,19 @@ describe('UxSettingsComponent', () => {
   let component: UxSettingsComponent;
   let fixture: ComponentFixture<UxSettingsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [UxSettingsComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        UxSettingsComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
 
     AuthenticationService.setAccessToken(
@@ -40,7 +52,7 @@ describe('UxSettingsComponent', () => {
     fixture = TestBed.createComponent(UxSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

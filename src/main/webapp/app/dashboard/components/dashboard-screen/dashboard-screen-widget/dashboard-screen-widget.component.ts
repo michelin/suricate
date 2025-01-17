@@ -17,15 +17,19 @@
  * under the License.
  */
 
-import { TitleCasePipe } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { TranslateService } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IMessage } from '@stomp/rx-stomp';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
+import { WidgetHtmlDirective } from '../../../../shared/directives/widget-html/widget-html.directive';
 import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
@@ -37,6 +41,7 @@ import { Widget } from '../../../../shared/models/backend/widget/widget';
 import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
+import { SafeHtmlPipe } from '../../../../shared/pipes/safe-html/safe-html.pipe';
 import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
 import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget.service';
@@ -54,7 +59,9 @@ import { LibraryService } from '../../../services/library/library.service';
 @Component({
   selector: 'suricate-dashboard-screen-widget',
   templateUrl: './dashboard-screen-widget.component.html',
-  styleUrls: ['./dashboard-screen-widget.component.scss']
+  styleUrls: ['./dashboard-screen-widget.component.scss'],
+  standalone: true,
+  imports: [NgClass, SpinnerComponent, WidgetHtmlDirective, MatIcon, MatTooltip, SafeHtmlPipe, TranslatePipe]
 })
 export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**

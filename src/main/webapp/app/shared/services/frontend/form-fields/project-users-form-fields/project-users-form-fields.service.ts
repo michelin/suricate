@@ -18,7 +18,6 @@
  */
 
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -40,12 +39,10 @@ export class ProjectUsersFormFieldsService {
   /**
    * Constructor
    *
-   * @param translateService Ngx translate service used to manage the translations
    * @param httpProjectService Service used to manage the projects
    * @param httpUserService Service used to manage http calls for user
    */
   constructor(
-    private readonly translateService: TranslateService,
     private readonly httpProjectService: HttpProjectService,
     private readonly httpUserService: HttpUserService
   ) {}

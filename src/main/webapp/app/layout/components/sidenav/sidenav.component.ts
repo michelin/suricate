@@ -18,13 +18,15 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
-import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
+import { ActivatedRoute, Event, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { FormSidenavComponent } from '../../../shared/components/form-sidenav/form-sidenav.component';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 import { RouteService } from '../../../shared/services/frontend/route/route.service';
+import { MenuComponent } from '../menu/menu.component';
 
 /**
  * Hold the sidenav behavior and the main view
@@ -33,7 +35,9 @@ import { RouteService } from '../../../shared/services/frontend/route/route.serv
   selector: 'suricate-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatSidenavContainer, MatSidenav, FormSidenavComponent, MenuComponent, MatSidenavContent, RouterOutlet]
 })
 export class SidenavComponent implements OnInit, OnDestroy {
   /**

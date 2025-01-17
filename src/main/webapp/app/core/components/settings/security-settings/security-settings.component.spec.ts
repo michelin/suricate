@@ -17,9 +17,13 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../../mock/mock.module';
 import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication.service';
 import { SecuritySettingsComponent } from './security-settings.component';
 
@@ -27,10 +31,19 @@ describe('SecuritySettingsComponent', () => {
   let component: SecuritySettingsComponent;
   let fixture: ComponentFixture<SecuritySettingsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [SecuritySettingsComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        SecuritySettingsComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideAnimationsAsync()]
     }).compileComponents();
 
     AuthenticationService.setAccessToken(
@@ -40,7 +53,7 @@ describe('SecuritySettingsComponent', () => {
     fixture = TestBed.createComponent(SecuritySettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

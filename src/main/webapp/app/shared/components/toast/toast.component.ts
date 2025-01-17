@@ -18,7 +18,11 @@
  */
 
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
+import { NgClass } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -98,7 +102,9 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
         ])
       ])
     ])
-  ]
+  ],
+  standalone: true,
+  imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
 })
 export class ToastComponent implements OnInit, OnDestroy {
   /**

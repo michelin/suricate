@@ -17,10 +17,13 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../mock/mock.module';
 import { IconEnum } from '../../enums/icon.enum';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
 import { ActionsDialogComponent } from './actions-dialog.component';
@@ -29,17 +32,29 @@ describe('ActionsDialogComponent', () => {
   let component: ActionsDialogComponent;
   let fixture: ComponentFixture<ActionsDialogComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [ActionsDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        ActionsDialogComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        { provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActionsDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -17,10 +17,14 @@
  * under the License.
  */
 
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { MatIcon } from '@angular/material/icon';
 
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
-import { InputComponent } from '../input/input.component';
+import { SpinnerComponent } from '../../spinner/spinner.component';
+import { BaseInputComponent } from '../base-input/base-input/base-input.component';
 
 /**
  * Component used to display the mosaic input type
@@ -28,9 +32,11 @@ import { InputComponent } from '../input/input.component';
 @Component({
   selector: 'suricate-mosaic',
   templateUrl: './mosaic.component.html',
-  styleUrls: ['./mosaic.component.scss']
+  styleUrls: ['./mosaic.component.scss'],
+  standalone: true,
+  imports: [SpinnerComponent, MatGridList, MatGridTile, NgClass, NgOptimizedImage, MatIcon]
 })
-export class MosaicComponent extends InputComponent implements OnInit {
+export class MosaicComponent extends BaseInputComponent implements OnInit {
   /**
    * The options related to the mosaic
    */
@@ -42,16 +48,9 @@ export class MosaicComponent extends InputComponent implements OnInit {
   public optionSelected: MosaicFormOption;
 
   /**
-   * Constructor
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * Called when the component is init
    */
-  public override ngOnInit(): void {
+  public ngOnInit(): void {
     if (this.field.mosaicOptions) {
       this.field.mosaicOptions(this.formGroup).subscribe((mosaicOptions: MosaicFormOption[]) => {
         this.mosaicOptions = mosaicOptions;
@@ -68,6 +67,6 @@ export class MosaicComponent extends InputComponent implements OnInit {
     this.optionSelected = mosaicOption;
     this.formGroup.controls[this.field.key].setValue(mosaicOption.value);
 
-    this.emitValueChange('mosaicOptionSelected');
+    this.emitValueChangeEventFromType('mosaicOptionSelected');
   }
 }

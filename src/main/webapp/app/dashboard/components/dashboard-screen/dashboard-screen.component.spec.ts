@@ -17,34 +17,87 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../mock/mock.module';
-import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
-import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
+import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
+import { Project } from '../../../shared/models/backend/project/project';
+import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
+import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
 import { DashboardScreenComponent } from './dashboard-screen.component';
 
 describe('DashboardScreenComponent', () => {
   let component: DashboardScreenComponent;
   let fixture: ComponentFixture<DashboardScreenComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [DashboardScreenComponent, SafeHtmlPipe]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        DashboardScreenComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
-
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(DashboardScreenComponent);
     component = fixture.componentInstance;
-    component.project = mockedModelBuilderService.buildMockedProject();
-    component.gridOptions = mockedModelBuilderService.buildGridOptions();
+    component.project = buildMockedProject();
+    component.gridOptions = buildGridOptions();
 
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  function buildMockedProject(): Project {
+    const gridProperties: GridProperties = {
+      maxColumn: 5,
+      widgetHeight: 300,
+      cssStyle: ''
+    };
+
+    const grid: ProjectGrid = {
+      id: 1,
+      time: 30
+    };
+
+    return {
+      gridProperties: gridProperties,
+      librariesToken: ['Token1', 'Token2'],
+      name: 'ProjectName',
+      screenshotToken: 'ScreenToken',
+      image: {
+        content: 'content',
+        contentType: 'image/png',
+        id: 'id',
+        lastUpdateDate: new Date(),
+        size: 10
+      },
+      token: 'Token',
+      displayProgressBar: false,
+      grids: [grid]
+    };
+  }
+
+  function buildGridOptions(): GridOptions {
+    return {
+      cols: 5,
+      rowHeight: 300,
+      gap: 10,
+      draggable: true,
+      resizable: true,
+      compactType: 'vertical'
+    };
+  }
 });

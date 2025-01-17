@@ -19,16 +19,13 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../../mock/mock.module';
 import { WebsocketService } from './websocket.service';
 
 describe('WebsocketService', () => {
   let service: WebsocketService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule]
-    });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(WebsocketService);
   });
 
