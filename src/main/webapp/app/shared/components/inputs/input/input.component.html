@@ -121,10 +121,6 @@
     </div>
   }
 
-  @if (field.type === dataType.FIELDS) {
-    <suricate-fields [field]="field" [formArray]="$any(getFormControl())"> </suricate-fields>
-  }
-
   @if (field.type === dataType.MOSAIC) {
     <suricate-mosaic
       [field]="field"

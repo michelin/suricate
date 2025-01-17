@@ -18,13 +18,16 @@
  */
 
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { MatIcon } from '@angular/material/icon';
 
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
 import { SpinnerComponent } from '../../spinner/spinner.component';
-import { InputComponent } from '../input/input.component';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { UntypedFormGroup } from '@angular/forms';
+import { ValueChangedEvent, ValueChangedType } from '../../../models/frontend/form/value-changed-event';
+import { MaterialIconRecords } from '../../../records/material-icon.record';
 
 /**
  * Component used to display the mosaic input type
@@ -36,7 +39,30 @@ import { InputComponent } from '../input/input.component';
   standalone: true,
   imports: [SpinnerComponent, MatGridList, MatGridTile, NgClass, NgOptimizedImage, MatIcon]
 })
-export class MosaicComponent extends InputComponent implements OnInit {
+export class MosaicComponent implements OnInit {
+  /**
+   * Object that hold different information used for the instantiation of the input
+   */
+  @Input()
+  public field: FormField;
+
+  /**
+   * The form created in which we have to create the input
+   */
+  @Input()
+  public formGroup: UntypedFormGroup;
+
+  /**
+   * Event sent when the value of the input has changed
+   */
+  @Output()
+  public valueChangeEvent = new EventEmitter<ValueChangedEvent>();
+
+  /**
+   * The list of material icon codes
+   */
+  public materialIconRecords = MaterialIconRecords;
+
   /**
    * The options related to the mosaic
    */
@@ -48,16 +74,9 @@ export class MosaicComponent extends InputComponent implements OnInit {
   public optionSelected: MosaicFormOption;
 
   /**
-   * Constructor
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * Called when the component is init
    */
-  public override ngOnInit(): void {
+  public ngOnInit(): void {
     if (this.field.mosaicOptions) {
       this.field.mosaicOptions(this.formGroup).subscribe((mosaicOptions: MosaicFormOption[]) => {
         this.mosaicOptions = mosaicOptions;
@@ -74,6 +93,10 @@ export class MosaicComponent extends InputComponent implements OnInit {
     this.optionSelected = mosaicOption;
     this.formGroup.controls[this.field.key].setValue(mosaicOption.value);
 
-    this.emitValueChange('mosaicOptionSelected');
+    this.valueChangeEvent.emit({
+      fieldKey: this.field.key,
+      value: this.formGroup.value[this.field.key],
+      type: 'mosaicOptionSelected'
+    });
   }
 }

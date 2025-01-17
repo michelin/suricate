@@ -35,7 +35,6 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.component';
 import { CheckboxComponent } from './components/inputs/checkbox/checkbox.component';
 import { ColorPickerComponent } from './components/inputs/color-picker/color-picker.component';
-import { FieldsComponent } from './components/inputs/fields/fields.component';
 import { FileInputComponent } from './components/inputs/file-input/file-input.component';
 import { InputComponent } from './components/inputs/input/input.component';
 import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
@@ -115,7 +114,6 @@ import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
     FormSidenavComponent,
     WizardComponent,
     ColorPickerComponent,
-    FieldsComponent,
     MosaicComponent,
     PaginatorComponent,
     SlideToggleComponent,

@@ -19,7 +19,7 @@
 
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NgClass } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -27,7 +27,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 import html2canvas from 'html2canvas';
 
 import { FileUtils } from '../../../utils/file.utils';
-import { InputComponent } from '../input/input.component';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { ValueChangedEvent, ValueChangedType } from '../../../models/frontend/form/value-changed-event';
+import { MaterialIconRecords } from '../../../records/material-icon.record';
+import { IconEnum } from '../../../enums/icon.enum';
 
 /**
  * Component that manage the file input
@@ -47,7 +51,41 @@ import { InputComponent } from '../input/input.component';
   standalone: true,
   imports: [MatButton, NgClass, MatIcon, MatError, TranslatePipe]
 })
-export class FileInputComponent extends InputComponent implements OnInit {
+export class FileInputComponent implements OnInit {
+  /**
+   * Object that hold different information used for the instantiation of the input
+   */
+  @Input()
+  public field: FormField;
+
+  /**
+   * The form created in which we have to create the input
+   */
+  @Input()
+  public formGroup: UntypedFormGroup;
+
+  /**
+   * Event sent when the value of the input has changed
+   */
+  @Output()
+  public valueChangeEvent = new EventEmitter<ValueChangedEvent>();
+
+  /**
+   * A reference to a component. Used to take screenshot
+   */
+  @Input()
+  public componentRef: ElementRef;
+
+  /**
+   * The list of material icon codes
+   */
+  public materialIconRecords = MaterialIconRecords;
+
+  /**
+   * The list of icons
+   */
+  public iconEnum = IconEnum;
+
   /**
    * The image as base 64
    */
@@ -59,16 +97,9 @@ export class FileInputComponent extends InputComponent implements OnInit {
   public filename: string;
 
   /**
-   * Constructor
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * When the component is init
    */
-  public override ngOnInit(): void {
+  public ngOnInit(): void {
     this.setBase64File(this.field.value as string);
   }
 
@@ -114,9 +145,9 @@ export class FileInputComponent extends InputComponent implements OnInit {
       const fileName = file.name;
 
       this.setBase64File(base64String, fileName);
-      super.getFormControl().setValue(base64String);
-      super.getFormControl().markAsDirty();
-      super.getFormControl().markAsTouched();
+      this.getFormControl().setValue(base64String);
+      this.getFormControl().markAsDirty();
+      this.getFormControl().markAsTouched();
 
       this.emitValueChange('fileChanged');
     });
@@ -134,11 +165,48 @@ export class FileInputComponent extends InputComponent implements OnInit {
     }).then((htmlCanvasElement: HTMLCanvasElement) => {
       const b64: string = htmlCanvasElement.toDataURL('image/png');
       this.setBase64File(b64);
-      super.getFormControl().setValue(b64);
-      super.getFormControl().markAsDirty();
-      super.getFormControl().markAsTouched();
+      this.getFormControl().setValue(b64);
+      this.getFormControl().markAsDirty();
+      this.getFormControl().markAsTouched();
 
       this.emitValueChange('fileChanged');
     });
+  }
+
+  /**
+   * Function called when a field has been changed in the form, emit and event that will be caught by the parent component
+   */
+  public emitValueChange(type: ValueChangedType): void {
+    this.valueChangeEvent.emit({
+      fieldKey: this.field.key,
+      value: this.formGroup.value[this.field.key],
+      type: type // TODO: Check if this is still needed
+    });
+  }
+
+  /**
+   * Retrieve the form control from the form
+   */
+  public getFormControl(): AbstractControl | null {
+    return this.formGroup.controls[this.field.key];
+  }
+
+  /**
+   * Test if the field is on error
+   */
+  public isInputFieldOnError(): boolean {
+    return (this.getFormControl().dirty || this.getFormControl().touched) && this.getFormControl().invalid;
+  }
+
+  /**
+   * Get the first error triggered by the current field.
+   * Return the string code of the error to display it.
+   */
+  public getInputErrors(): string {
+    if (this.getFormControl()['errors']?.['pattern']) {
+      return 'field.error.pattern';
+    }
+
+    return undefined;
   }
 }

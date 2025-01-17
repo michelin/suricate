@@ -17,12 +17,13 @@
  * under the License.
  */
 
-import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AbstractControl, FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { InputComponent } from '../input/input.component';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { ValueChangedEvent, ValueChangedType } from '../../../models/frontend/form/value-changed-event';
 
 /**
  * Manage the instantiation of the checkbox
@@ -34,18 +35,40 @@ import { InputComponent } from '../input/input.component';
   standalone: true,
   imports: [MatCheckbox, FormsModule, ReactiveFormsModule, TranslatePipe]
 })
-export class CheckboxComponent extends InputComponent {
+export class CheckboxComponent {
   /**
-   * Constructor
+   * Object that hold different information used for the instantiation of the input
    */
-  constructor() {
-    super();
-  }
+  @Input()
+  public field: FormField;
+
+  /**
+   * The form created in which we have to create the input
+   */
+  @Input()
+  public formGroup: UntypedFormGroup;
+
+  /**
+   * Event sent when the value of the input has changed
+   */
+  @Output()
+  public valueChangeEvent = new EventEmitter<ValueChangedEvent>();
 
   /**
    * Manage the changes on checkbox
    */
   public checkboxChange(): void {
-    this.emitValueChange('checkbox');
+    this.valueChangeEvent.emit({
+      fieldKey: this.field.key,
+      value: this.formGroup.value[this.field.key],
+      type: 'checkbox'
+    });
+  }
+
+  /**
+   * Retrieve the form control from the form
+   */
+  public getFormControl(): AbstractControl | null {
+    return this.formGroup.controls[this.field.key];
   }
 }

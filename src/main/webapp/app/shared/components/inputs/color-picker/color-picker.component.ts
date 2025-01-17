@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatLabel } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ColorPickerModule } from 'ngx-color-picker';
-
-import { InputComponent } from '../input/input.component';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 
 /**
  * Component used to display the color picker
@@ -34,13 +34,18 @@ import { InputComponent } from '../input/input.component';
   standalone: true,
   imports: [MatLabel, ColorPickerModule, TranslatePipe]
 })
-export class ColorPickerComponent extends InputComponent {
+export class ColorPickerComponent {
   /**
-   * Constructor
+   * Object that hold different information used for the instantiation of the input
    */
-  constructor() {
-    super();
-  }
+  @Input()
+  public field: FormField;
+
+  /**
+   * The form created in which we have to create the input
+   */
+  @Input()
+  public formGroup: UntypedFormGroup;
 
   /**
    * Notification change when the color as changed
@@ -56,5 +61,12 @@ export class ColorPickerComponent extends InputComponent {
    */
   public getFieldValue(): string {
     return this.field.value as string;
+  }
+
+  /**
+   * Retrieve the form control from the form
+   */
+  public getFormControl(): AbstractControl | null {
+    return this.formGroup.controls[this.field.key];
   }
 }

@@ -38,7 +38,6 @@ import { ValueChangedEvent, ValueChangedType } from '../../../models/frontend/fo
 import { MaterialIconRecords } from '../../../records/material-icon.record';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { ColorPickerComponent } from '../color-picker/color-picker.component';
-import { FieldsComponent } from '../fields/fields.component';
 import { FileInputComponent } from '../file-input/file-input.component';
 import { MosaicComponent } from '../mosaic/mosaic.component';
 
@@ -79,7 +78,6 @@ import { MosaicComponent } from '../mosaic/mosaic.component';
     CheckboxComponent,
     FileInputComponent,
     ColorPickerComponent,
-    FieldsComponent,
     MosaicComponent,
     TranslatePipe
   ]
