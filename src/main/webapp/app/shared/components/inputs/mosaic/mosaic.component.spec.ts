@@ -23,26 +23,43 @@ import { MockModule } from '../../../../mock/mock.module';
 import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { MosaicComponent } from './mosaic.component';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { UntypedFormBuilder } from '@angular/forms';
 
 describe('MosaicComponent', () => {
   let component: MosaicComponent;
   let fixture: ComponentFixture<MosaicComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, MosaicComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MosaicComponent]
     }).compileComponents();
-
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(MosaicComponent);
     component = fixture.componentInstance;
-    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.MOSAIC);
+    component.field = buildMockedFormField(DataTypeEnum.MOSAIC);
 
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  /**
+   * Build a mocked FormField for the unit tests
+   *
+   * @param type The type of the field to create
+   */
+  function buildMockedFormField(type: DataTypeEnum): FormField {
+    return {
+      key: 'Key',
+      type: type
+    };
+  }
 });

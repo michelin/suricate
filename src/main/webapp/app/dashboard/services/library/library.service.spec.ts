@@ -21,14 +21,17 @@ import { TestBed } from '@angular/core/testing';
 
 import { MockModule } from '../../../mock/mock.module';
 import { LibraryService } from './library.service';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { DashboardService } from '../dashboard/dashboard.service';
 
 describe('LibraryService', () => {
   let service: LibraryService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule]
-    });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(LibraryService);
   });
 

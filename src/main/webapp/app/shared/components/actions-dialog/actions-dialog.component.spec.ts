@@ -24,21 +24,42 @@ import { MockModule } from '../../../mock/mock.module';
 import { IconEnum } from '../../enums/icon.enum';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
 import { ActionsDialogComponent } from './actions-dialog.component';
+import {
+  TvManagementDialogComponent
+} from '../../../dashboard/components/tv-management-dialog/tv-management-dialog.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('ActionsDialogComponent', () => {
   let component: ActionsDialogComponent;
   let fixture: ComponentFixture<ActionsDialogComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, ActionsDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        ActionsDialogComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        { provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActionsDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

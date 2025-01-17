@@ -21,20 +21,41 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MockModule } from '../../../mock/mock.module';
 import { DashboardDetailComponent } from './dashboard-detail.component';
+import { UxSettingsComponent } from '../../../core/components/settings/ux-settings/ux-settings.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { appRoutes } from '../../../app.routes';
 
 describe('DashboardDetailComponent', () => {
   let component: DashboardDetailComponent;
   let fixture: ComponentFixture<DashboardDetailComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, DashboardDetailComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        DashboardDetailComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideRouter(appRoutes),
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

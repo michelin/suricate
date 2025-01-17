@@ -23,27 +23,79 @@ import { MockModule } from '../../../../mock/mock.module';
 import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { CheckboxComponent } from './checkbox.component';
+import { BaseInputComponent } from '../base-input/base-input/base-input.component';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideRouter } from '@angular/router';
+import { appRoutes } from '../../../../app.routes';
 
 describe('CheckboxComponent', () => {
   let component: CheckboxComponent;
   let fixture: ComponentFixture<CheckboxComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, CheckboxComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        CheckboxComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideAnimationsAsync(),
+        provideRouter(appRoutes)
+      ]
     }).compileComponents();
 
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
-
     fixture = TestBed.createComponent(CheckboxComponent);
+    const formBuilder = TestBed.inject(UntypedFormBuilder);
+
     component = fixture.componentInstance;
-    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.BOOLEAN);
-    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.BOOLEAN);
+    component.field = buildMockedFormField(DataTypeEnum.BOOLEAN);
+    component.formGroup = buildMockedFormGroup(DataTypeEnum.BOOLEAN, formBuilder);
 
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  /**
+   * Build a mocked FormField for the unit tests
+   *
+   * @param type The type of the field to create
+   */
+  function buildMockedFormField(type: DataTypeEnum): FormField {
+    return {
+      key: 'Key',
+      type: type
+    };
+  }
+
+  /**
+   * Build a mocked FormGroup for the unit tests
+   *
+   * @param type The type of the field to create
+   * @param formBuilder The form builder to use to create the form group
+   */
+  function buildMockedFormGroup(type: DataTypeEnum, formBuilder: UntypedFormBuilder): UntypedFormGroup {
+    const customField = buildMockedFormField(type);
+
+    const formGroup: UntypedFormGroup = formBuilder.group({});
+    formGroup.addControl(customField.key, new UntypedFormControl(customField.value));
+
+    return formGroup;
+  }
 });

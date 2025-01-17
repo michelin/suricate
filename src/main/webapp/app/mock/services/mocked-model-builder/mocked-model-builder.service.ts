@@ -134,43 +134,6 @@ export class MockedModelBuilderService {
   /**
    * Build a mocked project widget for the unit tests
    */
-  public buildMockedProjectWidget(): ProjectWidget {
-    const widgetPosition: ProjectWidgetPosition = {
-      gridColumn: 1,
-      gridRow: 1,
-      width: 200,
-      height: 200
-    };
 
-    return {
-      id: 1,
-      data: 'Data',
-      widgetPosition: widgetPosition,
-      customStyle: '',
-      instantiateHtml: '',
-      backendConfig: '',
-      log: '',
-      lastExecutionDate: '',
-      lastSuccessDate: '',
-      globalConfigOverridden: true,
-      state: WidgetStateEnum.RUNNING,
-      projectToken: 'Token',
-      widgetId: 1,
-      gridId: 1
-    };
-  }
 
-  /**
-   * Build a mocked gridOptions for the unit tests
-   */
-  public buildGridOptions(): GridOptions {
-    return {
-      cols: 5,
-      rowHeight: 300,
-      gap: 10,
-      draggable: true,
-      resizable: true,
-      compactType: 'vertical'
-    };
-  }
 }

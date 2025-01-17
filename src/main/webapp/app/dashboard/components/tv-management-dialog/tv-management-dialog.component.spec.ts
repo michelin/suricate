@@ -25,21 +25,43 @@ import { GridProperties } from '../../../shared/models/backend/project/grid-prop
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { TvManagementDialogComponent } from './tv-management-dialog.component';
+import { DashboardTvComponent } from '../dashboard-tv/dashboard-tv.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { appRoutes } from '../../../app.routes';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('TvManagementDialogComponent', () => {
   let component: TvManagementDialogComponent;
   let fixture: ComponentFixture<TvManagementDialogComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, TvManagementDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        TvManagementDialogComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideAnimationsAsync(),
+        { provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TvManagementDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
