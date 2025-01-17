@@ -19,16 +19,13 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../../mock/mock.module';
 import { RxStompService } from './rx-stomp.service';
 
 describe('RxStompService', () => {
   let service: RxStompService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule]
-    });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(RxStompService);
   });
 

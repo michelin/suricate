@@ -19,16 +19,13 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../../mock/mock.module';
 import { HttpAssetService } from './http-asset.service';
 
 describe('HttpAssetService', () => {
   let service: HttpAssetService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule]
-    });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(HttpAssetService);
   });
 

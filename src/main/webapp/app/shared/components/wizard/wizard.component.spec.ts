@@ -17,31 +17,64 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../mock/mock.module';
-import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
+import { appRoutes } from '../../../app.routes';
+import { IconEnum } from '../../enums/icon.enum';
+import { FormStep } from '../../models/frontend/form/form-step';
+import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
 import { WizardComponent } from './wizard.component';
 
 describe('WizardComponent', () => {
   let component: WizardComponent;
   let fixture: ComponentFixture<WizardComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, WizardComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        WizardComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideRouter(appRoutes)]
     }).compileComponents();
-
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(WizardComponent);
     component = fixture.componentInstance;
-    component.wizardConfiguration = mockedModelBuilderService.buildWizardConfiguration();
-
+    component.wizardConfiguration = buildWizardConfiguration();
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  /**
+   * Build a mocked WizardConfiguration for the unit tests
+   */
+  function buildWizardConfiguration(): WizardConfiguration {
+    const formSteps: FormStep[] = [];
+
+    for (let i = 0; i < 3; i++) {
+      formSteps.push({
+        key: 'Key' + i,
+        title: 'Title' + i,
+        icon: IconEnum.ADD
+      });
+    }
+
+    return {
+      steps: formSteps
+    };
+  }
 });

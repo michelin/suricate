@@ -19,16 +19,13 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../../mock/mock.module';
 import { FormService } from './form.service';
 
 describe('FormService', () => {
   let service: FormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule]
-    });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(FormService);
   });
 

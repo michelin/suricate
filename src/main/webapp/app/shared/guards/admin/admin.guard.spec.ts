@@ -20,7 +20,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CanActivateFn } from '@angular/router';
 
-import { MockModule } from '../../../mock/mock.module';
 import { adminGuard } from './admin.guard';
 
 describe('AdminGuard', () => {
@@ -28,9 +27,7 @@ describe('AdminGuard', () => {
     TestBed.runInInjectionContext(() => adminGuard(...guardParameters));
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule]
-    });
+    TestBed.configureTestingModule({});
   });
 
   it('should be created', () => {

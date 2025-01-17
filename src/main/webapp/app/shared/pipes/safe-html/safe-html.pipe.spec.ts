@@ -19,7 +19,6 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../mock/mock.module';
 import { SafeHtmlPipe } from './safe-html.pipe';
 
 describe('SafeHtmlPipe', () => {
@@ -27,7 +26,6 @@ describe('SafeHtmlPipe', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule],
       providers: [SafeHtmlPipe]
     });
     pipe = TestBed.inject(SafeHtmlPipe);

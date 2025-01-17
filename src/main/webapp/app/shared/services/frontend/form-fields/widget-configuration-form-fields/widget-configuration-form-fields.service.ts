@@ -24,7 +24,6 @@ import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { CategoryParameter } from '../../../../models/backend/category-parameters/category-parameter';
 import { FormField } from '../../../../models/frontend/form/form-field';
-import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
 import { FormService } from '../../form/form.service';
 import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
 
@@ -36,12 +35,10 @@ export class WidgetConfigurationFormFieldsService {
   /**
    * Constructor
    *
-   * @param categoryService The category service
    * @param formService The form service
    * @param projectWidgetFormStepsService The project widget form step service
    */
   constructor(
-    private readonly categoryService: HttpCategoryService,
     private readonly formService: FormService,
     private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService
   ) {}
