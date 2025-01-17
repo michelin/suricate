@@ -24,15 +24,11 @@ import { RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { CoreModule } from '../core/core.module';
-import { LayoutModule } from '../layout/layout.module';
 import { RxStompService } from '../shared/services/frontend/rx-stomp/rx-stomp.service';
-import { SharedModule } from '../shared/shared.module';
 import { MockElementRef } from './models/mock-element-ref';
 import { MockRxStompService } from './services/mock-rx-stomp/mock-rx-stomp.service';
 
 @NgModule({
-  exports: [LayoutModule, SharedModule],
   imports: [
     TranslateModule.forRoot({
       loader: {
@@ -42,9 +38,6 @@ import { MockRxStompService } from './services/mock-rx-stomp/mock-rx-stomp.servi
       }
     }),
     RouterModule.forRoot([]),
-    LayoutModule,
-    SharedModule,
-    CoreModule
   ],
   providers: [
     { provide: RxStompService, useClass: MockRxStompService },

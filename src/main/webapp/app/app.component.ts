@@ -31,11 +31,15 @@ import { ActionsDialogConfiguration } from './shared/models/frontend/dialog/acti
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
 import { DialogService } from './shared/services/frontend/dialog/dialog.service';
+import { SidenavComponent } from './layout/components/sidenav/sidenav.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
-  selector: 'suricate-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'suricate-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [SidenavComponent, ToastComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
   /**

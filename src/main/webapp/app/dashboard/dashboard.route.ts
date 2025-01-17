@@ -24,7 +24,7 @@ import { DashboardDetailComponent } from './components/dashboard-detail/dashboar
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
 import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
 
-export const DashboardRoutes: Routes = [
+export const dashboardRoutes: Routes = [
   {
     path: 'tv',
     component: DashboardTvComponent

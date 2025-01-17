@@ -44,7 +44,7 @@ import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 
 @Component({
-  selector: 'suricate-my-dashboards',
+  selector: 'suricate-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
