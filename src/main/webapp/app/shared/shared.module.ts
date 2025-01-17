@@ -50,7 +50,7 @@ import { WidgetHtmlDirective } from './directives/widget-html/widget-html.direct
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { MaterialModule } from './modules/material.module';
-import { MaterialCDKModule } from './modules/material-cdk.module';
+
 import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
 
 @NgModule({
@@ -64,7 +64,6 @@ import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
     FileInputComponent,
     FormsModule,
     InputComponent,
-    MaterialCDKModule,
     MaterialModule,
     KtdGridModule,
     ReactiveFormsModule,
@@ -85,13 +84,12 @@ import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
     ProgressBarComponent,
     ColorPickerModule,
     NgOptimizedImage
-  ],
+],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     CommonModule,
     FormsModule,
-    MaterialCDKModule,
     MaterialModule,
     KtdGridModule,
     ReactiveFormsModule,
@@ -119,7 +117,7 @@ import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
     SlideToggleComponent,
     ProgressBarComponent,
     ActionsDialogComponent
-  ],
+],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
