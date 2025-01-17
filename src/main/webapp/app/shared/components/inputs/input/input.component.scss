@@ -25,3 +25,30 @@
     width: 100%;
   }
 }
+
+.inner-form-group {
+  margin-block-start: 20px;
+
+  h1 {
+    font-size: 1.3em;
+  }
+
+  .fields-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .delete-row {
+      padding-top: 8px;
+    }
+  }
+
+  .trash-icon {
+    transform: translateY(-50%);
+
+    &:hover {
+      color: #ca2934;
+      cursor: pointer;
+    }
+  }
+}

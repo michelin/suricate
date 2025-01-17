@@ -88,7 +88,8 @@ export class FormService {
 
     if (fields) {
       fields.forEach((field) => {
-        if (field.type === DataTypeEnum.FIELDS) { // TODO: Delete this. FIELDS does not exist anymore I think
+        if (field.type === DataTypeEnum.FIELDS) {
+          // TODO: Delete this. FIELDS does not exist anymore I think
           formGroup.addControl(field.key, this.generateFormArrayForField(field));
         } else {
           formGroup.addControl(field.key, this.generateFormControl(field));
@@ -188,12 +189,14 @@ export class FormService {
    * @param formField The form field to check
    */
   public isInput(formField: FormField): boolean {
-    return formField.type === DataTypeEnum.TEXT
-      || formField.type === DataTypeEnum.NUMBER
-      || formField.type === DataTypeEnum.TEXTAREA
-      || formField.type === DataTypeEnum.PASSWORD
-      || formField.type === DataTypeEnum.COMBO
-      || formField.type === DataTypeEnum.MULTIPLE;
+    return (
+      formField.type === DataTypeEnum.TEXT ||
+      formField.type === DataTypeEnum.NUMBER ||
+      formField.type === DataTypeEnum.TEXTAREA ||
+      formField.type === DataTypeEnum.PASSWORD ||
+      formField.type === DataTypeEnum.COMBO ||
+      formField.type === DataTypeEnum.MULTIPLE
+    );
   }
 
   /**
