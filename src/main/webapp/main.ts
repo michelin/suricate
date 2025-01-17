@@ -17,43 +17,41 @@
  * under the License.
  */
 
-import { enableProdMode, importProvidersFrom } from '@angular/core';
-
-
-import { environment } from './environments/environment';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideRouter } from '@angular/router';
-import { appRoutes } from './app/app.routes';
-import { AppComponent } from './app/app.component';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { TokenInterceptor } from './app/shared/interceptors/token.interceptor';
+import { provideRouter } from '@angular/router';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+import { AppComponent } from './app/app.component';
+import { appRoutes } from './app/app.routes';
 import { ErrorInterceptor } from './app/shared/interceptors/error.interceptor';
-import { DatePipe } from '@angular/common';
+import { TokenInterceptor } from './app/shared/interceptors/token.interceptor';
+import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
 }
 
 bootstrapApplication(AppComponent, {
-    providers: [
-        importProvidersFrom(
-            TranslateModule.forRoot({
-                loader: {
-                    provide: TranslateLoader,
-                    useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
-                    deps: [HttpClient]
-                }
-            })
-        ),
-        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideAnimationsAsync(),
-        provideRouter(appRoutes),
-        DatePipe
-    ]
-})
-  .catch((err) => console.error(err));
+  providers: [
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+          deps: [HttpClient]
+        }
+      })
+    ),
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimationsAsync(),
+    provideRouter(appRoutes),
+    DatePipe
+  ]
+}).catch((err) => console.error(err));

@@ -22,15 +22,11 @@ import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGr
 
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
-import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
 import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
-import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { ProjectWidgetPosition } from '../../../shared/models/backend/project-widget/project-widget-position';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { FormStep } from '../../../shared/models/frontend/form/form-step';
-import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
 import { WizardConfiguration } from '../../../shared/models/frontend/wizard/wizard-configuration';
 
 @Injectable({
@@ -134,6 +130,4 @@ export class MockedModelBuilderService {
   /**
    * Build a mocked project widget for the unit tests
    */
-
-
 }

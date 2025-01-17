@@ -37,7 +37,7 @@ import { MockRxStompService } from './services/mock-rx-stomp/mock-rx-stomp.servi
         deps: [HttpClient]
       }
     }),
-    RouterModule.forRoot([]),
+    RouterModule.forRoot([])
   ],
   providers: [
     { provide: RxStompService, useClass: MockRxStompService },

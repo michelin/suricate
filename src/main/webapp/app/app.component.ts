@@ -24,22 +24,22 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { SettingsService } from './core/services/settings.service';
+import { SidenavComponent } from './layout/components/sidenav/sidenav.component';
 import { ActionsDialogComponent } from './shared/components/actions-dialog/actions-dialog.component';
 import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
 import { ActionsDialogConfiguration } from './shared/models/frontend/dialog/actions-dialog-configuration';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
 import { DialogService } from './shared/services/frontend/dialog/dialog.service';
-import { SidenavComponent } from './layout/components/sidenav/sidenav.component';
-import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
-    selector: 'suricate-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: true,
-    imports: [SidenavComponent, ToastComponent]
+  selector: 'suricate-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [SidenavComponent, ToastComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
   /**

@@ -17,17 +17,15 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../../mock/mock.module';
 import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication.service';
 import { SecuritySettingsComponent } from './security-settings.component';
-import { UxSettingsComponent } from '../ux-settings/ux-settings.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('SecuritySettingsComponent', () => {
   let component: SecuritySettingsComponent;
@@ -45,11 +43,7 @@ describe('SecuritySettingsComponent', () => {
           }
         })
       ],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideAnimationsAsync()
-      ]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideAnimationsAsync()]
     }).compileComponents();
 
     AuthenticationService.setAccessToken(

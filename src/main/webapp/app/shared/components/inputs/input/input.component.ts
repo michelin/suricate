@@ -270,21 +270,25 @@ export class InputComponent extends BaseInputComponent implements OnInit {
    * Is the current field an HTML input
    */
   public isHtmlInput(): boolean {
-    return this.field.type === DataTypeEnum.NUMBER
-      || this.field.type === DataTypeEnum.TEXT
-      || this.field.type === DataTypeEnum.TEXTAREA
-      || this.field.type === DataTypeEnum.PASSWORD
-      || this.field.type === DataTypeEnum.COMBO
-      || this.field.type === DataTypeEnum.MULTIPLE;
+    return (
+      this.field.type === DataTypeEnum.NUMBER ||
+      this.field.type === DataTypeEnum.TEXT ||
+      this.field.type === DataTypeEnum.TEXTAREA ||
+      this.field.type === DataTypeEnum.PASSWORD ||
+      this.field.type === DataTypeEnum.COMBO ||
+      this.field.type === DataTypeEnum.MULTIPLE
+    );
   }
 
   /**
    * Is the current field a simple input
    */
   public isSimpleInput(): boolean {
-    return this.field.type === DataTypeEnum.NUMBER
-      || this.field.type === DataTypeEnum.TEXT
-      || this.field.type === DataTypeEnum.PASSWORD;
+    return (
+      this.field.type === DataTypeEnum.NUMBER ||
+      this.field.type === DataTypeEnum.TEXT ||
+      this.field.type === DataTypeEnum.PASSWORD
+    );
   }
 
   /**

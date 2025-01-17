@@ -17,21 +17,16 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../mock/mock.module';
 import { IconEnum } from '../../enums/icon.enum';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
 import { ActionsDialogComponent } from './actions-dialog.component';
-import {
-  TvManagementDialogComponent
-} from '../../../dashboard/components/tv-management-dialog/tv-management-dialog.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('ActionsDialogComponent', () => {
   let component: ActionsDialogComponent;

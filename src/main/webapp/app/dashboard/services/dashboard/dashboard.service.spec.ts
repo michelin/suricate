@@ -17,25 +17,18 @@
  * under the License.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../mock/mock.module';
 import { DashboardService } from './dashboard.service';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { SettingsService } from '../../../core/services/settings.service';
 
 describe('DashboardService', () => {
   let service: DashboardService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-      ]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     service = TestBed.inject(DashboardService);
   });

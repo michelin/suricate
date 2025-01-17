@@ -17,15 +17,16 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormSidenavComponent } from './form-sidenav.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { appRoutes } from '../../../app.routes';
+import { FormSidenavComponent } from './form-sidenav.component';
 
 describe('FormSidenavComponent', () => {
   let component: FormSidenavComponent;

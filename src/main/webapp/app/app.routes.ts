@@ -18,6 +18,7 @@
  */
 
 import { Routes } from '@angular/router';
+
 import { adminRoutes } from './admin/admin.route';
 import { coreRoutes } from './core/core.route';
 import { dashboardRoutes } from './dashboard/dashboard.route';

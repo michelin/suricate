@@ -17,22 +17,16 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { MockModule } from '../../../../mock/mock.module';
-import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { ColorPickerComponent } from './color-picker.component';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideRouter } from '@angular/router';
-import { appRoutes } from '../../../../app.routes';
-import { FormField } from '../../../models/frontend/form/form-field';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { ColorPickerComponent } from './color-picker.component';
 
 describe('ColorPickerComponent', () => {
   let component: ColorPickerComponent;
@@ -50,10 +44,7 @@ describe('ColorPickerComponent', () => {
           }
         })
       ],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-      ]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ColorPickerComponent);

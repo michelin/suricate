@@ -17,14 +17,15 @@
  * under the License.
  */
 
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
 import { CommunicationDialogComponent } from './communication-dialog.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('CommunicationDialogComponent', () => {
   let component: CommunicationDialogComponent;

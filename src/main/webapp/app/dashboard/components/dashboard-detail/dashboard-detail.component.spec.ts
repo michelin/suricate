@@ -17,17 +17,15 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { MockModule } from '../../../mock/mock.module';
-import { DashboardDetailComponent } from './dashboard-detail.component';
-import { UxSettingsComponent } from '../../../core/components/settings/ux-settings/ux-settings.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { appRoutes } from '../../../app.routes';
+import { DashboardDetailComponent } from './dashboard-detail.component';
 
 describe('DashboardDetailComponent', () => {
   let component: DashboardDetailComponent;
@@ -45,11 +43,7 @@ describe('DashboardDetailComponent', () => {
           }
         })
       ],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideRouter(appRoutes),
-      ]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideRouter(appRoutes)]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardDetailComponent);

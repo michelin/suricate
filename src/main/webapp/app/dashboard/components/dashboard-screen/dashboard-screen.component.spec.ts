@@ -17,23 +17,17 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { MockModule } from '../../../mock/mock.module';
-import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
-import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
-import { DashboardScreenComponent } from './dashboard-screen.component';
-import { DashboardDetailComponent } from '../dashboard-detail/dashboard-detail.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
-import { appRoutes } from '../../../app.routes';
-import { Project } from '../../../shared/models/backend/project/project';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
+import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
+import { DashboardScreenComponent } from './dashboard-screen.component';
 
 describe('DashboardScreenComponent', () => {
   let component: DashboardScreenComponent;
@@ -51,10 +45,7 @@ describe('DashboardScreenComponent', () => {
           }
         })
       ],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-      ]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardScreenComponent);
@@ -110,4 +101,3 @@ describe('DashboardScreenComponent', () => {
     };
   }
 });
-

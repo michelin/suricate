@@ -17,22 +17,18 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { MockModule } from '../../../mock/mock.module';
 import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { TvManagementDialogComponent } from './tv-management-dialog.component';
-import { DashboardTvComponent } from '../dashboard-tv/dashboard-tv.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
-import { appRoutes } from '../../../app.routes';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('TvManagementDialogComponent', () => {
   let component: TvManagementDialogComponent;

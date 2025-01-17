@@ -17,19 +17,11 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MockModule } from '../../../../mock/mock.module';
-import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { MosaicComponent } from './mosaic.component';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormField } from '../../../models/frontend/form/form-field';
-import { UntypedFormBuilder } from '@angular/forms';
+import { MosaicComponent } from './mosaic.component';
 
 describe('MosaicComponent', () => {
   let component: MosaicComponent;

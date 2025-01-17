@@ -17,15 +17,14 @@
  * under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { MockModule } from '../../mock/mock.module';
-import { ConfigurationsComponent } from './configurations.component';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+import { ConfigurationsComponent } from './configurations.component';
 
 describe('ConfigurationsComponent', () => {
   let component: ConfigurationsComponent;
@@ -43,11 +42,7 @@ describe('ConfigurationsComponent', () => {
           }
         })
       ],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideAnimationsAsync(),
-      ]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideAnimationsAsync()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfigurationsComponent);
