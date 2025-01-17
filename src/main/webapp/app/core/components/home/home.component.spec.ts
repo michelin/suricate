@@ -21,20 +21,39 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MockModule } from '../../../mock/mock.module';
 import { HomeComponent } from './home.component';
+import { UsersComponent } from '../../../admin/users/users.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, HomeComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        HomeComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

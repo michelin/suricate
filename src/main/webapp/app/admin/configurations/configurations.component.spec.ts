@@ -21,20 +21,39 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MockModule } from '../../mock/mock.module';
 import { ConfigurationsComponent } from './configurations.component';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('ConfigurationsComponent', () => {
   let component: ConfigurationsComponent;
   let fixture: ComponentFixture<ConfigurationsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, ConfigurationsComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        ConfigurationsComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideAnimationsAsync(),
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfigurationsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

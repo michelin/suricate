@@ -21,20 +21,40 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MockModule } from '../../mock/mock.module';
 import { DashboardsComponent } from './dashboards.component';
+import { ConfigurationsComponent } from '../configurations/configurations.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('DashboardsComponent', () => {
   let component: DashboardsComponent;
   let fixture: ComponentFixture<DashboardsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule, DashboardsComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        DashboardsComponent,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideAnimationsAsync(),
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

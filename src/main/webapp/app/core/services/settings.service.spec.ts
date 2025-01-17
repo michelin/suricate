@@ -21,13 +21,30 @@ import { TestBed } from '@angular/core/testing';
 
 import { MockModule } from '../../mock/mock.module';
 import { SettingsService } from './settings.service';
+import { SettingsComponent } from '../components/settings/settings.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('SettingsService', () => {
   let service: SettingsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MockModule]
+      imports: [
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
     service = TestBed.inject(SettingsService);
   });

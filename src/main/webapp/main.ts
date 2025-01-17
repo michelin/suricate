@@ -31,6 +31,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { TokenInterceptor } from './app/shared/interceptors/token.interceptor';
 import { ErrorInterceptor } from './app/shared/interceptors/error.interceptor';
+import { DatePipe } from '@angular/common';
 
 if (environment.production) {
   enableProdMode();
@@ -51,7 +52,8 @@ bootstrapApplication(AppComponent, {
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimationsAsync(),
-        provideRouter(appRoutes)
+        provideRouter(appRoutes),
+        DatePipe
     ]
 })
   .catch((err) => console.error(err));
