@@ -25,7 +25,6 @@ import { MatProgressBar } from '@angular/material/progress-bar';
   selector: 'suricate-progress-bar',
   templateUrl: './progress-bar.component.html',
   styleUrls: ['./progress-bar.component.scss'],
-  standalone: true,
   imports: [MatProgressBar]
 })
 export class ProgressBarComponent {

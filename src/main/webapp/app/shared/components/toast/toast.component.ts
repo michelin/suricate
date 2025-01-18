@@ -103,7 +103,6 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
       ])
     ])
   ],
-  standalone: true,
   imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
 })
 export class ToastComponent implements OnInit, OnDestroy {

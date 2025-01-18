@@ -36,7 +36,6 @@ import { MaterialIconRecords } from '../../records/material-icon.record';
   selector: 'suricate-buttons',
   templateUrl: './buttons.component.html',
   styleUrls: ['./buttons.component.scss'],
-  standalone: true,
   imports: [NgTemplateOutlet, MatButton, MatTooltip, MatIcon, NgClass, MatMiniFabButton, AsyncPipe, TranslatePipe]
 })
 export class ButtonsComponent<T> {

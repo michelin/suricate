@@ -45,7 +45,6 @@ import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.c
   templateUrl: './dashboard-tv.component.html',
   styleUrls: ['./dashboard-tv.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     NgOptimizedImage,
     SpinnerComponent,

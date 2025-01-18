@@ -46,7 +46,6 @@ import { ToastService } from '../../../shared/services/frontend/toast/toast.serv
   selector: 'suricate-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  standalone: true,
   imports: [
     NgOptimizedImage,
     SpinnerComponent,

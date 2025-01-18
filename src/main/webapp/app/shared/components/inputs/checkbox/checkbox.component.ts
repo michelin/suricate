@@ -31,7 +31,6 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
   selector: 'suricate-checkbox',
   templateUrl: './checkbox.component.html',
   styleUrls: ['./checkbox.component.scss'],
-  standalone: true,
   imports: [MatCheckbox, FormsModule, ReactiveFormsModule, TranslatePipe]
 })
 export class CheckboxComponent extends BaseInputComponent {

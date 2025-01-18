@@ -42,7 +42,6 @@ import { ButtonsComponent } from '../buttons/buttons.component';
   selector: 'suricate-communication-dialog',
   templateUrl: './communication-dialog.component.html',
   styleUrls: ['./communication-dialog.component.scss'],
-  standalone: true,
   imports: [
     MatDialogTitle,
     CdkScrollable,

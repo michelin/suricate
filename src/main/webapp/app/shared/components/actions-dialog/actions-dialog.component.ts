@@ -37,7 +37,6 @@ import { ButtonsComponent } from '../buttons/buttons.component';
 @Component({
   templateUrl: './actions-dialog.component.html',
   styleUrls: ['./actions-dialog.component.scss'],
-  standalone: true,
   imports: [
     MatDialogTitle,
     CdkScrollable,

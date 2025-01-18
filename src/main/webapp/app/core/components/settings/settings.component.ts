@@ -30,7 +30,6 @@ import { UxSettingsComponent } from './ux-settings/ux-settings.component';
   selector: 'suricate-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
-  standalone: true,
   imports: [HeaderComponent, MatTabGroup, MatTab, UxSettingsComponent, SecuritySettingsComponent, TranslatePipe]
 })
 export class SettingsComponent implements OnInit {

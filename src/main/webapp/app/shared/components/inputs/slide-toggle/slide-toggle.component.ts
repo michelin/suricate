@@ -26,7 +26,6 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'suricate-slide-toggle',
   templateUrl: './slide-toggle.component.html',
   styleUrls: ['./slide-toggle.component.scss'],
-  standalone: true,
   imports: [MatSlideToggle, FormsModule, TranslatePipe]
 })
 export class SlideToggleComponent {

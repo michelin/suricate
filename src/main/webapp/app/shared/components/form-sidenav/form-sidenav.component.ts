@@ -44,7 +44,6 @@ import { SlideToggleComponent } from '../inputs/slide-toggle/slide-toggle.compon
   selector: 'suricate-form-sidenav',
   templateUrl: './form-sidenav.component.html',
   styleUrls: ['./form-sidenav.component.scss'],
-  standalone: true,
   imports: [
     SlideToggleComponent,
     InputComponent,

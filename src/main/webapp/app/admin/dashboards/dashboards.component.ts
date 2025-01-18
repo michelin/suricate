@@ -45,7 +45,6 @@ import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/fo
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss'],
-  standalone: true,
   imports: [
     HeaderComponent,
     InputComponent,

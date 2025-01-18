@@ -59,7 +59,6 @@ import { ToastService } from '../../../../shared/services/frontend/toast/toast.s
   selector: 'suricate-security-settings',
   templateUrl: './security-settings.component.html',
   styleUrls: ['./security-settings.component.scss'],
-  standalone: true,
   imports: [
     MatCard,
     MatCardTitle,

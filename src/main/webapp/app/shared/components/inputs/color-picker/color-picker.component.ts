@@ -31,7 +31,6 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
   selector: 'suricate-color-picker',
   templateUrl: './color-picker.component.html',
   styleUrls: ['./color-picker.component.scss'],
-  standalone: true,
   imports: [MatLabel, ColorPickerModule, TranslatePipe]
 })
 export class ColorPickerComponent extends BaseInputComponent {

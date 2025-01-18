@@ -42,7 +42,6 @@ import { ToastService } from '../../../../shared/services/frontend/toast/toast.s
 @Component({
   templateUrl: '../../../../shared/components/wizard/wizard.component.html',
   styleUrls: ['../../../../shared/components/wizard/wizard.component.scss'],
-  standalone: true,
   imports: [
     HeaderComponent,
     MatStepper,
