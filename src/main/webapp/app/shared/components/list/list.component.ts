@@ -197,7 +197,6 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
     this.displayLoader();
 
     this.childService.getAll(this.httpFilter).subscribe((objectsPaged: PageModel<TRet>) => {
-      console.warn(objectsPaged);
       this.objectsPaged = objectsPaged;
       this.hideLoader();
       this.onItemsLoaded();
