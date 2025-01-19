@@ -24,7 +24,7 @@
   .button-warn-color {
     @if mat.get-theme-type($theme) == dark {
       @include mat.fab-overrides((
-        container-color: mat.get-theme-color($theme, 'error', 20),
+        small-container-color: mat.get-theme-color($theme, 'error', 20),
       ));
 
       @include mat.button-overrides((
@@ -32,7 +32,7 @@
       ));
     } @else {
       @include mat.fab-overrides((
-        container-color: mat.get-theme-color($theme, 'error', 80),
+        small-container-color: mat.get-theme-color($theme, 'error', 80),
       ));
 
       @include mat.button-overrides((
