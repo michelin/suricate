@@ -242,9 +242,10 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
-        return roleHierarchy;
+        return RoleHierarchyImpl
+            .withDefaultRolePrefix()
+            .role("ADMIN").implies("USER")
+            .build();
     }
 
     /**
