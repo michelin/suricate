@@ -78,7 +78,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * The view resolver.
-     * Serve the Angular static resources and route them all the index.html.
+     * Serve the Angular static resources and redirect them all to the index.html.
      *
      * @param registry Store the configurations
      */
