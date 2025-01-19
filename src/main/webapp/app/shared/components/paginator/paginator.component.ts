@@ -29,7 +29,6 @@ import { HttpFilterService } from '../../services/backend/http-filter/http-filte
   selector: 'suricate-paginator',
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss'],
-  standalone: true,
   imports: [MatPaginator]
 })
 export class PaginatorComponent {

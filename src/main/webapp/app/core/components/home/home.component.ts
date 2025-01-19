@@ -47,7 +47,6 @@ import { ImageUtils } from '../../../shared/utils/image.utils';
   selector: 'suricate-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  standalone: true,
   imports: [
     HeaderComponent,
     SpinnerComponent,

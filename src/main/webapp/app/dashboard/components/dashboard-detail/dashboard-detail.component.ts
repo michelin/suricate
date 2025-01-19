@@ -68,7 +68,6 @@ import { TvManagementDialogComponent } from '../tv-management-dialog/tv-manageme
   selector: 'suricate-dashboard-detail',
   templateUrl: './dashboard-detail.component.html',
   styleUrls: ['./dashboard-detail.component.scss'],
-  standalone: true,
   imports: [
     HeaderComponent,
     PaginatorComponent,

@@ -48,7 +48,6 @@ import { FooterComponent } from '../footer/footer.component';
   selector: 'suricate-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
-  standalone: true,
   imports: [
     MatMenu,
     MatMenuItem,

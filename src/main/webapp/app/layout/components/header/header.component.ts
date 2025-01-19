@@ -32,7 +32,6 @@ import { HeaderConfiguration } from '../../../shared/models/frontend/header/head
   selector: 'suricate-pages-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  standalone: true,
   imports: [ButtonsComponent, MatDivider, TranslatePipe]
 })
 export class HeaderComponent implements OnInit {

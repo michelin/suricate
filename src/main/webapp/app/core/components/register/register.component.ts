@@ -49,7 +49,6 @@ import { CustomValidator } from '../../../shared/validators/custom-validator';
   selector: 'suricate-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
-  standalone: true,
   imports: [NgOptimizedImage, SpinnerComponent, FormsModule, ReactiveFormsModule, InputComponent, ButtonsComponent]
 })
 export class RegisterComponent implements OnInit {

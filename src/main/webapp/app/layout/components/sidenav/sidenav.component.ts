@@ -36,7 +36,6 @@ import { MenuComponent } from '../menu/menu.component';
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [MatSidenavContainer, MatSidenav, FormSidenavComponent, MenuComponent, MatSidenavContent, RouterOutlet]
 })
 export class SidenavComponent implements OnInit, OnDestroy {

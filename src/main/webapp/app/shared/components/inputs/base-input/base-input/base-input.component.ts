@@ -8,7 +8,6 @@ import { MaterialIconRecords } from '../../../../records/material-icon.record';
 
 @Component({
   selector: 'suricate-base-input',
-  standalone: true,
   imports: [],
   template: ''
 })

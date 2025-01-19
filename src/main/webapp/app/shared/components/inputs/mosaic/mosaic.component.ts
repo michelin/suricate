@@ -33,7 +33,6 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
   selector: 'suricate-mosaic',
   templateUrl: './mosaic.component.html',
   styleUrls: ['./mosaic.component.scss'],
-  standalone: true,
   imports: [SpinnerComponent, MatGridList, MatGridTile, NgClass, NgOptimizedImage, MatIcon]
 })
 export class MosaicComponent extends BaseInputComponent implements OnInit {

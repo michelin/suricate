@@ -41,7 +41,6 @@ import { SettingsService } from '../../../services/settings.service';
   selector: 'suricate-ux-settings',
   templateUrl: './ux-settings.component.html',
   styleUrls: ['./ux-settings.component.scss'],
-  standalone: true,
   imports: [InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent]
 })
 export class UxSettingsComponent implements OnInit {

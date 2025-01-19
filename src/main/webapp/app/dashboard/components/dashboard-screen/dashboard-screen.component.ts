@@ -66,7 +66,6 @@ declare global {
   selector: 'suricate-dashboard-screen',
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.scss'],
-  standalone: true,
   imports: [
     MatIcon,
     KtdGridComponent,

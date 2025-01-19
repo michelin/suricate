@@ -44,7 +44,6 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
       ])
     ])
   ],
-  standalone: true,
   imports: [MatButton, NgClass, MatIcon, MatError, TranslatePipe]
 })
 export class FileInputComponent extends BaseInputComponent implements OnInit {

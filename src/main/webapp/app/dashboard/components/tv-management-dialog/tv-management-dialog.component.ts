@@ -51,7 +51,6 @@ import { CustomValidator } from '../../../shared/validators/custom-validator';
   selector: 'suricate-tv-management-dialog',
   templateUrl: './tv-management-dialog.component.html',
   styleUrls: ['./tv-management-dialog.component.scss'],
-  standalone: true,
   imports: [
     MatDialogTitle,
     CdkScrollable,

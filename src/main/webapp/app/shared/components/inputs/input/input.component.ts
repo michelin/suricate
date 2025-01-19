@@ -67,7 +67,6 @@ import { MosaicComponent } from '../mosaic/mosaic.component';
       ])
     ])
   ],
-  standalone: true,
   imports: [
     MatFormField,
     NgClass,
