@@ -19,34 +19,34 @@
 
 @use '@angular/material' as mat;
 
+// Font Awesome icons for widgets
+@use '@fortawesome/fontawesome-free/scss/fontawesome';
+@use '@fortawesome/fontawesome-free/scss/brands';
+@use '@fortawesome/fontawesome-free/scss/regular';
+@use '@fortawesome/fontawesome-free/scss/solid';
+
+@use 'scss/global-styles';
+@use 'scss/dashboard-screen';
+
+@use 'scss/themes/suricate-theme' as suricate-theme;
+@use 'scss/themes/light-and-dark-themes' as theme;
+
 @include mat.elevation-classes();
 @include mat.app-background();
-
-// Font Awesome icons for widgets
-@import '@fortawesome/fontawesome-free/scss/fontawesome';
-@import '@fortawesome/fontawesome-free/scss/brands';
-@import '@fortawesome/fontawesome-free/scss/regular';
-@import '@fortawesome/fontawesome-free/scss/solid';
-
-@import 'scss/global-styles';
-@import 'scss/dashboard-screen';
-
-@import 'scss/themes/suricate-theme';
-@import 'scss/themes/light-and-dark-themes';
 
 html {
   @include mat.elevation-classes();
   @include mat.app-background();
-  @include mat.all-component-themes($light-theme);
-  @include mat.system-level-colors($light-theme);
-  @include suricate-theme($light-theme);
+  @include mat.all-component-themes(theme.$light-theme);
+  @include mat.system-level-colors(theme.$light-theme);
+  @include suricate-theme.suricate-theme(theme.$light-theme);
 }
 
 .dark-theme {
   @media (prefers-color-scheme: dark) {
-    @include mat.all-component-colors($dark-theme);
-    @include mat.system-level-colors($dark-theme);
-    @include suricate-theme($dark-theme);
+    @include mat.all-component-colors(theme.$dark-theme);
+    @include mat.system-level-colors(theme.$dark-theme);
+    @include suricate-theme.suricate-theme(theme.$dark-theme);
   }
 }
 

@@ -28,7 +28,7 @@
       ));
 
       @include mat.button-overrides((
-        container-color: mat.get-theme-color($theme, 'error', 80),
+        filled-container-color: mat.get-theme-color($theme, 'error', 80),
       ));
     } @else {
       @include mat.fab-overrides((
@@ -36,7 +36,7 @@
       ));
 
       @include mat.button-overrides((
-        container-color: mat.get-theme-color($theme, 'error', 20),
+        filled-container-color: mat.get-theme-color($theme, 'error', 20),
       ));
     }
   }

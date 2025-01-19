@@ -17,23 +17,23 @@
  * under the License.
  */
 
-@import '../components/mat-button-theme';
-@import '../components/mat-communication-dialog-theme';
-@import '../components/mat-grid-list-theme';
-@import '../components/mat-list-theme';
-@import '../components/mat-menu-theme';
-@import '../components/mat-sidenav-theme';
-@import '../components/mat-stepper-theme';
+@use '../components/mat-button-theme' as button-theme;
+@use '../components/mat-communication-dialog-theme' as communication-dialog-theme;
+@use '../components/mat-grid-list-theme' as grid-list-theme;
+@use '../components/mat-list-theme' as list-theme;
+@use '../components/mat-menu-theme' as menu-theme;
+@use '../components/mat-sidenav-theme' as sidenav-theme;
+@use '../components/mat-stepper-theme' as stepper-theme;
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
  */
 @mixin suricate-theme($theme) {
-  @include custom-button-theme($theme);
-  @include custom-communication-dialog-component-theme($theme);
-  @include custom-mat-grid-list-theme($theme);
-  @include custom-mat-list-theme($theme);
-  @include custom-mat-stepper-theme($theme);
-  @include custom-sidenav-theme($theme);
-  @include custom-mat-menu-theme($theme);
+  @include button-theme.custom-button-theme($theme);
+  @include communication-dialog-theme.custom-communication-dialog-component-theme($theme);
+  @include grid-list-theme.custom-mat-grid-list-theme($theme);
+  @include list-theme.custom-mat-list-theme($theme);
+  @include sidenav-theme.custom-sidenav-theme($theme);
+  @include menu-theme.custom-mat-menu-theme($theme);
+  @include stepper-theme.custom-mat-stepper-theme($theme);
 }
