@@ -19,7 +19,8 @@
 
 @use '@angular/material' as mat;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Font Awesome icons for widgets
 @import '@fortawesome/fontawesome-free/scss/fontawesome';
@@ -34,7 +35,8 @@
 @import 'scss/themes/light-and-dark-themes';
 
 html {
-  @include mat.core-theme($light-theme);
+  @include mat.elevation-classes();
+  @include mat.app-background();
   @include mat.all-component-themes($light-theme);
   @include mat.system-level-colors($light-theme);
   @include suricate-theme($light-theme);
