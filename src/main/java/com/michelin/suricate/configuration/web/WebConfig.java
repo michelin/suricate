@@ -78,6 +78,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * The view resolver.
+     * Serve the Angular static resources and route them all the index.html.
      *
      * @param registry Store the configurations
      */
@@ -91,8 +92,8 @@ public class WebConfig implements WebMvcConfigurer {
                 protected Resource getResource(@NotNull String resourcePath, @NotNull Resource location)
                     throws IOException {
                     Resource requestedResource = location.createRelative(resourcePath);
-                    return requestedResource.exists() && requestedResource.isReadable() ? requestedResource :
-                        new ClassPathResource("/public/index.html");
+                    return requestedResource.exists() && requestedResource.isReadable()
+                        ? requestedResource : new ClassPathResource("/public/index.html");
                 }
             });
     }

@@ -446,10 +446,10 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/public</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.build.directory}/dist/</directory>
+                                            <directory>${project.build.directory}/dist/public/browser</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
