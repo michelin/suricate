@@ -1,6 +1,6 @@
 {
   "name": "suricate-frontend",
-  "version": "2.8.2-next",
+  "version": "2.9.0",
   "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
