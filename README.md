@@ -354,6 +354,10 @@ The first time you start the application, you'll need to configure a repository 
 repositories tab and add a new repository. You can choose to add either a local or remote repository (such as GitLab or
 GitHub).
 
+### Test New Section
+
+Add some text in a new section
+
 If you don't have a repository yet, you can create your own widgets repository by following the instructions provided
 in the [official open-source widgets GitHub repository](https://github.com/michelin/suricate-widgets), or use this
 repository directly.
