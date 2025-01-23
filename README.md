@@ -388,15 +388,6 @@ JWT token in the `Authorization` header.
 We welcome contributions from the community! Before you get started, please take a look at
 our [contribution guide](https://github.com/michelin/suricate/blob/master/CONTRIBUTING.md) to learn about our guidelines
 and best practices. We appreciate your help in making Suricate a better tool for everyone.
-
-# End of Monitoring.michelin.com
-
-Hello @DevopsCommunication, 
-
-We have decided to shut down the monitoring.michelin.com servers by the end of this month.
-The infrastructure's significant technical debt, its very poor usage and the preference for the Observability technical stack
-have led us to this decision.
-
 If anyone requires it, we can provide partial extracts of your data before the shutdown.
 
 Thank you for your understanding.
