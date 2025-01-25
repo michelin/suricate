@@ -8,7 +8,6 @@
 [![GitHub Release](https://img.shields.io/github/v/release/michelin/suricate?logo=github&style=for-the-badge)](https://github.com/michelin/suricate/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/michelin/suricate?logo=github&style=for-the-badge)](https://github.com/michelin/suricate)
 [![Docker Pulls](https://img.shields.io/docker/pulls/michelin/suricate?label=Pulls&logo=docker&style=for-the-badge)](https://hub.docker.com/r/michelin/suricate/tags)
-[![Docker Stars](https://img.shields.io/docker/stars/michelin/suricate?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/michelin/suricate)
 [![SonarCloud Coverage](https://img.shields.io/sonar/coverage/michelin_suricate?logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/component_measures?id=michelin_suricate&metric=coverage&view=list)
 [![SonarCloud Tests](https://img.shields.io/sonar/tests/michelin_suricate/master?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge&logo=sonarcloud)](https://sonarcloud.io/component_measures?metric=tests&view=list&id=michelin_suricate)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache&style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)
