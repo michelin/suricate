@@ -9,6 +9,8 @@ jobs:
   back-end:
     name: Back-End
     runs-on: ubuntu-latest
+    outputs:
+      current_version: ${{ steps.build.outputs.current_version }}
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
@@ -26,7 +28,10 @@ jobs:
         run: mvn checkstyle:check
 
       - name: Build
-        run: mvn clean package -P production
+        id: build
+        run: |
+          mvn clean package -P production
+          echo current_version=$(echo $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)) >> $GITHUB_OUTPUT
 
       - name: Publish test report
         if: always()
@@ -75,6 +80,7 @@ jobs:
     name: Docker
     runs-on: ubuntu-latest
     needs: [ front-end, back-end ]
+    if: endsWith(needs.back-end.outputs.current_version, '-SNAPSHOT')
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
