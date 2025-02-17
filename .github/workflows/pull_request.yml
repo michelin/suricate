@@ -56,7 +56,7 @@ jobs:
           path: ${{ github.workspace }}/target/suricate.jar
 
       - name: Sonar
-        if: env.SONAR_TOKEN != ''
+        if: github.event.pull_request.head.repo.fork == false
         run: mvn verify sonar:sonar -DcentralAnalyzerEnabled=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
