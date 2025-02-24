@@ -162,9 +162,9 @@ The signing key should be at least 256 bits long (since Suricate v2.8.0) and sho
 
 #### Database
 
-You can log in to Suricate using the database after the sign-up step.
+After signing up, you can log in to Suricate using database authentication.
 
-You can choose this authentication mode using the following YAML property:
+To enable this authentication mode, set the following YAML property:
 
 ```yml
 application:
@@ -172,11 +172,13 @@ application:
     provider: 'database'
 ```
 
+When this mode is activated, a "**Register now**" button will appear on the login page, allowing users to create an account.
+
 #### LDAP
 
 You can log in to Suricate an LDAP. 
 
-You can choose this authentication mode using the following YAML property:
+To enable this authentication mode, set the following YAML property:
 
 ```yml
 ---
