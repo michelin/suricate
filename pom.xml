@@ -2,11 +2,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.1</version>
+    </parent>
+
     <groupId>com.michelin.suricate</groupId>
     <artifactId>suricate</artifactId>
     <version>2.9.1-SNAPSHOT</version>
     <packaging>${packaging.type}</packaging>
     <name>suricate</name>
+    <description>Suricate application</description>
 
     <scm>
         <connection>scm:git:https://github.com/michelin/suricate.git</connection>
@@ -14,12 +21,6 @@
         <developerConnection>scm:git:https://github.com/michelin/suricate.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
-    </parent>
 
     <properties>
         <base62.version>0.1.3</base62.version>
