@@ -24,7 +24,6 @@
 
     <properties>
         <base62.version>0.1.3</base62.version>
-        <checkstyle.version>10.21.4</checkstyle.version>
         <commons-io.version>2.18.0</commons-io.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
@@ -38,7 +37,6 @@
         <jgit.version>7.1.0.202411261347-r</jgit.version>
         <lombok.version>1.18.36</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <maven-checkstyle-plugin>3.6.0</maven-checkstyle-plugin>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <mustache.version>0.9.14</mustache.version>
         <okhttp3.version>4.12.0</okhttp3.version>
@@ -50,6 +48,8 @@
         <sonar.organization>michelin</sonar.organization>
         <sonar.projectKey>michelin_suricate</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+        <palantir.version>2.39.0</palantir.version>
     </properties>
 
     <dependencies>
@@ -314,6 +314,7 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
                     <execution>
                         <id>report</id>
                         <phase>prepare-package</phase>
@@ -321,6 +322,7 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+
                     <execution>
                         <id>post-unit-test</id>
                         <phase>test</phase>
@@ -352,32 +354,49 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle-plugin}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${checkstyle.version}</version>
-                    </dependency>
-                </dependencies>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
                 <configuration>
-                    <configLocation>.checkstyle/checkstyle.xml</configLocation>
-                    <violationSeverity>info</violationSeverity>
-                    <consoleOutput>true</consoleOutput>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <sourceDirectories>
-                        <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
-                    </sourceDirectories>
-                    <testSourceDirectories>
-                        <testSourceDirectory>${project.build.testSourceDirectory}</testSourceDirectory>
-                    </testSourceDirectories>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <palantirJavaFormat>
+                            <version>${palantir.version}</version>
+                            <style>PALANTIR</style>
+                            <formatJavadoc>true</formatJavadoc>
+                        </palantirJavaFormat>
+                        <removeUnusedImports />
+                        <formatAnnotations />
+                        <importOrder />
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
+                        <licenseHeader>
+                            <file>.spotless/HEADER</file>
+                        </licenseHeader>
+                    </java>
+                    <pom>
+                        <includes>
+                            <include>pom.xml</include>
+                        </includes>
+                        <sortPom>
+                            <nrOfIndentSpace>4</nrOfIndentSpace>
+                            <expandEmptyElements>false</expandEmptyElements>
+                            <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+                            <sortDependencies>groupId,artifactId</sortDependencies>
+                            <sortDependencyManagement>groupId,artifactId</sortDependencyManagement>
+                            <sortDependencyExclusions>groupId,artifactId</sortDependencyExclusions>
+                            <sortPlugins>groupId,artifactId</sortPlugins>
+                            <sortProperties>true</sortProperties>
+                            <sortModules>true</sortModules>
+                            <endWithNewline />
+                        </sortPom>
+                    </pom>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>check-style</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
