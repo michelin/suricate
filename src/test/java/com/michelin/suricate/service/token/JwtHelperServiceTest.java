@@ -110,7 +110,9 @@ class JwtHelperServiceTest {
             }
 
             @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {}
+            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+                // Do nothing
+            }
         };
 
         WeakKeyException exception =
@@ -187,7 +189,9 @@ class JwtHelperServiceTest {
             }
 
             @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {}
+            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+                // Do nothing
+            }
         };
 
         String actual = jwtHelperService.createToken(authentication);
@@ -323,7 +327,9 @@ class JwtHelperServiceTest {
             }
 
             @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {}
+            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+                // Do nothing
+            }
         };
 
         boolean actual = jwtHelperService.validateToken(jwtHelperService.createToken(authentication));
