@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -89,21 +88,18 @@ class ImportExportControllerTest {
         ImportExportProjectDto importExportProjectDto = new ImportExportProjectDto();
         importExportProjectDto.setName("name");
 
-        when(repositoryService.getAll(any(), any()))
-            .thenReturn(new PageImpl<>(Collections.singletonList(repository)));
-        when(repositoryMapper.toImportExportRepositoryDto(any()))
-            .thenReturn(importExportRepositoryDto);
-        when(projectService.getAll(any(), any()))
-            .thenReturn(new PageImpl<>(Collections.singletonList(project)));
-        when(projectMapper.toImportExportProjectDto(any()))
-            .thenReturn(importExportProjectDto);
+        when(repositoryService.getAll(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(repository)));
+        when(repositoryMapper.toImportExportRepositoryDto(any())).thenReturn(importExportRepositoryDto);
+        when(projectService.getAll(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(project)));
+        when(projectMapper.toImportExportProjectDto(any())).thenReturn(importExportProjectDto);
 
         ResponseEntity<ImportExportDto> actual = importExportController.exports();
 
         assertEquals(MediaType.APPLICATION_JSON, actual.getHeaders().getContentType());
         assertEquals(HttpStatus.OK, actual.getStatusCode());
         assertNotNull(actual.getBody());
-        assertEquals(importExportRepositoryDto, actual.getBody().getRepositories().getFirst());
+        assertEquals(
+                importExportRepositoryDto, actual.getBody().getRepositories().getFirst());
         assertEquals(importExportProjectDto, actual.getBody().getProjects().getFirst());
     }
 
@@ -134,14 +130,10 @@ class ImportExportControllerTest {
 
         Project project = new Project();
 
-        when(repositoryMapper.toRepositoryEntity(any()))
-            .thenReturn(repository);
-        when(repositoryService.findByName(any()))
-            .thenReturn(Optional.of(repository));
-        when(projectMapper.toProjectEntity(any(ImportExportProjectDto.class)))
-            .thenReturn(project);
-        when(projectService.createUpdateProjects(any(), any()))
-            .thenReturn(Collections.emptyList());
+        when(repositoryMapper.toRepositoryEntity(any())).thenReturn(repository);
+        when(repositoryService.findByName(any())).thenReturn(Optional.of(repository));
+        when(projectMapper.toProjectEntity(any(ImportExportProjectDto.class))).thenReturn(project);
+        when(projectService.createUpdateProjects(any(), any())).thenReturn(Collections.emptyList());
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
@@ -151,16 +143,10 @@ class ImportExportControllerTest {
         assertEquals(HttpStatus.OK, actual.getStatusCode());
         assertNull(actual.getBody());
 
-        verify(repositoryMapper)
-            .toRepositoryEntity(importExportRepositoryDto);
-        verify(repositoryService)
-            .findByName("name");
-        verify(repositoryService)
-            .addOrUpdateRepositories(argThat(repositories -> repositories.contains(repository)));
-        verify(projectMapper)
-            .toProjectEntity(importExportProjectDto);
-        verify(projectService)
-            .createUpdateProjects(argThat(projects -> projects.contains(project)),
-                eq(user));
+        verify(repositoryMapper).toRepositoryEntity(importExportRepositoryDto);
+        verify(repositoryService).findByName("name");
+        verify(repositoryService).addOrUpdateRepositories(argThat(repositories -> repositories.contains(repository)));
+        verify(projectMapper).toProjectEntity(importExportProjectDto);
+        verify(projectService).createUpdateProjects(argThat(projects -> projects.contains(project)), eq(user));
     }
 }

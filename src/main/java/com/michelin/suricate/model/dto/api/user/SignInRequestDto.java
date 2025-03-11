@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.user;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -26,19 +25,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Sign in request DTO.
- */
+/** Sign in request DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "Sign in request")
 public class SignInRequestDto extends AbstractDto {
-    @NotBlank
-    @Schema(description = "The username")
+    @NotBlank @Schema(description = "The username")
     private String username;
 
-    @NotBlank
-    @Schema(description = "The password")
+    @NotBlank @Schema(description = "The password")
     private String password;
 }

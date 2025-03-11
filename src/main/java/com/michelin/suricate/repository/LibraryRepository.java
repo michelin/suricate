@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.Library;
@@ -26,9 +25,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-/**
- * Library repository.
- */
+/** Library repository. */
 @Repository
 public interface LibraryRepository extends JpaRepository<Library, Long>, JpaSpecificationExecutor<Library> {
     /**

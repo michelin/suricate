@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
@@ -55,9 +54,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Import/Export controller.
- */
+/** Import/Export controller. */
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Import/Export", description = "Import/Export Controller")
@@ -83,34 +80,36 @@ public class ImportExportController {
      * @return The application data to export
      */
     @Operation(summary = "Export the application data")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "OK"),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Authentication error, token expired or invalid",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "You don't have permission to access to this resource",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
+            })
     @GetMapping(value = "/v1/export")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ImportExportDto> exports() {
         List<ImportExportRepositoryDto> importExportRepositories = repositoryService
-            .getAll(StringUtils.EMPTY, Pageable.unpaged())
-            .map(repositoryMapper::toImportExportRepositoryDto)
-            .getContent();
+                .getAll(StringUtils.EMPTY, Pageable.unpaged())
+                .map(repositoryMapper::toImportExportRepositoryDto)
+                .getContent();
 
         List<ImportExportProjectDto> projects = projectService
-            .getAll(StringUtils.EMPTY, Pageable.unpaged())
-            .map(projectMapper::toImportExportProjectDto)
-            .getContent();
+                .getAll(StringUtils.EMPTY, Pageable.unpaged())
+                .map(projectMapper::toImportExportProjectDto)
+                .getContent();
 
         ImportExportDto exportDto = new ImportExportDto();
         exportDto.setRepositories(importExportRepositories);
         exportDto.setProjects(projects);
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(exportDto);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(exportDto);
     }
 
     /**
@@ -119,24 +118,29 @@ public class ImportExportController {
      * @param importDto The application data to import
      */
     @Operation(summary = "Import the application data")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "OK"),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Authentication error, token expired or invalid",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "You don't have permission to access to this resource",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
+            })
     @PostMapping(value = "/v1/import")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> imports(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
-                                        @Parameter(name = "importDto", description = "The data to import",
-                                            required = true) @RequestBody ImportExportDto importDto)
-        throws GitAPIException, IOException {
+    public ResponseEntity<Void> imports(
+            @Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
+            @Parameter(name = "importDto", description = "The data to import", required = true) @RequestBody
+                    ImportExportDto importDto)
+            throws GitAPIException, IOException {
         // Map repositories into entity
-        List<Repository> repositories = importDto.getRepositories()
-            .stream()
-            .map(repositoryMapper::toRepositoryEntity)
-            .toList();
+        List<Repository> repositories = importDto.getRepositories().stream()
+                .map(repositoryMapper::toRepositoryEntity)
+                .toList();
 
         // For existing repos, restore the ID
         repositories.forEach(repository -> {
@@ -147,16 +151,12 @@ public class ImportExportController {
         repositoryService.addOrUpdateRepositories(repositories);
         gitService.updateWidgetFromEnabledGitRepositories();
 
-        List<Project> projects = importDto.getProjects()
-            .stream()
-            .map(projectMapper::toProjectEntity)
-            .toList();
+        List<Project> projects = importDto.getProjects().stream()
+                .map(projectMapper::toProjectEntity)
+                .toList();
 
         projectService.createUpdateProjects(projects, connectedUser.getUser());
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .build();
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).build();
     }
 }

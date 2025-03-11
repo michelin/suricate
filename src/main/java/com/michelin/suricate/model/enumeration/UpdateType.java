@@ -16,12 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.enumeration;
 
-/**
- * Update type for websocket events.
- */
+/** Update type for websocket events. */
 public enum UpdateType {
     REFRESH_DASHBOARD,
     REFRESH_WIDGET,

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.widget;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -28,9 +27,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Widget param response DTO.
- */
+/** Widget param response DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -45,8 +42,9 @@ public class WidgetParamResponseDto extends AbstractDto {
     @Schema(description = "HTML Default value to insert on the field")
     private String defaultValue;
 
-    @Schema(description = "The type of this param define the HTML element to display",
-        requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(
+            description = "The type of this param define the HTML element to display",
+            requiredMode = Schema.RequiredMode.REQUIRED)
     private DataTypeEnum type;
 
     @Schema(description = "A regex to respect for the field")

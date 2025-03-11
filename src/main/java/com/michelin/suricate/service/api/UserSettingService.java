@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.dto.api.user.UserSettingRequestDto;
@@ -32,9 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * User setting service.
- */
+/** User setting service. */
 @Service
 public class UserSettingService {
     @Autowired
@@ -55,14 +52,13 @@ public class UserSettingService {
     public List<UserSetting> createDefaultSettingsForUser(final User user) {
         List<UserSetting> userSettings = new ArrayList<>();
 
-        settingService.getAll().ifPresent(settings -> userSettings.addAll(
-            settings
-                .stream()
-                .flatMap(setting -> setting.getAllowedSettingValues().stream())
-                .filter(AllowedSettingValue::isDefault)
-                .map(allowedSettingValue -> createUserSettingFromAllowedSettingValue(allowedSettingValue, user))
-                .toList()
-        ));
+        settingService
+                .getAll()
+                .ifPresent(settings -> userSettings.addAll(settings.stream()
+                        .flatMap(setting -> setting.getAllowedSettingValues().stream())
+                        .filter(AllowedSettingValue::isDefault)
+                        .map(allowedSettingValue -> createUserSettingFromAllowedSettingValue(allowedSettingValue, user))
+                        .toList()));
 
         userSettingRepository.saveAll(userSettings);
         userSettingRepository.flush();
@@ -76,8 +72,8 @@ public class UserSettingService {
      * @param allowedSettingValue The allowed setting value
      * @return The related user setting
      */
-    public UserSetting createUserSettingFromAllowedSettingValue(final AllowedSettingValue allowedSettingValue,
-                                                                final User user) {
+    public UserSetting createUserSettingFromAllowedSettingValue(
+            final AllowedSettingValue allowedSettingValue, final User user) {
         UserSetting userSetting = new UserSetting();
 
         userSetting.setUser(user);
@@ -90,7 +86,7 @@ public class UserSettingService {
     /**
      * Get a user setting.
      *
-     * @param userName  The username
+     * @param userName The username
      * @param settingId The setting ID
      * @return The user setting
      */
@@ -111,12 +107,12 @@ public class UserSettingService {
     /**
      * Update the settings for a user.
      *
-     * @param userName              The username
-     * @param settingId             The setting id
+     * @param userName The username
+     * @param settingId The setting id
      * @param userSettingRequestDto The new user setting value
      */
-    public void updateUserSetting(final String userName, final Long settingId,
-                                  final UserSettingRequestDto userSettingRequestDto) {
+    public void updateUserSetting(
+            final String userName, final Long settingId, final UserSettingRequestDto userSettingRequestDto) {
         Optional<UserSetting> userSettingOptional = getUserSetting(userName, settingId);
 
         if (userSettingOptional.isEmpty()) {
@@ -126,8 +122,8 @@ public class UserSettingService {
         UserSetting userSetting = userSettingOptional.get();
         if (userSetting.getSetting().isConstrained()) {
             allowedSettingValueService
-                .findById(userSettingRequestDto.getAllowedSettingValueId())
-                .ifPresent(userSetting::setSettingValue);
+                    .findById(userSettingRequestDto.getAllowedSettingValueId())
+                    .ifPresent(userSetting::setSettingValue);
         } else {
             userSetting.setUnconstrainedValue(userSettingRequestDto.getUnconstrainedValue());
         }

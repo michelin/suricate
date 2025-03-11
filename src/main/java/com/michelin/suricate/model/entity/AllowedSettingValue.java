@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.entity;
 
 import com.michelin.suricate.model.entity.generic.AbstractEntity;
@@ -34,9 +33,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.type.YesNoConverter;
 
-/**
- * Allowed setting value entity.
- */
+/** Allowed setting value entity. */
 @Entity(name = "allowed_setting_value")
 @Getter
 @Setter
@@ -63,9 +60,8 @@ public class AllowedSettingValue extends AbstractEntity<Long> {
     private Setting setting;
 
     /**
-     * Hashcode method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Hashcode method
+     * Hashcode method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Hashcode method
      *
      * @return The hash code
      */
@@ -75,9 +71,8 @@ public class AllowedSettingValue extends AbstractEntity<Long> {
     }
 
     /**
-     * Equals method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Equals method
+     * Equals method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Equals method
      *
      * @param other The other object to compare
      * @return true if equals, false otherwise

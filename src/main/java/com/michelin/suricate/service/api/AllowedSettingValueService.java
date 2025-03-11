@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.entity.AllowedSettingValue;
@@ -25,9 +24,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Allowed setting value service.
- */
+/** Allowed setting value service. */
 @Service
 public class AllowedSettingValueService {
     @Autowired

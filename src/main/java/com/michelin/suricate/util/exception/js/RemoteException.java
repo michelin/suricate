@@ -16,12 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception.js;
 
-/**
- * Remote exception.
- */
+/** Remote exception. */
 public class RemoteException extends Exception {
     /**
      * Constructor.

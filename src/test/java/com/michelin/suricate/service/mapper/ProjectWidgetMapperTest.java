@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -89,10 +88,8 @@ class ProjectWidgetMapperTest {
         projectWidget.setState(WidgetStateEnum.RUNNING);
         projectWidget.setLog("log");
 
-        when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any()))
-            .thenReturn("backendConfig");
-        when(projectWidgetService.instantiateProjectWidgetHtml(any()))
-            .thenReturn("html");
+        when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any())).thenReturn("backendConfig");
+        when(projectWidgetService.instantiateProjectWidgetHtml(any())).thenReturn("html");
 
         ProjectWidgetResponseDto actual = projectWidgetMapper.toProjectWidgetDto(projectWidget);
 
@@ -142,13 +139,11 @@ class ProjectWidgetMapperTest {
         projectWidget.setState(WidgetStateEnum.RUNNING);
         projectWidget.setLog("log");
 
-        when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any()))
-            .thenReturn("backendConfig");
-        when(projectWidgetService.instantiateProjectWidgetHtml(any()))
-            .thenReturn("html");
+        when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any())).thenReturn("backendConfig");
+        when(projectWidgetService.instantiateProjectWidgetHtml(any())).thenReturn("html");
 
         List<ProjectWidgetResponseDto> actual =
-            projectWidgetMapper.toProjectWidgetsDtos(Collections.singleton(projectWidget));
+                projectWidgetMapper.toProjectWidgetsDtos(Collections.singleton(projectWidget));
 
         assertEquals(1L, actual.getFirst().getId());
         assertEquals(1L, actual.getFirst().getWidgetId());
@@ -157,8 +152,12 @@ class ProjectWidgetMapperTest {
         assertEquals("style", actual.getFirst().getCustomStyle());
         assertEquals("html", actual.getFirst().getInstantiateHtml());
         assertEquals(1, actual.getFirst().getGridId());
-        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getFirst().getLastExecutionDate());
-        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getFirst().getLastSuccessDate());
+        assertEquals(
+                Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
+                actual.getFirst().getLastExecutionDate());
+        assertEquals(
+                Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
+                actual.getFirst().getLastSuccessDate());
         assertEquals("token", actual.getFirst().getProjectToken());
         assertEquals("log", actual.getFirst().getLog());
         assertEquals(1, actual.getFirst().getWidgetPosition().getWidth());
@@ -186,10 +185,8 @@ class ProjectWidgetMapperTest {
         Widget widget = new Widget();
         widget.setId(1L);
 
-        when(projectGridService.getOneById(any()))
-            .thenReturn(Optional.of(projectGrid));
-        when(widgetService.findOne(any()))
-            .thenReturn(Optional.of(widget));
+        when(projectGridService.getOneById(any())).thenReturn(Optional.of(projectGrid));
+        when(widgetService.findOne(any())).thenReturn(Optional.of(widget));
 
         ProjectWidget actual = projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, 1L);
 
@@ -214,7 +211,7 @@ class ProjectWidgetMapperTest {
         projectWidgetPositionResponseDto.setHeight(1);
 
         ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto =
-            new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
+                new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
         importExportProjectWidgetDto.setId(1L);
         importExportProjectWidgetDto.setBackendConfig("backendConfig");
         importExportProjectWidgetDto.setWidgetPosition(projectWidgetPositionResponseDto);
@@ -222,8 +219,7 @@ class ProjectWidgetMapperTest {
         Widget widget = new Widget();
         widget.setId(1L);
 
-        when(widgetService.findOneByTechnicalName(any()))
-            .thenReturn(Optional.of(widget));
+        when(widgetService.findOneByTechnicalName(any())).thenReturn(Optional.of(widget));
 
         ProjectWidget actual = projectWidgetMapper.toProjectWidgetEntity(importExportProjectWidgetDto);
 
@@ -260,11 +256,10 @@ class ProjectWidgetMapperTest {
         projectWidget.setState(WidgetStateEnum.RUNNING);
         projectWidget.setLog("log");
 
-        when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any()))
-            .thenReturn("backendConfig");
+        when(projectWidgetService.decryptSecretParamsIfNeeded(any(), any())).thenReturn("backendConfig");
 
         ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto actual =
-            projectWidgetMapper.toImportExportProjectWidgetDto(projectWidget);
+                projectWidgetMapper.toImportExportProjectWidgetDto(projectWidget);
 
         assertEquals(1L, actual.getId());
         assertEquals("backendConfig", actual.getBackendConfig());

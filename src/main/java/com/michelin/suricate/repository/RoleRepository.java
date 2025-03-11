@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.Role;
@@ -25,9 +24,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * Role repository.
- */
+/** Role repository. */
 @Repository
 public interface RoleRepository extends CrudRepository<Role, Long>, JpaSpecificationExecutor<Role> {
     /**
@@ -37,5 +34,4 @@ public interface RoleRepository extends CrudRepository<Role, Long>, JpaSpecifica
      * @return The role as optional
      */
     Optional<Role> findByName(String name);
-
 }

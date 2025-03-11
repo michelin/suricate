@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,15 +56,14 @@ class PersonalAccessTokenServiceTest {
         user.setId(1L);
 
         when(personalAccessTokenRepository.findAllByUser(any()))
-            .thenReturn(Collections.singletonList(personalAccessToken));
+                .thenReturn(Collections.singletonList(personalAccessToken));
 
         List<PersonalAccessToken> actual = personalAccessTokenService.findAllByUser(user);
 
         assertEquals(1, actual.size());
         assertTrue(actual.contains(personalAccessToken));
 
-        verify(personalAccessTokenRepository)
-            .findAllByUser(user);
+        verify(personalAccessTokenRepository).findAllByUser(user);
     }
 
     @Test
@@ -77,15 +75,14 @@ class PersonalAccessTokenServiceTest {
         user.setId(1L);
 
         when(personalAccessTokenRepository.findByNameAndUser(any(), any()))
-            .thenReturn(Optional.of(personalAccessToken));
+                .thenReturn(Optional.of(personalAccessToken));
 
         Optional<PersonalAccessToken> actual = personalAccessTokenService.findByNameAndUser("name", user);
 
         assertTrue(actual.isPresent());
         assertEquals(personalAccessToken, actual.get());
 
-        verify(personalAccessTokenRepository)
-            .findByNameAndUser("name", user);
+        verify(personalAccessTokenRepository).findByNameAndUser("name", user);
     }
 
     @Test
@@ -93,16 +90,14 @@ class PersonalAccessTokenServiceTest {
         PersonalAccessToken personalAccessToken = new PersonalAccessToken();
         personalAccessToken.setId(1L);
 
-        when(personalAccessTokenRepository.findByChecksum(any()))
-            .thenReturn(Optional.of(personalAccessToken));
+        when(personalAccessTokenRepository.findByChecksum(any())).thenReturn(Optional.of(personalAccessToken));
 
         Optional<PersonalAccessToken> actual = personalAccessTokenService.findByChecksum(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(personalAccessToken, actual.get());
 
-        verify(personalAccessTokenRepository)
-            .findByChecksum(1L);
+        verify(personalAccessTokenRepository).findByChecksum(1L);
     }
 
     @Test
@@ -119,8 +114,7 @@ class PersonalAccessTokenServiceTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(personalAccessTokenRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(personalAccessTokenRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         PersonalAccessToken actual = personalAccessTokenService.create("token", 1L, localUser);
 
@@ -129,16 +123,16 @@ class PersonalAccessTokenServiceTest {
         assertEquals(localUser.getUser(), actual.getUser());
 
         verify(personalAccessTokenRepository)
-            .save(argThat(createdPersonalAccessToken -> createdPersonalAccessToken.getName().equals("token")
-                && createdPersonalAccessToken.getChecksum().equals(1L)
-                && createdPersonalAccessToken.getUser().equals(localUser.getUser())));
+                .save(argThat(createdPersonalAccessToken ->
+                        createdPersonalAccessToken.getName().equals("token")
+                                && createdPersonalAccessToken.getChecksum().equals(1L)
+                                && createdPersonalAccessToken.getUser().equals(localUser.getUser())));
     }
 
     @Test
     void shouldDeleteById() {
         personalAccessTokenService.deleteById(1L);
 
-        verify(personalAccessTokenRepository)
-            .deleteById(1L);
+        verify(personalAccessTokenRepository).deleteById(1L);
     }
 }

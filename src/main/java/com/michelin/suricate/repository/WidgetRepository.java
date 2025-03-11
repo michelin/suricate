@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.Widget;
@@ -30,16 +29,14 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * Widget repository.
- */
+/** Widget repository. */
 @Repository
 public interface WidgetRepository extends JpaRepository<Widget, Long> {
     /**
      * Find all paginated widgets.
      *
      * @param specification The specification to apply
-     * @param pageable      The pageable to apply
+     * @param pageable The pageable to apply
      * @return The paginated widgets
      */
     @EntityGraph(attributePaths = {"category", "widgetParams.possibleValuesMap"})
@@ -51,8 +48,7 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
      * @param id The id
      * @return The widget
      */
-    @NotNull
-    @EntityGraph(attributePaths = {"category.configurations", "widgetParams.possibleValuesMap"})
+    @NotNull @EntityGraph(attributePaths = {"category.configurations", "widgetParams.possibleValuesMap"})
     Optional<Widget> findById(@NotNull Long id);
 
     /**

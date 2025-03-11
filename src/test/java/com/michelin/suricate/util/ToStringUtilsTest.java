@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,15 +53,15 @@ class ToStringUtilsTest {
 
     @Test
     void shouldHideWidgetConfigurationInLogs() {
-        String actual = ToStringUtils
-            .hideWidgetConfigurationInLogs("Should hide my password", Collections.singletonList("password"));
+        String actual = ToStringUtils.hideWidgetConfigurationInLogs(
+                "Should hide my password", Collections.singletonList("password"));
         assertEquals("Should hide my ********", actual);
     }
 
     @Test
     void shouldAvoidNullValue() {
-        String actual = ToStringUtils
-            .hideWidgetConfigurationInLogs("Should hide my password", Arrays.asList("password", null));
+        String actual =
+                ToStringUtils.hideWidgetConfigurationInLogs("Should hide my password", Arrays.asList("password", null));
         assertEquals("Should hide my ********", actual);
     }
 }

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller.handler;
 
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
@@ -40,9 +39,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-/**
- * Rest controller advice used to manage exceptions.
- */
+/** Rest controller advice used to manage exceptions. */
 @Slf4j
 @RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
@@ -61,11 +58,10 @@ public class GlobalDefaultExceptionHandler {
             if (!builder.isEmpty()) {
                 builder.append(". ");
             }
-            builder
-                .append(error.getField().substring(0, 1).toUpperCase())
-                .append(error.getField().substring(1))
-                .append(" ")
-                .append(error.getDefaultMessage());
+            builder.append(error.getField().substring(0, 1).toUpperCase())
+                    .append(error.getField().substring(1))
+                    .append(" ")
+                    .append(error.getDefaultMessage());
         }
 
         return builder.toString();
@@ -84,11 +80,10 @@ public class GlobalDefaultExceptionHandler {
             if (!builder.isEmpty()) {
                 builder.append(". ");
             }
-            builder
-                .append(error.getPropertyPath().toString().substring(0, 1).toUpperCase())
-                .append(error.getPropertyPath().toString().substring(1))
-                .append(" ")
-                .append(error.getMessage());
+            builder.append(error.getPropertyPath().toString().substring(0, 1).toUpperCase())
+                    .append(error.getPropertyPath().toString().substring(1))
+                    .append(" ")
+                    .append(error.getMessage());
         }
 
         return builder.toString();
@@ -104,9 +99,7 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleApiException(ApiException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(exception.getError().getStatus())
-            .body(exception.getError());
+        return ResponseEntity.status(exception.getError().getStatus()).body(exception.getError());
     }
 
     /**
@@ -119,9 +112,8 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleBadCredentialsException(BadCredentialsException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.BAD_CREDENTIALS_ERROR.getStatus())
-            .body(new ApiErrorDto(ApiErrorEnum.BAD_CREDENTIALS_ERROR));
+        return ResponseEntity.status(ApiErrorEnum.BAD_CREDENTIALS_ERROR.getStatus())
+                .body(new ApiErrorDto(ApiErrorEnum.BAD_CREDENTIALS_ERROR));
     }
 
     /**
@@ -134,9 +126,8 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentNotValidException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(extractMessage(exception.getBindingResult()), ApiErrorEnum.BAD_REQUEST));
+        return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
+                .body(new ApiErrorDto(extractMessage(exception.getBindingResult()), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
@@ -149,14 +140,13 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentTypeMismatchException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(ApiErrorEnum.BAD_REQUEST));
+        return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
+                .body(new ApiErrorDto(ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
-     * Manage the ConstraintViolationException exception.
-     * Throw when Spring fails to validate a bean in the service layer.
+     * Manage the ConstraintViolationException exception. Throw when Spring fails to validate a bean in the service
+     * layer.
      *
      * @param exception the exception being raised
      * @return the response entity
@@ -165,14 +155,13 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleRequestException(ConstraintViolationException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(extractMessage(exception.getConstraintViolations()), ApiErrorEnum.BAD_REQUEST));
+        return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
+                .body(new ApiErrorDto(extractMessage(exception.getConstraintViolations()), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
-     * Manage the HttpRequestMethodNotSupportedException exception.
-     * Throw when a user try to access a resource with a not supported Http Verb.
+     * Manage the HttpRequestMethodNotSupportedException exception. Throw when a user try to access a resource with a
+     * not supported Http Verb.
      *
      * @param exception The exception
      * @return The response
@@ -181,14 +170,13 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleRequestException(HttpRequestMethodNotSupportedException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(exception.getMessage(), ApiErrorEnum.BAD_REQUEST));
+        return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
+                .body(new ApiErrorDto(exception.getMessage(), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
-     * Manage the DataIntegrityViolationException exception.
-     * Throw when Hibernate validators fail to validate a bean in the JPA layer.
+     * Manage the DataIntegrityViolationException exception. Throw when Hibernate validators fail to validate a bean in
+     * the JPA layer.
      *
      * @param exception the exception being raised
      * @return the response entity
@@ -197,10 +185,9 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleRequestException(DataIntegrityViolationException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(Objects.requireNonNull(exception.getRootCause()).getMessage(),
-                ApiErrorEnum.BAD_REQUEST));
+        return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
+                .body(new ApiErrorDto(
+                        Objects.requireNonNull(exception.getRootCause()).getMessage(), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
@@ -213,15 +200,13 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleRequestException(HttpMediaTypeNotAcceptableException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(Objects.requireNonNull(exception.getRootCause()).getMessage(),
-                ApiErrorEnum.BAD_REQUEST));
+        return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
+                .body(new ApiErrorDto(
+                        Objects.requireNonNull(exception.getRootCause()).getMessage(), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
-     * Manage the AccessDeniedException exception.
-     * Throw when a user try access a resource that he can't.
+     * Manage the AccessDeniedException exception. Throw when a user try access a resource that he can't.
      *
      * @param exception the exception
      * @return The related response entity
@@ -230,9 +215,7 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.FORBIDDEN.getStatus())
-            .body(new ApiErrorDto(ApiErrorEnum.FORBIDDEN));
+        return ResponseEntity.status(ApiErrorEnum.FORBIDDEN.getStatus()).body(new ApiErrorDto(ApiErrorEnum.FORBIDDEN));
     }
 
     /**
@@ -245,9 +228,7 @@ public class GlobalDefaultExceptionHandler {
     public ResponseEntity<ApiErrorDto> handleException(Exception exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
-        return ResponseEntity
-            .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
-            .body(new ApiErrorDto(ApiErrorEnum.INTERNAL_SERVER_ERROR));
+        return ResponseEntity.status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
+                .body(new ApiErrorDto(ApiErrorEnum.INTERNAL_SERVER_ERROR));
     }
-
 }

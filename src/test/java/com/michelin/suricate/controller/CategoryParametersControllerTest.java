@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,9 +69,8 @@ class CategoryParametersControllerTest {
         categoryParameterResponseDto.setKey("key");
 
         when(categoryParametersService.getAll(any(), any()))
-            .thenReturn(new PageImpl<>(Collections.singletonList(categoryParameter)));
-        when(categoryMapper.toCategoryParameterDto(any()))
-            .thenReturn(categoryParameterResponseDto);
+                .thenReturn(new PageImpl<>(Collections.singletonList(categoryParameter)));
+        when(categoryMapper.toCategoryParameterDto(any())).thenReturn(categoryParameterResponseDto);
 
         Page<CategoryParameterResponseDto> actual = categoryParametersController.getAll("search", Pageable.unpaged());
 
@@ -83,13 +81,10 @@ class CategoryParametersControllerTest {
 
     @Test
     void shouldGetOneByKeyNotFound() {
-        when(categoryParametersService.getOneByKey(any()))
-            .thenReturn(Optional.empty());
+        when(categoryParametersService.getOneByKey(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> categoryParametersController.getOneByKey("key")
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> categoryParametersController.getOneByKey("key"));
 
         assertEquals("CategoryParameter 'key' not found", exception.getMessage());
     }
@@ -102,10 +97,8 @@ class CategoryParametersControllerTest {
         CategoryParameterResponseDto categoryParameterResponseDto = new CategoryParameterResponseDto();
         categoryParameterResponseDto.setKey("key");
 
-        when(categoryParametersService.getOneByKey(any()))
-            .thenReturn(Optional.of(categoryParameter));
-        when(categoryMapper.toCategoryParameterDto(any()))
-            .thenReturn(categoryParameterResponseDto);
+        when(categoryParametersService.getOneByKey(any())).thenReturn(Optional.of(categoryParameter));
+        when(categoryMapper.toCategoryParameterDto(any())).thenReturn(categoryParameterResponseDto);
 
         ResponseEntity<CategoryParameterResponseDto> actual = categoryParametersController.getOneByKey("key");
 
@@ -120,13 +113,11 @@ class CategoryParametersControllerTest {
         WidgetConfigurationRequestDto widgetConfigurationRequestDto = new WidgetConfigurationRequestDto();
         widgetConfigurationRequestDto.setValue("value");
 
-        when(categoryParametersService.getOneByKey(any()))
-            .thenReturn(Optional.empty());
+        when(categoryParametersService.getOneByKey(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto)
-        );
+                ObjectNotFoundException.class,
+                () -> categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto));
 
         assertEquals("CategoryParameter 'key' not found", exception.getMessage());
     }
@@ -139,8 +130,7 @@ class CategoryParametersControllerTest {
         WidgetConfigurationRequestDto widgetConfigurationRequestDto = new WidgetConfigurationRequestDto();
         widgetConfigurationRequestDto.setValue("value");
 
-        when(categoryParametersService.getOneByKey(any()))
-            .thenReturn(Optional.of(categoryParameter));
+        when(categoryParametersService.getOneByKey(any())).thenReturn(Optional.of(categoryParameter));
 
         ResponseEntity<Void> actual = categoryParametersController.updateOneByKey("key", widgetConfigurationRequestDto);
 
@@ -149,13 +139,10 @@ class CategoryParametersControllerTest {
 
     @Test
     void shouldDeleteOneByKeyNotFound() {
-        when(categoryParametersService.getOneByKey(any()))
-            .thenReturn(Optional.empty());
+        when(categoryParametersService.getOneByKey(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> categoryParametersController.deleteOneByKey("key")
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> categoryParametersController.deleteOneByKey("key"));
 
         assertEquals("CategoryParameter 'key' not found", exception.getMessage());
     }
@@ -165,8 +152,7 @@ class CategoryParametersControllerTest {
         CategoryParameter categoryParameter = new CategoryParameter();
         categoryParameter.setKey("key");
 
-        when(categoryParametersService.getOneByKey(any()))
-            .thenReturn(Optional.of(categoryParameter));
+        when(categoryParametersService.getOneByKey(any())).thenReturn(Optional.of(categoryParameter));
 
         ResponseEntity<Void> actual = categoryParametersController.deleteOneByKey("key");
 

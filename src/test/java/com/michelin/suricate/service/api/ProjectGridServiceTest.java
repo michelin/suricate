@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,16 +71,14 @@ class ProjectGridServiceTest {
         ProjectGrid projectGrid = new ProjectGrid();
         projectGrid.setId(1L);
 
-        when(projectGridRepository.findById(any()))
-            .thenReturn(Optional.of(projectGrid));
+        when(projectGridRepository.findById(any())).thenReturn(Optional.of(projectGrid));
 
         Optional<ProjectGrid> actual = projectGridService.getOneById(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(projectGrid, actual.get());
 
-        verify(projectGridRepository)
-            .findById(1L);
+        verify(projectGridRepository).findById(1L);
     }
 
     @Test
@@ -89,16 +86,14 @@ class ProjectGridServiceTest {
         ProjectGrid projectGrid = new ProjectGrid();
         projectGrid.setId(1L);
 
-        when(projectGridRepository.findByIdAndProjectToken(any(), any()))
-            .thenReturn(Optional.of(projectGrid));
+        when(projectGridRepository.findByIdAndProjectToken(any(), any())).thenReturn(Optional.of(projectGrid));
 
         Optional<ProjectGrid> actual = projectGridService.findByIdAndProjectToken(1L, "token");
 
         assertTrue(actual.isPresent());
         assertEquals(projectGrid, actual.get());
 
-        verify(projectGridRepository)
-            .findByIdAndProjectToken(1L, "token");
+        verify(projectGridRepository).findByIdAndProjectToken(1L, "token");
     }
 
     @Test
@@ -106,15 +101,13 @@ class ProjectGridServiceTest {
         ProjectGrid projectGrid = new ProjectGrid();
         projectGrid.setId(1L);
 
-        when(projectGridRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(projectGridRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         ProjectGrid actual = projectGridService.create(projectGrid);
 
         assertEquals(projectGrid, actual);
 
-        verify(projectGridRepository)
-            .save(projectGrid);
+        verify(projectGridRepository).save(projectGrid);
     }
 
     @Test
@@ -132,32 +125,25 @@ class ProjectGridServiceTest {
         gridRequestDto.setTime(10);
         projectGridRequestDto.setGrids(Collections.singletonList(gridRequestDto));
 
-        when(projectRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
-        when(projectGridRepository.saveAll(any()))
-            .thenReturn(new ArrayList<>());
+        when(projectRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
+        when(projectGridRepository.saveAll(any())).thenReturn(new ArrayList<>());
 
         projectGridService.updateAll(project, projectGridRequestDto);
 
         assertEquals(10, new ArrayList<>(project.getGrids()).getFirst().getTime());
 
-        verify(projectRepository)
-            .save(project);
-        verify(projectGridRepository)
-            .saveAll(Collections.singleton(projectGrid));
+        verify(projectRepository).save(project);
+        verify(projectGridRepository).saveAll(Collections.singleton(projectGrid));
     }
 
     @Test
     void shouldDeleteByProjectIdAndIdWhenNotPresent() {
-        when(projectGridRepository.findById(any()))
-            .thenReturn(Optional.empty());
+        when(projectGridRepository.findById(any())).thenReturn(Optional.empty());
 
         projectGridService.deleteByProjectIdAndId(new Project(), 1L);
 
-        verify(projectGridRepository, never())
-            .deleteByProjectIdAndId(any(), any());
-        verify(dashboardWebsocketService, never())
-            .sendEventToProjectSubscribers(any(), any());
+        verify(projectGridRepository, never()).deleteByProjectIdAndId(any(), any());
+        verify(dashboardWebsocketService, never()).sendEventToProjectSubscribers(any(), any());
     }
 
     @Test
@@ -173,21 +159,18 @@ class ProjectGridServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        when(projectGridRepository.findById(any()))
-            .thenReturn(Optional.of(projectGrid));
-        when(ctx.getBean(JsExecutionScheduler.class))
-            .thenReturn(jsExecutionScheduler);
+        when(projectGridRepository.findById(any())).thenReturn(Optional.of(projectGrid));
+        when(ctx.getBean(JsExecutionScheduler.class)).thenReturn(jsExecutionScheduler);
 
         projectGridService.deleteByProjectIdAndId(project, 1L);
 
-        verify(projectGridRepository)
-            .deleteByProjectIdAndId(1L, 1L);
+        verify(projectGridRepository).deleteByProjectIdAndId(1L, 1L);
         verify(dashboardWebsocketService)
-            .sendEventToProjectSubscribers(eq("token"),
-                argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)
-                    && event.getDate() != null));
-        verify(jsExecutionScheduler)
-            .cancelWidgetsExecutionByGrid(projectGrid);
+                .sendEventToProjectSubscribers(
+                        eq("token"),
+                        argThat(event ->
+                                event.getType().equals(UpdateType.REFRESH_DASHBOARD) && event.getDate() != null));
+        verify(jsExecutionScheduler).cancelWidgetsExecutionByGrid(projectGrid);
     }
 
     @Test
@@ -199,18 +182,16 @@ class ProjectGridServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        when(projectGridRepository.findById(any()))
-            .thenReturn(Optional.of(projectGrid));
+        when(projectGridRepository.findById(any())).thenReturn(Optional.of(projectGrid));
 
         projectGridService.deleteByProjectIdAndId(project, 1L);
 
-        verify(projectGridRepository)
-            .deleteByProjectIdAndId(1L, 1L);
+        verify(projectGridRepository).deleteByProjectIdAndId(1L, 1L);
         verify(dashboardWebsocketService)
-            .sendEventToProjectSubscribers(eq("token"),
-                argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)
-                    && event.getDate() != null));
-        verify(jsExecutionScheduler, never())
-            .cancelWidgetsExecutionByGrid(any());
+                .sendEventToProjectSubscribers(
+                        eq("token"),
+                        argThat(event ->
+                                event.getType().equals(UpdateType.REFRESH_DASHBOARD) && event.getDate() != null));
+        verify(jsExecutionScheduler, never()).cancelWidgetsExecutionByGrid(any());
     }
 }

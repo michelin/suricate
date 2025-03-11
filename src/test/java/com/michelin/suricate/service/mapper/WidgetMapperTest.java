@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -91,12 +90,9 @@ class WidgetMapperTest {
             WidgetParamResponseDto widgetParamResponseDto = new WidgetParamResponseDto();
             widgetParamResponseDto.setName("name");
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
-            when(categoryMapper.toCategoryWithHiddenValueParametersDto(any()))
-                .thenReturn(categoryResponseDto);
-            when(widgetParamMapper.toWidgetParameterDto(any()))
-                .thenReturn(widgetParamResponseDto);
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
+            when(categoryMapper.toCategoryWithHiddenValueParametersDto(any())).thenReturn(categoryResponseDto);
+            when(widgetParamMapper.toWidgetParameterDto(any())).thenReturn(widgetParamResponseDto);
 
             WidgetResponseDto actual = widgetMapper.toWidgetDto(widget);
 
@@ -154,12 +150,9 @@ class WidgetMapperTest {
             WidgetParamResponseDto widgetParamResponseDto = new WidgetParamResponseDto();
             widgetParamResponseDto.setName("name");
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
-            when(categoryMapper.toCategoryWithoutParametersDto(any()))
-                .thenReturn(categoryResponseDto);
-            when(widgetParamMapper.toWidgetParameterDto(any()))
-                .thenReturn(widgetParamResponseDto);
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
+            when(categoryMapper.toCategoryWithoutParametersDto(any())).thenReturn(categoryResponseDto);
+            when(widgetParamMapper.toWidgetParameterDto(any())).thenReturn(widgetParamResponseDto);
 
             WidgetResponseDto actual = widgetMapper.toWidgetWithoutCategoryParametersDto(widget);
 
@@ -217,12 +210,9 @@ class WidgetMapperTest {
             WidgetParamResponseDto widgetParamResponseDto = new WidgetParamResponseDto();
             widgetParamResponseDto.setName("name");
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
-            when(categoryMapper.toCategoryWithHiddenValueParametersDto(any()))
-                .thenReturn(categoryResponseDto);
-            when(widgetParamMapper.toWidgetParameterDto(any()))
-                .thenReturn(widgetParamResponseDto);
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
+            when(categoryMapper.toCategoryWithHiddenValueParametersDto(any())).thenReturn(categoryResponseDto);
+            when(widgetParamMapper.toWidgetParameterDto(any())).thenReturn(widgetParamResponseDto);
 
             List<WidgetResponseDto> actual = widgetMapper.toWidgetsDtos(Collections.singletonList(widget));
 

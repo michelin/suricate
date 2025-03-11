@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import com.michelin.suricate.model.enumeration.AuthenticationProvider;
@@ -36,9 +35,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Configuration controller.
- */
+/** Configuration controller. */
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Configuration", description = "Configuration Controller")
@@ -52,33 +49,27 @@ public class ConfigurationController {
      * @return The authentication provider
      */
     @Operation(summary = "Get the server configuration for authentication providers (DB, LDAP, Social providers)")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @GetMapping(value = "/v1/configurations/authentication-providers")
     public ResponseEntity<List<AuthenticationProvider>> getAuthenticationProviders() {
         List<AuthenticationProvider> providers = new ArrayList<>();
 
         if (StringUtils.isNotBlank(applicationProperties.getAuthentication().getProvider())) {
-            providers.add(
-                AuthenticationProvider.valueOf(applicationProperties.getAuthentication().getProvider().toUpperCase()));
+            providers.add(AuthenticationProvider.valueOf(
+                    applicationProperties.getAuthentication().getProvider().toUpperCase()));
         }
 
         if (applicationProperties.getAuthentication().getSocialProviders() != null) {
             List<AuthenticationProvider> socialProviders =
-                applicationProperties.getAuthentication().getSocialProviders()
-                    .stream()
-                    .filter(socialProvider -> EnumUtils.isValidEnum(AuthenticationProvider.class,
-                        socialProvider.toUpperCase()))
-                    .map(socialProvider -> AuthenticationProvider.valueOf(socialProvider.toUpperCase()))
-                    .toList();
+                    applicationProperties.getAuthentication().getSocialProviders().stream()
+                            .filter(socialProvider ->
+                                    EnumUtils.isValidEnum(AuthenticationProvider.class, socialProvider.toUpperCase()))
+                            .map(socialProvider -> AuthenticationProvider.valueOf(socialProvider.toUpperCase()))
+                            .toList();
 
             providers.addAll(socialProviders);
         }
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(providers);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(providers);
     }
 }

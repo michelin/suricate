@@ -16,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.specification;
 
 import com.michelin.suricate.model.entity.Role;
 import com.michelin.suricate.model.entity.Role_;
 
-/**
- * Role search specification.
- */
+/** Role search specification. */
 public class RoleSearchSpecification extends AbstractSearchSpecification<Role> {
     /**
      * Constructor.

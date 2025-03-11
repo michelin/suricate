@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.configuration.websocket;
 
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +23,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-/**
- * Websocket configuration.
- */
+/** Websocket configuration. */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
@@ -38,9 +35,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry
-            .addEndpoint("/ws")
-            .setAllowedOriginPatterns("*")
-            .withSockJS();
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 }

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.configuration.web;
 
 import com.michelin.suricate.property.ApplicationProperties;
@@ -63,9 +62,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
-/**
- * Web configuration.
- */
+/** Web configuration. */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -77,113 +74,130 @@ public class WebConfig implements WebMvcConfigurer {
     private boolean h2Enabled;
 
     /**
-     * The view resolver.
-     * Serve the Angular static resources and redirect them all to the index.html.
+     * The view resolver. Serve the Angular static resources and redirect them all to the index.html.
      *
      * @param registry Store the configurations
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-            .addResourceLocations("classpath:/public/")
-            .resourceChain(true)
-            .addResolver(new PathResourceResolver() {
-                @Override
-                protected Resource getResource(@NotNull String resourcePath, @NotNull Resource location)
-                    throws IOException {
-                    Resource requestedResource = location.createRelative(resourcePath);
-                    return requestedResource.exists() && requestedResource.isReadable()
-                        ? requestedResource : new ClassPathResource("/public/index.html");
-                }
-            });
+                .addResourceLocations("classpath:/public/")
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver() {
+                    @Override
+                    protected Resource getResource(@NotNull String resourcePath, @NotNull Resource location)
+                            throws IOException {
+                        Resource requestedResource = location.createRelative(resourcePath);
+                        return requestedResource.exists() && requestedResource.isReadable()
+                                ? requestedResource
+                                : new ClassPathResource("/public/index.html");
+                    }
+                });
     }
 
     /**
      * Define the security filter chain.
      *
-     * @param http                    The http security
-     * @param authFailureEntryPoint   The authentication failure entry point
+     * @param http The http security
+     * @param authFailureEntryPoint The authentication failure entry point
      * @param oauth2RequestRepository The auth request repository
-     * @param userService             The user service
-     * @param openIdcUserService      The oidc user service
-     * @param oauth2SuccessHandler    The oauth2 authentication success handler
-     * @param oauth2FailureHandler    The oauth2 authentication failure handler
+     * @param userService The user service
+     * @param openIdcUserService The oidc user service
+     * @param oauth2SuccessHandler The oauth2 authentication success handler
+     * @param oauth2FailureHandler The oauth2 authentication failure handler
      * @return The security filter chain
      * @throws Exception When an error occurred
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           AuthenticationFailureEntryPoint authFailureEntryPoint,
-                                           HttpCookieOauth2AuthorizationRequestRepository oauth2RequestRepository,
-                                           Oauth2UserService userService, OpenIdcUserService openIdcUserService,
-                                           @Autowired(required = false)
-                                           Oauth2AuthenticationSuccessHandler oauth2SuccessHandler,
-                                           Oauth2AuthenticationFailureHandler oauth2FailureHandler,
-                                           HandlerMappingIntrospector introspector) throws Exception {
+    public SecurityFilterChain filterChain(
+            HttpSecurity http,
+            AuthenticationFailureEntryPoint authFailureEntryPoint,
+            HttpCookieOauth2AuthorizationRequestRepository oauth2RequestRepository,
+            Oauth2UserService userService,
+            OpenIdcUserService openIdcUserService,
+            @Autowired(required = false) Oauth2AuthenticationSuccessHandler oauth2SuccessHandler,
+            Oauth2AuthenticationFailureHandler oauth2FailureHandler,
+            HandlerMappingIntrospector introspector)
+            throws Exception {
         MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
-        http
-            .cors(corsConfigurer -> corsConfigurer
-                .configurationSource(corsConfiguration()))
-            .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .csrf(AbstractHttpConfigurer::disable)
-            .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
-                .authenticationEntryPoint(authFailureEntryPoint)
-                .accessDeniedHandler(authFailureEntryPoint))
-            .headers(headersConfigurer -> headersConfigurer
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-            .authorizeHttpRequests(authorizeRequestsConfigurer -> {
-                authorizeRequestsConfigurer
-                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    // Make other MVC requests served by the DispatcherServlet
-                    .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.OPTIONS, "/**")).permitAll()
-                    // Actuator
-                    .requestMatchers(mvcMatcherBuilder.pattern("/actuator/**")).permitAll()
-                    // Swagger
-                    .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui.html")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/v3/api-docs/**")).permitAll()
-                    // Suricate API
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/auth/signin")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/users/signup")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/configurations/authentication-providers"))
-                    .permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projects/{projectToken}")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder
-                        .pattern("/api/*/projectWidgets/{projectToken}/projectWidgets"))
-                    .permitAll()
-                    .requestMatchers(mvcMatcherBuilder
-                        .pattern("/api/*/projectWidgets/{projectWidgetId}")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/widgets/{widgetId}")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/settings")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/*/assets/**")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/ws/**")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/oauth2/authorization/**")).permitAll()
-                    .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
-                    // Front-End
-                    .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/**")).permitAll();
+        http.cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfiguration()))
+                .sessionManagement(sessionManagementConfigurer ->
+                        sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
+                        .authenticationEntryPoint(authFailureEntryPoint)
+                        .accessDeniedHandler(authFailureEntryPoint))
+                .headers(headersConfigurer ->
+                        headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .authorizeHttpRequests(authorizeRequestsConfigurer -> {
+                    authorizeRequestsConfigurer
+                            .requestMatchers(CorsUtils::isPreFlightRequest)
+                            .permitAll()
+                            // Make other MVC requests served by the DispatcherServlet
+                            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.OPTIONS, "/**"))
+                            .permitAll()
+                            // Actuator
+                            .requestMatchers(mvcMatcherBuilder.pattern("/actuator/**"))
+                            .permitAll()
+                            // Swagger
+                            .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui.html"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/v3/api-docs/**"))
+                            .permitAll()
+                            // Suricate API
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/auth/signin"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/users/signup"))
+                            .permitAll()
+                            .requestMatchers(
+                                    mvcMatcherBuilder.pattern("/api/*/configurations/authentication-providers"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projects/{projectToken}"))
+                            .permitAll()
+                            .requestMatchers(
+                                    mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectToken}/projectWidgets"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectWidgetId}"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/widgets/{widgetId}"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/settings"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/assets/**"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/ws/**"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/oauth2/authorization/**"))
+                            .permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/**"))
+                            .authenticated()
+                            // Front-End
+                            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/**"))
+                            .permitAll();
 
-                if (h2Enabled) {
-                    // Make H2 console served by the Jakarta servlet if enabled
-                    authorizeRequestsConfigurer.requestMatchers(PathRequest.toH2Console()).permitAll();
-                }
-            })
-            .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                    if (h2Enabled) {
+                        // Make H2 console served by the Jakarta servlet if enabled
+                        authorizeRequestsConfigurer
+                                .requestMatchers(PathRequest.toH2Console())
+                                .permitAll();
+                    }
+                })
+                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         if (oauth2SuccessHandler.getAuthorizedClientRepository() != null) {
-            http
-                .oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
+            http.oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
                     .authorizationEndpoint(authorizationEndpointConfigurer -> authorizationEndpointConfigurer
-                        // Store auth request in a http cookie on the IDP response
-                        .authorizationRequestRepository(oauth2RequestRepository)
-                        // Override default "oauth2/authorization/" endpoint by adding "/api"
-                        // Endpoint that triggers the OAuth2 auth to given IDP
-                        .baseUri("/api/oauth2/authorization"))
-                    .userInfoEndpoint(userInfoEndpointConfigurer -> userInfoEndpointConfigurer
-                        .userService(userService)
-                        .oidcUserService(openIdcUserService))
+                            // Store auth request in a http cookie on the IDP response
+                            .authorizationRequestRepository(oauth2RequestRepository)
+                            // Override default "oauth2/authorization/" endpoint by adding "/api"
+                            // Endpoint that triggers the OAuth2 auth to given IDP
+                            .baseUri("/api/oauth2/authorization"))
+                    .userInfoEndpoint(userInfoEndpointConfigurer ->
+                            userInfoEndpointConfigurer.userService(userService).oidcUserService(openIdcUserService))
                     .successHandler(oauth2SuccessHandler)
                     .failureHandler(oauth2FailureHandler));
         }
@@ -203,8 +217,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Define the authentication manager.
-     * Used to inject it in the authentication controller.
+     * Define the authentication manager. Used to inject it in the authentication controller.
      *
      * @param authConfiguration The auth configuration
      * @return The authentication manager
@@ -242,15 +255,14 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl
-            .withDefaultRolePrefix()
-            .role("ADMIN").implies("USER")
-            .build();
+        return RoleHierarchyImpl.withDefaultRolePrefix()
+                .role("ADMIN")
+                .implies("USER")
+                .build();
     }
 
     /**
-     * Define a method security expression handler.
-     * Used to define the role hierarchy on the method security.
+     * Define a method security expression handler. Used to define the role hierarchy on the method security.
      *
      * @return The method security expression handler bean
      */
@@ -262,8 +274,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Define local language.
-     * Used in "jakarta.validation" messages
+     * Define local language. Used in "jakarta.validation" messages
      *
      * @return The local language
      */

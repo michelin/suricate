@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.property;
 
 import jakarta.validation.constraints.NotNull;
@@ -32,9 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.cors.CorsConfiguration;
 
-/**
- * Application properties.
- */
+/** Application properties. */
 @Getter
 @Setter
 @Configuration
@@ -47,9 +44,7 @@ public class ApplicationProperties {
     private Widgets widgets;
     private Swagger swagger;
 
-    /**
-     * Authentication properties.
-     */
+    /** Authentication properties. */
     @Getter
     @Setter
     public static class Authentication {
@@ -57,15 +52,14 @@ public class ApplicationProperties {
         private Jwt jwt;
         private PersonalAccessToken pat;
         private Oauth2 oauth2;
-        @Pattern(regexp = "ldap|database")
-        private String provider;
+
+        @Pattern(regexp = "ldap|database") private String provider;
+
         private List<String> socialProviders;
         private Map<String, SocialProvidersConfig> socialProvidersConfig = new HashMap<>();
     }
 
-    /**
-     * LDAP properties.
-     */
+    /** LDAP properties. */
     @Getter
     @Setter
     public static class Ldap {
@@ -80,35 +74,25 @@ public class ApplicationProperties {
         private String mailAttributeName;
     }
 
-    /**
-     * JWT properties.
-     */
+    /** JWT properties. */
     @Getter
     @Setter
     public static class Jwt {
-        @NotNull
-        private long tokenValidityMs;
+        @NotNull private long tokenValidityMs;
 
-        @NotNull
-        private String signingKey;
+        @NotNull private String signingKey;
     }
 
-    /**
-     * Personal Access Token properties.
-     */
+    /** Personal Access Token properties. */
     @Getter
     @Setter
     public static class PersonalAccessToken {
-        @NotNull
-        private String prefix;
+        @NotNull private String prefix;
 
-        @NotNull
-        private String checksumSecret;
+        @NotNull private String checksumSecret;
     }
 
-    /**
-     * OAuth2 properties.
-     */
+    /** OAuth2 properties. */
     @Getter
     @Setter
     public static class Oauth2 {
@@ -116,9 +100,7 @@ public class ApplicationProperties {
         private boolean useReferer;
     }
 
-    /**
-     * SSL properties.
-     */
+    /** SSL properties. */
     @Getter
     @Setter
     public static class Ssl {
@@ -126,9 +108,7 @@ public class ApplicationProperties {
         private TrustStore trustStore;
     }
 
-    /**
-     * KeyStore properties.
-     */
+    /** KeyStore properties. */
     @Getter
     @Setter
     public static class KeyStore {
@@ -137,9 +117,7 @@ public class ApplicationProperties {
         private String type;
     }
 
-    /**
-     * TrustStore properties.
-     */
+    /** TrustStore properties. */
     @Getter
     @Setter
     public static class TrustStore {
@@ -148,20 +126,16 @@ public class ApplicationProperties {
         private String type;
     }
 
-    /**
-     * Widgets properties.
-     */
+    /** Widgets properties. */
     @Getter
     @Setter
     public static class Widgets {
-        @NotNull
-        private boolean updateEnable;
+        @NotNull private boolean updateEnable;
+
         private String cloneDir = "/tmp";
     }
 
-    /**
-     * Swagger properties.
-     */
+    /** Swagger properties. */
     @Getter
     @Setter
     public static class Swagger {
@@ -178,9 +152,7 @@ public class ApplicationProperties {
         private String contactEmail;
     }
 
-    /**
-     * Social providers properties.
-     */
+    /** Social providers properties. */
     @Getter
     @Setter
     public static class SocialProvidersConfig {

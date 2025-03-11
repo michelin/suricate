@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.git;
 
 import com.michelin.suricate.model.entity.Category;
@@ -48,9 +47,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Git repository service.
- */
+/** Git repository service. */
 @Slf4j
 @Service
 public class GitService {
@@ -78,9 +75,7 @@ public class GitService {
     @Autowired
     private CacheService cacheService;
 
-    /**
-     * Update widgets from the full list of git repositories asynchronously.
-     */
+    /** Update widgets from the full list of git repositories asynchronously. */
     @Async
     @Transactional
     public void updateWidgetFromEnabledGitRepositoriesAsync() {
@@ -91,9 +86,7 @@ public class GitService {
         }
     }
 
-    /**
-     * Update widgets from the full list of git repositories.
-     */
+    /** Update widgets from the full list of git repositories. */
     @Transactional
     public void updateWidgetFromEnabledGitRepositories() throws GitAPIException, IOException {
         log.info("Update widgets from Git repository");
@@ -103,8 +96,8 @@ public class GitService {
             return;
         }
 
-        Optional<List<Repository>> optionalRepositories = repositoryService
-            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        Optional<List<Repository>> optionalRepositories =
+                repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
 
         if (optionalRepositories.isEmpty()) {
             log.info("No remote or local repository found");
@@ -119,11 +112,10 @@ public class GitService {
                     updateWidgetsFromRepositoryFolder(new File(repository.getLocalPath()), true, repository);
                 } else {
                     File remoteFolder = cloneRemoteRepository(
-                        repository.getUrl(),
-                        repository.getBranch(),
-                        repository.getLogin(),
-                        repository.getPassword()
-                    );
+                            repository.getUrl(),
+                            repository.getBranch(),
+                            repository.getLogin(),
+                            repository.getPassword());
 
                     updateWidgetsFromRepositoryFolder(remoteFolder, false, repository);
                 }
@@ -137,18 +129,20 @@ public class GitService {
     /**
      * Clone a remote repository on local system.
      *
-     * @param url      git repository url
-     * @param branch   git branch
-     * @param login    The login of the git repo
+     * @param url git repository url
+     * @param branch git branch
+     * @param login The login of the git repo
      * @param password The password of the git repo
      * @return File object on local repo
      */
     public File cloneRemoteRepository(String url, String branch, String login, String password)
-        throws IOException, GitAPIException {
+            throws IOException, GitAPIException {
         log.info("Cloning the branch {} of the remote repository {}", branch, url);
 
-        File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()),
-            new File(applicationProperties.getWidgets().getCloneDir()));
+        File localRepository = File.createTempFile(
+                "tmp",
+                Long.toString(System.nanoTime()),
+                new File(applicationProperties.getWidgets().getCloneDir()));
 
         if (localRepository.exists()) {
             FileUtils.deleteQuietly(localRepository);
@@ -156,21 +150,24 @@ public class GitService {
 
         localRepository.mkdirs();
 
-        CloneCommand cloneCmd = Git.cloneRepository()
-            .setURI(url)
-            .setBranch(branch)
-            .setDirectory(localRepository);
+        CloneCommand cloneCmd =
+                Git.cloneRepository().setURI(url).setBranch(branch).setDirectory(localRepository);
 
         if (StringUtils.isNoneBlank(login, password)) {
             cloneCmd.setCredentialsProvider(new UsernamePasswordCredentialsProvider(login, password));
         }
 
         try (Git git = cloneCmd.call()) {
-            log.info("The branch {} from the remote repository {} was successfully cloned",
-                git.getRepository().getBranch(), url);
+            log.info(
+                    "The branch {} from the remote repository {} was successfully cloned",
+                    git.getRepository().getBranch(),
+                    url);
         } catch (Exception e) {
-            log.error("An error has occurred while trying to clone the branch {} of the remote repository {}", branch,
-                url, e);
+            log.error(
+                    "An error has occurred while trying to clone the branch {} of the remote repository {}",
+                    branch,
+                    url,
+                    e);
             FileUtils.deleteQuietly(localRepository);
             throw e;
         }
@@ -181,27 +178,21 @@ public class GitService {
     /**
      * Update the widget in database from cloned folder.
      *
-     * @param folder            The folder to process
+     * @param folder The folder to process
      * @param isLocalRepository True if the folder come from local repository, false if it's a remote repo
-     * @param repository        The repository
+     * @param repository The repository
      */
     private void updateWidgetsFromRepositoryFolder(File folder, boolean isLocalRepository, final Repository repository)
-        throws IOException {
+            throws IOException {
         if (folder != null) {
             try {
-                List<Library> libraries = WidgetUtils
-                    .parseLibraryFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
-                        + File.separator
-                        + "libraries"
-                        + File.separator));
+                List<Library> libraries = WidgetUtils.parseLibraryFolder(new File(
+                        folder.getAbsoluteFile().getAbsolutePath() + File.separator + "libraries" + File.separator));
 
                 final List<Library> allLibraries = libraryService.createUpdateLibraries(libraries);
 
-                List<Category> categories = WidgetUtils
-                    .parseCategoriesFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
-                        + File.separator
-                        + "content"
-                        + File.separator));
+                List<Category> categories = WidgetUtils.parseCategoriesFolder(new File(
+                        folder.getAbsoluteFile().getAbsolutePath() + File.separator + "content" + File.separator));
 
                 categories.forEach(category -> {
                     categoryService.addOrUpdateCategory(category);

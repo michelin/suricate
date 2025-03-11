@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.security.oauth2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -79,40 +78,35 @@ class OpenIdcUserServiceTest {
         user.setRoles(Collections.singleton(role));
         LocalUser localUser = new LocalUser(user, claims);
 
-        when(oauth2UserService.loadUser(any()))
-            .thenReturn(localUser);
+        when(oauth2UserService.loadUser(any())).thenReturn(localUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("unknownIDP")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OidcIdToken oidcToken = new OidcIdToken(
-            "oidcToken",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z"),
-            claims
-        );
+                "oidcToken",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"),
+                claims);
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        Oauth2AuthenticationProcessingException exception = assertThrows(
-            Oauth2AuthenticationProcessingException.class,
-            () -> openIdcUserService.loadUser(request)
-        );
+        Oauth2AuthenticationProcessingException exception =
+                assertThrows(Oauth2AuthenticationProcessingException.class, () -> openIdcUserService.loadUser(request));
 
         assertEquals("ID provider unknownIDP is not recognized", exception.getMessage());
     }
@@ -135,40 +129,35 @@ class OpenIdcUserServiceTest {
         user.setRoles(Collections.singleton(role));
         LocalUser localUser = new LocalUser(user, claims);
 
-        when(oauth2UserService.loadUser(any()))
-            .thenReturn(localUser);
+        when(oauth2UserService.loadUser(any())).thenReturn(localUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OidcIdToken oidcToken = new OidcIdToken(
-            "oidcToken",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z"),
-            claims
-        );
+                "oidcToken",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"),
+                claims);
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        Oauth2AuthenticationProcessingException exception = assertThrows(
-            Oauth2AuthenticationProcessingException.class,
-            () -> openIdcUserService.loadUser(request)
-        );
+        Oauth2AuthenticationProcessingException exception =
+                assertThrows(Oauth2AuthenticationProcessingException.class, () -> openIdcUserService.loadUser(request));
 
         assertEquals("Username not found from gitlab", exception.getMessage());
     }
@@ -192,40 +181,35 @@ class OpenIdcUserServiceTest {
         user.setRoles(Collections.singleton(role));
         LocalUser localUser = new LocalUser(user, claims);
 
-        when(oauth2UserService.loadUser(any()))
-            .thenReturn(localUser);
+        when(oauth2UserService.loadUser(any())).thenReturn(localUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OidcIdToken oidcToken = new OidcIdToken(
-            "oidcToken",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z"),
-            claims
-        );
+                "oidcToken",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"),
+                claims);
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
-        Oauth2AuthenticationProcessingException exception = assertThrows(
-            Oauth2AuthenticationProcessingException.class,
-            () -> openIdcUserService.loadUser(request)
-        );
+        Oauth2AuthenticationProcessingException exception =
+                assertThrows(Oauth2AuthenticationProcessingException.class, () -> openIdcUserService.loadUser(request));
 
         assertEquals("Email not found from Gitlab", exception.getMessage());
     }
@@ -260,37 +244,32 @@ class OpenIdcUserServiceTest {
         user.setRoles(Collections.singleton(role));
 
         LocalUser localUser = new LocalUser(user, claims);
-        when(applicationProperties.getAuthentication())
-            .thenReturn(authProperties);
-        when(oauth2UserService.loadUser(any()))
-            .thenReturn(localUser);
-        when(userService.registerUser(any(), any(), any(), any(), any(), any()))
-            .thenReturn(createdUser);
+        when(applicationProperties.getAuthentication()).thenReturn(authProperties);
+        when(oauth2UserService.loadUser(any())).thenReturn(localUser);
+        when(userService.registerUser(any(), any(), any(), any(), any(), any())).thenReturn(createdUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OidcIdToken oidcToken = new OidcIdToken(
-            "oidcToken",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z"),
-            claims
-        );
+                "oidcToken",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"),
+                claims);
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
@@ -305,8 +284,13 @@ class OpenIdcUserServiceTest {
         assertEquals(createdUser, actual.getUser());
         assertEquals(oidcToken, actual.getIdToken());
         verify(userService)
-            .registerUser("myUsername", "myFirstName", "myLastName", "myEmail", "myAvatar",
-                AuthenticationProvider.GITLAB);
+                .registerUser(
+                        "myUsername",
+                        "myFirstName",
+                        "myLastName",
+                        "myEmail",
+                        "myAvatar",
+                        AuthenticationProvider.GITLAB);
     }
 
     @Test
@@ -342,36 +326,32 @@ class OpenIdcUserServiceTest {
         user.setRoles(Collections.singleton(role));
 
         LocalUser localUser = new LocalUser(user, claims);
-        when(applicationProperties.getAuthentication())
-            .thenReturn(authProperties);
-        when(oauth2UserService.loadUser(any()))
-            .thenReturn(localUser);
-        when(userService.registerUser(any(), any(), any(), any(), any(), any()))
-            .thenReturn(createdUser);
+        when(applicationProperties.getAuthentication()).thenReturn(authProperties);
+        when(oauth2UserService.loadUser(any())).thenReturn(localUser);
+        when(userService.registerUser(any(), any(), any(), any(), any(), any())).thenReturn(createdUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z"));
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OidcIdToken oidcToken = new OidcIdToken(
-            "oidcToken",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z"),
-            claims
-        );
+                "oidcToken",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"),
+                claims);
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
@@ -386,8 +366,13 @@ class OpenIdcUserServiceTest {
         assertEquals(createdUser, actual.getUser());
         assertEquals(oidcToken, actual.getIdToken());
         verify(userService)
-            .registerUser("myUsername", "myFirstName", "MYLASTNAME", "myEmail", "myPicture",
-                AuthenticationProvider.GITLAB);
+                .registerUser(
+                        "myUsername",
+                        "myFirstName",
+                        "MYLASTNAME",
+                        "myEmail",
+                        "myPicture",
+                        AuthenticationProvider.GITLAB);
     }
 
     @Test
@@ -415,35 +400,31 @@ class OpenIdcUserServiceTest {
         user.setRoles(Collections.singleton(role));
 
         LocalUser localUser = new LocalUser(user, claims);
-        when(oauth2UserService.loadUser(any()))
-            .thenReturn(localUser);
-        when(userService.registerUser(any(), any(), any(), any(), any(), any()))
-            .thenReturn(createdUser);
+        when(oauth2UserService.loadUser(any())).thenReturn(localUser);
+        when(userService.registerUser(any(), any(), any(), any(), any(), any())).thenReturn(createdUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OidcIdToken oidcToken = new OidcIdToken(
-            "oidcToken",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z"),
-            claims
-        );
+                "oidcToken",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"),
+                claims);
 
         OidcUserRequest request = new OidcUserRequest(clientRegistration, token, oidcToken);
 
@@ -455,7 +436,6 @@ class OpenIdcUserServiceTest {
         assertEquals("myEmail", actual.getAttributes().get("email"));
         assertEquals(createdUser, actual.getUser());
         assertEquals(oidcToken, actual.getIdToken());
-        verify(userService)
-            .registerUser("myUsername", null, null, "myEmail", null, AuthenticationProvider.GITLAB);
+        verify(userService).registerUser("myUsername", null, null, "myEmail", null, AuthenticationProvider.GITLAB);
     }
 }

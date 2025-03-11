@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.UserSetting;
@@ -26,9 +25,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * User setting repository.
- */
+/** User setting repository. */
 @Repository
 public interface UserSettingRepository extends JpaRepository<UserSetting, Long> {
     /**
@@ -43,7 +40,7 @@ public interface UserSettingRepository extends JpaRepository<UserSetting, Long> 
     /**
      * Get a setting by userName and setting id.
      *
-     * @param userName  The userName
+     * @param userName The userName
      * @param settingId The setting id
      * @return The user setting associated
      */

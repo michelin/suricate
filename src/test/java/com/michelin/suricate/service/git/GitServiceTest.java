@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.git;
 
 import static org.mockito.ArgumentMatchers.argThat;
@@ -90,37 +89,37 @@ class GitServiceTest {
         repository.setType(RepositoryTypeEnum.LOCAL);
         repository.setLocalPath("src/test/resources/repository");
 
-        when(applicationProperties.getWidgets())
-            .thenReturn(widgetsProperties);
+        when(applicationProperties.getWidgets()).thenReturn(widgetsProperties);
         when(repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-            .thenReturn(Optional.of(Collections.singletonList(repository)));
-        when(libraryService.createUpdateLibraries(any()))
-            .thenReturn(Collections.singletonList(library));
+                .thenReturn(Optional.of(Collections.singletonList(repository)));
+        when(libraryService.createUpdateLibraries(any())).thenReturn(Collections.singletonList(library));
 
         gitService.updateWidgetFromEnabledGitRepositoriesAsync();
 
-        verify(repositoryService)
-            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
-        verify(libraryService).createUpdateLibraries(argThat(libraries ->
-            libraries.get(0).getTechnicalName().equals("test.js")
-                && libraries.get(0).getAsset() != null
-                && libraries.get(0).getAsset().getContentType().equals("application/javascript")));
+        verify(repositoryService).findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        verify(libraryService)
+                .createUpdateLibraries(
+                        argThat(libraries -> libraries.get(0).getTechnicalName().equals("test.js")
+                                && libraries.get(0).getAsset() != null
+                                && libraries.get(0).getAsset().getContentType().equals("application/javascript")));
         verify(categoryService)
-            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub")
-                && category.getTechnicalName().equals("github")));
+                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub")
+                        && category.getTechnicalName().equals("github")));
         verify(categoryService)
-            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab")
-                && category.getTechnicalName().equals("gitlab")));
+                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab")
+                        && category.getTechnicalName().equals("gitlab")));
         verify(widgetService)
-            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub")
-                    && category.getTechnicalName().equals("github")),
-                argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                argThat(repository::equals));
+                .addOrUpdateWidgets(
+                        argThat(category -> category.getName().equals("GitHub")
+                                && category.getTechnicalName().equals("github")),
+                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                        argThat(repository::equals));
         verify(widgetService)
-            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab")
-                    && category.getTechnicalName().equals("gitlab")),
-                argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                argThat(repository::equals));
+                .addOrUpdateWidgets(
+                        argThat(category -> category.getName().equals("GitLab")
+                                && category.getTechnicalName().equals("gitlab")),
+                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                        argThat(repository::equals));
         verify(cacheService).clearAllCache();
     }
 
@@ -136,19 +135,15 @@ class GitServiceTest {
         repository.setType(RepositoryTypeEnum.LOCAL);
         repository.setLocalPath("unknown");
 
-        when(applicationProperties.getWidgets())
-            .thenReturn(widgetsProperties);
+        when(applicationProperties.getWidgets()).thenReturn(widgetsProperties);
         when(repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-            .thenReturn(Optional.of(Collections.singletonList(repository)));
+                .thenReturn(Optional.of(Collections.singletonList(repository)));
 
         gitService.updateWidgetFromEnabledGitRepositoriesAsync();
 
-        verify(jsExecutionScheduler)
-            .init();
-        verify(dashboardWebSocketService)
-            .reloadAllConnectedClientsToAllProjects();
-        verify(repositoryService)
-            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        verify(jsExecutionScheduler).init();
+        verify(dashboardWebSocketService).reloadAllConnectedClientsToAllProjects();
+        verify(repositoryService).findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
     @Test
@@ -166,49 +161,47 @@ class GitServiceTest {
         repository.setType(RepositoryTypeEnum.LOCAL);
         repository.setLocalPath("src/test/resources/repository");
 
-        when(applicationProperties.getWidgets())
-            .thenReturn(widgetsProperties);
+        when(applicationProperties.getWidgets()).thenReturn(widgetsProperties);
         when(repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-            .thenReturn(Optional.of(Collections.singletonList(repository)));
-        when(libraryService.createUpdateLibraries(any()))
-            .thenReturn(Collections.singletonList(library));
+                .thenReturn(Optional.of(Collections.singletonList(repository)));
+        when(libraryService.createUpdateLibraries(any())).thenReturn(Collections.singletonList(library));
 
         gitService.updateWidgetFromEnabledGitRepositories();
 
-        verify(repositoryService)
-            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
-        verify(libraryService).createUpdateLibraries(argThat(libraries ->
-            libraries.get(0).getTechnicalName().equals("test.js")
-                && libraries.get(0).getAsset() != null
-                && libraries.get(0).getAsset().getContentType().equals("application/javascript")));
+        verify(repositoryService).findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        verify(libraryService)
+                .createUpdateLibraries(
+                        argThat(libraries -> libraries.get(0).getTechnicalName().equals("test.js")
+                                && libraries.get(0).getAsset() != null
+                                && libraries.get(0).getAsset().getContentType().equals("application/javascript")));
         verify(categoryService)
-            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub")
-                && category.getTechnicalName().equals("github")));
+                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitHub")
+                        && category.getTechnicalName().equals("github")));
         verify(categoryService)
-            .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab")
-                && category.getTechnicalName().equals("gitlab")));
+                .addOrUpdateCategory(argThat(category -> category.getName().equals("GitLab")
+                        && category.getTechnicalName().equals("gitlab")));
         verify(widgetService)
-            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitHub")
-                    && category.getTechnicalName().equals("github")),
-                argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                argThat(repository::equals));
+                .addOrUpdateWidgets(
+                        argThat(category -> category.getName().equals("GitHub")
+                                && category.getTechnicalName().equals("github")),
+                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                        argThat(repository::equals));
         verify(widgetService)
-            .addOrUpdateWidgets(argThat(category -> category.getName().equals("GitLab")
-                    && category.getTechnicalName().equals("gitlab")),
-                argThat(allLibraries -> allLibraries.get(0).equals(library)),
-                argThat(repository::equals));
+                .addOrUpdateWidgets(
+                        argThat(category -> category.getName().equals("GitLab")
+                                && category.getTechnicalName().equals("gitlab")),
+                        argThat(allLibraries -> allLibraries.get(0).equals(library)),
+                        argThat(repository::equals));
         verify(cacheService).clearAllCache();
     }
 
     @Test
     void shouldNotUpdateWidgetFromEnabledGitRepositoriesWhenUpdateIsDisabled() throws GitAPIException, IOException {
-        when(applicationProperties.getWidgets())
-            .thenReturn(new ApplicationProperties.Widgets());
+        when(applicationProperties.getWidgets()).thenReturn(new ApplicationProperties.Widgets());
 
         gitService.updateWidgetFromEnabledGitRepositories();
 
-        verify(repositoryService, never())
-            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        verify(repositoryService, never()).findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
     @Test
@@ -216,14 +209,12 @@ class GitServiceTest {
         ApplicationProperties.Widgets widgetsProperties = new ApplicationProperties.Widgets();
         widgetsProperties.setUpdateEnable(true);
 
-        when(applicationProperties.getWidgets())
-            .thenReturn(widgetsProperties);
+        when(applicationProperties.getWidgets()).thenReturn(widgetsProperties);
         when(repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-            .thenReturn(Optional.empty());
+                .thenReturn(Optional.empty());
 
         gitService.updateWidgetFromEnabledGitRepositories();
 
-        verify(repositoryService)
-            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        verify(repositoryService).findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 }

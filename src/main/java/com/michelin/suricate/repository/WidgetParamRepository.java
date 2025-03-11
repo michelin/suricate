@@ -16,16 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.WidgetParam;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * Widget param repository.
- */
+/** Widget param repository. */
 @Repository
-public interface WidgetParamRepository extends CrudRepository<WidgetParam, Long> {
-}
+public interface WidgetParamRepository extends CrudRepository<WidgetParam, Long> {}

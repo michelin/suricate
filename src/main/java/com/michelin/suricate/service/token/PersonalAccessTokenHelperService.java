@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.token;
 
 import com.michelin.suricate.property.ApplicationProperties;
@@ -28,9 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Personal access token helper service.
- */
+/** Personal access token helper service. */
 @Slf4j
 @Service
 public class PersonalAccessTokenHelperService {
@@ -61,8 +58,18 @@ public class PersonalAccessTokenHelperService {
      */
     public Long computePersonAccessTokenChecksum(String personalAccessToken) {
         Checksum crc32 = new CRC32();
-        crc32.update(applicationProperties.getAuthentication().getPat().getChecksumSecret().getBytes(),
-            0, applicationProperties.getAuthentication().getPat().getChecksumSecret().length());
+        crc32.update(
+                applicationProperties
+                        .getAuthentication()
+                        .getPat()
+                        .getChecksumSecret()
+                        .getBytes(),
+                0,
+                applicationProperties
+                        .getAuthentication()
+                        .getPat()
+                        .getChecksumSecret()
+                        .length());
 
         crc32.update(personalAccessToken.getBytes(), 0, personalAccessToken.length());
         return crc32.getValue();
@@ -77,7 +84,8 @@ public class PersonalAccessTokenHelperService {
     public boolean validateToken(String personalAccessToken) {
         String[] splitPersonalAccessToken = personalAccessToken.split("_");
         if (splitPersonalAccessToken.length != 2
-            || !splitPersonalAccessToken[0].equals(applicationProperties.getAuthentication().getPat().getPrefix())) {
+                || !splitPersonalAccessToken[0].equals(
+                        applicationProperties.getAuthentication().getPat().getPrefix())) {
             log.error("Invalid personal access token format");
             return false;
         }

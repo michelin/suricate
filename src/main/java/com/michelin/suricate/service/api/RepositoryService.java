@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.entity.Repository;
@@ -30,9 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Repository service.
- */
+/** Repository service. */
 @Service
 public class RepositoryService {
     @Autowired
@@ -41,7 +38,7 @@ public class RepositoryService {
     /**
      * Get all repositories.
      *
-     * @param search   The search string
+     * @param search The search string
      * @param pageable The pageable object
      * @return The paginated list of repositories
      */

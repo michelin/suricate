@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.entity;
 
 import com.michelin.suricate.model.entity.generic.AbstractAuditingEntity;
@@ -44,9 +43,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Widget entity.
- */
+/** Widget entity. */
 @Entity
 @Getter
 @Setter
@@ -98,10 +95,9 @@ public class Widget extends AbstractAuditingEntity<Long> {
     @ToString.Exclude
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
-        name = "widget_library",
-        joinColumns = {@JoinColumn(name = "widget_id")},
-        inverseJoinColumns = {@JoinColumn(name = "library_id")}
-    )
+            name = "widget_library",
+            joinColumns = {@JoinColumn(name = "widget_id")},
+            inverseJoinColumns = {@JoinColumn(name = "library_id")})
     private Set<Library> libraries = new LinkedHashSet<>();
 
     @ToString.Exclude
@@ -137,9 +133,8 @@ public class Widget extends AbstractAuditingEntity<Long> {
     }
 
     /**
-     * Hashcode method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Hashcode method
+     * Hashcode method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Hashcode method
      *
      * @return The hash code
      */
@@ -149,9 +144,8 @@ public class Widget extends AbstractAuditingEntity<Long> {
     }
 
     /**
-     * Equals method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Equals method
+     * Equals method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Equals method
      *
      * @param other The other object to compare
      * @return true if equals, false otherwise

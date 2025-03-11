@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.category.CategoryParameterResponseDto;
@@ -31,22 +30,15 @@ import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-/**
- * Category mapper.
- */
-@Mapper(componentModel = "spring",
-    uses = {
-        AssetMapper.class,
-        WidgetMapper.class
-    },
-    unmappedTargetPolicy = ReportingPolicy.IGNORE)
+/** Category mapper. */
+@Mapper(
+        componentModel = "spring",
+        uses = {AssetMapper.class, WidgetMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class CategoryMapper {
-    /**
-     * String encryptor.
-     */
+    /** String encryptor. */
     @Autowired
-    @Qualifier("jasyptStringEncryptor")
-    StringEncryptor stringEncryptor;
+    @Qualifier("jasyptStringEncryptor") StringEncryptor stringEncryptor;
 
     /**
      * Map a category into a DTO. Ignore the category parameters.
@@ -58,8 +50,10 @@ public abstract class CategoryMapper {
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "widgets", ignore = true)
     @Mapping(target = "categoryParameters", ignore = true)
-    @Mapping(target = "assetToken", expression = "java(category.getImage() != null "
-        + "? com.michelin.suricate.util.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(
+            target = "assetToken",
+            expression = "java(category.getImage() != null "
+                    + "? com.michelin.suricate.util.IdUtils.encrypt(category.getImage().getId()) : null )")
     public abstract CategoryResponseDto toCategoryWithoutParametersDto(Category category);
 
     /**
@@ -71,10 +65,14 @@ public abstract class CategoryMapper {
     @Named("toCategoryWithHiddenValueParametersDto")
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "widgets", ignore = true)
-    @Mapping(target = "assetToken", expression = "java(category.getImage() != null "
-        + "? com.michelin.suricate.util.IdUtils.encrypt(category.getImage().getId()) : null )")
-    @Mapping(target = "categoryParameters", source = "category.configurations",
-        qualifiedByName = "toCategoryParameterWithHiddenValuesDTO")
+    @Mapping(
+            target = "assetToken",
+            expression = "java(category.getImage() != null "
+                    + "? com.michelin.suricate.util.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(
+            target = "categoryParameters",
+            source = "category.configurations",
+            qualifiedByName = "toCategoryParameterWithHiddenValuesDTO")
     public abstract CategoryResponseDto toCategoryWithHiddenValueParametersDto(Category category);
 
     /**
@@ -85,9 +83,11 @@ public abstract class CategoryMapper {
      */
     @Named("toCategoryParameterDto")
     @Mapping(target = "category", qualifiedByName = "toCategoryWithoutParametersDto")
-    @Mapping(target = "value", expression = "java("
-        + "categoryParameter.getDataType() == com.michelin.suricate.model.enumeration.DataTypeEnum.PASSWORD "
-        + "? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())")
+    @Mapping(
+            target = "value",
+            expression = "java("
+                    + "categoryParameter.getDataType() == com.michelin.suricate.model.enumeration.DataTypeEnum.PASSWORD "
+                    + "? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())")
     public abstract CategoryParameterResponseDto toCategoryParameterDto(CategoryParameter categoryParameter);
 
     /**
@@ -98,10 +98,11 @@ public abstract class CategoryMapper {
      */
     @Named("toCategoryParameterWithHiddenValuesDTO")
     @Mapping(target = "category", ignore = true)
-    @Mapping(target = "value", expression = "java("
-        + "categoryParameter.getDataType() == com.michelin.suricate.model.enumeration.DataTypeEnum.PASSWORD"
-        + " ? org.apache.commons.lang3.StringUtils.EMPTY : categoryParameter.getValue())")
+    @Mapping(
+            target = "value",
+            expression = "java("
+                    + "categoryParameter.getDataType() == com.michelin.suricate.model.enumeration.DataTypeEnum.PASSWORD"
+                    + " ? org.apache.commons.lang3.StringUtils.EMPTY : categoryParameter.getValue())")
     public abstract CategoryParameterResponseDto toCategoryParameterWithHiddenValuesDto(
-        CategoryParameter categoryParameter);
+            CategoryParameter categoryParameter);
 }
-

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -40,9 +39,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Widget utils.
- */
+/** Widget utils. */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WidgetUtils {
@@ -190,8 +187,12 @@ public final class WidgetUtils {
                 return null;
             }
 
-            if (StringUtils.isAnyBlank(widget.getCssContent(), widget.getDescription(), widget.getHtmlContent(),
-                widget.getTechnicalName(), widget.getName())) {
+            if (StringUtils.isAnyBlank(
+                    widget.getCssContent(),
+                    widget.getDescription(),
+                    widget.getHtmlContent(),
+                    widget.getTechnicalName(),
+                    widget.getName())) {
                 log.error("Widget is not well formatted : {}", folder.getPath());
                 return null;
             }
@@ -201,11 +202,11 @@ public final class WidgetUtils {
     }
 
     /**
-     * Read the given file. According to the name of the file,
-     * fill the widget with the information contained in the file
+     * Read the given file. According to the name of the file, fill the widget with the information contained in the
+     * file
      *
      * @param widget The widget
-     * @param file   The file containing information to set to the widget
+     * @param file The file containing information to set to the widget
      * @throws IOException Exception triggered during file reading
      */
     private static void readWidgetConfig(Widget widget, File file) throws IOException {

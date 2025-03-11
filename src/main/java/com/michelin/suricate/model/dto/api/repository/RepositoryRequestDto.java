@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.repository;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -26,9 +25,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Repository request DTO.
- */
+/** Repository request DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

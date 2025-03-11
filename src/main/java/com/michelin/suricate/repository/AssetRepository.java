@@ -16,16 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * Asset repository.
- */
+/** Asset repository. */
 @Repository
-public interface AssetRepository extends JpaRepository<Asset, Long> {
-}
+public interface AssetRepository extends JpaRepository<Asset, Long> {}

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.entity.Category;
@@ -38,9 +37,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Category service.
- */
+/** Category service. */
 @Service
 public class CategoryService {
     @Autowired
@@ -99,8 +96,8 @@ public class CategoryService {
         }
 
         // Save the configurations
-        List<CategoryParameter> categoryOldConfigurations = existingCategory != null
-            ? new ArrayList<>(existingCategory.getConfigurations()) : new ArrayList<>();
+        List<CategoryParameter> categoryOldConfigurations =
+                existingCategory != null ? new ArrayList<>(existingCategory.getConfigurations()) : new ArrayList<>();
 
         Set<CategoryParameter> categoryNewConfigurations = category.getConfigurations();
         category.setConfigurations(new HashSet<>());
@@ -110,10 +107,9 @@ public class CategoryService {
 
         // Create/Update configurations
         if (!Collections.isEmpty(categoryNewConfigurations)) {
-            List<String> categoryNewConfigurationsKeys = categoryNewConfigurations
-                .stream()
-                .map(CategoryParameter::getId)
-                .toList();
+            List<String> categoryNewConfigurationsKeys = categoryNewConfigurations.stream()
+                    .map(CategoryParameter::getId)
+                    .toList();
 
             for (CategoryParameter categoryConfiguration : categoryOldConfigurations) {
                 if (!categoryNewConfigurationsKeys.contains(categoryConfiguration.getId())) {
@@ -132,14 +128,13 @@ public class CategoryService {
      * @return The category parameters
      */
     public List<WidgetParam> getCategoryParametersByWidget(final Widget widget) {
-        Optional<List<CategoryParameter>> configurationsOptional = categoryParametersService
-            .getParametersByCategoryId(widget.getCategory().getId());
+        Optional<List<CategoryParameter>> configurationsOptional = categoryParametersService.getParametersByCategoryId(
+                widget.getCategory().getId());
 
         return configurationsOptional
-            .map(configurations -> configurations
-                .stream()
-                .map(CategoryParametersService::convertCategoryParametersToWidgetParameters)
-                .toList())
-            .orElseGet(ArrayList::new);
+                .map(configurations -> configurations.stream()
+                        .map(CategoryParametersService::convertCategoryParametersToWidgetParameters)
+                        .toList())
+                .orElseGet(ArrayList::new);
     }
 }

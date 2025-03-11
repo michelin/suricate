@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -76,10 +75,8 @@ class UserSettingServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(settingService.getAll())
-            .thenReturn(Optional.of(settings));
-        when(userSettingRepository.saveAll(any()))
-            .thenReturn(Collections.singletonList(userSetting));
+        when(settingService.getAll()).thenReturn(Optional.of(settings));
+        when(userSettingRepository.saveAll(any())).thenReturn(Collections.singletonList(userSetting));
 
         List<UserSetting> actual = userSettingService.createDefaultSettingsForUser(user);
 
@@ -88,17 +85,14 @@ class UserSettingServiceTest {
         assertEquals(setting, actual.getFirst().getSetting());
         assertEquals(allowedSettingValue, actual.getFirst().getSettingValue());
 
-        verify(settingService)
-            .getAll();
-        verify(userSettingRepository)
-            .saveAll(argThat(userSettings -> {
-                UserSetting createdUserSetting = userSettings.iterator().next();
-                return createdUserSetting.getUser().equals(user)
+        verify(settingService).getAll();
+        verify(userSettingRepository).saveAll(argThat(userSettings -> {
+            UserSetting createdUserSetting = userSettings.iterator().next();
+            return createdUserSetting.getUser().equals(user)
                     && createdUserSetting.getSetting().equals(setting)
                     && createdUserSetting.getSettingValue().equals(allowedSettingValue);
-            }));
-        verify(userSettingRepository)
-            .flush();
+        }));
+        verify(userSettingRepository).flush();
     }
 
     @Test
@@ -125,16 +119,14 @@ class UserSettingServiceTest {
         UserSetting userSetting = new UserSetting();
         userSetting.setId(1L);
 
-        when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
-            .thenReturn(Optional.of(userSetting));
+        when(userSettingRepository.findByUserUsernameAndSettingId(any(), any())).thenReturn(Optional.of(userSetting));
 
         Optional<UserSetting> actual = userSettingService.getUserSetting("username", 1L);
 
         assertTrue(actual.isPresent());
         assertEquals(userSetting, actual.get());
 
-        verify(userSettingRepository)
-            .findByUserUsernameAndSettingId("username", 1L);
+        verify(userSettingRepository).findByUserUsernameAndSettingId("username", 1L);
     }
 
     @Test
@@ -143,16 +135,14 @@ class UserSettingServiceTest {
         userSetting.setId(1L);
         List<UserSetting> userSettings = Collections.singletonList(userSetting);
 
-        when(userSettingRepository.findAllByUserUsernameIgnoreCase(any()))
-            .thenReturn(Optional.of(userSettings));
+        when(userSettingRepository.findAllByUserUsernameIgnoreCase(any())).thenReturn(Optional.of(userSettings));
 
         Optional<List<UserSetting>> actual = userSettingService.getUserSettingsByUsername("username");
 
         assertTrue(actual.isPresent());
         assertEquals(userSetting, actual.get().getFirst());
 
-        verify(userSettingRepository)
-            .findAllByUserUsernameIgnoreCase("username");
+        verify(userSettingRepository).findAllByUserUsernameIgnoreCase("username");
     }
 
     @Test
@@ -172,23 +162,17 @@ class UserSettingServiceTest {
         userSettingRequestDto.setAllowedSettingValueId(1L);
         userSettingRequestDto.setUnconstrainedValue("value");
 
-        when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
-            .thenReturn(Optional.of(userSetting));
-        when(allowedSettingValueService.findById(any()))
-            .thenReturn(Optional.of(allowedSettingValue));
-        when(userSettingRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingRepository.findByUserUsernameAndSettingId(any(), any())).thenReturn(Optional.of(userSetting));
+        when(allowedSettingValueService.findById(any())).thenReturn(Optional.of(allowedSettingValue));
+        when(userSettingRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         userSettingService.updateUserSetting("username", 1L, userSettingRequestDto);
 
         assertEquals(allowedSettingValue, userSetting.getSettingValue());
 
-        verify(userSettingRepository)
-            .findByUserUsernameAndSettingId("username", 1L);
-        verify(allowedSettingValueService)
-            .findById(1L);
-        verify(userSettingRepository)
-            .save(userSetting);
+        verify(userSettingRepository).findByUserUsernameAndSettingId("username", 1L);
+        verify(allowedSettingValueService).findById(1L);
+        verify(userSettingRepository).save(userSetting);
     }
 
     @Test
@@ -208,19 +192,15 @@ class UserSettingServiceTest {
         userSettingRequestDto.setAllowedSettingValueId(1L);
         userSettingRequestDto.setUnconstrainedValue("value");
 
-        when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
-            .thenReturn(Optional.of(userSetting));
-        when(userSettingRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingRepository.findByUserUsernameAndSettingId(any(), any())).thenReturn(Optional.of(userSetting));
+        when(userSettingRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         userSettingService.updateUserSetting("username", 1L, userSettingRequestDto);
 
         assertEquals("value", userSetting.getUnconstrainedValue());
 
-        verify(userSettingRepository)
-            .findByUserUsernameAndSettingId("username", 1L);
-        verify(userSettingRepository)
-            .save(userSetting);
+        verify(userSettingRepository).findByUserUsernameAndSettingId("username", 1L);
+        verify(userSettingRepository).save(userSetting);
     }
 
     @Test
@@ -229,17 +209,14 @@ class UserSettingServiceTest {
         userSettingRequestDto.setAllowedSettingValueId(1L);
         userSettingRequestDto.setUnconstrainedValue("value");
 
-        when(userSettingRepository.findByUserUsernameAndSettingId(any(), any()))
-            .thenReturn(Optional.empty());
+        when(userSettingRepository.findByUserUsernameAndSettingId(any(), any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> userSettingService.updateUserSetting("username", 1L, userSettingRequestDto)
-        );
+                ObjectNotFoundException.class,
+                () -> userSettingService.updateUserSetting("username", 1L, userSettingRequestDto));
 
         assertEquals("UserSetting 'user: username, settingId: 1' not found", exception.getMessage());
 
-        verify(userSettingRepository)
-            .findByUserUsernameAndSettingId("username", 1L);
+        verify(userSettingRepository).findByUserUsernameAndSettingId("username", 1L);
     }
 }

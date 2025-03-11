@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.projectgrid;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -25,9 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Project grid response DTO.
- */
+/** Project grid response DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -103,16 +102,15 @@ class ProjectGridMapperTest {
         projectWidgetPositionResponseDto.setWidth(1);
 
         ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto =
-            new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
+                new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
         importExportProjectWidgetDto.setWidgetPosition(projectWidgetPositionResponseDto);
         importExportProjectWidgetDto.setWidgetTechnicalName("technicalName");
         importExportProjectWidgetDto.setBackendConfig("key=value");
 
-        when(projectWidgetMapper.toImportExportProjectWidgetDto(any()))
-            .thenReturn(importExportProjectWidgetDto);
+        when(projectWidgetMapper.toImportExportProjectWidgetDto(any())).thenReturn(importExportProjectWidgetDto);
 
         ImportExportProjectDto.ImportExportProjectGridDto actual =
-            projectGridMapper.toImportExportProjectGridDto(projectGrid);
+                projectGridMapper.toImportExportProjectGridDto(projectGrid);
 
         assertEquals(1L, actual.getId());
         assertEquals(10, actual.getTime());
@@ -149,13 +147,13 @@ class ProjectGridMapperTest {
         projectWidgetPositionResponseDto.setWidth(1);
 
         ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto =
-            new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
+                new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
         importExportProjectWidgetDto.setWidgetPosition(projectWidgetPositionResponseDto);
         importExportProjectWidgetDto.setWidgetTechnicalName("technicalName");
         importExportProjectWidgetDto.setBackendConfig("key=value");
 
         ImportExportProjectDto.ImportExportProjectGridDto importExportProjectGridDto =
-            new ImportExportProjectDto.ImportExportProjectGridDto();
+                new ImportExportProjectDto.ImportExportProjectGridDto();
         importExportProjectGridDto.setId(1L);
         importExportProjectGridDto.setTime(10);
         importExportProjectGridDto.setWidgets(Collections.singletonList(importExportProjectWidgetDto));
@@ -163,8 +161,7 @@ class ProjectGridMapperTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        when(projectWidgetMapper.toProjectWidgetEntity(any()))
-            .thenReturn(projectWidget);
+        when(projectWidgetMapper.toProjectWidgetEntity(any())).thenReturn(projectWidget);
 
         ProjectGrid actual = projectGridMapper.toProjectGridEntity(importExportProjectGridDto);
 

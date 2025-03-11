@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,15 +47,13 @@ class AllowedSettingValueServiceTest {
         allowedSettingValue.setTitle("title");
         allowedSettingValue.setValue("value");
 
-        when(allowedSettingValueRepository.findById(1L))
-            .thenReturn(Optional.of(allowedSettingValue));
+        when(allowedSettingValueRepository.findById(1L)).thenReturn(Optional.of(allowedSettingValue));
 
         Optional<AllowedSettingValue> actual = allowedSettingValueService.findById(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(allowedSettingValue, actual.get());
 
-        verify(allowedSettingValueRepository)
-            .findById(1L);
+        verify(allowedSettingValueRepository).findById(1L);
     }
 }

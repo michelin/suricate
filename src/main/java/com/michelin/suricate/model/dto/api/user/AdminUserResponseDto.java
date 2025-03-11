@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.user;
 
 import com.michelin.suricate.model.dto.api.role.RoleResponseDto;
@@ -26,9 +25,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Admin user response DTO.
- */
+/** Admin user response DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

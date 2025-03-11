@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import com.michelin.suricate.model.entity.Asset;
@@ -32,9 +31,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
-/**
- * Files utils.
- */
+/** Files utils. */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FilesUtils {
@@ -48,11 +45,7 @@ public final class FilesUtils {
     public static List<File> getFolders(File rootFolder) throws IOException {
         if (rootFolder != null) {
             try (Stream<Path> list = Files.list(rootFolder.toPath())) {
-                return list.map(Path::toFile)
-                    .filter(File::isDirectory)
-                    .sorted()
-                    .toList();
-
+                return list.map(Path::toFile).filter(File::isDirectory).sorted().toList();
             }
         }
         return Collections.emptyList();
@@ -68,10 +61,7 @@ public final class FilesUtils {
     public static List<File> getFiles(File folder) throws IOException {
         if (folder != null) {
             try (Stream<Path> list = Files.list(folder.toPath())) {
-                return list.map(Path::toFile)
-                    .filter(File::isFile)
-                    .sorted()
-                    .toList();
+                return list.map(Path::toFile).filter(File::isFile).sorted().toList();
             }
         }
         return Collections.emptyList();
@@ -88,8 +78,8 @@ public final class FilesUtils {
         Asset asset = new Asset();
         asset.setContent(FileUtils.readFileToByteArray(file));
 
-        String mimeType = Files.probeContentType(file.toPath()) != null ? Files.probeContentType(file.toPath())
-            : "text/plain";
+        String mimeType =
+                Files.probeContentType(file.toPath()) != null ? Files.probeContentType(file.toPath()) : "text/plain";
 
         // Override mime type for javascript
         if (file.getName().endsWith(".js")) {

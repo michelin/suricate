@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
@@ -49,9 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Role controller.
- */
+/** Role controller. */
 @RestController
 @RequestMapping(value = "/api")
 @Tag(name = "Role", description = "Role Controller")
@@ -71,20 +68,27 @@ public class RoleController {
      * @return The list of roles
      */
     @Operation(summary = "Get the full list of roles")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "204", description = "No Content"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "OK"),
+                @ApiResponse(responseCode = "204", description = "No Content"),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Authentication error, token expired or invalid",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "You don't have permission to access to this resource",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            })
     @PageableAsQueryParam
     @GetMapping(value = "/v1/roles")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Page<RoleResponseDto> getRoles(@Parameter(name = "search", description = "Search keyword")
-                                          @RequestParam(value = "search", required = false) String search,
-                                          @Parameter(hidden = true) Pageable pageable) {
+    public Page<RoleResponseDto> getRoles(
+            @Parameter(name = "search", description = "Search keyword")
+                    @RequestParam(value = "search", required = false)
+                    String search,
+            @Parameter(hidden = true) Pageable pageable) {
         return roleService.getRoles(search, pageable).map(roleMapper::toRoleDto);
     }
 
@@ -95,27 +99,32 @@ public class RoleController {
      * @return The role
      */
     @Operation(summary = "Get a role by id")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "OK"),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Authentication error, token expired or invalid",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "You don't have permission to access to this resource",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
+            })
     @GetMapping(value = "/v1/roles/{roleId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RoleResponseDto> getOne(
-        @Parameter(name = "roleId", description = "The role id", required = true, example = "1")
-        @PathVariable("roleId") Long roleId) {
+            @Parameter(name = "roleId", description = "The role id", required = true, example = "1")
+                    @PathVariable("roleId")
+                    Long roleId) {
         Optional<Role> roleOptional = roleService.getOneById(roleId);
         if (roleOptional.isEmpty()) {
             throw new ObjectNotFoundException(Role.class, roleId);
         }
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(roleMapper.toRoleDto(roleOptional.get()));
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(roleMapper.toRoleDto(roleOptional.get()));
     }
 
     /**
@@ -125,26 +134,31 @@ public class RoleController {
      * @return The list of related users
      */
     @Operation(summary = "Get the list of user for a role")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "OK"),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Authentication error, token expired or invalid",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "You don't have permission to access to this resource",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
+            })
     @GetMapping(value = "/v1/roles/{roleId}/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserResponseDto>> getUsersByRole(
-        @Parameter(name = "roleId", description = "The role id", required = true, example = "1")
-        @PathVariable("roleId") Long roleId) {
+            @Parameter(name = "roleId", description = "The role id", required = true, example = "1")
+                    @PathVariable("roleId")
+                    Long roleId) {
         Optional<Role> roleOptional = roleService.getOneById(roleId);
         if (roleOptional.isEmpty()) {
             throw new ObjectNotFoundException(Role.class, roleId);
         }
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(userMapper.toUsersDtos(roleOptional.get().getUsers()));
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(userMapper.toUsersDtos(roleOptional.get().getUsers()));
     }
 }

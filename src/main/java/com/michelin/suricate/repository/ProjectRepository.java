@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.Project;
@@ -33,21 +32,24 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-/**
- * Project repository.
- */
+/** Project repository. */
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpecificationExecutor<Project> {
     /**
      * Find all paginated projects.
      *
      * @param specification The specification to apply
-     * @param pageable      The pageable to apply
+     * @param pageable The pageable to apply
      * @return The paginated projects
      */
-    @NotNull
-    @EntityGraph(attributePaths = {"screenshot", "grids", "grids.widgets", "grids.widgets.widget",
-        "grids.widgets.widget.widgetParams"})
+    @NotNull @EntityGraph(
+            attributePaths = {
+                "screenshot",
+                "grids",
+                "grids.widgets",
+                "grids.widgets.widget",
+                "grids.widgets.widget.widgetParams"
+            })
     Page<Project> findAll(@NotNull Specification<Project> specification, @NotNull Pageable pageable);
 
     /**
@@ -65,10 +67,13 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
      * @param token The token to find
      * @return The project as Optionals
      */
-    @EntityGraph(attributePaths = {"screenshot",
-        "grids.widgets.widget.category.configurations",
-        "grids.widgets.widget.widgetParams",
-        "users.roles"})
+    @EntityGraph(
+            attributePaths = {
+                "screenshot",
+                "grids.widgets.widget.category.configurations",
+                "grids.widgets.widget.widgetParams",
+                "users.roles"
+            })
     Optional<Project> findProjectByToken(final String token);
 
     /**

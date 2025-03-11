@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -80,34 +79,29 @@ class WidgetServiceTest {
         Widget widget = new Widget();
         widget.setId(1L);
 
-        when(widgetRepository.findById(any()))
-            .thenReturn(Optional.of(widget));
+        when(widgetRepository.findById(any())).thenReturn(Optional.of(widget));
 
         Optional<Widget> actual = widgetService.findOne(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(widget, actual.get());
 
-        verify(widgetRepository)
-            .findById(1L);
+        verify(widgetRepository).findById(1L);
     }
-
 
     @Test
     void shouldFindOneByTechnicalName() {
         Widget widget = new Widget();
         widget.setId(1L);
 
-        when(widgetRepository.findByTechnicalName(any()))
-            .thenReturn(Optional.of(widget));
+        when(widgetRepository.findByTechnicalName(any())).thenReturn(Optional.of(widget));
 
         Optional<Widget> actual = widgetService.findOneByTechnicalName("technicalName");
 
         assertTrue(actual.isPresent());
         assertEquals(widget, actual.get());
 
-        verify(widgetRepository)
-            .findByTechnicalName("technicalName");
+        verify(widgetRepository).findByTechnicalName("technicalName");
     }
 
     @Test
@@ -116,7 +110,7 @@ class WidgetServiceTest {
         widget.setId(1L);
 
         when(widgetRepository.findAll(any(WidgetSearchSpecification.class), any(Pageable.class)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(widget)));
+                .thenReturn(new PageImpl<>(Collections.singletonList(widget)));
 
         Page<Widget> actual = widgetService.getAll("search", Pageable.unpaged());
 
@@ -124,10 +118,11 @@ class WidgetServiceTest {
         assertEquals(widget, actual.get().toList().getFirst());
 
         verify(widgetRepository)
-            .findAll(Mockito.<WidgetSearchSpecification>argThat(
-                    specification -> specification.getSearch().equals("search")
-                        && specification.getAttributes().isEmpty()),
-                Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
+                .findAll(
+                        Mockito.<WidgetSearchSpecification>argThat(
+                                specification -> specification.getSearch().equals("search")
+                                        && specification.getAttributes().isEmpty()),
+                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -136,42 +131,36 @@ class WidgetServiceTest {
         widget.setId(1L);
         List<Widget> widgets = Collections.singletonList(widget);
 
-        when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any()))
-            .thenReturn(widgets);
+        when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any())).thenReturn(widgets);
 
         Optional<List<Widget>> actual = widgetService.getWidgetsByCategory(1L);
 
         assertTrue(actual.isPresent());
         assertTrue(actual.get().contains(widget));
 
-        verify(widgetRepository)
-            .findAllByCategoryIdOrderByNameAsc(1L);
+        verify(widgetRepository).findAllByCategoryIdOrderByNameAsc(1L);
     }
 
     @Test
     void shouldGetWidgetsByCategoryEmptyList() {
-        when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any()))
-            .thenReturn(Collections.emptyList());
+        when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any())).thenReturn(Collections.emptyList());
 
         Optional<List<Widget>> actual = widgetService.getWidgetsByCategory(1L);
 
         assertTrue(actual.isEmpty());
 
-        verify(widgetRepository)
-            .findAllByCategoryIdOrderByNameAsc(1L);
+        verify(widgetRepository).findAllByCategoryIdOrderByNameAsc(1L);
     }
 
     @Test
     void shouldGetWidgetsByCategoryNull() {
-        when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any()))
-            .thenReturn(null);
+        when(widgetRepository.findAllByCategoryIdOrderByNameAsc(any())).thenReturn(null);
 
         Optional<List<Widget>> actual = widgetService.getWidgetsByCategory(1L);
 
         assertTrue(actual.isEmpty());
 
-        verify(widgetRepository)
-            .findAllByCategoryIdOrderByNameAsc(1L);
+        verify(widgetRepository).findAllByCategoryIdOrderByNameAsc(1L);
     }
 
     @Test
@@ -188,16 +177,14 @@ class WidgetServiceTest {
 
         List<WidgetParam> widgetParams = Collections.singletonList(widgetParam);
 
-        when(categoryService.getCategoryParametersByWidget(any()))
-            .thenReturn(widgetParams);
+        when(categoryService.getCategoryParametersByWidget(any())).thenReturn(widgetParams);
 
         List<WidgetParam> actual = widgetService.getWidgetParametersWithCategoryParameters(widget);
 
         assertEquals(2, actual.size());
         assertTrue(actual.containsAll(List.of(widgetParam, widgetParamTwo)));
 
-        verify(categoryService)
-            .getCategoryParametersByWidget(widget);
+        verify(categoryService).getCategoryParametersByWidget(widget);
     }
 
     @Test
@@ -239,14 +226,13 @@ class WidgetServiceTest {
         widget.setId(1L);
 
         when(categoryService.getCategoryParametersByWidget(any()))
-            .thenReturn(Arrays.asList(widgetParam, widgetParamTwo, widgetParamThree, widgetParamFour));
+                .thenReturn(Arrays.asList(widgetParam, widgetParamTwo, widgetParamThree, widgetParamFour));
 
         List<WidgetVariableResponseDto> actual = widgetService.getWidgetParametersForJsExecution(widget);
 
         assertEquals(4, actual.size());
 
-        verify(categoryService)
-            .getCategoryParametersByWidget(widget);
+        verify(categoryService).getCategoryParametersByWidget(widget);
     }
 
     @Test
@@ -257,20 +243,16 @@ class WidgetServiceTest {
         WidgetRequestDto widgetRequestDto = new WidgetRequestDto();
         widgetRequestDto.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
 
-        when(widgetRepository.findById(any()))
-            .thenReturn(Optional.of(widget));
-        when(widgetRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(widgetRepository.findById(any())).thenReturn(Optional.of(widget));
+        when(widgetRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         Optional<Widget> actual = widgetService.updateWidget(1L, widgetRequestDto);
 
         assertTrue(actual.isPresent());
         assertEquals(widget, actual.get());
 
-        verify(widgetRepository)
-            .findById(1L);
-        verify(widgetRepository)
-            .save(widget);
+        verify(widgetRepository).findById(1L);
+        verify(widgetRepository).save(widget);
     }
 
     @Test
@@ -278,15 +260,13 @@ class WidgetServiceTest {
         WidgetRequestDto widgetRequestDto = new WidgetRequestDto();
         widgetRequestDto.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
 
-        when(widgetRepository.findById(any()))
-            .thenReturn(Optional.empty());
+        when(widgetRepository.findById(any())).thenReturn(Optional.empty());
 
         Optional<Widget> actual = widgetService.updateWidget(1L, widgetRequestDto);
 
         assertTrue(actual.isEmpty());
 
-        verify(widgetRepository)
-            .findById(1L);
+        verify(widgetRepository).findById(1L);
     }
 
     @Test
@@ -304,14 +284,10 @@ class WidgetServiceTest {
 
         widgetService.addOrUpdateWidgets(category, Collections.singletonList(library), repository);
 
-        verify(widgetRepository, never())
-            .findByTechnicalName(any());
-        verify(assetService, never())
-            .save(any());
-        verify(widgetParamRepository, never())
-            .deleteById(any());
-        verify(widgetRepository, never())
-            .save(any());
+        verify(widgetRepository, never()).findByTechnicalName(any());
+        verify(assetService, never()).save(any());
+        verify(widgetParamRepository, never()).deleteById(any());
+        verify(widgetRepository, never()).save(any());
     }
 
     @Test
@@ -374,10 +350,8 @@ class WidgetServiceTest {
         category.setId(1L);
         category.setWidgets(Collections.singleton(widget));
 
-        when(widgetRepository.findByTechnicalName(any()))
-            .thenReturn(Optional.of(currentWidget));
-        when(assetService.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(widgetRepository.findByTechnicalName(any())).thenReturn(Optional.of(currentWidget));
+        when(assetService.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         widgetService.addOrUpdateWidgets(category, Collections.singletonList(library), repository);
 
@@ -389,20 +363,17 @@ class WidgetServiceTest {
         assertEquals(10L, widget.getImage().getId());
         assertEquals(11L, new ArrayList<>(widget.getWidgetParams()).getFirst().getId());
         assertEquals(
-            12L,
-            new ArrayList<>(new ArrayList<>(widget.getWidgetParams())
-                .getFirst().getPossibleValuesMap())
-                .getFirst().getId()
-        );
+                12L,
+                new ArrayList<>(new ArrayList<>(widget.getWidgetParams())
+                                .getFirst()
+                                .getPossibleValuesMap())
+                        .getFirst()
+                        .getId());
 
-        verify(widgetRepository)
-            .findByTechnicalName("widgetTechnicalName");
-        verify(assetService)
-            .save(widgetImage);
-        verify(widgetParamRepository)
-            .deleteAllById(List.of(13L));
-        verify(widgetRepository)
-            .save(widget);
+        verify(widgetRepository).findByTechnicalName("widgetTechnicalName");
+        verify(assetService).save(widgetImage);
+        verify(widgetParamRepository).deleteAllById(List.of(13L));
+        verify(widgetRepository).save(widget);
     }
 
     @Test
@@ -463,10 +434,8 @@ class WidgetServiceTest {
         category.setId(1L);
         category.setWidgets(Collections.singleton(widget));
 
-        when(widgetRepository.findByTechnicalName(any()))
-            .thenReturn(Optional.of(currentWidget));
-        when(assetService.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(widgetRepository.findByTechnicalName(any())).thenReturn(Optional.of(currentWidget));
+        when(assetService.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         widgetService.addOrUpdateWidgets(category, Collections.singletonList(library), repository);
 
@@ -478,14 +447,10 @@ class WidgetServiceTest {
         assertEquals(10L, widget.getImage().getId());
         assertEquals(13L, new ArrayList<>(widget.getWidgetParams()).getFirst().getId());
 
-        verify(widgetRepository)
-            .findByTechnicalName("widgetTechnicalName");
-        verify(assetService)
-            .save(widgetImage);
-        verify(widgetParamRepository, never())
-            .deleteAllById(List.of(13L));
-        verify(widgetRepository)
-            .save(widget);
+        verify(widgetRepository).findByTechnicalName("widgetTechnicalName");
+        verify(assetService).save(widgetImage);
+        verify(widgetParamRepository, never()).deleteAllById(List.of(13L));
+        verify(widgetRepository).save(widget);
     }
 
     @Test
@@ -547,10 +512,8 @@ class WidgetServiceTest {
         category.setId(1L);
         category.setWidgets(Collections.singleton(widget));
 
-        when(widgetRepository.findByTechnicalName(any()))
-            .thenReturn(Optional.of(currentWidget));
-        when(assetService.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(widgetRepository.findByTechnicalName(any())).thenReturn(Optional.of(currentWidget));
+        when(assetService.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         widgetService.addOrUpdateWidgets(category, Collections.singletonList(library), repository);
 
@@ -562,21 +525,17 @@ class WidgetServiceTest {
         assertEquals(10L, widget.getImage().getId());
         assertEquals(11L, new ArrayList<>(widget.getWidgetParams()).getFirst().getId());
         assertEquals(
-            12L,
-            new ArrayList<>(new ArrayList<>(widget.getWidgetParams())
-                .getFirst()
-                .getPossibleValuesMap())
-                .getFirst().getId()
-        );
+                12L,
+                new ArrayList<>(new ArrayList<>(widget.getWidgetParams())
+                                .getFirst()
+                                .getPossibleValuesMap())
+                        .getFirst()
+                        .getId());
 
-        verify(widgetRepository)
-            .findByTechnicalName("widgetTechnicalName");
-        verify(assetService)
-            .save(widgetImage);
-        verify(widgetParamRepository)
-            .deleteAllById(List.of(13L));
-        verify(widgetRepository)
-            .save(widget);
+        verify(widgetRepository).findByTechnicalName("widgetTechnicalName");
+        verify(assetService).save(widgetImage);
+        verify(widgetParamRepository).deleteAllById(List.of(13L));
+        verify(widgetRepository).save(widget);
     }
 
     @Test

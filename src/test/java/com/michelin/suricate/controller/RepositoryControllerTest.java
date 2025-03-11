@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -82,10 +81,8 @@ class RepositoryControllerTest {
         Repository repository = new Repository();
         repository.setId(1L);
 
-        when(repositoryService.getAll(any(), any()))
-            .thenReturn(new PageImpl<>(Collections.singletonList(repository)));
-        when(repositoryMapper.toRepositoryDtoNoWidgets(any()))
-            .thenReturn(repositoryResponseDto);
+        when(repositoryService.getAll(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(repository)));
+        when(repositoryMapper.toRepositoryDtoNoWidgets(any())).thenReturn(repositoryResponseDto);
 
         Page<RepositoryResponseDto> actual = repositoryController.getAll("search", Pageable.unpaged());
 
@@ -107,18 +104,15 @@ class RepositoryControllerTest {
         repository.setEnabled(true);
 
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
-        when(repositoryMapper.toRepositoryEntity(any(), any()))
-            .thenReturn(repository);
-        when(repositoryMapper.toRepositoryDtoNoWidgets(any()))
-            .thenReturn(repositoryResponseDto);
+        when(repositoryMapper.toRepositoryEntity(any(), any())).thenReturn(repository);
+        when(repositoryMapper.toRepositoryDtoNoWidgets(any())).thenReturn(repositoryResponseDto);
 
         ResponseEntity<RepositoryResponseDto> actual = repositoryController.createOne(repositoryRequestDto);
 
         assertEquals(HttpStatus.CREATED, actual.getStatusCode());
         assertEquals(repositoryResponseDto, actual.getBody());
 
-        verify(gitService)
-            .updateWidgetFromEnabledGitRepositories();
+        verify(gitService).updateWidgetFromEnabledGitRepositories();
     }
 
     @Test
@@ -134,18 +128,15 @@ class RepositoryControllerTest {
         repository.setEnabled(false);
 
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
-        when(repositoryMapper.toRepositoryEntity(any(), any()))
-            .thenReturn(repository);
-        when(repositoryMapper.toRepositoryDtoNoWidgets(any()))
-            .thenReturn(repositoryResponseDto);
+        when(repositoryMapper.toRepositoryEntity(any(), any())).thenReturn(repository);
+        when(repositoryMapper.toRepositoryDtoNoWidgets(any())).thenReturn(repositoryResponseDto);
 
         ResponseEntity<RepositoryResponseDto> actual = repositoryController.createOne(repositoryRequestDto);
 
         assertEquals(HttpStatus.CREATED, actual.getStatusCode());
         assertEquals(repositoryResponseDto, actual.getBody());
 
-        verify(gitService, never())
-            .updateWidgetFromEnabledGitRepositories();
+        verify(gitService, never()).updateWidgetFromEnabledGitRepositories();
     }
 
     @Test
@@ -156,13 +147,10 @@ class RepositoryControllerTest {
         Repository repository = new Repository();
         repository.setId(1L);
 
-        when(repositoryService.getOneById(any()))
-            .thenReturn(Optional.empty());
+        when(repositoryService.getOneById(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> repositoryController.getOneById(1L)
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> repositoryController.getOneById(1L));
 
         assertEquals("Repository '1' not found", exception.getMessage());
     }
@@ -175,10 +163,8 @@ class RepositoryControllerTest {
         Repository repository = new Repository();
         repository.setId(1L);
 
-        when(repositoryService.getOneById(any()))
-            .thenReturn(Optional.of(repository));
-        when(repositoryMapper.toRepositoryDtoNoWidgets(any()))
-            .thenReturn(repositoryResponseDto);
+        when(repositoryService.getOneById(any())).thenReturn(Optional.of(repository));
+        when(repositoryMapper.toRepositoryDtoNoWidgets(any())).thenReturn(repositoryResponseDto);
 
         ResponseEntity<RepositoryResponseDto> actual = repositoryController.getOneById(1L);
 
@@ -191,13 +177,11 @@ class RepositoryControllerTest {
         RepositoryRequestDto repositoryRequestDto = new RepositoryRequestDto();
         repositoryRequestDto.setName("name");
 
-        when(repositoryService.existsById(any()))
-            .thenReturn(false);
+        when(repositoryService.existsById(any())).thenReturn(false);
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> repositoryController.updateOneById(1L, repositoryRequestDto, true)
-        );
+                ObjectNotFoundException.class,
+                () -> repositoryController.updateOneById(1L, repositoryRequestDto, true));
 
         assertEquals("Repository '1' not found", exception.getMessage());
     }
@@ -210,10 +194,8 @@ class RepositoryControllerTest {
         Repository repository = new Repository();
         repository.setId(1L);
 
-        when(repositoryService.existsById(any()))
-            .thenReturn(true);
-        when(repositoryMapper.toRepositoryEntity(any(), any()))
-            .thenReturn(repository);
+        when(repositoryService.existsById(any())).thenReturn(true);
+        when(repositoryMapper.toRepositoryEntity(any(), any())).thenReturn(repository);
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, true);
 
@@ -229,10 +211,8 @@ class RepositoryControllerTest {
         repository.setId(1L);
         repository.setEnabled(false);
 
-        when(repositoryService.existsById(any()))
-            .thenReturn(true);
-        when(repositoryMapper.toRepositoryEntity(any(), any()))
-            .thenReturn(repository);
+        when(repositoryService.existsById(any())).thenReturn(true);
+        when(repositoryMapper.toRepositoryEntity(any(), any())).thenReturn(repository);
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, false);
 
@@ -248,10 +228,8 @@ class RepositoryControllerTest {
         repository.setId(1L);
         repository.setEnabled(true);
 
-        when(repositoryService.existsById(any()))
-            .thenReturn(true);
-        when(repositoryMapper.toRepositoryEntity(any(), any()))
-            .thenReturn(repository);
+        when(repositoryService.existsById(any())).thenReturn(true);
+        when(repositoryMapper.toRepositoryEntity(any(), any())).thenReturn(repository);
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, false);
 
@@ -267,13 +245,10 @@ class RepositoryControllerTest {
 
     @Test
     void shouldGetRepositoryWidgetNotFound() {
-        when(repositoryService.getOneById(any()))
-            .thenReturn(Optional.empty());
+        when(repositoryService.getOneById(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> repositoryController.getRepositoryWidget(1L)
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> repositoryController.getRepositoryWidget(1L));
 
         assertEquals("Repository '1' not found", exception.getMessage());
     }
@@ -286,10 +261,8 @@ class RepositoryControllerTest {
         WidgetResponseDto widgetResponseDto = new WidgetResponseDto();
         widgetResponseDto.setId(1L);
 
-        when(repositoryService.getOneById(any()))
-            .thenReturn(Optional.of(repository));
-        when(widgetMapper.toWidgetsDtos(any()))
-            .thenReturn(Collections.singletonList(widgetResponseDto));
+        when(repositoryService.getOneById(any())).thenReturn(Optional.of(repository));
+        when(widgetMapper.toWidgetsDtos(any())).thenReturn(Collections.singletonList(widgetResponseDto));
 
         ResponseEntity<List<WidgetResponseDto>> actual = repositoryController.getRepositoryWidget(1L);
 

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.export.ImportExportProjectDto;
@@ -37,13 +36,12 @@ import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * Project widget mapper.
- */
+/** Project widget mapper. */
 @Component
-@Mapper(componentModel = "spring",
-    imports = {Collection.class, Collectors.class},
-    unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(
+        componentModel = "spring",
+        imports = {Collection.class, Collectors.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ProjectWidgetMapper {
     @Autowired
     protected ProjectWidgetService projectWidgetService;
@@ -65,10 +63,13 @@ public abstract class ProjectWidgetMapper {
     @Mapping(target = "widgetPosition.gridRow", source = "projectWidget.gridRow")
     @Mapping(target = "widgetPosition.height", source = "projectWidget.height")
     @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
-    @Mapping(target = "instantiateHtml", expression = "java("
-        + "projectWidgetService.instantiateProjectWidgetHtml(projectWidget))")
-    @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded("
-        + "projectWidget.getWidget(), projectWidget.getBackendConfig()))")
+    @Mapping(
+            target = "instantiateHtml",
+            expression = "java(" + "projectWidgetService.instantiateProjectWidgetHtml(projectWidget))")
+    @Mapping(
+            target = "backendConfig",
+            expression = "java(projectWidgetService.decryptSecretParamsIfNeeded("
+                    + "projectWidget.getWidget(), projectWidget.getBackendConfig()))")
     @Mapping(target = "projectToken", source = "projectWidget.projectGrid.project.token")
     @Mapping(target = "widgetId", source = "projectWidget.widget.id")
     @Mapping(target = "gridId", source = "projectWidget.projectGrid.id")
@@ -92,8 +93,9 @@ public abstract class ProjectWidgetMapper {
      */
     @Named("toProjectWidgetEntity")
     @Mapping(target = "projectGrid", expression = "java( projectGridService.getOneById(gridId).get())")
-    @Mapping(target = "widget", expression = "java( widgetService.findOne("
-        + "projectWidgetRequestDto.getWidgetId()).get() )")
+    @Mapping(
+            target = "widget",
+            expression = "java( widgetService.findOne(" + "projectWidgetRequestDto.getWidgetId()).get() )")
     public abstract ProjectWidget toProjectWidgetEntity(ProjectWidgetRequestDto projectWidgetRequestDto, Long gridId);
 
     /**
@@ -108,10 +110,12 @@ public abstract class ProjectWidgetMapper {
     @Mapping(target = "gridColumn", source = "projectWidgetRequestDto.widgetPosition.gridColumn")
     @Mapping(target = "width", source = "projectWidgetRequestDto.widgetPosition.width")
     @Mapping(target = "height", source = "projectWidgetRequestDto.widgetPosition.height")
-    @Mapping(target = "widget", expression = "java( widgetService.findOneByTechnicalName("
-        + "projectWidgetRequestDto.getWidgetTechnicalName()).get() )")
+    @Mapping(
+            target = "widget",
+            expression = "java( widgetService.findOneByTechnicalName("
+                    + "projectWidgetRequestDto.getWidgetTechnicalName()).get() )")
     public abstract ProjectWidget toProjectWidgetEntity(
-        ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto projectWidgetRequestDto);
+            ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto projectWidgetRequestDto);
 
     /**
      * Map a project widget into a DTO for export.
@@ -121,12 +125,14 @@ public abstract class ProjectWidgetMapper {
      */
     @Named("toImportExportProjectWidgetDto")
     @Mapping(target = "widgetTechnicalName", source = "projectWidget.widget.technicalName")
-    @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded("
-        + "projectWidget.getWidget(), projectWidget.getBackendConfig()))")
+    @Mapping(
+            target = "backendConfig",
+            expression = "java(projectWidgetService.decryptSecretParamsIfNeeded("
+                    + "projectWidget.getWidget(), projectWidget.getBackendConfig()))")
     @Mapping(target = "widgetPosition.gridColumn", source = "projectWidget.gridColumn")
     @Mapping(target = "widgetPosition.gridRow", source = "projectWidget.gridRow")
     @Mapping(target = "widgetPosition.height", source = "projectWidget.height")
     @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
-    public abstract ImportExportProjectDto.ImportExportProjectGridDto
-        .ImportExportProjectWidgetDto toImportExportProjectWidgetDto(ProjectWidget projectWidget);
+    public abstract ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto
+            toImportExportProjectWidgetDto(ProjectWidget projectWidget);
 }

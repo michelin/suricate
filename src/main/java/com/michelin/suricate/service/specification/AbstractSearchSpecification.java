@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.specification;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -48,42 +47,42 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
     /**
      * Constructor.
      *
-     * @param search           The search query
+     * @param search The search query
      * @param filterAttributes The attribute used to filter on search attribute
      */
     protected AbstractSearchSpecification(final String search, final SingularAttribute<T, String>... filterAttributes) {
         this.search = search;
-        this.attributes = Arrays.stream(filterAttributes).map(Attribute::getName).toList();
+        this.attributes =
+                Arrays.stream(filterAttributes).map(Attribute::getName).toList();
     }
 
     /**
      * Used to add search predicates.
      *
-     * @param root            The root entity
+     * @param root The root entity
      * @param criteriaBuilder Used to build new predicate
-     * @param predicates      The list of predicates to add for this entity
+     * @param predicates The list of predicates to add for this entity
      */
     protected void addSearchPredicate(Root<T> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
         if (StringUtils.isNotBlank(search)) {
             String likeSearchString = String.format(LIKE_OPERATOR_FORMATTER, search.toLowerCase());
-            Optional
-                .ofNullable(attributes)
-                .orElseGet(ArrayList::new)
-                .forEach((String attribute) -> predicates.add(
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get(attribute)), likeSearchString)));
+            Optional.ofNullable(attributes)
+                    .orElseGet(ArrayList::new)
+                    .forEach((String attribute) -> predicates.add(
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get(attribute)), likeSearchString)));
         }
     }
 
     /**
      * Used to add predicates to the search query.
      *
-     * @param root            The root entity
-     * @param criteriaQuery   Used to build queries
+     * @param root The root entity
+     * @param criteriaQuery Used to build queries
      * @param criteriaBuilder Used to build new predicate
      */
     @Override
-    public Predicate toPredicate(@NotNull Root<T> root, @NotNull CriteriaQuery<?> criteriaQuery,
-                                 @NotNull CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(
+            @NotNull Root<T> root, @NotNull CriteriaQuery<?> criteriaQuery, @NotNull CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
         addSearchPredicate(root, criteriaBuilder, predicates);

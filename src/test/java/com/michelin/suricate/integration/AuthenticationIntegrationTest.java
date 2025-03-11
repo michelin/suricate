@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.integration;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -69,9 +68,11 @@ class AuthenticationIntegrationTest {
         userRequestDto.setConfirmPassword("none");
 
         // Sign up
-        ResponseEntity<UserResponseDto> signUpResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/signup",
-                POST, new HttpEntity<>(userRequestDto), UserResponseDto.class);
+        ResponseEntity<UserResponseDto> signUpResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/signup",
+                POST,
+                new HttpEntity<>(userRequestDto),
+                UserResponseDto.class);
 
         assertEquals(HttpStatus.CREATED, signUpResponse.getStatusCode());
 
@@ -80,9 +81,11 @@ class AuthenticationIntegrationTest {
         badSignInRequestDto.setPassword("badPassword");
 
         // Sign in with bad password
-        ResponseEntity<ApiErrorDto> badSignInResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
-                POST, new HttpEntity<>(badSignInRequestDto), ApiErrorDto.class);
+        ResponseEntity<ApiErrorDto> badSignInResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/signin",
+                POST,
+                new HttpEntity<>(badSignInRequestDto),
+                ApiErrorDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, badSignInResponse.getStatusCode());
         assertNotNull(badSignInResponse.getBody());
@@ -93,9 +96,11 @@ class AuthenticationIntegrationTest {
         emptyUsernamePasswordSignInRequestDto.setPassword(EMPTY);
 
         // Sign in with empty username/password
-        ResponseEntity<ApiErrorDto> emptyUsernamePasswordSignInResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
-                POST, new HttpEntity<>(emptyUsernamePasswordSignInRequestDto), ApiErrorDto.class);
+        ResponseEntity<ApiErrorDto> emptyUsernamePasswordSignInResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/signin",
+                POST,
+                new HttpEntity<>(emptyUsernamePasswordSignInRequestDto),
+                ApiErrorDto.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, emptyUsernamePasswordSignInResponse.getStatusCode());
         assertNotNull(emptyUsernamePasswordSignInResponse.getBody());
@@ -107,9 +112,11 @@ class AuthenticationIntegrationTest {
         signInRequestDto.setPassword("none");
 
         // Sign in with good password
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
-                POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/signin",
+                POST,
+                new HttpEntity<>(signInRequestDto),
+                JwtAuthenticationResponseDto.class);
 
         assertEquals(HttpStatus.OK, signInResponse.getStatusCode());
         assertNotNull(signInResponse.getBody());
@@ -127,17 +134,22 @@ class AuthenticationIntegrationTest {
         userRequestDto.setConfirmPassword("none");
 
         // Sign up
-        restTemplate.exchange("http://localhost:" + port + "/api/v1/users/signup",
-            POST, new HttpEntity<>(userRequestDto), UserResponseDto.class);
+        restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/signup",
+                POST,
+                new HttpEntity<>(userRequestDto),
+                UserResponseDto.class);
 
         SignInRequestDto signInRequestDto = new SignInRequestDto();
         signInRequestDto.setUsername("username");
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
-                POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/signin",
+                POST,
+                new HttpEntity<>(signInRequestDto),
+                JwtAuthenticationResponseDto.class);
 
         assertNotNull(signInResponse.getBody());
 
@@ -148,9 +160,11 @@ class AuthenticationIntegrationTest {
         personalAccessTokenRequestDto.setName("newToken");
 
         // Create PAT
-        ResponseEntity<PersonalAccessTokenResponseDto> createPatResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/personal-access-token",
-                POST, new HttpEntity<>(personalAccessTokenRequestDto, headers), PersonalAccessTokenResponseDto.class);
+        ResponseEntity<PersonalAccessTokenResponseDto> createPatResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/personal-access-token",
+                POST,
+                new HttpEntity<>(personalAccessTokenRequestDto, headers),
+                PersonalAccessTokenResponseDto.class);
 
         assertNotNull(createPatResponse.getBody());
 
@@ -158,20 +172,24 @@ class AuthenticationIntegrationTest {
         patHeaders.set("Authorization", "Token " + createPatResponse.getBody().getValue());
 
         // Wrong HTTP verb
-        ResponseEntity<ApiErrorDto> methodNotSupportedResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/personal-access-token",
-                PATCH, new HttpEntity<>(patHeaders), ApiErrorDto.class);
+        ResponseEntity<ApiErrorDto> methodNotSupportedResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/personal-access-token",
+                PATCH,
+                new HttpEntity<>(patHeaders),
+                ApiErrorDto.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, methodNotSupportedResponse.getStatusCode());
         assertNotNull(methodNotSupportedResponse.getBody());
-        assertEquals("Request method 'PATCH' is not supported", methodNotSupportedResponse.getBody().getMessage());
+        assertEquals(
+                "Request method 'PATCH' is not supported",
+                methodNotSupportedResponse.getBody().getMessage());
 
         // Get personal access tokens
-        ResponseEntity<List<PersonalAccessTokenResponseDto>> response = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/personal-access-token",
-                GET, new HttpEntity<>(patHeaders),
-                new ParameterizedTypeReference<>() {
-                });
+        ResponseEntity<List<PersonalAccessTokenResponseDto>> response = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/personal-access-token",
+                GET,
+                new HttpEntity<>(patHeaders),
+                new ParameterizedTypeReference<>() {});
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

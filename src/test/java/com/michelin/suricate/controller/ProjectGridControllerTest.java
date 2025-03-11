@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -79,13 +78,10 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectGridController.create(localUser, "token", gridRequestDto)
-        );
+                ObjectNotFoundException.class, () -> projectGridController.create(localUser, "token", gridRequestDto));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -110,15 +106,11 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
         ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectGridController.create(localUser, "token", gridRequestDto)
-        );
+                ApiException.class, () -> projectGridController.create(localUser, "token", gridRequestDto));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -149,19 +141,14 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
-        when(projectGridMapper.toProjectGridEntity(any(), any()))
-            .thenReturn(projectGrid);
-        when(projectGridService.create(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
-        when(projectGridMapper.toProjectGridDto(any()))
-            .thenReturn(projectGridResponseDto);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
+        when(projectGridMapper.toProjectGridEntity(any(), any())).thenReturn(projectGrid);
+        when(projectGridService.create(any())).thenAnswer(answer -> answer.getArgument(0));
+        when(projectGridMapper.toProjectGridDto(any())).thenReturn(projectGridResponseDto);
 
         ResponseEntity<ProjectGridResponseDto> actual =
-            projectGridController.create(localUser, "token", gridRequestDto);
+                projectGridController.create(localUser, "token", gridRequestDto);
 
         assertEquals(HttpStatus.OK, actual.getStatusCode());
         assertEquals(projectGridResponseDto, actual.getBody());
@@ -181,15 +168,13 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ProjectGridRequestDto projectGridRequestDto = new ProjectGridRequestDto();
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto)
-        );
+                ObjectNotFoundException.class,
+                () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -211,17 +196,14 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
         ProjectGridRequestDto projectGridRequestDto = new ProjectGridRequestDto();
 
         ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto)
-        );
+                ApiException.class,
+                () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -253,15 +235,12 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
 
         GridNotFoundException exception = assertThrows(
-            GridNotFoundException.class,
-            () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto)
-        );
+                GridNotFoundException.class,
+                () -> projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto));
 
         assertEquals("Grid '2' not found for project token", exception.getMessage());
     }
@@ -293,13 +272,11 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
 
         ResponseEntity<Void> actual =
-            projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto);
+                projectGridController.updateProjectGrids(localUser, "token", projectGridRequestDto);
 
         assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
         assertNull(actual.getBody());
@@ -319,13 +296,10 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectGridController.deleteGridById(localUser, "token", 1L)
-        );
+                ObjectNotFoundException.class, () -> projectGridController.deleteGridById(localUser, "token", 1L));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -347,15 +321,11 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
-        ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectGridController.deleteGridById(localUser, "token", 1L)
-        );
+        ApiException exception =
+                assertThrows(ApiException.class, () -> projectGridController.deleteGridById(localUser, "token", 1L));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -381,15 +351,11 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
 
         GridNotFoundException exception = assertThrows(
-            GridNotFoundException.class,
-            () -> projectGridController.deleteGridById(localUser, "token", 1L)
-        );
+                GridNotFoundException.class, () -> projectGridController.deleteGridById(localUser, "token", 1L));
 
         assertEquals("Grid '1' not found for project token", exception.getMessage());
     }
@@ -415,10 +381,8 @@ class ProjectGridControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
 
         ResponseEntity<Void> actual = projectGridController.deleteGridById(localUser, "token", 1L);
 

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,10 +69,8 @@ class RoleControllerTest {
         Role role = new Role();
         role.setId(1L);
 
-        when(roleService.getRoles(any(), any()))
-            .thenReturn(new PageImpl<>(Collections.singletonList(role)));
-        when(roleMapper.toRoleDto(any()))
-            .thenReturn(roleResponseDto);
+        when(roleService.getRoles(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(role)));
+        when(roleMapper.toRoleDto(any())).thenReturn(roleResponseDto);
 
         Page<RoleResponseDto> actual = roleController.getRoles("search", Pageable.unpaged());
 
@@ -84,13 +81,10 @@ class RoleControllerTest {
 
     @Test
     void shouldGetOneNotFound() {
-        when(roleService.getOneById(any()))
-            .thenReturn(Optional.empty());
+        when(roleService.getOneById(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> roleController.getOne(1L)
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> roleController.getOne(1L));
 
         assertEquals("Role '1' not found", exception.getMessage());
     }
@@ -103,10 +97,8 @@ class RoleControllerTest {
         Role role = new Role();
         role.setId(1L);
 
-        when(roleService.getOneById(any()))
-            .thenReturn(Optional.of(role));
-        when(roleMapper.toRoleDto(any()))
-            .thenReturn(roleResponseDto);
+        when(roleService.getOneById(any())).thenReturn(Optional.of(role));
+        when(roleMapper.toRoleDto(any())).thenReturn(roleResponseDto);
 
         ResponseEntity<RoleResponseDto> actual = roleController.getOne(1L);
 
@@ -116,13 +108,10 @@ class RoleControllerTest {
 
     @Test
     void shouldGetUsersByRoleNotFound() {
-        when(roleService.getOneById(any()))
-            .thenReturn(Optional.empty());
+        when(roleService.getOneById(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> roleController.getUsersByRole(1L)
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> roleController.getUsersByRole(1L));
 
         assertEquals("Role '1' not found", exception.getMessage());
     }
@@ -135,10 +124,8 @@ class RoleControllerTest {
         UserResponseDto userResponseDto = new UserResponseDto();
         userResponseDto.setUsername("username");
 
-        when(roleService.getOneById(any()))
-            .thenReturn(Optional.of(role));
-        when(userMapper.toUsersDtos(any()))
-            .thenReturn(Collections.singletonList(userResponseDto));
+        when(roleService.getOneById(any())).thenReturn(Optional.of(role));
+        when(userMapper.toUsersDtos(any())).thenReturn(Collections.singletonList(userResponseDto));
 
         ResponseEntity<List<UserResponseDto>> actual = roleController.getUsersByRole(1L);
 

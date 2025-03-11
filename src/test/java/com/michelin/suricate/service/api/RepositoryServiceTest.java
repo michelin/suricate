@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,7 +61,7 @@ class RepositoryServiceTest {
 
         Repository_.name = name;
         when(repositoryRepository.findAll(any(RepositorySearchSpecification.class), any(Pageable.class)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(repository)));
+                .thenReturn(new PageImpl<>(Collections.singletonList(repository)));
 
         Page<Repository> actual = repositoryService.getAll("search", Pageable.unpaged());
 
@@ -70,10 +69,11 @@ class RepositoryServiceTest {
         assertEquals(repository, actual.get().toList().getFirst());
 
         verify(repositoryRepository)
-            .findAll(Mockito.<RepositorySearchSpecification>argThat(
-                    specification -> specification.getSearch().equals("search")
-                        && specification.getAttributes().contains(name.getName())),
-                Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
+                .findAll(
+                        Mockito.<RepositorySearchSpecification>argThat(
+                                specification -> specification.getSearch().equals("search")
+                                        && specification.getAttributes().contains(name.getName())),
+                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -82,7 +82,7 @@ class RepositoryServiceTest {
         repository.setId(1L);
 
         when(repositoryRepository.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true))
-            .thenReturn(Optional.of(Collections.singletonList(repository)));
+                .thenReturn(Optional.of(Collections.singletonList(repository)));
 
         Optional<List<Repository>> actual = repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
 
@@ -90,8 +90,7 @@ class RepositoryServiceTest {
         assertFalse(actual.get().isEmpty());
         assertEquals(repository, actual.get().getFirst());
 
-        verify(repositoryRepository)
-            .findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
+        verify(repositoryRepository).findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
     }
 
     @Test
@@ -99,16 +98,14 @@ class RepositoryServiceTest {
         Repository repository = new Repository();
         repository.setId(1L);
 
-        when(repositoryRepository.findById(any()))
-            .thenReturn(Optional.of(repository));
+        when(repositoryRepository.findById(any())).thenReturn(Optional.of(repository));
 
         Optional<Repository> actual = repositoryService.getOneById(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(repository, actual.get());
 
-        verify(repositoryRepository)
-            .findById(1L);
+        verify(repositoryRepository).findById(1L);
     }
 
     @Test
@@ -116,29 +113,25 @@ class RepositoryServiceTest {
         Repository repository = new Repository();
         repository.setId(1L);
 
-        when(repositoryRepository.findByName(any()))
-            .thenReturn(Optional.of(repository));
+        when(repositoryRepository.findByName(any())).thenReturn(Optional.of(repository));
 
         Optional<Repository> actual = repositoryService.findByName("name");
 
         assertTrue(actual.isPresent());
         assertEquals(repository, actual.get());
 
-        verify(repositoryRepository)
-            .findByName("name");
+        verify(repositoryRepository).findByName("name");
     }
 
     @Test
     void shouldExistsById() {
-        when(repositoryRepository.existsById(any()))
-            .thenReturn(true);
+        when(repositoryRepository.existsById(any())).thenReturn(true);
 
         boolean actual = repositoryService.existsById(1L);
 
         assertTrue(actual);
 
-        verify(repositoryRepository)
-            .existsById(1L);
+        verify(repositoryRepository).existsById(1L);
     }
 
     @Test
@@ -146,13 +139,11 @@ class RepositoryServiceTest {
         Repository repository = new Repository();
         repository.setId(1L);
 
-        when(repositoryRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(repositoryRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         repositoryService.addOrUpdateRepository(repository);
 
-        verify(repositoryRepository)
-            .save(repository);
+        verify(repositoryRepository).save(repository);
     }
 
     @Test
@@ -161,12 +152,10 @@ class RepositoryServiceTest {
         repository.setId(1L);
         List<Repository> repositories = Collections.singletonList(repository);
 
-        when(repositoryRepository.saveAll(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(repositoryRepository.saveAll(any())).thenAnswer(answer -> answer.getArgument(0));
 
         repositoryService.addOrUpdateRepositories(Collections.singletonList(repository));
 
-        verify(repositoryRepository)
-            .saveAll(repositories);
+        verify(repositoryRepository).saveAll(repositories);
     }
 }

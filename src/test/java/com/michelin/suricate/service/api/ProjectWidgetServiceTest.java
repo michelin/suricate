@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -95,16 +94,14 @@ class ProjectWidgetServiceTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        when(projectWidgetRepository.findAll())
-            .thenReturn(Collections.singletonList(projectWidget));
+        when(projectWidgetRepository.findAll()).thenReturn(Collections.singletonList(projectWidget));
 
         List<ProjectWidget> actual = projectWidgetService.getAll();
 
         assertFalse(actual.isEmpty());
         assertTrue(actual.contains(projectWidget));
 
-        verify(projectWidgetRepository)
-            .findAll();
+        verify(projectWidgetRepository).findAll();
     }
 
     @Test
@@ -112,16 +109,14 @@ class ProjectWidgetServiceTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        when(projectWidgetRepository.findById(any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(projectWidgetRepository.findById(any())).thenReturn(Optional.of(projectWidget));
 
         Optional<ProjectWidget> actual = projectWidgetService.getOne(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(projectWidget, actual.get());
 
-        verify(projectWidgetRepository)
-            .findById(1L);
+        verify(projectWidgetRepository).findById(1L);
     }
 
     @Test
@@ -129,16 +124,14 @@ class ProjectWidgetServiceTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        when(projectWidgetRepository.findByIdAndProjectGridId(any(), any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(projectWidgetRepository.findByIdAndProjectGridId(any(), any())).thenReturn(Optional.of(projectWidget));
 
         Optional<ProjectWidget> actual = projectWidgetService.findByIdAndProjectGridId(1L, 1L);
 
         assertTrue(actual.isPresent());
         assertEquals(projectWidget, actual.get());
 
-        verify(projectWidgetRepository)
-            .findByIdAndProjectGridId(1L, 1L);
+        verify(projectWidgetRepository).findByIdAndProjectGridId(1L, 1L);
     }
 
     @Test
@@ -157,18 +150,15 @@ class ProjectWidgetServiceTest {
         projectWidget.setWidget(widget);
 
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
-        when(projectWidgetRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+                .thenReturn(Collections.singletonList(widgetParam));
+        when(projectWidgetRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         ProjectWidget actual = projectWidgetService.create(projectWidget);
 
         assertEquals(projectWidget, actual);
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
-        verify(projectWidgetRepository)
-            .save(projectWidget);
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
+        verify(projectWidgetRepository).save(projectWidget);
     }
 
     @Test
@@ -190,25 +180,23 @@ class ProjectWidgetServiceTest {
         projectWidget.setWidget(widget);
         projectWidget.setProjectGrid(projectGrid);
 
-        when(projectWidgetRepository.saveAndFlush(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(projectWidgetRepository.saveAndFlush(any())).thenAnswer(answer -> answer.getArgument(0));
 
         projectWidgetService.createAndRefreshDashboards(projectWidget);
 
-        verify(projectWidgetRepository)
-            .saveAndFlush(projectWidget);
+        verify(projectWidgetRepository).saveAndFlush(projectWidget);
         verify(dashboardWebsocketService)
-            .sendEventToProjectSubscribers(eq("token"),
-                argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)
-                    && event.getDate() != null));
+                .sendEventToProjectSubscribers(
+                        eq("token"),
+                        argThat(event ->
+                                event.getType().equals(UpdateType.REFRESH_DASHBOARD) && event.getDate() != null));
     }
 
     @Test
     void shouldUpdateWidgetPositionByProjectWidgetId() {
         projectWidgetService.updateWidgetPositionByProjectWidgetId(1L, 1, 1, 1, 1);
 
-        verify(projectWidgetRepository)
-            .updateRowAndColAndWidthAndHeightById(1, 1, 1, 1, 1L);
+        verify(projectWidgetRepository).updateRowAndColAndWidthAndHeightById(1, 1, 1, 1, 1L);
     }
 
     @Test
@@ -224,14 +212,12 @@ class ProjectWidgetServiceTest {
         projectWidgetPositionRequestDto.setGridColumn(1);
         projectWidgetPositionRequestDto.setGridRow(1);
 
-        projectWidgetService.updateWidgetPositionByProject(project,
-            Collections.singletonList(projectWidgetPositionRequestDto));
+        projectWidgetService.updateWidgetPositionByProject(
+                project, Collections.singletonList(projectWidgetPositionRequestDto));
 
-        verify(projectWidgetRepository)
-            .flush();
-        verify(dashboardWebsocketService)
-            .sendEventToProjectSubscribers(eq("token"),
-                argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)));
+        verify(projectWidgetRepository).flush();
+        verify(dashboardWebsocketService).sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType()
+                .equals(UpdateType.REFRESH_DASHBOARD)));
     }
 
     @Test
@@ -253,51 +239,37 @@ class ProjectWidgetServiceTest {
         projectWidget.setWidget(widget);
         projectWidget.setProjectGrid(projectGrid);
 
-        when(ctx.getBean(JsExecutionScheduler.class))
-            .thenReturn(jsExecutionScheduler);
-        when(projectWidgetRepository.findById(any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(ctx.getBean(JsExecutionScheduler.class)).thenReturn(jsExecutionScheduler);
+        when(projectWidgetRepository.findById(any())).thenReturn(Optional.of(projectWidget));
 
         projectWidgetService.removeWidgetFromDashboard(1L);
 
-        verify(jsExecutionScheduler)
-            .cancelWidgetExecution(1L);
-        verify(projectWidgetRepository)
-            .deleteById(1L);
-        verify(projectWidgetRepository)
-            .flush();
-        verify(dashboardWebsocketService)
-            .sendEventToProjectSubscribers(eq("token"),
-                argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)));
-        verify(projectWidgetRepository)
-            .findById(1L);
+        verify(jsExecutionScheduler).cancelWidgetExecution(1L);
+        verify(projectWidgetRepository).deleteById(1L);
+        verify(projectWidgetRepository).flush();
+        verify(dashboardWebsocketService).sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType()
+                .equals(UpdateType.REFRESH_DASHBOARD)));
+        verify(projectWidgetRepository).findById(1L);
     }
 
     @Test
     void shouldRemoveWidgetFromDashboardWhenWidgetNotFound() {
-        when(projectWidgetRepository.findById(any()))
-            .thenReturn(Optional.empty());
+        when(projectWidgetRepository.findById(any())).thenReturn(Optional.empty());
 
         projectWidgetService.removeWidgetFromDashboard(1L);
 
-        verify(jsExecutionScheduler, never())
-            .cancelWidgetExecution(any());
-        verify(projectWidgetRepository, never())
-            .deleteById(any());
-        verify(projectWidgetRepository, never())
-            .flush();
-        verify(dashboardWebsocketService, never())
-            .sendEventToProjectSubscribers(any(), any());
-        verify(projectWidgetRepository)
-            .findById(1L);
+        verify(jsExecutionScheduler, never()).cancelWidgetExecution(any());
+        verify(projectWidgetRepository, never()).deleteById(any());
+        verify(projectWidgetRepository, never()).flush();
+        verify(dashboardWebsocketService, never()).sendEventToProjectSubscribers(any(), any());
+        verify(projectWidgetRepository).findById(1L);
     }
 
     @Test
     void shouldResetProjectWidgetsState() {
         projectWidgetService.resetProjectWidgetsState();
 
-        verify(projectWidgetRepository)
-            .resetProjectWidgetsState();
+        verify(projectWidgetRepository).resetProjectWidgetsState();
     }
 
     @Test
@@ -306,19 +278,15 @@ class ProjectWidgetServiceTest {
         projectWidget.setId(1L);
         projectWidget.setBackendConfig("param=value");
 
-        when(projectWidgetRepository.findById(any()))
-            .thenReturn(Optional.of(projectWidget));
-        when(projectWidgetRepository.saveAndFlush(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(projectWidgetRepository.findById(any())).thenReturn(Optional.of(projectWidget));
+        when(projectWidgetRepository.saveAndFlush(any())).thenAnswer(answer -> answer.getArgument(0));
 
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, 1L);
 
         assertEquals(WidgetStateEnum.STOPPED, projectWidget.getState());
 
-        verify(projectWidgetRepository)
-            .findById(1L);
-        verify(projectWidgetRepository)
-            .saveAndFlush(projectWidget);
+        verify(projectWidgetRepository).findById(1L);
+        verify(projectWidgetRepository).saveAndFlush(projectWidget);
     }
 
     @Test
@@ -327,15 +295,12 @@ class ProjectWidgetServiceTest {
         projectWidget.setId(1L);
         projectWidget.setBackendConfig("param=value");
 
-        when(projectWidgetRepository.findById(any()))
-            .thenReturn(Optional.empty());
+        when(projectWidgetRepository.findById(any())).thenReturn(Optional.empty());
 
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, 1L);
 
-        verify(projectWidgetRepository)
-            .findById(1L);
-        verify(projectWidgetRepository, never())
-            .saveAndFlush(any());
+        verify(projectWidgetRepository).findById(1L);
+        verify(projectWidgetRepository, never()).saveAndFlush(any());
     }
 
     @Test
@@ -344,8 +309,7 @@ class ProjectWidgetServiceTest {
         projectWidget.setId(1L);
         projectWidget.setBackendConfig("param=value");
 
-        when(projectWidgetRepository.findById(any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(projectWidgetRepository.findById(any())).thenReturn(Optional.of(projectWidget));
 
         Date now = Date.from(Instant.parse("2000-01-01T01:00:00.00Z"));
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, 1L, now);
@@ -353,10 +317,8 @@ class ProjectWidgetServiceTest {
         assertEquals(WidgetStateEnum.STOPPED, projectWidget.getState());
         assertEquals(now, projectWidget.getLastExecutionDate());
 
-        verify(projectWidgetRepository)
-            .findById(1L);
-        verify(projectWidgetRepository)
-            .saveAndFlush(projectWidget);
+        verify(projectWidgetRepository).findById(1L);
+        verify(projectWidgetRepository).saveAndFlush(projectWidget);
     }
 
     @Test
@@ -407,8 +369,11 @@ class ProjectWidgetServiceTest {
         widget.setId(1L);
         widget.setHtmlContent("<h1>{{DATA}}</h1>");
         widget.setTechnicalName("technicalName");
-        widget.setWidgetParams(Arrays.asList(widgetParam, widgetParamNotRequired, widgetParamAlreadyContained,
-            widgetParamAlreadyContainedNotRequired));
+        widget.setWidgetParams(Arrays.asList(
+                widgetParam,
+                widgetParamNotRequired,
+                widgetParamAlreadyContained,
+                widgetParamAlreadyContainedNotRequired));
 
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
@@ -417,18 +382,20 @@ class ProjectWidgetServiceTest {
         projectWidget.setWidget(widget);
 
         when(mustacheFactory.compile(any(), any()))
-            .thenReturn(new DefaultMustacheFactory().compile(new StringReader(widget.getHtmlContent()),
-                widget.getTechnicalName()));
+                .thenReturn(new DefaultMustacheFactory()
+                        .compile(new StringReader(widget.getHtmlContent()), widget.getTechnicalName()));
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Arrays.asList(widgetParam, widgetParamNotRequired, widgetParamAlreadyContained,
-                widgetParamAlreadyContainedNotRequired));
+                .thenReturn(Arrays.asList(
+                        widgetParam,
+                        widgetParamNotRequired,
+                        widgetParamAlreadyContained,
+                        widgetParamAlreadyContainedNotRequired));
 
         String actual = projectWidgetService.instantiateProjectWidgetHtml(projectWidget);
 
         assertEquals("<h1>titre</h1>", actual);
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
     }
 
     @Test
@@ -449,17 +416,15 @@ class ProjectWidgetServiceTest {
         projectWidget.setData("{\"DATA\": \"titre\"}");
         projectWidget.setWidget(widget);
 
-        when(mustacheFactory.compile(any(), any()))
-            .thenThrow(new MustacheException("Error"));
+        when(mustacheFactory.compile(any(), any())).thenThrow(new MustacheException("Error"));
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
+                .thenReturn(Collections.singletonList(widgetParam));
 
         String actual = projectWidgetService.instantiateProjectWidgetHtml(projectWidget);
 
         assertTrue(actual.isEmpty());
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
     }
 
     @Test
@@ -476,15 +441,14 @@ class ProjectWidgetServiceTest {
         projectWidget.setWidget(widget);
 
         when(mustacheFactory.compile(any(), any()))
-            .thenReturn(new DefaultMustacheFactory().compile(new StringReader(widget.getHtmlContent()),
-                widget.getTechnicalName()));
+                .thenReturn(new DefaultMustacheFactory()
+                        .compile(new StringReader(widget.getHtmlContent()), widget.getTechnicalName()));
 
         String actual = projectWidgetService.instantiateProjectWidgetHtml(projectWidget);
 
         assertEquals("<h1></h1>", actual);
 
-        verify(widgetService, never())
-            .getWidgetParametersWithCategoryParameters(any());
+        verify(widgetService, never()).getWidgetParametersWithCategoryParameters(any());
     }
 
     @Test
@@ -496,24 +460,19 @@ class ProjectWidgetServiceTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        when(ctx.getBean(JsExecutionScheduler.class))
-            .thenReturn(jsExecutionScheduler);
+        when(ctx.getBean(JsExecutionScheduler.class)).thenReturn(jsExecutionScheduler);
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
-        when(projectWidgetRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+                .thenReturn(Collections.singletonList(widgetParam));
+        when(projectWidgetRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         projectWidgetService.updateProjectWidget(projectWidget, "style", "param=value");
 
         assertEquals("style", projectWidget.getCustomStyle());
         assertEquals("param=value", projectWidget.getBackendConfig());
 
-        verify(jsExecutionScheduler)
-            .cancelWidgetExecution(1L);
-        verify(projectWidgetRepository)
-            .save(projectWidget);
-        verify(dashboardScheduleService)
-            .scheduleWidget(1L);
+        verify(jsExecutionScheduler).cancelWidgetExecution(1L);
+        verify(projectWidgetRepository).save(projectWidget);
+        verify(dashboardScheduleService).scheduleWidget(1L);
     }
 
     @Test
@@ -525,22 +484,17 @@ class ProjectWidgetServiceTest {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
 
-        when(ctx.getBean(JsExecutionScheduler.class))
-            .thenReturn(jsExecutionScheduler);
-        when(projectWidgetRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(ctx.getBean(JsExecutionScheduler.class)).thenReturn(jsExecutionScheduler);
+        when(projectWidgetRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         projectWidgetService.updateProjectWidget(projectWidget, null, null);
 
         assertNull(projectWidget.getCustomStyle());
         assertNull(projectWidget.getBackendConfig());
 
-        verify(jsExecutionScheduler)
-            .cancelWidgetExecution(1L);
-        verify(projectWidgetRepository)
-            .save(projectWidget);
-        verify(dashboardScheduleService)
-            .scheduleWidget(1L);
+        verify(jsExecutionScheduler).cancelWidgetExecution(1L);
+        verify(projectWidgetRepository).save(projectWidget);
+        verify(dashboardScheduleService).scheduleWidget(1L);
     }
 
     @Test
@@ -548,18 +502,16 @@ class ProjectWidgetServiceTest {
         Date now = new Date();
         projectWidgetService.updateWidgetInstanceAfterFailedExecution(now, "log", 1L, WidgetStateEnum.STOPPED);
 
-        verify(projectWidgetRepository)
-            .updateLastExecutionDateAndStateAndLog(now, "log", 1L, WidgetStateEnum.STOPPED);
+        verify(projectWidgetRepository).updateLastExecutionDateAndStateAndLog(now, "log", 1L, WidgetStateEnum.STOPPED);
     }
 
     @Test
     void shouldUpdateWidgetInstanceAfterSucceededExecution() {
         Date now = new Date();
-        projectWidgetService.updateWidgetInstanceAfterSucceededExecution(now, "log", "data", 1L,
-            WidgetStateEnum.STOPPED);
+        projectWidgetService.updateWidgetInstanceAfterSucceededExecution(
+                now, "log", "data", 1L, WidgetStateEnum.STOPPED);
 
-        verify(projectWidgetRepository)
-            .updateSuccessExecution(now, "log", "data", 1L, WidgetStateEnum.STOPPED);
+        verify(projectWidgetRepository).updateSuccessExecution(now, "log", "data", 1L, WidgetStateEnum.STOPPED);
     }
 
     @Test
@@ -572,14 +524,13 @@ class ProjectWidgetServiceTest {
         widget.setId(1L);
 
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
+                .thenReturn(Collections.singletonList(widgetParam));
 
         String actual = projectWidgetService.decryptSecretParamsIfNeeded(widget, "param=value");
 
         assertEquals("param=value", actual);
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
     }
 
     @Test
@@ -593,18 +544,15 @@ class ProjectWidgetServiceTest {
         widget.setId(1L);
 
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
-        when(stringEncryptor.decrypt(any()))
-            .thenReturn("decrypted");
+                .thenReturn(Collections.singletonList(widgetParam));
+        when(stringEncryptor.decrypt(any())).thenReturn("decrypted");
 
         String actual = projectWidgetService.decryptSecretParamsIfNeeded(widget, "param=value");
 
         assertEquals("param=decrypted", actual);
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
-        verify(stringEncryptor)
-            .decrypt("value");
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
+        verify(stringEncryptor).decrypt("value");
     }
 
     @Test
@@ -618,16 +566,14 @@ class ProjectWidgetServiceTest {
         widget.setId(1L);
 
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
+                .thenReturn(Collections.singletonList(widgetParam));
 
         String actual = projectWidgetService.decryptSecretParamsIfNeeded(widget, "otherParam=");
 
         assertTrue(actual.isEmpty());
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
-        verify(stringEncryptor, never())
-            .decrypt(any());
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
+        verify(stringEncryptor, never()).decrypt(any());
     }
 
     @Test
@@ -640,14 +586,13 @@ class ProjectWidgetServiceTest {
         widget.setId(1L);
 
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
+                .thenReturn(Collections.singletonList(widgetParam));
 
         String actual = projectWidgetService.encryptSecretParamsIfNeeded(widget, "param=value");
 
         assertEquals("param=value", actual);
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
     }
 
     @Test
@@ -661,18 +606,15 @@ class ProjectWidgetServiceTest {
         widget.setId(1L);
 
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
-        when(stringEncryptor.encrypt(any()))
-            .thenReturn("encrypted");
+                .thenReturn(Collections.singletonList(widgetParam));
+        when(stringEncryptor.encrypt(any())).thenReturn("encrypted");
 
         String actual = projectWidgetService.encryptSecretParamsIfNeeded(widget, "param=value");
 
         assertEquals("param=encrypted", actual);
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
-        verify(stringEncryptor)
-            .encrypt("value");
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
+        verify(stringEncryptor).encrypt("value");
     }
 
     @Test
@@ -686,15 +628,13 @@ class ProjectWidgetServiceTest {
         widget.setId(1L);
 
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-            .thenReturn(Collections.singletonList(widgetParam));
+                .thenReturn(Collections.singletonList(widgetParam));
 
         String actual = projectWidgetService.encryptSecretParamsIfNeeded(widget, "otherParam=value");
 
         assertEquals("otherParam=value", actual);
 
-        verify(widgetService)
-            .getWidgetParametersWithCategoryParameters(widget);
-        verify(stringEncryptor, never())
-            .encrypt(any());
+        verify(widgetService).getWidgetParametersWithCategoryParameters(widget);
+        verify(stringEncryptor, never()).encrypt(any());
     }
 }

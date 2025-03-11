@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,28 +85,20 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.count())
-            .thenReturn(0L);
-        when(roleService.getRoleByName(any()))
-            .thenReturn(Optional.of(role));
-        when(userRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
-        when(userSettingService.createDefaultSettingsForUser(any()))
-            .thenReturn(Collections.singletonList(userSetting));
+        when(userRepository.count()).thenReturn(0L);
+        when(roleService.getRoleByName(any())).thenReturn(Optional.of(role));
+        when(userRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingService.createDefaultSettingsForUser(any())).thenReturn(Collections.singletonList(userSetting));
 
         User actual = userService.create(user);
 
         assertTrue(actual.getRoles().contains(role));
         assertTrue(actual.getUserSettings().contains(userSetting));
 
-        verify(userRepository)
-            .count();
-        verify(roleService)
-            .getRoleByName(UserRoleEnum.ROLE_ADMIN.name());
-        verify(userRepository)
-            .save(user);
-        verify(userSettingService)
-            .createDefaultSettingsForUser(user);
+        verify(userRepository).count();
+        verify(roleService).getRoleByName(UserRoleEnum.ROLE_ADMIN.name());
+        verify(userRepository).save(user);
+        verify(userSettingService).createDefaultSettingsForUser(user);
     }
 
     @Test
@@ -121,28 +112,20 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.count())
-            .thenReturn(15L);
-        when(roleService.getRoleByName(any()))
-            .thenReturn(Optional.of(role));
-        when(userRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
-        when(userSettingService.createDefaultSettingsForUser(any()))
-            .thenReturn(Collections.singletonList(userSetting));
+        when(userRepository.count()).thenReturn(15L);
+        when(roleService.getRoleByName(any())).thenReturn(Optional.of(role));
+        when(userRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingService.createDefaultSettingsForUser(any())).thenReturn(Collections.singletonList(userSetting));
 
         User actual = userService.create(user);
 
         assertTrue(actual.getRoles().contains(role));
         assertTrue(actual.getUserSettings().contains(userSetting));
 
-        verify(userRepository)
-            .count();
-        verify(roleService)
-            .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository)
-            .save(user);
-        verify(userSettingService)
-            .createDefaultSettingsForUser(user);
+        verify(userRepository).count();
+        verify(roleService).getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository).save(user);
+        verify(userSettingService).createDefaultSettingsForUser(user);
     }
 
     @Test
@@ -150,26 +133,17 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.count())
-            .thenReturn(15L);
-        when(roleService.getRoleByName(any()))
-            .thenReturn(Optional.empty());
+        when(userRepository.count()).thenReturn(15L);
+        when(roleService.getRoleByName(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> userService.create(user)
-        );
+        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> userService.create(user));
 
         assertEquals("Role 'ROLE_USER' not found", exception.getMessage());
 
-        verify(userRepository)
-            .count();
-        verify(roleService)
-            .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository, never())
-            .save(any());
-        verify(userSettingService, never())
-            .createDefaultSettingsForUser(any());
+        verify(userRepository).count();
+        verify(roleService).getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository, never()).save(any());
+        verify(userSettingService, never()).createDefaultSettingsForUser(any());
     }
 
     @Test
@@ -183,21 +157,15 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.findByEmailIgnoreCase(any()))
-            .thenReturn(Optional.empty());
-        when(userRepository.existsByUsername(any()))
-            .thenReturn(false);
-        when(userRepository.count())
-            .thenReturn(15L);
-        when(roleService.getRoleByName(any()))
-            .thenReturn(Optional.of(role));
-        when(userRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
-        when(userSettingService.createDefaultSettingsForUser(any()))
-            .thenReturn(Collections.singletonList(userSetting));
+        when(userRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.empty());
+        when(userRepository.existsByUsername(any())).thenReturn(false);
+        when(userRepository.count()).thenReturn(15L);
+        when(roleService.getRoleByName(any())).thenReturn(Optional.of(role));
+        when(userRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingService.createDefaultSettingsForUser(any())).thenReturn(Collections.singletonList(userSetting));
 
-        User actual = userService.registerUser("username", "firstname", "lastname", "email",
-            "avatar", AuthenticationProvider.LDAP);
+        User actual = userService.registerUser(
+                "username", "firstname", "lastname", "email", "avatar", AuthenticationProvider.LDAP);
 
         assertEquals("username", actual.getUsername());
         assertEquals("firstname", actual.getFirstname());
@@ -208,24 +176,18 @@ class UserServiceTest {
         assertTrue(actual.getRoles().contains(role));
         assertTrue(actual.getUserSettings().contains(userSetting));
 
+        verify(userRepository).findByEmailIgnoreCase("email");
+        verify(userRepository).existsByUsername("username");
+        verify(userRepository).count();
+        verify(roleService).getRoleByName(UserRoleEnum.ROLE_USER.name());
         verify(userRepository)
-            .findByEmailIgnoreCase("email");
-        verify(userRepository)
-            .existsByUsername("username");
-        verify(userRepository)
-            .count();
-        verify(roleService)
-            .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository)
-            .save(argThat(createdUser ->
-                createdUser.getUsername().equals("username")
-                    && createdUser.getFirstname().equals("firstname")
-                    && createdUser.getLastname().equals("lastname")
-                    && createdUser.getEmail().equals("email")
-                    && createdUser.getAvatarUrl().equals("avatar")
-                    && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
-        verify(userSettingService)
-            .createDefaultSettingsForUser(any(User.class));
+                .save(argThat(createdUser -> createdUser.getUsername().equals("username")
+                        && createdUser.getFirstname().equals("firstname")
+                        && createdUser.getLastname().equals("lastname")
+                        && createdUser.getEmail().equals("email")
+                        && createdUser.getAvatarUrl().equals("avatar")
+                        && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+        verify(userSettingService).createDefaultSettingsForUser(any(User.class));
     }
 
     @Test
@@ -239,24 +201,19 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.findByEmailIgnoreCase(any()))
-            .thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.empty());
         when(userRepository.existsByUsername(any()))
-            .thenReturn(true)
-            .thenReturn(true)
-            .thenReturn(true)
-            .thenReturn(false);
-        when(userRepository.count())
-            .thenReturn(15L);
-        when(roleService.getRoleByName(any()))
-            .thenReturn(Optional.of(role));
-        when(userRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
-        when(userSettingService.createDefaultSettingsForUser(any()))
-            .thenReturn(Collections.singletonList(userSetting));
+                .thenReturn(true)
+                .thenReturn(true)
+                .thenReturn(true)
+                .thenReturn(false);
+        when(userRepository.count()).thenReturn(15L);
+        when(roleService.getRoleByName(any())).thenReturn(Optional.of(role));
+        when(userRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
+        when(userSettingService.createDefaultSettingsForUser(any())).thenReturn(Collections.singletonList(userSetting));
 
-        User actual = userService.registerUser("username", "firstname", "lastname", "email",
-            "avatar", AuthenticationProvider.LDAP);
+        User actual = userService.registerUser(
+                "username", "firstname", "lastname", "email", "avatar", AuthenticationProvider.LDAP);
 
         assertEquals("username3", actual.getUsername());
         assertEquals("firstname", actual.getFirstname());
@@ -267,30 +224,21 @@ class UserServiceTest {
         assertTrue(actual.getRoles().contains(role));
         assertTrue(actual.getUserSettings().contains(userSetting));
 
+        verify(userRepository).findByEmailIgnoreCase("email");
+        verify(userRepository).existsByUsername("username");
+        verify(userRepository).existsByUsername("username1");
+        verify(userRepository).existsByUsername("username2");
+        verify(userRepository).existsByUsername("username3");
+        verify(userRepository).count();
+        verify(roleService).getRoleByName(UserRoleEnum.ROLE_USER.name());
         verify(userRepository)
-            .findByEmailIgnoreCase("email");
-        verify(userRepository)
-            .existsByUsername("username");
-        verify(userRepository)
-            .existsByUsername("username1");
-        verify(userRepository)
-            .existsByUsername("username2");
-        verify(userRepository)
-            .existsByUsername("username3");
-        verify(userRepository)
-            .count();
-        verify(roleService)
-            .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository)
-            .save(argThat(createdUser ->
-                createdUser.getUsername().equals("username3")
-                    && createdUser.getFirstname().equals("firstname")
-                    && createdUser.getLastname().equals("lastname")
-                    && createdUser.getEmail().equals("email")
-                    && createdUser.getAvatarUrl().equals("avatar")
-                    && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
-        verify(userSettingService)
-            .createDefaultSettingsForUser(any(User.class));
+                .save(argThat(createdUser -> createdUser.getUsername().equals("username3")
+                        && createdUser.getFirstname().equals("firstname")
+                        && createdUser.getLastname().equals("lastname")
+                        && createdUser.getEmail().equals("email")
+                        && createdUser.getAvatarUrl().equals("avatar")
+                        && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+        verify(userSettingService).createDefaultSettingsForUser(any(User.class));
     }
 
     @Test
@@ -311,13 +259,11 @@ class UserServiceTest {
         user.setUserSettings(Collections.singleton(userSetting));
         user.setProjects(Collections.singleton(project));
 
-        when(userRepository.findByEmailIgnoreCase(any()))
-            .thenReturn(Optional.of(user));
-        when(userRepository.save(any()))
-            .thenReturn(user);
+        when(userRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.of(user));
+        when(userRepository.save(any())).thenReturn(user);
 
-        User actual = userService.registerUser("username", "firstname", "lastname", "email",
-            "avatar", AuthenticationProvider.LDAP);
+        User actual = userService.registerUser(
+                "username", "firstname", "lastname", "email", "avatar", AuthenticationProvider.LDAP);
 
         assertEquals(1L, actual.getId());
         assertEquals("existingUsername", actual.getUsername());
@@ -330,16 +276,14 @@ class UserServiceTest {
         assertTrue(actual.getUserSettings().contains(userSetting));
         assertTrue(actual.getProjects().contains(project));
 
+        verify(userRepository).findByEmailIgnoreCase("email");
         verify(userRepository)
-            .findByEmailIgnoreCase("email");
-        verify(userRepository)
-            .save(argThat(createdUser ->
-                createdUser.getUsername().equals("existingUsername")
-                    && createdUser.getFirstname().equals("firstname")
-                    && createdUser.getLastname().equals("lastname")
-                    && createdUser.getEmail().equals("email")
-                    && createdUser.getAvatarUrl().equals("avatar")
-                    && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+                .save(argThat(createdUser -> createdUser.getUsername().equals("existingUsername")
+                        && createdUser.getFirstname().equals("firstname")
+                        && createdUser.getLastname().equals("lastname")
+                        && createdUser.getEmail().equals("email")
+                        && createdUser.getAvatarUrl().equals("avatar")
+                        && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
     }
 
     @Test
@@ -360,11 +304,10 @@ class UserServiceTest {
         user.setUserSettings(Collections.singleton(userSetting));
         user.setProjects(Collections.singleton(project));
 
-        when(userRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(userRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
-        User actual = userService.update(user, user.getUsername(), "firstname", "lastname", "email",
-            "avatar", AuthenticationProvider.LDAP);
+        User actual = userService.update(
+                user, user.getUsername(), "firstname", "lastname", "email", "avatar", AuthenticationProvider.LDAP);
 
         assertEquals(1L, actual.getId());
         assertEquals("existingUsername", actual.getUsername());
@@ -378,14 +321,13 @@ class UserServiceTest {
         assertTrue(actual.getProjects().contains(project));
 
         verify(userRepository)
-            .save(argThat(createdUser ->
-                createdUser.getId().equals(1L)
-                    && createdUser.getUsername().equals("existingUsername")
-                    && createdUser.getFirstname().equals("firstname")
-                    && createdUser.getLastname().equals("lastname")
-                    && createdUser.getEmail().equals("email")
-                    && createdUser.getAvatarUrl().equals("avatar")
-                    && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+                .save(argThat(createdUser -> createdUser.getId().equals(1L)
+                        && createdUser.getUsername().equals("existingUsername")
+                        && createdUser.getFirstname().equals("firstname")
+                        && createdUser.getLastname().equals("lastname")
+                        && createdUser.getEmail().equals("email")
+                        && createdUser.getAvatarUrl().equals("avatar")
+                        && createdUser.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
     }
 
     @Test
@@ -393,16 +335,14 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.findById(any()))
-            .thenReturn(Optional.of(user));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
         Optional<User> actual = userService.getOne(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(user, actual.get());
 
-        verify(userRepository)
-            .findById(1L);
+        verify(userRepository).findById(1L);
     }
 
     @Test
@@ -410,16 +350,14 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.findByUsernameIgnoreCase(any()))
-            .thenReturn(Optional.of(user));
+        when(userRepository.findByUsernameIgnoreCase(any())).thenReturn(Optional.of(user));
 
         Optional<User> actual = userService.getOneByUsername("username");
 
         assertTrue(actual.isPresent());
         assertEquals(user, actual.get());
 
-        verify(userRepository)
-            .findByUsernameIgnoreCase("username");
+        verify(userRepository).findByUsernameIgnoreCase("username");
     }
 
     @Test
@@ -427,16 +365,14 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.findByEmailIgnoreCase(any()))
-            .thenReturn(Optional.of(user));
+        when(userRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.of(user));
 
         Optional<User> actual = userService.getOneByEmail("email");
 
         assertTrue(actual.isPresent());
         assertEquals(user, actual.get());
 
-        verify(userRepository)
-            .findByEmailIgnoreCase("email");
+        verify(userRepository).findByEmailIgnoreCase("email");
     }
 
     @Test
@@ -444,15 +380,13 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.existsByUsername(any()))
-            .thenReturn(true);
+        when(userRepository.existsByUsername(any())).thenReturn(true);
 
         boolean actual = userService.existsByUsername("username");
 
         assertTrue(actual);
 
-        verify(userRepository)
-            .existsByUsername("username");
+        verify(userRepository).existsByUsername("username");
     }
 
     @Test
@@ -461,7 +395,7 @@ class UserServiceTest {
         user.setId(1L);
 
         when(userRepository.findAll(any(UserSearchSpecification.class), any(Pageable.class)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(user)));
+                .thenReturn(new PageImpl<>(Collections.singletonList(user)));
 
         Page<User> actual = userService.getAll("search", Pageable.unpaged());
 
@@ -469,10 +403,11 @@ class UserServiceTest {
         assertEquals(user, actual.get().toList().getFirst());
 
         verify(userRepository)
-            .findAll(
-                Mockito.<UserSearchSpecification>argThat(specification -> specification.getSearch().equals("search")
-                    && specification.getAttributes().isEmpty()),
-                Mockito.argThat(pageable -> pageable.equals(Pageable.unpaged())));
+                .findAll(
+                        Mockito.<UserSearchSpecification>argThat(
+                                specification -> specification.getSearch().equals("search")
+                                        && specification.getAttributes().isEmpty()),
+                        Mockito.argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -487,10 +422,8 @@ class UserServiceTest {
 
         userService.deleteUserByUserId(user);
 
-        verify(projectService)
-            .deleteUserFromProject(user, project);
-        verify(userRepository)
-            .delete(user);
+        verify(projectService).deleteUserFromProject(user, project);
+        verify(userRepository).delete(user);
     }
 
     @Test
@@ -500,15 +433,12 @@ class UserServiceTest {
 
         User user = new User();
 
-        when(userRepository.findById(any()))
-            .thenReturn(Optional.of(user));
-        when(roleService.getRoleByName(any()))
-            .thenReturn(Optional.of(role));
-        when(userRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(roleService.getRoleByName(any())).thenReturn(Optional.of(role));
+        when(userRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
-        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
-            "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
+        Optional<User> actual = userService.updateUser(
+                1L, "username", "firstname", "lastname", "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
 
         assertTrue(actual.isPresent());
         assertEquals("username", actual.get().getUsername());
@@ -517,12 +447,9 @@ class UserServiceTest {
         assertEquals("email", actual.get().getEmail());
         assertTrue(actual.get().getRoles().contains(role));
 
-        verify(userRepository)
-            .findById(1L);
-        verify(roleService)
-            .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository)
-            .save(user);
+        verify(userRepository).findById(1L);
+        verify(roleService).getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository).save(user);
     }
 
     @Test
@@ -532,15 +459,12 @@ class UserServiceTest {
 
         User user = new User();
 
-        when(userRepository.findById(any()))
-            .thenReturn(Optional.of(user));
-        when(roleService.getRoleByName(any()))
-            .thenReturn(Optional.empty());
-        when(userRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(roleService.getRoleByName(any())).thenReturn(Optional.empty());
+        when(userRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
-        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
-            "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
+        Optional<User> actual = userService.updateUser(
+                1L, "username", "firstname", "lastname", "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
 
         assertTrue(actual.isPresent());
         assertEquals("username", actual.get().getUsername());
@@ -549,12 +473,9 @@ class UserServiceTest {
         assertEquals("email", actual.get().getEmail());
         assertTrue(actual.get().getRoles().contains(null));
 
-        verify(userRepository)
-            .findById(1L);
-        verify(roleService)
-            .getRoleByName(UserRoleEnum.ROLE_USER.name());
-        verify(userRepository)
-            .save(user);
+        verify(userRepository).findById(1L);
+        verify(roleService).getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository).save(user);
     }
 
     @Test
@@ -564,10 +485,8 @@ class UserServiceTest {
 
         User user = new User();
 
-        when(userRepository.findById(any()))
-            .thenReturn(Optional.of(user));
-        when(userRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(userRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         Optional<User> actual = userService.updateUser(1L, null, null, null, null, Collections.emptyList());
 
@@ -578,10 +497,8 @@ class UserServiceTest {
         assertNull(actual.get().getEmail());
         assertTrue(actual.get().getRoles().isEmpty());
 
-        verify(userRepository)
-            .findById(1L);
-        verify(userRepository)
-            .save(user);
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(user);
     }
 
     @Test
@@ -589,24 +506,21 @@ class UserServiceTest {
         Role role = new Role();
         role.setId(1L);
 
-        when(userRepository.findById(any()))
-            .thenReturn(Optional.empty());
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
 
-        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
-            "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
+        Optional<User> actual = userService.updateUser(
+                1L, "username", "firstname", "lastname", "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
 
         assertTrue(actual.isEmpty());
 
-        verify(userRepository)
-            .findById(1L);
-        verify(roleService, never())
-            .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository).findById(1L);
+        verify(roleService, never()).getRoleByName(UserRoleEnum.ROLE_USER.name());
         verify(userRepository, never())
-            .save(argThat(user -> user.getId().equals(1L)
-                && user.getUsername().equals("username")
-                && user.getFirstname().equals("firstname")
-                && user.getLastname().equals("lastname")
-                && user.getEmail().equals("email")
-                && user.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
+                .save(argThat(user -> user.getId().equals(1L)
+                        && user.getUsername().equals("username")
+                        && user.getFirstname().equals("firstname")
+                        && user.getLastname().equals("lastname")
+                        && user.getEmail().equals("email")
+                        && user.getAuthenticationMethod().equals(AuthenticationProvider.LDAP)));
     }
 }

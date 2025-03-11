@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.security.ldap;
 
 import com.michelin.suricate.model.entity.User;
@@ -44,9 +43,7 @@ import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 
-/**
- * Ldap authentication configuration.
- */
+/** Ldap authentication configuration. */
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "ldap")
 public class LdapAuthentication {
@@ -58,9 +55,10 @@ public class LdapAuthentication {
 
     @PostConstruct
     private void checkLdapConfiguration() {
-        if (StringUtils.isBlank(applicationProperties.getAuthentication().getLdap().getUrl())) {
-            throw new ConfigurationException("The Ldap url is mandatory when the provider is ldap",
-                "application.authentication.ldap.url");
+        if (StringUtils.isBlank(
+                applicationProperties.getAuthentication().getLdap().getUrl())) {
+            throw new ConfigurationException(
+                    "The Ldap url is mandatory when the provider is ldap", "application.authentication.ldap.url");
         }
     }
 
@@ -72,15 +70,15 @@ public class LdapAuthentication {
      */
     @Bean
     public LdapAuthenticationProvider authenticationProvider(UserDetailsServiceLdapAuthoritiesPopulator userDetails) {
-        FilterBasedLdapUserSearch filterBasedLdapUserSearch =
-            new FilterBasedLdapUserSearch(applicationProperties.getAuthentication().getLdap().getUserSearchBase(),
-                applicationProperties.getAuthentication().getLdap().getUserSearchFilter(), contextSource());
+        FilterBasedLdapUserSearch filterBasedLdapUserSearch = new FilterBasedLdapUserSearch(
+                applicationProperties.getAuthentication().getLdap().getUserSearchBase(),
+                applicationProperties.getAuthentication().getLdap().getUserSearchFilter(),
+                contextSource());
 
         BindAuthenticator bindAuthenticator = new BindAuthenticator(contextSource());
         bindAuthenticator.setUserSearch(filterBasedLdapUserSearch);
 
-        LdapAuthenticationProvider authProvider =
-            new LdapAuthenticationProvider(bindAuthenticator, userDetails);
+        LdapAuthenticationProvider authProvider = new LdapAuthenticationProvider(bindAuthenticator, userDetails);
         authProvider.setUserDetailsContextMapper(userDetailsContextMapper());
 
         return authProvider;
@@ -94,10 +92,12 @@ public class LdapAuthentication {
     public UserDetailsContextMapper userDetailsContextMapper() {
         return new LdapUserDetailsMapper() {
             @Override
-            public UserDetails mapUserFromContext(DirContextOperations ctx, String username,
-                                                  java.util.Collection<? extends GrantedAuthority> authorities) {
-                String email =
-                    ctx.getStringAttribute(applicationProperties.getAuthentication().getLdap().getMailAttributeName());
+            public UserDetails mapUserFromContext(
+                    DirContextOperations ctx,
+                    String username,
+                    java.util.Collection<? extends GrantedAuthority> authorities) {
+                String email = ctx.getStringAttribute(
+                        applicationProperties.getAuthentication().getLdap().getMailAttributeName());
                 Optional<User> currentUser = userService.getOneByEmail(email);
 
                 if (currentUser.isEmpty()) {
@@ -115,15 +115,19 @@ public class LdapAuthentication {
      * @return The default context source configured
      */
     private DefaultSpringSecurityContextSource contextSource() {
-        DefaultSpringSecurityContextSource contextSource =
-            new DefaultSpringSecurityContextSource(applicationProperties.getAuthentication().getLdap().getUrl());
+        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(
+                applicationProperties.getAuthentication().getLdap().getUrl());
 
-        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getUserDnPatterns())) {
-            contextSource.setUserDn(applicationProperties.getAuthentication().getLdap().getUserDnPatterns());
+        if (!StringUtils.isEmpty(
+                applicationProperties.getAuthentication().getLdap().getUserDnPatterns())) {
+            contextSource.setUserDn(
+                    applicationProperties.getAuthentication().getLdap().getUserDnPatterns());
         }
 
-        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getUsername())
-            && !StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getPassword())) {
+        if (!StringUtils.isEmpty(
+                        applicationProperties.getAuthentication().getLdap().getUsername())
+                && !StringUtils.isEmpty(
+                        applicationProperties.getAuthentication().getLdap().getPassword())) {
             contextSource.setAuthenticationSource(new AuthenticationSource() {
                 @Override
                 public String getPrincipal() {

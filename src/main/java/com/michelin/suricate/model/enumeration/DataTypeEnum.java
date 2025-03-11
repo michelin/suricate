@@ -16,12 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.enumeration;
 
-/**
- * Possible data type for a widget parameter.
- */
+/** Possible data type for a widget parameter. */
 public enum DataTypeEnum {
     // Simple data types
     NUMBER,

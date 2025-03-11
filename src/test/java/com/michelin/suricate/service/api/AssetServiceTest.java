@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,18 +55,15 @@ class AssetServiceTest {
             asset.setSize(1L);
             asset.setContentType("contentType");
 
-            mocked.when(() -> IdUtils.decrypt("token"))
-                .thenReturn(1L);
-            when(assetRepository.findById(1L))
-                .thenReturn(Optional.of(asset));
+            mocked.when(() -> IdUtils.decrypt("token")).thenReturn(1L);
+            when(assetRepository.findById(1L)).thenReturn(Optional.of(asset));
 
             Asset actual = assetService.getAssetById("token");
 
             assertNotNull(actual);
             assertEquals(asset, actual);
 
-            verify(assetRepository)
-                .findById(1L);
+            verify(assetRepository).findById(1L);
         }
     }
 
@@ -80,15 +76,10 @@ class AssetServiceTest {
             asset.setSize(1L);
             asset.setContentType("contentType");
 
-            mocked.when(() -> IdUtils.decrypt("token"))
-                .thenReturn(1L);
-            when(assetRepository.findById(1L))
-                .thenReturn(Optional.empty());
+            mocked.when(() -> IdUtils.decrypt("token")).thenReturn(1L);
+            when(assetRepository.findById(1L)).thenReturn(Optional.empty());
 
-            assertThrows(
-                ObjectNotFoundException.class,
-                () -> assetService.getAssetById("token")
-            );
+            assertThrows(ObjectNotFoundException.class, () -> assetService.getAssetById("token"));
         }
     }
 
@@ -100,15 +91,13 @@ class AssetServiceTest {
         asset.setSize(1L);
         asset.setContentType("contentType");
 
-        when(assetRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(assetRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         Asset actual = assetService.save(asset);
 
         assertNotNull(actual);
         assertEquals(asset, actual);
 
-        verify(assetRepository)
-            .save(asset);
+        verify(assetRepository).save(asset);
     }
 }

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,10 +57,8 @@ class UserSettingMapperTest {
         AllowedSettingValueResponseDto allowedSettingValueResponseDto = new AllowedSettingValueResponseDto();
         allowedSettingValueResponseDto.setId(1L);
 
-        when(settingMapper.toSettingDto(any()))
-            .thenReturn(settingResponseDto);
-        when(allowedSettingValueMapper.toAllowedSettingValueDto(any()))
-            .thenReturn(allowedSettingValueResponseDto);
+        when(settingMapper.toSettingDto(any())).thenReturn(settingResponseDto);
+        when(allowedSettingValueMapper.toAllowedSettingValueDto(any())).thenReturn(allowedSettingValueResponseDto);
 
         UserSettingResponseDto actual = userSettingMapper.toUserSettingDto(getUserSetting());
 
@@ -80,13 +77,11 @@ class UserSettingMapperTest {
         AllowedSettingValueResponseDto allowedSettingValueResponseDto = new AllowedSettingValueResponseDto();
         allowedSettingValueResponseDto.setId(1L);
 
-        when(settingMapper.toSettingDto(any()))
-            .thenReturn(settingResponseDto);
-        when(allowedSettingValueMapper.toAllowedSettingValueDto(any()))
-            .thenReturn(allowedSettingValueResponseDto);
+        when(settingMapper.toSettingDto(any())).thenReturn(settingResponseDto);
+        when(allowedSettingValueMapper.toAllowedSettingValueDto(any())).thenReturn(allowedSettingValueResponseDto);
 
         List<UserSettingResponseDto> actual =
-            userSettingMapper.toUserSettingsDtos(Collections.singletonList(getUserSetting()));
+                userSettingMapper.toUserSettingsDtos(Collections.singletonList(getUserSetting()));
 
         assertEquals(1L, actual.getFirst().getId());
         assertEquals(1L, actual.getFirst().getUserId());
@@ -95,8 +90,7 @@ class UserSettingMapperTest {
         assertEquals(allowedSettingValueResponseDto, actual.getFirst().getSettingValue());
     }
 
-    @NotNull
-    private static UserSetting getUserSetting() {
+    @NotNull private static UserSetting getUserSetting() {
         AllowedSettingValue allowedSettingValue = new AllowedSettingValue();
         allowedSettingValue.setId(1L);
 

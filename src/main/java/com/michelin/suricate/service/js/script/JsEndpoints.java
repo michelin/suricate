@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.js.script;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -39,31 +38,25 @@ import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 
-/**
- * Javascript endpoints called by the widgets.
- */
+/** Javascript endpoints called by the widgets. */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JsEndpoints {
     /**
      * Create and submit an HTTP request according to the given parameters.
      *
-     * @param url            The URL of the endpoint to call
-     * @param headerName     The name of the header to add
-     * @param headerValue    The value to set to the added header
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
+     * @param headerValue The value to set to the added header
      * @param headerToReturn The name of the header to return
-     * @param body           The body of the request. Can be null in case of GET HTTP request
+     * @param body The body of the request. Can be null in case of GET HTTP request
      * @return The response body of the request or the value of the requested header
-     * @throws IOException      If an error occurred during the execution of the request
-     * @throws RemoteException  If an error occurred during the execution of the request
+     * @throws IOException If an error occurred during the execution of the request
+     * @throws RemoteException If an error occurred during the execution of the request
      * @throws RequestException If an error occurred during the execution of the request
      */
-    private static String executeRequest(String url,
-                                         String headerName,
-                                         String headerValue,
-                                         String headerToReturn,
-                                         String body,
-                                         boolean returnCode)
-        throws IOException, RemoteException, RequestException {
+    private static String executeRequest(
+            String url, String headerName, String headerValue, String headerToReturn, String body, boolean returnCode)
+            throws IOException, RemoteException, RequestException {
         Request.Builder builder = new Request.Builder().url(url);
 
         if (StringUtils.isNotBlank(headerName)) {
@@ -71,14 +64,14 @@ public final class JsEndpoints {
         }
 
         if (StringUtils.isNotBlank(body)) {
-            builder.post(
-                RequestBody.create(body, MediaType.parse(APPLICATION_JSON_VALUE)));
+            builder.post(RequestBody.create(body, MediaType.parse(APPLICATION_JSON_VALUE)));
         }
 
         Request request = builder.build();
         String returnedValue;
 
-        try (Response response = OkHttpClientUtils.getUnsafeOkHttpClient().newCall(request).execute()) {
+        try (Response response =
+                OkHttpClientUtils.getUnsafeOkHttpClient().newCall(request).execute()) {
             if (returnCode) {
                 return String.valueOf(response.code());
             }
@@ -91,13 +84,17 @@ public final class JsEndpoints {
             } else {
                 if (response.code() >= HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                     throw new RemoteException("A server error occurred during the execution of the request /"
-                        + response.request().method() + " " + response.request().url() + " (code " + response.code()
-                        + ").");
+                            + response.request().method() + " "
+                            + response.request().url() + " (code " + response.code()
+                            + ").");
                 } else {
                     throw new RequestException("A request error occurred during the execution of the request /"
-                        + response.request().method() + " " + response.request().url() + " (code " + response.code()
-                        + "). Error body details: "
-                        + (response.body() != null ? Objects.requireNonNull(response.body()).string() : "Empty body"));
+                            + response.request().method() + " "
+                            + response.request().url() + " (code " + response.code()
+                            + "). Error body details: "
+                            + (response.body() != null
+                                    ? Objects.requireNonNull(response.body()).string()
+                                    : "Empty body"));
                 }
             }
         }
@@ -118,7 +115,7 @@ public final class JsEndpoints {
     /**
      * Perform a GET HTTP call.
      *
-     * @param url        The URL of the endpoint to call
+     * @param url The URL of the endpoint to call
      * @param returnCode true if you want to only return the http status code, false otherwise
      * @return The http status code
      */
@@ -129,104 +126,101 @@ public final class JsEndpoints {
     /**
      * Perform a GET HTTP call.
      *
-     * @param url         The URL of the endpoint to call
-     * @param headerName  The name of the header to add
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header
      * @return The response body of the request
      */
     public static String get(String url, String headerName, String headerValue)
-        throws RemoteException, IOException, RequestException {
+            throws RemoteException, IOException, RequestException {
         return JsEndpoints.executeRequest(url, headerName, headerValue, null, null, false);
     }
 
     /**
      * Perform a GET HTTP call.
      *
-     * @param url         The URL of the endpoint to call
-     * @param headerName  The name of the header to add
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header
-     * @param returnCode  true if you want to only return the http status code, false otherwise
+     * @param returnCode true if you want to only return the http status code, false otherwise
      * @return The response body of the request
      */
     public static String get(String url, String headerName, String headerValue, boolean returnCode)
-        throws RemoteException, IOException, RequestException {
+            throws RemoteException, IOException, RequestException {
         return JsEndpoints.executeRequest(url, headerName, headerValue, null, null, returnCode);
     }
 
     /**
      * Perform a GET HTTP call.
      *
-     * @param url            The URL of the endpoint to call
-     * @param headerName     The name of the header to add
-     * @param headerValue    The value to set to the added header
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
+     * @param headerValue The value to set to the added header
      * @param headerToReturn The name of the header to return
      * @return The requested header
      */
     public static String get(String url, String headerName, String headerValue, String headerToReturn)
-        throws RemoteException, IOException, RequestException {
+            throws RemoteException, IOException, RequestException {
         return JsEndpoints.executeRequest(url, headerName, headerValue, headerToReturn, null, false);
     }
 
     /**
      * Perform a POST HTTP call.
      *
-     * @param url  The URL of the endpoint to call
+     * @param url The URL of the endpoint to call
      * @param body The body of the POST request
      * @return The response body of the request
      */
     public static String post(String url, String body) throws RemoteException, IOException, RequestException {
-        return JsEndpoints.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body,
-            false);
+        return JsEndpoints.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body, false);
     }
 
     /**
      * Perform a POST HTTP call.
      *
-     * @param url        The URL of the endpoint to call
-     * @param body       The body of the POST request
+     * @param url The URL of the endpoint to call
+     * @param body The body of the POST request
      * @param returnCode true if you want to only return the http status code, false otherwise
      * @return The response body of the request
      */
     public static String post(String url, String body, boolean returnCode)
-        throws RemoteException, IOException, RequestException {
-        return JsEndpoints.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body,
-            returnCode);
+            throws RemoteException, IOException, RequestException {
+        return JsEndpoints.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body, returnCode);
     }
 
     /**
      * Perform a POST HTTP call.
      *
-     * @param url         The URL of the endpoint to call
-     * @param body        The body of the POST request
-     * @param headerName  The name of the header to add
+     * @param url The URL of the endpoint to call
+     * @param body The body of the POST request
+     * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header
      * @return The response body of the request
      */
     public static String post(String url, String body, String headerName, String headerValue)
-        throws RemoteException, IOException, RequestException {
-        return JsEndpoints.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body,
-            false);
+            throws RemoteException, IOException, RequestException {
+        return JsEndpoints.executeRequest(
+                url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, false);
     }
 
     /**
      * Perform a POST HTTP call.
      *
-     * @param url         The URL of the endpoint to call
-     * @param body        The body of the POST request
-     * @param headerName  The name of the header to add
+     * @param url The URL of the endpoint to call
+     * @param body The body of the POST request
+     * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header
-     * @param returnCode  true if you want to only return the http status code, false otherwise
+     * @param returnCode true if you want to only return the http status code, false otherwise
      * @return The response body of the request
      */
     public static String post(String url, String body, String headerName, String headerValue, boolean returnCode)
-        throws RemoteException, IOException, RequestException {
-        return JsEndpoints.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body,
-            returnCode);
+            throws RemoteException, IOException, RequestException {
+        return JsEndpoints.executeRequest(
+                url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, returnCode);
     }
 
     /**
-     * Check if a thread is interrupted.
-     * This method is injected during the Js execution preparation
+     * Check if a thread is interrupted. This method is injected during the Js execution preparation
      *
      * @throws InterruptedException an exception if the thread is interrupted
      */
@@ -237,8 +231,7 @@ public final class JsEndpoints {
     }
 
     /**
-     * Convert ASCII string to base 64.
-     * This method is directly called by the widgets especially to encrypt credentials
+     * Convert ASCII string to base 64. This method is directly called by the widgets especially to encrypt credentials
      *
      * @param data The string to convert
      * @return A String encoded with Base64

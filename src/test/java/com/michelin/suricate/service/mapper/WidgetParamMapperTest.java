@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,7 +51,7 @@ class WidgetParamMapperTest {
         widgetParamValueResponseDto.setJsKey("key");
 
         when(widgetParamValueMapper.toWidgetParameterValuesDtos(any()))
-            .thenReturn(Collections.singletonList(widgetParamValueResponseDto));
+                .thenReturn(Collections.singletonList(widgetParamValueResponseDto));
 
         WidgetParamResponseDto actual = widgetParamMapper.toWidgetParameterDto(getWidgetParam());
 
@@ -67,8 +66,7 @@ class WidgetParamMapperTest {
         assertEquals(widgetParamValueResponseDto, actual.getValues().getFirst());
     }
 
-    @NotNull
-    private static WidgetParam getWidgetParam() {
+    @NotNull private static WidgetParam getWidgetParam() {
         WidgetParamValue widgetParamValue = new WidgetParamValue();
         widgetParamValue.setId(1L);
 

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.js.task;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -67,15 +66,13 @@ class JsResultAsyncTaskTest {
 
         when(scheduledFuture.get(anyLong(), any())).thenReturn(jsResultDto);
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(dashboardScheduleService)
-            .processJsResult(jsResultDto, jsExecutionScheduler);
-        verify(scheduledFuture)
-            .get(60, TimeUnit.SECONDS);
+        verify(dashboardScheduleService).processJsResult(jsResultDto, jsExecutionScheduler);
+        verify(scheduledFuture).get(60, TimeUnit.SECONDS);
     }
 
     @Test
@@ -92,19 +89,18 @@ class JsResultAsyncTaskTest {
         jsResultDto.setProjectId(1L);
 
         doThrow(new RuntimeException("Error"))
-            .doNothing()
-            .when(dashboardScheduleService).processJsResult(any(), any());
+                .doNothing()
+                .when(dashboardScheduleService)
+                .processJsResult(any(), any());
         when(scheduledFuture.get(anyLong(), any())).thenReturn(jsResultDto);
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(dashboardScheduleService, times(2))
-            .processJsResult(jsResultDto, jsExecutionScheduler);
-        verify(scheduledFuture)
-            .get(120, TimeUnit.SECONDS);
+        verify(dashboardScheduleService, times(2)).processJsResult(jsResultDto, jsExecutionScheduler);
+        verify(scheduledFuture).get(120, TimeUnit.SECONDS);
     }
 
     @Test
@@ -120,21 +116,17 @@ class JsResultAsyncTaskTest {
         JsResultDto jsResultDto = new JsResultDto();
         jsResultDto.setProjectId(1L);
 
-        doThrow(new RuntimeException("Error"))
-            .when(dashboardScheduleService).processJsResult(any(), any());
+        doThrow(new RuntimeException("Error")).when(dashboardScheduleService).processJsResult(any(), any());
         when(scheduledFuture.get(anyLong(), any())).thenReturn(jsResultDto);
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(dashboardScheduleService, times(10))
-            .processJsResult(jsResultDto, jsExecutionScheduler);
-        verify(jsExecutionScheduler)
-            .schedule(jsExecutionDto, false);
-        verify(scheduledFuture)
-            .get(60, TimeUnit.SECONDS);
+        verify(dashboardScheduleService, times(10)).processJsResult(jsResultDto, jsExecutionScheduler);
+        verify(jsExecutionScheduler).schedule(jsExecutionDto, false);
+        verify(scheduledFuture).get(60, TimeUnit.SECONDS);
     }
 
     @Test
@@ -151,15 +143,14 @@ class JsResultAsyncTaskTest {
 
         when(scheduledFuture.get(anyLong(), any())).thenThrow(new InterruptedException("error"));
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
         assertTrue(Thread.currentThread().isInterrupted());
 
-        verify(scheduledFuture)
-            .get(60, TimeUnit.SECONDS);
+        verify(scheduledFuture).get(60, TimeUnit.SECONDS);
     }
 
     @Test
@@ -176,21 +167,19 @@ class JsResultAsyncTaskTest {
 
         scheduledFuture.cancel(true);
 
-        when(scheduledFuture.get(anyLong(), any()))
-            .thenThrow(new CancellationException("error"));
+        when(scheduledFuture.get(anyLong(), any())).thenThrow(new CancellationException("error"));
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(scheduledFuture)
-            .get(60, TimeUnit.SECONDS);
+        verify(scheduledFuture).get(60, TimeUnit.SECONDS);
     }
 
     @Test
     void shouldCatchCancellationExceptionAndCancelImmediately()
-        throws ExecutionException, InterruptedException, TimeoutException {
+            throws ExecutionException, InterruptedException, TimeoutException {
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectId(1L);
         jsExecutionDto.setProjectWidgetId(1L);
@@ -203,18 +192,15 @@ class JsResultAsyncTaskTest {
 
         scheduledFuture.cancel(true);
 
-        when(scheduledFuture.isCancelled())
-            .thenReturn(true);
-        when(scheduledFuture.get(anyLong(), any()))
-            .thenThrow(new CancellationException("error"));
+        when(scheduledFuture.isCancelled()).thenReturn(true);
+        when(scheduledFuture.get(anyLong(), any())).thenThrow(new CancellationException("error"));
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(scheduledFuture)
-            .get(60, TimeUnit.SECONDS);
+        verify(scheduledFuture).get(60, TimeUnit.SECONDS);
     }
 
     @Test
@@ -232,18 +218,16 @@ class JsResultAsyncTaskTest {
         when(scheduledFuture.get(anyLong(), any())).thenThrow(new TimeoutException("error"));
         when(scheduledFuture.cancel(anyBoolean())).thenReturn(true);
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(scheduledFuture)
-            .get(60, TimeUnit.SECONDS);
-        verify(scheduledFuture)
-            .cancel(true);
+        verify(scheduledFuture).get(60, TimeUnit.SECONDS);
+        verify(scheduledFuture).cancel(true);
         verify(dashboardScheduleService)
-            .updateWidgetInstanceNoJsResult("The JavaScript execution exceeded the timeout defined by the widget", 1L,
-                1L);
+                .updateWidgetInstanceNoJsResult(
+                        "The JavaScript execution exceeded the timeout defined by the widget", 1L, 1L);
     }
 
     @Test
@@ -261,17 +245,14 @@ class JsResultAsyncTaskTest {
         when(scheduledFuture.get(anyLong(), any())).thenThrow(new RuntimeException("Error"));
         when(scheduledFuture.cancel(anyBoolean())).thenReturn(true);
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(scheduledFuture)
-            .get(60, TimeUnit.SECONDS);
-        verify(scheduledFuture)
-            .cancel(true);
-        verify(dashboardScheduleService)
-            .updateWidgetInstanceNoJsResult("java.lang.RuntimeException: Error", 1L, 1L);
+        verify(scheduledFuture).get(60, TimeUnit.SECONDS);
+        verify(scheduledFuture).cancel(true);
+        verify(dashboardScheduleService).updateWidgetInstanceNoJsResult("java.lang.RuntimeException: Error", 1L, 1L);
     }
 
     @Test
@@ -288,21 +269,18 @@ class JsResultAsyncTaskTest {
 
         when(scheduledFuture.get(anyLong(), any())).thenThrow(new RuntimeException("Error"));
         when(scheduledFuture.cancel(anyBoolean())).thenReturn(true);
-        doThrow(new RuntimeException()).when(dashboardScheduleService)
-            .updateWidgetInstanceNoJsResult(any(), any(), any());
+        doThrow(new RuntimeException())
+                .when(dashboardScheduleService)
+                .updateWidgetInstanceNoJsResult(any(), any(), any());
 
-        JsResultAsyncTask task = new JsResultAsyncTask(scheduledFuture,
-            jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
+        JsResultAsyncTask task =
+                new JsResultAsyncTask(scheduledFuture, jsExecutionDto, jsExecutionScheduler, dashboardScheduleService);
 
         task.call();
 
-        verify(scheduledFuture)
-            .get(60, TimeUnit.SECONDS);
-        verify(scheduledFuture)
-            .cancel(true);
-        verify(dashboardScheduleService)
-            .updateWidgetInstanceNoJsResult("java.lang.RuntimeException: Error", 1L, 1L);
-        verify(jsExecutionScheduler)
-            .schedule(jsExecutionDto, false);
+        verify(scheduledFuture).get(60, TimeUnit.SECONDS);
+        verify(scheduledFuture).cancel(true);
+        verify(dashboardScheduleService).updateWidgetInstanceNoJsResult("java.lang.RuntimeException: Error", 1L, 1L);
+        verify(jsExecutionScheduler).schedule(jsExecutionDto, false);
     }
 }

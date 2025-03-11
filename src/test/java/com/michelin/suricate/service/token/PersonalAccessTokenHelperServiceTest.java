@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.token;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,8 +64,8 @@ class PersonalAccessTokenHelperServiceTest {
 
         when(applicationProperties.getAuthentication()).thenReturn(authProperties);
 
-        Long actual = personalAccessTokenHelperService
-            .computePersonAccessTokenChecksum("test_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
+        Long actual = personalAccessTokenHelperService.computePersonAccessTokenChecksum(
+                "test_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
 
         assertEquals(3008800073L, actual);
     }
@@ -94,8 +93,8 @@ class PersonalAccessTokenHelperServiceTest {
 
         when(applicationProperties.getAuthentication()).thenReturn(authProperties);
 
-        boolean actual = personalAccessTokenHelperService
-            .validateToken("wrongPrefix_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
+        boolean actual =
+                personalAccessTokenHelperService.validateToken("wrongPrefix_1NNTKc5hL0Rc83lSwqSV05NSQ0E19R9Pw");
 
         assertFalse(actual);
     }

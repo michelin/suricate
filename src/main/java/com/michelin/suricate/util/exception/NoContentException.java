@@ -16,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception;
 
 import com.michelin.suricate.model.enumeration.ApiErrorEnum;
 import java.text.MessageFormat;
 
-/**
- * No content exception.
- */
+/** No content exception. */
 public class NoContentException extends ApiException {
     private static final String MSG_LIST_NO_CONTENT = "No resource for the class ''{0}''";
 

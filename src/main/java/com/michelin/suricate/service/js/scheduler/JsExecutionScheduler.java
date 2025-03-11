@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.js.scheduler;
 
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
@@ -53,9 +52,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Class used to schedule the Js executions.
- */
+/** Class used to schedule the Js executions. */
 @Slf4j
 @Service
 public class JsExecutionScheduler {
@@ -63,8 +60,8 @@ public class JsExecutionScheduler {
 
     private static final long JS_IMMEDIATE_EXECUTION_DELAY = 1L;
 
-    private final Map<Long, Pair<WeakReference<ScheduledFuture<JsResultDto>>,
-        WeakReference<ScheduledFuture<Void>>>> jsTasksByProjectWidgetId = new ConcurrentHashMap<>();
+    private final Map<Long, Pair<WeakReference<ScheduledFuture<JsResultDto>>, WeakReference<ScheduledFuture<Void>>>>
+            jsTasksByProjectWidgetId = new ConcurrentHashMap<>();
 
     private ScheduledThreadPoolExecutor jsExecutionExecutor;
 
@@ -88,12 +85,9 @@ public class JsExecutionScheduler {
     private DashboardScheduleService dashboardScheduleService;
 
     @Autowired
-    @Qualifier("jasyptStringEncryptor")
-    private StringEncryptor stringEncryptor;
+    @Qualifier("jasyptStringEncryptor") private StringEncryptor stringEncryptor;
 
-    /**
-     * Init the Js executors.
-     */
+    /** Init the Js executors. */
     @Transactional
     public void init() {
         log.debug("Initializing the JavaScript executors");
@@ -120,7 +114,7 @@ public class JsExecutionScheduler {
     /**
      * Schedule a list of Js executions.
      *
-     * @param jsExecutionDtos   The list of Js execution to schedule
+     * @param jsExecutionDtos The list of Js execution to schedule
      * @param startJsRequestNow Should the Js execution starts now or from the widget configured delay
      */
     public void scheduleJsRequests(final List<JsExecutionDto> jsExecutionDtos, boolean startJsRequestNow) {
@@ -132,18 +126,14 @@ public class JsExecutionScheduler {
     }
 
     /**
-     * Method used to schedule the Js execution updating the associated widget.
-     * Checks if the given Js execution can be executed and set the widget in a pause state
-     * if it cannot be.
-     * If the widget was in a pause state from a previous execution, then set the widget in a running
-     * state before executing the request.
-     * Create an asynchronous task which will execute the Js execution and execute the widget. Schedule
-     * this task according to the computed delay.
-     * Create another asynchronous task which will wait for the result of the first task
-     * (the result of the widget execution).
+     * Method used to schedule the Js execution updating the associated widget. Checks if the given Js execution can be
+     * executed and set the widget in a pause state if it cannot be. If the widget was in a pause state from a previous
+     * execution, then set the widget in a running state before executing the request. Create an asynchronous task which
+     * will execute the Js execution and execute the widget. Schedule this task according to the computed delay. Create
+     * another asynchronous task which will wait for the result of the first task (the result of the widget execution).
      * It waits during the whole duration set in the widget description as timeout.
      *
-     * @param jsExecutionDto    The Js execution
+     * @param jsExecutionDto The Js execution
      * @param startJsRequestNow Should the Js execution starts now or from the widget configured delay
      */
     public void schedule(final JsExecutionDto jsExecutionDto, final boolean startJsRequestNow) {
@@ -160,37 +150,40 @@ public class JsExecutionScheduler {
 
         if (WidgetStateEnum.STOPPED == jsExecutionDto.getWidgetState()) {
             log.debug(
-                "The widget instance {} of the JavaScript execution was stopped. "
-                    + "Setting the widget instance to running", jsExecutionDto.getProjectWidgetId());
+                    "The widget instance {} of the JavaScript execution was stopped. "
+                            + "Setting the widget instance to running",
+                    jsExecutionDto.getProjectWidgetId());
             projectWidgetService.updateState(WidgetStateEnum.RUNNING, jsExecutionDto.getProjectWidgetId(), new Date());
         }
 
-        ProjectWidget projectWidget = projectWidgetService
-            .getOne(jsExecutionDto.getProjectWidgetId()).orElse(new ProjectWidget());
+        ProjectWidget projectWidget =
+                projectWidgetService.getOne(jsExecutionDto.getProjectWidgetId()).orElse(new ProjectWidget());
 
-        List<WidgetVariableResponseDto> widgetParameters = widgetService
-            .getWidgetParametersForJsExecution(projectWidget.getWidget());
+        List<WidgetVariableResponseDto> widgetParameters =
+                widgetService.getWidgetParametersForJsExecution(projectWidget.getWidget());
 
         long jsRequestExecutionDelay = startJsRequestNow ? JS_IMMEDIATE_EXECUTION_DELAY : jsExecutionDto.getDelay();
 
-        log.debug("The JavaScript execution of the widget instance {} will start in {} second(s)",
-            jsExecutionDto.getProjectWidgetId(), jsRequestExecutionDelay);
+        log.debug(
+                "The JavaScript execution of the widget instance {} will start in {} second(s)",
+                jsExecutionDto.getProjectWidgetId(),
+                jsRequestExecutionDelay);
 
-        ScheduledFuture<JsResultDto> scheduledJsRequestTask = jsExecutionExecutor
-            .schedule(new JsExecutionAsyncTask(jsExecutionDto, stringEncryptor, widgetParameters),
+        ScheduledFuture<JsResultDto> scheduledJsRequestTask = jsExecutionExecutor.schedule(
+                new JsExecutionAsyncTask(jsExecutionDto, stringEncryptor, widgetParameters),
                 jsRequestExecutionDelay,
                 TimeUnit.SECONDS);
 
-        JsResultAsyncTask jsResultAsyncTask = applicationContext
-            .getBean(JsResultAsyncTask.class, scheduledJsRequestTask, jsExecutionDto, this, dashboardScheduleService);
+        JsResultAsyncTask jsResultAsyncTask = applicationContext.getBean(
+                JsResultAsyncTask.class, scheduledJsRequestTask, jsExecutionDto, this, dashboardScheduleService);
 
-        ScheduledFuture<Void> scheduledJsResponseTask = jsResultExecutor
-            .schedule(jsResultAsyncTask, jsRequestExecutionDelay, TimeUnit.SECONDS);
+        ScheduledFuture<Void> scheduledJsResponseTask =
+                jsResultExecutor.schedule(jsResultAsyncTask, jsRequestExecutionDelay, TimeUnit.SECONDS);
 
-        jsTasksByProjectWidgetId.put(jsExecutionDto.getProjectWidgetId(), ImmutablePair.of(
-            new WeakReference<>(scheduledJsRequestTask),
-            new WeakReference<>(scheduledJsResponseTask)
-        ));
+        jsTasksByProjectWidgetId.put(
+                jsExecutionDto.getProjectWidgetId(),
+                ImmutablePair.of(
+                        new WeakReference<>(scheduledJsRequestTask), new WeakReference<>(scheduledJsResponseTask)));
     }
 
     /**
@@ -209,12 +202,11 @@ public class JsExecutionScheduler {
      * @param project The project
      */
     public void cancelWidgetsExecutionByProject(final Project project) {
-        project.getGrids()
-            .stream()
-            .map(ProjectGrid::getWidgets)
-            .flatMap(Collection::stream)
-            .toList()
-            .forEach(projectWidget -> cancelWidgetExecution(projectWidget.getId()));
+        project.getGrids().stream()
+                .map(ProjectGrid::getWidgets)
+                .flatMap(Collection::stream)
+                .toList()
+                .forEach(projectWidget -> cancelWidgetExecution(projectWidget.getId()));
     }
 
     /**
@@ -223,9 +215,7 @@ public class JsExecutionScheduler {
      * @param projectGrid The project grid
      */
     public void cancelWidgetsExecutionByGrid(final ProjectGrid projectGrid) {
-        projectGrid
-            .getWidgets()
-            .forEach(projectWidget -> cancelWidgetExecution(projectWidget.getId()));
+        projectGrid.getWidgets().forEach(projectWidget -> cancelWidgetExecution(projectWidget.getId()));
     }
 
     /**
@@ -235,7 +225,7 @@ public class JsExecutionScheduler {
      */
     public void cancelWidgetExecution(Long projectWidgetId) {
         Pair<WeakReference<ScheduledFuture<JsResultDto>>, WeakReference<ScheduledFuture<Void>>> pairOfJsFutureTasks =
-            jsTasksByProjectWidgetId.get(projectWidgetId);
+                jsTasksByProjectWidgetId.get(projectWidgetId);
 
         if (pairOfJsFutureTasks != null) {
             cancelScheduledFutureTask(projectWidgetId, pairOfJsFutureTasks.getLeft());
@@ -248,11 +238,11 @@ public class JsExecutionScheduler {
     /**
      * Cancel a scheduled future task for a widget instance.
      *
-     * @param projectWidgetId              The widget instance ID
+     * @param projectWidgetId The widget instance ID
      * @param scheduledFutureTaskReference The reference containing the future task
      */
-    public void cancelScheduledFutureTask(Long projectWidgetId,
-                                          WeakReference<? extends ScheduledFuture<?>> scheduledFutureTaskReference) {
+    public void cancelScheduledFutureTask(
+            Long projectWidgetId, WeakReference<? extends ScheduledFuture<?>> scheduledFutureTaskReference) {
         if (scheduledFutureTaskReference != null) {
             ScheduledFuture<?> scheduledFutureTask = scheduledFutureTaskReference.get();
 

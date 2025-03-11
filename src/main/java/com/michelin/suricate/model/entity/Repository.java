@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.entity;
 
 import com.michelin.suricate.model.entity.generic.AbstractAuditingEntity;
@@ -38,9 +37,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.type.YesNoConverter;
 
-/**
- * Repository entity.
- */
+/** Repository entity. */
 @Entity
 @Getter
 @Setter
@@ -85,9 +82,8 @@ public class Repository extends AbstractAuditingEntity<Long> {
     private Set<Widget> widgets = new LinkedHashSet<>();
 
     /**
-     * Hashcode method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Hashcode method
+     * Hashcode method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Hashcode method
      *
      * @return The hash code
      */
@@ -97,9 +93,8 @@ public class Repository extends AbstractAuditingEntity<Long> {
     }
 
     /**
-     * Equals method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Equals method
+     * Equals method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Equals method
      *
      * @param other The other object to compare
      * @return true if equals, false otherwise

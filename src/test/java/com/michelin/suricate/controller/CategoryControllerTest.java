@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -76,10 +75,8 @@ class CategoryControllerTest {
         CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
         categoryResponseDto.setId(1L);
 
-        when(categoryService.getAll(any(), any()))
-            .thenReturn(new PageImpl<>(Collections.singletonList(category)));
-        when(categoryMapper.toCategoryWithoutParametersDto(any()))
-            .thenReturn(categoryResponseDto);
+        when(categoryService.getAll(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(category)));
+        when(categoryMapper.toCategoryWithoutParametersDto(any())).thenReturn(categoryResponseDto);
 
         Page<CategoryResponseDto> actual = categoryController.getCategories("search", Pageable.unpaged());
 
@@ -90,13 +87,10 @@ class CategoryControllerTest {
 
     @Test
     void shouldGetWidgetByCategoryNoContent() {
-        when(widgetService.getWidgetsByCategory(any()))
-            .thenReturn(Optional.empty());
+        when(widgetService.getWidgetsByCategory(any())).thenReturn(Optional.empty());
 
-        NoContentException exception = assertThrows(
-            NoContentException.class,
-            () -> categoryController.getWidgetByCategory(1L)
-        );
+        NoContentException exception =
+                assertThrows(NoContentException.class, () -> categoryController.getWidgetByCategory(1L));
 
         assertEquals("No resource for the class 'Widget'", exception.getMessage());
     }
@@ -109,10 +103,8 @@ class CategoryControllerTest {
         WidgetResponseDto widgetResponseDto = new WidgetResponseDto();
         widgetResponseDto.setId(1L);
 
-        when(widgetService.getWidgetsByCategory(any()))
-            .thenReturn(Optional.of(Collections.singletonList(widget)));
-        when(widgetMapper.toWidgetsDtos(any()))
-            .thenReturn(Collections.singletonList(widgetResponseDto));
+        when(widgetService.getWidgetsByCategory(any())).thenReturn(Optional.of(Collections.singletonList(widget)));
+        when(widgetMapper.toWidgetsDtos(any())).thenReturn(Collections.singletonList(widgetResponseDto));
 
         ResponseEntity<List<WidgetResponseDto>> actual = categoryController.getWidgetByCategory(1L);
 

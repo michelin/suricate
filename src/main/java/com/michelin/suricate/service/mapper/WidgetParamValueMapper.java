@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.widget.WidgetParamValueResponseDto;
@@ -28,9 +27,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
-/**
- * Widget param value mapper.
- */
+/** Widget param value mapper. */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class WidgetParamValueMapper {
     /**
@@ -51,5 +48,5 @@ public abstract class WidgetParamValueMapper {
     @Named("toWidgetParameterValuesDtos")
     @IterableMapping(qualifiedByName = "toWidgetParameterValueDto")
     public abstract List<WidgetParamValueResponseDto> toWidgetParameterValuesDtos(
-        Collection<WidgetParamValue> widgetParamValues);
+            Collection<WidgetParamValue> widgetParamValues);
 }

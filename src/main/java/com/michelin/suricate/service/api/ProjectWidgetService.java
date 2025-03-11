@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -57,9 +56,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Project widget service.
- */
+/** Project widget service. */
 @Slf4j
 @Service
 public class ProjectWidgetService {
@@ -83,8 +80,7 @@ public class ProjectWidgetService {
     private ApplicationContext ctx;
 
     @Autowired
-    @Qualifier("jasyptStringEncryptor")
-    private StringEncryptor stringEncryptor;
+    @Qualifier("jasyptStringEncryptor") private StringEncryptor stringEncryptor;
 
     /**
      * Get all the project widget in database.
@@ -110,7 +106,7 @@ public class ProjectWidgetService {
     /**
      * Get the project widget by id.
      *
-     * @param id     The project widget id
+     * @param id The project widget id
      * @param gridId The grid id
      * @return The project widget
      */
@@ -120,77 +116,72 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Persist a given project widget
-     * Encrypt the secret configuration of the widget instance before saving it.
+     * Persist a given project widget Encrypt the secret configuration of the widget instance before saving it.
      *
      * @param projectWidget The project widget
      */
     @Transactional
     public ProjectWidget create(ProjectWidget projectWidget) {
         projectWidget.setBackendConfig(
-            encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()));
+                encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()));
         return projectWidgetRepository.save(projectWidget);
     }
 
     /**
-     * Add a new widget instance to a project
-     * Encrypt the secret configuration of the widget instance then save it.
+     * Add a new widget instance to a project Encrypt the secret configuration of the widget instance then save it.
      *
      * @param projectWidget The widget instance
      */
     @Transactional
     public void createAndRefreshDashboards(ProjectWidget projectWidget) {
         projectWidget.setBackendConfig(
-            encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()));
+                encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()));
 
         projectWidgetRepository.saveAndFlush(projectWidget);
 
-        UpdateEvent updateEvent = UpdateEvent.builder()
-            .type(UpdateType.REFRESH_DASHBOARD)
-            .build();
+        UpdateEvent updateEvent =
+                UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build();
 
-        dashboardWebsocketService.sendEventToProjectSubscribers(projectWidget.getProjectGrid().getProject().getToken(),
-            updateEvent);
+        dashboardWebsocketService.sendEventToProjectSubscribers(
+                projectWidget.getProjectGrid().getProject().getToken(), updateEvent);
     }
 
     /**
      * Update the position of a widget.
      *
      * @param projectWidgetId The projectWidgetId
-     * @param startCol        The new start col
-     * @param startRow        The new start row
-     * @param height          The new Height
-     * @param width           The new width
+     * @param startCol The new start col
+     * @param startRow The new start row
+     * @param height The new Height
+     * @param width The new width
      */
-    public void updateWidgetPositionByProjectWidgetId(final Long projectWidgetId, final int startCol,
-                                                      final int startRow, final int height, final int width) {
-        projectWidgetRepository.updateRowAndColAndWidthAndHeightById(startRow, startCol, width, height,
-            projectWidgetId);
+    public void updateWidgetPositionByProjectWidgetId(
+            final Long projectWidgetId, final int startCol, final int startRow, final int height, final int width) {
+        projectWidgetRepository.updateRowAndColAndWidthAndHeightById(
+                startRow, startCol, width, height, projectWidgetId);
     }
 
     /**
      * Method used to update all widgets positions for a current project.
      *
-     * @param project   the project to update
+     * @param project the project to update
      * @param positions lit of position
      */
     @Transactional
     public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionRequestDto> positions) {
         for (ProjectWidgetPositionRequestDto projectWidgetPositionRequestDto : positions) {
             updateWidgetPositionByProjectWidgetId(
-                projectWidgetPositionRequestDto.getProjectWidgetId(),
-                projectWidgetPositionRequestDto.getGridColumn(),
-                projectWidgetPositionRequestDto.getGridRow(),
-                projectWidgetPositionRequestDto.getHeight(),
-                projectWidgetPositionRequestDto.getWidth()
-            );
+                    projectWidgetPositionRequestDto.getProjectWidgetId(),
+                    projectWidgetPositionRequestDto.getGridColumn(),
+                    projectWidgetPositionRequestDto.getGridRow(),
+                    projectWidgetPositionRequestDto.getHeight(),
+                    projectWidgetPositionRequestDto.getWidth());
         }
         projectWidgetRepository.flush();
 
         // notify clients
-        UpdateEvent updateEvent = UpdateEvent.builder()
-            .type(UpdateType.REFRESH_DASHBOARD)
-            .build();
+        UpdateEvent updateEvent =
+                UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build();
 
         dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
     }
@@ -211,19 +202,15 @@ public class ProjectWidgetService {
             projectWidgetRepository.flush();
 
             // notify client
-            UpdateEvent updateEvent = UpdateEvent.builder()
-                .type(UpdateType.REFRESH_DASHBOARD)
-                .build();
+            UpdateEvent updateEvent =
+                    UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build();
 
             dashboardWebsocketService.sendEventToProjectSubscribers(
-                projectWidgetOptional.get().getProjectGrid().getProject().getToken(), updateEvent);
+                    projectWidgetOptional.get().getProjectGrid().getProject().getToken(), updateEvent);
         }
     }
 
-
-    /**
-     * Reset the execution state of a project widget.
-     */
+    /** Reset the execution state of a project widget. */
     public void resetProjectWidgetsState() {
         projectWidgetRepository.resetProjectWidgetsState();
     }
@@ -232,7 +219,7 @@ public class ProjectWidgetService {
      * Update widget state.
      *
      * @param widgetState widget state
-     * @param id          project widget id
+     * @param id project widget id
      */
     @Transactional
     public void updateState(WidgetStateEnum widgetState, Long id) {
@@ -243,8 +230,8 @@ public class ProjectWidgetService {
      * Update the state of a widget instance.
      *
      * @param widgetState The widget state
-     * @param id          The project widget ID
-     * @param date        The last execution date
+     * @param id The project widget ID
+     * @param date The last execution date
      */
     @Transactional
     public void updateState(WidgetStateEnum widgetState, Long id, Date date) {
@@ -262,8 +249,7 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Instantiate the HTML of a widget with the data resulting from
-     * the Js execution.
+     * Instantiate the HTML of a widget with the data resulting from the Js execution.
      *
      * @param projectWidget the widget instance
      * @return The instantiated HTML
@@ -277,15 +263,14 @@ public class ProjectWidgetService {
         String instantiateHtml = widget.getHtmlContent();
         if (StringUtils.isNotEmpty(projectWidget.getData())) {
             try {
-                map = objectMapper.readValue(projectWidget.getData(), new TypeReference<>() {
-                });
+                map = objectMapper.readValue(projectWidget.getData(), new TypeReference<>() {});
                 // Add backend config
                 map.putAll(PropertiesUtils.convertStringWidgetPropertiesToMap(projectWidget.getBackendConfig()));
                 map.put(JavaScriptUtils.WIDGET_INSTANCE_ID_VARIABLE, projectWidget.getId());
 
                 // Add global variables if needed
-                for (WidgetParam widgetParam : widgetService.getWidgetParametersWithCategoryParameters(
-                    projectWidget.getWidget())) {
+                for (WidgetParam widgetParam :
+                        widgetService.getWidgetParametersWithCategoryParameters(projectWidget.getWidget())) {
                     if (!map.containsKey(widgetParam.getName()) && widgetParam.isRequired()) {
                         map.put(widgetParam.getName(), widgetParam.getDefaultValue());
                     }
@@ -297,7 +282,7 @@ public class ProjectWidgetService {
             StringWriter stringWriter = new StringWriter();
             try {
                 Mustache mustache =
-                    mustacheFactory.compile(new StringReader(instantiateHtml), widget.getTechnicalName());
+                        mustacheFactory.compile(new StringReader(instantiateHtml), widget.getTechnicalName());
                 mustache.execute(stringWriter, map);
             } catch (MustacheException me) {
                 log.error("Error with mustache template for widget {}", widget.getTechnicalName(), me);
@@ -310,11 +295,11 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Update the configuration and the custom CSS for a widget instance.
-     * Then schedule a new Js execution for the updated widget.
+     * Update the configuration and the custom CSS for a widget instance. Then schedule a new Js execution for the
+     * updated widget.
      *
      * @param projectWidget The widget instance
-     * @param customStyle   The new CSS style
+     * @param customStyle The new CSS style
      * @param backendConfig The new configuration
      */
     @Transactional
@@ -337,14 +322,13 @@ public class ProjectWidgetService {
     /**
      * Update the state of a widget instance when Js execution ends with a failure.
      *
-     * @param executionDate   The execution date
-     * @param log             The message to log
+     * @param executionDate The execution date
+     * @param log The message to log
      * @param projectWidgetId The project widget id to update
-     * @param widgetState     The widget sate
+     * @param widgetState The widget sate
      */
-    public void updateWidgetInstanceAfterFailedExecution(final Date executionDate, final String log,
-                                                         final Long projectWidgetId,
-                                                         final WidgetStateEnum widgetState) {
+    public void updateWidgetInstanceAfterFailedExecution(
+            final Date executionDate, final String log, final Long projectWidgetId, final WidgetStateEnum widgetState) {
         projectWidgetRepository.updateLastExecutionDateAndStateAndLog(executionDate, log, projectWidgetId, widgetState);
     }
 
@@ -352,26 +336,29 @@ public class ProjectWidgetService {
      * Update the state of a widget instance when Js execution ends successfully.
      *
      * @param executionDate The last execution date
-     * @param executionLog  The log of Js execution
-     * @param data          The data returned by Js execution
-     * @param widgetState   The widget state
+     * @param executionLog The log of Js execution
+     * @param data The data returned by Js execution
+     * @param widgetState The widget state
      */
-    public void updateWidgetInstanceAfterSucceededExecution(final Date executionDate, final String executionLog,
-                                                            final String data, final Long projectWidgetId,
-                                                            final WidgetStateEnum widgetState) {
+    public void updateWidgetInstanceAfterSucceededExecution(
+            final Date executionDate,
+            final String executionLog,
+            final String data,
+            final Long projectWidgetId,
+            final WidgetStateEnum widgetState) {
         projectWidgetRepository.updateSuccessExecution(executionDate, executionLog, data, projectWidgetId, widgetState);
     }
 
     /**
      * Decrypt the secret params if exists.
      *
-     * @param widget        The widget related to project widget
+     * @param widget The widget related to project widget
      * @param backendConfig The related backend config
      * @return The list of param decrypted
      */
     public String decryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
         Map<String, String> backendConfigAsMap =
-            PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap(backendConfig);
+                PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap(backendConfig);
 
         List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {
@@ -384,24 +371,22 @@ public class ProjectWidgetService {
             }
         }
 
-        return backendConfigAsMap
-            .entrySet()
-            .stream()
-            .filter(backendConfigEntrySet -> backendConfigEntrySet.getValue() != null)
-            .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
-            .collect(Collectors.joining("\n"));
+        return backendConfigAsMap.entrySet().stream()
+                .filter(backendConfigEntrySet -> backendConfigEntrySet.getValue() != null)
+                .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
+                .collect(Collectors.joining("\n"));
     }
 
     /**
      * Method that encrypt secret params if needed.
      *
-     * @param widget        The widget related to project widget
+     * @param widget The widget related to project widget
      * @param backendConfig The backend config of project widget
      * @return The backend config with the secret params encrypted
      */
     public String encryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
         Map<String, String> backendConfigAsMap =
-            PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap(backendConfig);
+                PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap(backendConfig);
 
         List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {
@@ -414,10 +399,8 @@ public class ProjectWidgetService {
             }
         }
 
-        return backendConfigAsMap
-            .entrySet()
-            .stream()
-            .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
-            .collect(Collectors.joining("\n"));
+        return backendConfigAsMap.entrySet().stream()
+                .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
+                .collect(Collectors.joining("\n"));
     }
 }

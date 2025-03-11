@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.project;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -25,9 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Grid properties response DTO.
- */
+/** Grid properties response DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -41,5 +38,4 @@ public class GridPropertiesResponseDto extends AbstractDto {
 
     @Schema(description = "The css style of the dashboard grid")
     private String cssStyle;
-
 }

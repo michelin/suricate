@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.PersonalAccessToken;
@@ -28,12 +27,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * Personal access token repository.
- */
+/** Personal access token repository. */
 @Repository
 public interface PersonalAccessTokenRepository
-    extends CrudRepository<PersonalAccessToken, Long>, JpaSpecificationExecutor<PersonalAccessToken> {
+        extends CrudRepository<PersonalAccessToken, Long>, JpaSpecificationExecutor<PersonalAccessToken> {
     /**
      * Find all tokens of given user.
      *

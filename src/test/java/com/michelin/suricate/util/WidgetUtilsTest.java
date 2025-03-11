@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,16 +57,15 @@ class WidgetUtilsTest {
 
     @Test
     void shouldParseCategoriesEmptyFolder() {
-        assertTrue(WidgetUtils
-            .parseCategoriesFolder(new File("src/test/resources/specific-repository/content/no-name"))
-            .isEmpty());
+        assertTrue(WidgetUtils.parseCategoriesFolder(new File("src/test/resources/specific-repository/content/no-name"))
+                .isEmpty());
     }
 
     @Test
     void shouldParseCategoriesUnknownFolder() {
-        assertTrue(WidgetUtils
-            .parseCategoriesFolder(new File("src/test/resources/specific-repository/content/does-not-exist"))
-            .isEmpty());
+        assertTrue(WidgetUtils.parseCategoriesFolder(
+                        new File("src/test/resources/specific-repository/content/does-not-exist"))
+                .isEmpty());
     }
 
     @Test
@@ -87,7 +85,9 @@ class WidgetUtilsTest {
         assertNull(gitHubWidgets.getFirst().getId());
         assertEquals("Number of issues", gitHubWidgets.getFirst().getName());
         assertEquals("githubOpenedIssues", gitHubWidgets.getFirst().getTechnicalName());
-        assertEquals("Display the number of issues of a GitHub project", gitHubWidgets.getFirst().getDescription());
+        assertEquals(
+                "Display the number of issues of a GitHub project",
+                gitHubWidgets.getFirst().getDescription());
         assertEquals(600L, gitHubWidgets.getFirst().getDelay());
         assertNotNull(gitHubWidgets.getFirst().getHtmlContent());
         assertNotNull(gitHubWidgets.getFirst().getCssContent());
@@ -121,8 +121,9 @@ class WidgetUtilsTest {
         assertNull(gitLabWidgets.getFirst().getId());
         assertEquals("Number of merge requests", gitLabWidgets.getFirst().getName());
         assertEquals("gitlabOpenedMR", gitLabWidgets.getFirst().getTechnicalName());
-        assertEquals("Display the number of merge requests of a GitLab project",
-            gitLabWidgets.getFirst().getDescription());
+        assertEquals(
+                "Display the number of merge requests of a GitLab project",
+                gitLabWidgets.getFirst().getDescription());
         assertEquals(500L, gitLabWidgets.getFirst().getDelay());
         assertNotNull(gitLabWidgets.getFirst().getHtmlContent());
         assertNotNull(gitLabWidgets.getFirst().getCssContent());
@@ -133,10 +134,12 @@ class WidgetUtilsTest {
         List<CategoryParameter> gitLabConfig = new ArrayList<>(actual.get(1).getConfigurations());
 
         assertEquals(2, gitLabConfig.size());
-        assertIterableEquals(List.of("WIDGET_CONFIG_GITLAB_URL", "WIDGET_CONFIG_GITLAB_TOKEN"),
-            gitLabConfig.stream().map(CategoryParameter::getId).toList());
-        assertIterableEquals(List.of("URL of the GitLab environment", "Token for the GitLab API"),
-            gitLabConfig.stream().map(CategoryParameter::getDescription).toList());
+        assertIterableEquals(
+                List.of("WIDGET_CONFIG_GITLAB_URL", "WIDGET_CONFIG_GITLAB_TOKEN"),
+                gitLabConfig.stream().map(CategoryParameter::getId).toList());
+        assertIterableEquals(
+                List.of("URL of the GitLab environment", "Token for the GitLab API"),
+                gitLabConfig.stream().map(CategoryParameter::getDescription).toList());
     }
 
     @Test
@@ -146,14 +149,13 @@ class WidgetUtilsTest {
 
     @Test
     void shouldGetCategoryWithNoName() throws IOException {
-        assertNull(WidgetUtils
-            .getCategory(new File("src/test/resources/specific-repository/content/no-name")));
+        assertNull(WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-name")));
     }
 
     @Test
     void shouldGetCategoryWithNoWidgets() throws IOException {
-        Category actual = WidgetUtils
-            .getCategory(new File("src/test/resources/specific-repository/content/no-widgets"));
+        Category actual =
+                WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-widgets"));
 
         assertNull(actual.getId());
         assertEquals("noWidgets", actual.getName());
@@ -179,7 +181,9 @@ class WidgetUtilsTest {
         assertNull(gitHubWidgets.getFirst().getId());
         assertEquals("Number of issues", gitHubWidgets.getFirst().getName());
         assertEquals("githubOpenedIssues", gitHubWidgets.getFirst().getTechnicalName());
-        assertEquals("Display the number of issues of a GitHub project", gitHubWidgets.getFirst().getDescription());
+        assertEquals(
+                "Display the number of issues of a GitHub project",
+                gitHubWidgets.getFirst().getDescription());
         assertEquals(600L, gitHubWidgets.getFirst().getDelay());
         assertNotNull(gitHubWidgets.getFirst().getHtmlContent());
         assertNotNull(gitHubWidgets.getFirst().getCssContent());
@@ -203,28 +207,26 @@ class WidgetUtilsTest {
 
     @Test
     void shouldGetWidgetNoDelay() throws IOException {
-        assertNull(WidgetUtils
-            .getWidget(new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-delay")));
+        assertNull(WidgetUtils.getWidget(
+                new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-delay")));
     }
 
     @Test
     void shouldGetWidgetDelayButNoScript() throws IOException {
-        assertNull(WidgetUtils
-            .getWidget(new File("src/test/resources/specific-repository/content/"
-                    + "specific-widgets/widgets/delay-but-no-script")));
+        assertNull(WidgetUtils.getWidget(new File(
+                "src/test/resources/specific-repository/content/" + "specific-widgets/widgets/delay-but-no-script")));
     }
 
     @Test
     void shouldGetWidgetNoTechnicalName() throws IOException {
-        assertNull(WidgetUtils
-            .getWidget(
+        assertNull(WidgetUtils.getWidget(
                 new File("src/test/resources/specific-repository/content/specific-widgets/widgets/no-technical-name")));
     }
 
     @Test
     void shouldGetWidgetGitHubCountIssues() throws IOException {
-        Widget actual = WidgetUtils
-            .getWidget(new File("src/test/resources/repository/content/github/widgets/count-issues"));
+        Widget actual =
+                WidgetUtils.getWidget(new File("src/test/resources/repository/content/github/widgets/count-issues"));
 
         assertNull(actual.getId());
         assertEquals("Number of issues", actual.getName());

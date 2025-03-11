@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.security.oauth2;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
@@ -41,9 +40,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-/**
- * OAuth2 user service.
- */
+/** OAuth2 user service. */
 @Slf4j
 @Service
 public class Oauth2UserService extends DefaultOAuth2UserService {
@@ -66,13 +63,15 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
         try {
             Optional<AuthenticationProvider> authenticationMethod = Arrays.stream(AuthenticationProvider.values())
-                .filter(authMethod -> userRequest.getClientRegistration().getRegistrationId()
-                    .equalsIgnoreCase(authMethod.name()))
-                .findAny();
+                    .filter(authMethod -> userRequest
+                            .getClientRegistration()
+                            .getRegistrationId()
+                            .equalsIgnoreCase(authMethod.name()))
+                    .findAny();
 
             if (authenticationMethod.isEmpty()) {
-                throw new Oauth2AuthenticationProcessingException(
-                    String.format("ID provider %s is not recognized",
+                throw new Oauth2AuthenticationProcessingException(String.format(
+                        "ID provider %s is not recognized",
                         userRequest.getClientRegistration().getRegistrationId()));
             }
 
@@ -84,15 +83,17 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             }
 
             if (StringUtils.isBlank(username)) {
-                throw new Oauth2AuthenticationProcessingException(String.format("Username not found from %s",
-                    userRequest.getClientRegistration().getRegistrationId()));
+                throw new Oauth2AuthenticationProcessingException(String.format(
+                        "Username not found from %s",
+                        userRequest.getClientRegistration().getRegistrationId()));
             }
 
             String email = oauth2User.getAttribute("email");
             if (StringUtils.isBlank(email)) {
-                throw new Oauth2AuthenticationProcessingException(
-                    String.format("Email not found from %s", StringUtils.capitalize(userRequest.getClientRegistration()
-                        .getRegistrationId())));
+                throw new Oauth2AuthenticationProcessingException(String.format(
+                        "Email not found from %s",
+                        StringUtils.capitalize(
+                                userRequest.getClientRegistration().getRegistrationId())));
             }
 
             String firstName = null;
@@ -100,15 +101,27 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             String name = oauth2User.getAttribute("name");
             if (StringUtils.isNotBlank(name)) {
                 List<String> splitName = new LinkedList<>(Arrays.asList(name.split(SPACE)));
-                if (applicationProperties.getAuthentication().getSocialProvidersConfig()
-                    .containsKey(userRequest.getClientRegistration().getRegistrationId().toLowerCase())
-                    && applicationProperties.getAuthentication().getSocialProvidersConfig()
-                    .get(userRequest.getClientRegistration().getRegistrationId().toLowerCase())
-                    .isNameCaseParse()) {
-                    firstName = splitName.stream().filter(word -> !word.equals(word.toUpperCase()))
-                        .collect(Collectors.joining(SPACE));
-                    lastName = splitName.stream().filter(word -> word.equals(word.toUpperCase()))
-                        .collect(Collectors.joining(SPACE));
+                if (applicationProperties
+                                .getAuthentication()
+                                .getSocialProvidersConfig()
+                                .containsKey(userRequest
+                                        .getClientRegistration()
+                                        .getRegistrationId()
+                                        .toLowerCase())
+                        && applicationProperties
+                                .getAuthentication()
+                                .getSocialProvidersConfig()
+                                .get(userRequest
+                                        .getClientRegistration()
+                                        .getRegistrationId()
+                                        .toLowerCase())
+                                .isNameCaseParse()) {
+                    firstName = splitName.stream()
+                            .filter(word -> !word.equals(word.toUpperCase()))
+                            .collect(Collectors.joining(SPACE));
+                    lastName = splitName.stream()
+                            .filter(word -> word.equals(word.toUpperCase()))
+                            .collect(Collectors.joining(SPACE));
                 } else {
                     firstName = splitName.getFirst();
                     lastName = String.join(SPACE, splitName.subList(1, splitName.size()));
@@ -122,16 +135,21 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                 avatarUrl = oauth2User.getAttribute("picture");
             }
 
-            User user = userService.registerUser(username, firstName, lastName, email, avatarUrl,
-                authenticationMethod.get());
+            User user = userService.registerUser(
+                    username, firstName, lastName, email, avatarUrl, authenticationMethod.get());
 
-            log.debug("Authenticated user <{}> with {}", username,
-                userRequest.getClientRegistration().getRegistrationId());
+            log.debug(
+                    "Authenticated user <{}> with {}",
+                    username,
+                    userRequest.getClientRegistration().getRegistrationId());
 
             return new LocalUser(user, oauth2User.getAttributes());
         } catch (Exception e) {
-            log.error("An error occurred authenticating user <{}> with {} in OAuth2 mode", oauth2User.getName(),
-                userRequest.getClientRegistration().getRegistrationId(), e);
+            log.error(
+                    "An error occurred authenticating user <{}> with {} in OAuth2 mode",
+                    oauth2User.getName(),
+                    userRequest.getClientRegistration().getRegistrationId(),
+                    e);
             throw new Oauth2AuthenticationProcessingException(e.getMessage(), e.getCause());
         }
     }

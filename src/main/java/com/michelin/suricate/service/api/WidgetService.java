@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.dto.api.widget.WidgetRequestDto;
@@ -49,9 +48,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Widget service.
- */
+/** Widget service. */
 @Slf4j
 @Service
 public class WidgetService {
@@ -117,8 +114,8 @@ public class WidgetService {
     }
 
     /**
-     * Return the full list of parameters of a widget including the parameters of the widget
-     * and the global parameters of the category.
+     * Return the full list of parameters of a widget including the parameters of the widget and the global parameters
+     * of the category.
      *
      * @param widget The widget
      * @return A list of parameters
@@ -151,9 +148,8 @@ public class WidgetService {
             widgetVariableResponseDto.setDefaultValue(widgetParameter.getDefaultValue());
 
             if (widgetVariableResponseDto.getType() == DataTypeEnum.COMBO
-                || widgetVariableResponseDto.getType() == DataTypeEnum.MULTIPLE) {
-                widgetVariableResponseDto.setValues(
-                    getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
+                    || widgetVariableResponseDto.getType() == DataTypeEnum.MULTIPLE) {
+                widgetVariableResponseDto.setValues(getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
             } else {
                 widgetVariableResponseDto.setData(StringUtils.trimToNull(widgetParameter.getDefaultValue()));
             }
@@ -167,7 +163,7 @@ public class WidgetService {
     /**
      * Update a widget.
      *
-     * @param widgetId         The widget id to update
+     * @param widgetId The widget id to update
      * @param widgetRequestDto The object that holds changes
      * @return The widget update
      */
@@ -183,17 +179,13 @@ public class WidgetService {
     }
 
     /**
-     * Add or update the given widgets from the given repository
-     * Find the matching existing widget if it exists.
-     * Update the libraries of the widget.
-     * Update the image of the widget.
-     * Update the parameters of the widget. If the new widget does not contain some
-     * parameters anymore, then delete these parameters.
-     * Set the activated state by default to the widget.
-     * Set the category and the repository to the widget.
+     * Add or update the given widgets from the given repository Find the matching existing widget if it exists. Update
+     * the libraries of the widget. Update the image of the widget. Update the parameters of the widget. If the new
+     * widget does not contain some parameters anymore, then delete these parameters. Set the activated state by default
+     * to the widget. Set the category and the repository to the widget.
      *
-     * @param category   The category
-     * @param libraries  The libraries
+     * @param category The category
+     * @param libraries The libraries
      * @param repository The git repository
      */
     @Transactional
@@ -208,10 +200,10 @@ public class WidgetService {
             if (!Collections.isEmpty(widget.getLibraries()) && !Collections.isEmpty(libraries)) {
                 List<Library> widgetLibraries = new ArrayList<>(widget.getLibraries());
 
-                widgetLibraries.replaceAll(widgetLibrary -> libraries
-                    .stream()
-                    .filter(library -> library.getTechnicalName().equals(widgetLibrary.getTechnicalName()))
-                    .findFirst().orElse(null));
+                widgetLibraries.replaceAll(widgetLibrary -> libraries.stream()
+                        .filter(library -> library.getTechnicalName().equals(widgetLibrary.getTechnicalName()))
+                        .findFirst()
+                        .orElse(null));
 
                 widget.setLibraries(new HashSet<>(widgetLibraries));
             }
@@ -225,15 +217,15 @@ public class WidgetService {
             }
 
             // Replace the existing list of params and values by the new one
-            if (!Collections.isEmpty(widget.getWidgetParams()) && existingWidget.isPresent()
-                && !Collections.isEmpty(existingWidget.get().getWidgetParams())) {
+            if (!Collections.isEmpty(widget.getWidgetParams())
+                    && existingWidget.isPresent()
+                    && !Collections.isEmpty(existingWidget.get().getWidgetParams())) {
                 Set<WidgetParam> currentWidgetParams = existingWidget.get().getWidgetParams();
 
                 widget.getWidgetParams().forEach(widgetParam -> {
-                    Optional<WidgetParam> widgetParamToFind = currentWidgetParams
-                        .stream()
-                        .filter(currentParam -> currentParam.getName().equals(widgetParam.getName()))
-                        .findAny();
+                    Optional<WidgetParam> widgetParamToFind = currentWidgetParams.stream()
+                            .filter(currentParam -> currentParam.getName().equals(widgetParam.getName()))
+                            .findAny();
 
                     widgetParamToFind.ifPresent(currentWidgetParamFound -> {
                         // Set the ID of the new object with the current one
@@ -241,20 +233,19 @@ public class WidgetService {
 
                         // Search params with the current WidgetParam in DB
                         if (!Collections.isEmpty(widgetParam.getPossibleValuesMap())
-                            && !Collections.isEmpty(currentWidgetParamFound.getPossibleValuesMap())) {
+                                && !Collections.isEmpty(currentWidgetParamFound.getPossibleValuesMap())) {
 
                             widgetParam.getPossibleValuesMap().forEach(possibleValueMap -> {
                                 // Search the current widget possible values in DB
                                 Optional<WidgetParamValue> possibleValueMapToFind =
-                                    currentWidgetParamFound.getPossibleValuesMap()
-                                        .stream()
-                                        .filter(currentPossibleValueMap -> currentPossibleValueMap.getJsKey()
-                                            .equals(possibleValueMap.getJsKey()))
-                                        .findAny();
+                                        currentWidgetParamFound.getPossibleValuesMap().stream()
+                                                .filter(currentPossibleValueMap -> currentPossibleValueMap
+                                                        .getJsKey()
+                                                        .equals(possibleValueMap.getJsKey()))
+                                                .findAny();
                                 // Set ID of the new object with the current one in DB
                                 possibleValueMapToFind.ifPresent(
-                                    possibleValueMapFound -> possibleValueMap.setId(possibleValueMapFound.getId())
-                                );
+                                        possibleValueMapFound -> possibleValueMap.setId(possibleValueMapFound.getId()));
                             });
                         }
                     });
@@ -267,13 +258,12 @@ public class WidgetService {
                 widget.setWidgetAvailability(existingWidget.get().getWidgetAvailability());
                 widget.setId(existingWidget.get().getId());
 
-                List<Long> idsToDelete = existingWidget.get().getWidgetParams()
-                    .stream()
-                    .filter(oldWidgetParameter -> widget.getWidgetParams()
-                        .stream()
-                        .noneMatch(newWidgetParam -> newWidgetParam.getName().equals(oldWidgetParameter.getName())))
-                    .map(WidgetParam::getId)
-                    .toList();
+                List<Long> idsToDelete = existingWidget.get().getWidgetParams().stream()
+                        .filter(oldWidgetParameter -> widget.getWidgetParams().stream()
+                                .noneMatch(newWidgetParam ->
+                                        newWidgetParam.getName().equals(oldWidgetParameter.getName())))
+                        .map(WidgetParam::getId)
+                        .toList();
 
                 if (!Collections.isEmpty(idsToDelete)) {
                     widgetParamRepository.deleteAllById(idsToDelete);
@@ -291,13 +281,14 @@ public class WidgetService {
 
             String type = repository.getType().equals(RepositoryTypeEnum.LOCAL) ? "local path" : "branch";
             String where = repository.getType().equals(RepositoryTypeEnum.LOCAL)
-                ? repository.getLocalPath() : repository.getBranch();
-            log.info("Widget {} updated from the {} {} of the repository {}",
-                widget.getTechnicalName(),
-                type,
-                where,
-                widget.getRepository().getName()
-            );
+                    ? repository.getLocalPath()
+                    : repository.getBranch();
+            log.info(
+                    "Widget {} updated from the {} {} of the repository {}",
+                    widget.getTechnicalName(),
+                    type,
+                    where,
+                    widget.getRepository().getName());
         }
     }
 
@@ -308,8 +299,7 @@ public class WidgetService {
      * @return The list
      */
     public Map<String, String> getWidgetParamValuesAsMap(Set<WidgetParamValue> widgetParamValues) {
-        return widgetParamValues
-            .stream()
-            .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
+        return widgetParamValues.stream()
+                .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
     }
 }

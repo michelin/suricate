@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import java.io.IOException;
@@ -29,9 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Properties utils.
- */
+/** Properties utils. */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PropertiesUtils {
@@ -57,8 +54,8 @@ public final class PropertiesUtils {
     }
 
     /**
-     * Convert widget parameters values from string to map
-     * Preserve break lines "\n" escapes that have been unescaped when converted to properties.
+     * Convert widget parameters values from string to map Preserve break lines "\n" escapes that have been unescaped
+     * when converted to properties.
      *
      * @param widgetProperties the string containing the widget parameters values (key1=value1)
      * @return The widget parameters values as map
@@ -70,7 +67,8 @@ public final class PropertiesUtils {
         if (properties != null) {
             for (String propertyName : properties.stringPropertyNames()) {
                 if (!properties.getProperty(propertyName).trim().isEmpty()) {
-                    mappedWidgetProperties.put(propertyName, properties.getProperty(propertyName).replace("\n", "\\n"));
+                    mappedWidgetProperties.put(
+                            propertyName, properties.getProperty(propertyName).replace("\n", "\\n"));
                 }
             }
         }
@@ -92,8 +90,10 @@ public final class PropertiesUtils {
                 properties = new Properties();
                 properties.load(reader);
             } catch (IOException e) {
-                log.error("An error has occurred converting widget parameters values from string to Properties: {}",
-                    widgetProperties, e);
+                log.error(
+                        "An error has occurred converting widget parameters values from string to Properties: {}",
+                        widgetProperties,
+                        e);
             }
         }
 

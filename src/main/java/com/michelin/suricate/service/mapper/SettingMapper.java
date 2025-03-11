@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.setting.SettingResponseDto;
@@ -28,16 +27,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
-/**
- * Setting mapper.
- */
+/** Setting mapper. */
 @Mapper(
-    componentModel = "spring",
-    uses = {
-        AllowedSettingValueMapper.class
-    },
-    unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+        componentModel = "spring",
+        uses = {AllowedSettingValueMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class SettingMapper {
     /**
      * Map a setting into a DTO.

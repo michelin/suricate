@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import com.michelin.suricate.util.exception.ProjectTokenInvalidException;
@@ -25,9 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 
-/**
- * Id utils.
- */
+/** Id utils. */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class IdUtils {
@@ -39,7 +36,7 @@ public final class IdUtils {
      */
     public static Long decrypt(String token) {
         StringEncryptor stringEncryptor =
-            (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
+                (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
         long id;
         try {
             id = Long.parseLong(stringEncryptor.decrypt(token));
@@ -58,7 +55,7 @@ public final class IdUtils {
      */
     public static String encrypt(Long id) {
         StringEncryptor stringEncryptor =
-            (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
+                (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
         String token = null;
         if (id != null) {
             try {

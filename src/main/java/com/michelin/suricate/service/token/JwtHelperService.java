@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.token;
 
 import com.michelin.suricate.model.entity.Role;
@@ -36,9 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-/**
- * JWT helper service.
- */
+/** JWT helper service. */
 @Slf4j
 @Service
 public class JwtHelperService {
@@ -59,21 +56,26 @@ public class JwtHelperService {
         claims.put("lastname", userPrincipal.getUser().getLastname());
         claims.put("email", userPrincipal.getUser().getEmail());
         claims.put("avatar_url", userPrincipal.getUser().getAvatarUrl());
-        claims.put("roles",
-            userPrincipal.getUser().getRoles().stream().map(Role::getName).toList());
+        claims.put(
+                "roles",
+                userPrincipal.getUser().getRoles().stream().map(Role::getName).toList());
         claims.put("mode", userPrincipal.getUser().getAuthenticationMethod());
 
         Date now = new Date();
-        Date expiryDate =
-            new Date(now.getTime() + applicationProperties.getAuthentication().getJwt().getTokenValidityMs());
+        Date expiryDate = new Date(now.getTime()
+                + applicationProperties.getAuthentication().getJwt().getTokenValidityMs());
 
         return Jwts.builder()
-            .subject(userPrincipal.getUsername())
-            .expiration(expiryDate)
-            .issuedAt(now)
-            .claims(claims)
-            .signWith(Keys.hmacShaKeyFor(applicationProperties.getAuthentication().getJwt().getSigningKey().getBytes()))
-            .compact();
+                .subject(userPrincipal.getUsername())
+                .expiration(expiryDate)
+                .issuedAt(now)
+                .claims(claims)
+                .signWith(Keys.hmacShaKeyFor(applicationProperties
+                        .getAuthentication()
+                        .getJwt()
+                        .getSigningKey()
+                        .getBytes()))
+                .compact();
     }
 
     /**
@@ -84,12 +86,15 @@ public class JwtHelperService {
      */
     public String getUsernameFromToken(String token) {
         return Jwts.parser()
-            .verifyWith(
-                Keys.hmacShaKeyFor(applicationProperties.getAuthentication().getJwt().getSigningKey().getBytes()))
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .getSubject();
+                .verifyWith(Keys.hmacShaKeyFor(applicationProperties
+                        .getAuthentication()
+                        .getJwt()
+                        .getSigningKey()
+                        .getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 
     /**
@@ -101,10 +106,13 @@ public class JwtHelperService {
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser()
-                .verifyWith(
-                    Keys.hmacShaKeyFor(applicationProperties.getAuthentication().getJwt().getSigningKey().getBytes()))
-                .build()
-                .parseSignedClaims(authToken);
+                    .verifyWith(Keys.hmacShaKeyFor(applicationProperties
+                            .getAuthentication()
+                            .getJwt()
+                            .getSigningKey()
+                            .getBytes()))
+                    .build()
+                    .parseSignedClaims(authToken);
             return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT signature", e);

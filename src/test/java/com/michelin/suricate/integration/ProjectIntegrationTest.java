@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,17 +63,22 @@ class ProjectIntegrationTest {
         userRequestDto.setConfirmPassword("none");
 
         // Sign up
-        restTemplate.exchange("http://localhost:" + port + "/api/v1/users/signup",
-            POST, new HttpEntity<>(userRequestDto), UserResponseDto.class);
+        restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/signup",
+                POST,
+                new HttpEntity<>(userRequestDto),
+                UserResponseDto.class);
 
         SignInRequestDto signInRequestDto = new SignInRequestDto();
         signInRequestDto.setUsername("username");
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
-                POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/signin",
+                POST,
+                new HttpEntity<>(signInRequestDto),
+                JwtAuthenticationResponseDto.class);
 
         assertNotNull(signInResponse.getBody());
 
@@ -87,9 +91,11 @@ class ProjectIntegrationTest {
         noNameProjectRequestDto.setCssStyle("css");
 
         // Create project with no name
-        ResponseEntity<ApiErrorDto> noNameProjectResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/projects",
-                POST, new HttpEntity<>(noNameProjectRequestDto, headers), ApiErrorDto.class);
+        ResponseEntity<ApiErrorDto> noNameProjectResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/projects",
+                POST,
+                new HttpEntity<>(noNameProjectRequestDto, headers),
+                ApiErrorDto.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, noNameProjectResponse.getStatusCode());
         assertNotNull(noNameProjectResponse.getBody());
@@ -102,9 +108,11 @@ class ProjectIntegrationTest {
         projectRequestDto.setCssStyle("css");
 
         // Create project
-        ResponseEntity<ProjectResponseDto> projectResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/projects",
-                POST, new HttpEntity<>(projectRequestDto, headers), ProjectResponseDto.class);
+        ResponseEntity<ProjectResponseDto> projectResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/projects",
+                POST,
+                new HttpEntity<>(projectRequestDto, headers),
+                ProjectResponseDto.class);
 
         assertEquals(HttpStatus.CREATED, projectResponse.getStatusCode());
         assertNotNull(projectResponse.getBody());
@@ -121,17 +129,22 @@ class ProjectIntegrationTest {
         userRequestDto.setConfirmPassword("none");
 
         // Sign up
-        restTemplate.exchange("http://localhost:" + port + "/api/v1/users/signup",
-            POST, new HttpEntity<>(userRequestDto), UserResponseDto.class);
+        restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/signup",
+                POST,
+                new HttpEntity<>(userRequestDto),
+                UserResponseDto.class);
 
         SignInRequestDto signInRequestDto = new SignInRequestDto();
         signInRequestDto.setUsername("username");
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
-                POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/signin",
+                POST,
+                new HttpEntity<>(signInRequestDto),
+                JwtAuthenticationResponseDto.class);
 
         assertNotNull(signInResponse.getBody());
 
@@ -145,19 +158,22 @@ class ProjectIntegrationTest {
         projectRequestDto.setCssStyle("css");
 
         // Create project
-        ResponseEntity<ProjectResponseDto> projectResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/projects",
-                POST, new HttpEntity<>(projectRequestDto, headers), ProjectResponseDto.class);
+        ResponseEntity<ProjectResponseDto> projectResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/projects",
+                POST,
+                new HttpEntity<>(projectRequestDto, headers),
+                ProjectResponseDto.class);
 
         assertEquals(HttpStatus.CREATED, projectResponse.getStatusCode());
         assertNotNull(projectResponse.getBody());
 
         // Get project users
-        ResponseEntity<List<UserResponseDto>> projectUsersResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/projects/"
-                    + projectResponse.getBody().getToken() + "/users",
-                GET, new HttpEntity<>(headers), new ParameterizedTypeReference<>() {
-                });
+        ResponseEntity<List<UserResponseDto>> projectUsersResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/projects/"
+                        + projectResponse.getBody().getToken() + "/users",
+                GET,
+                new HttpEntity<>(headers),
+                new ParameterizedTypeReference<>() {});
 
         assertEquals(HttpStatus.OK, projectUsersResponse.getStatusCode());
         assertNotNull(projectUsersResponse.getBody());

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.specification;
 
 import com.michelin.suricate.model.entity.Project;
@@ -27,10 +26,7 @@ import jakarta.persistence.criteria.Root;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
-
-/**
- * Project search specification.
- */
+/** Project search specification. */
 public class ProjectSearchSpecification extends AbstractSearchSpecification<Project> {
     public ProjectSearchSpecification(final String search) {
         super(search);
@@ -39,9 +35,9 @@ public class ProjectSearchSpecification extends AbstractSearchSpecification<Proj
     /**
      * Used to add search predicates.
      *
-     * @param root            The root entity
+     * @param root The root entity
      * @param criteriaBuilder Used to build new predicate
-     * @param predicates      The list of predicates to add for this entity
+     * @param predicates The list of predicates to add for this entity
      */
     @Override
     protected void addSearchPredicate(Root<Project> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
@@ -51,8 +47,8 @@ public class ProjectSearchSpecification extends AbstractSearchSpecification<Proj
         if (StringUtils.isNotBlank(search)) {
             for (String keyWord : search.split("\\s+")) {
                 predicates.add(criteriaBuilder.like(
-                    criteriaBuilder.lower(root.get(Project_.name)),
-                    String.format(LIKE_OPERATOR_FORMATTER, keyWord.toLowerCase())));
+                        criteriaBuilder.lower(root.get(Project_.name)),
+                        String.format(LIKE_OPERATOR_FORMATTER, keyWord.toLowerCase())));
             }
         }
     }

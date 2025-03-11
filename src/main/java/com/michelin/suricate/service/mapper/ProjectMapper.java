@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.export.ImportExportProjectDto;
@@ -33,18 +32,12 @@ import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * Project mapper.
- */
+/** Project mapper. */
 @Component
 @Mapper(
-    componentModel = "spring",
-    uses = {
-        AssetMapper.class,
-        ProjectGridMapper.class
-    },
-    unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+        componentModel = "spring",
+        uses = {AssetMapper.class, ProjectGridMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ProjectMapper {
     @Autowired
     protected LibraryService libraryService;
@@ -59,16 +52,17 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
-    @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null "
-        + "? com.michelin.suricate.util.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
+    @Mapping(
+            target = "screenshotToken",
+            expression = "java( project.getScreenshot() != null "
+                    + "? com.michelin.suricate.util.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
     @Mapping(target = "librariesToken", expression = "java( libraryService.getLibraryTokensByProject(project) )")
     @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDto")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridDto")
     public abstract ProjectResponseDto toProjectDto(Project project);
 
     /**
-     * Map a project into a DTO
-     * Ignore the libraries to not load all widgets.
+     * Map a project into a DTO Ignore the libraries to not load all widgets.
      *
      * @param project The project to map
      * @return The project as DTO
@@ -77,8 +71,10 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
-    @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null"
-        + " ? com.michelin.suricate.util.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
+    @Mapping(
+            target = "screenshotToken",
+            expression = "java( project.getScreenshot() != null"
+                    + " ? com.michelin.suricate.util.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
     @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDto")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridDto")
     public abstract ProjectResponseDto toProjectDtoNoLibrary(Project project);

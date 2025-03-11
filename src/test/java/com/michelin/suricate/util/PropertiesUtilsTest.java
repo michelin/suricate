@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,8 +49,8 @@ class PropertiesUtilsTest {
 
     @Test
     void shouldConvertStringWidgetPropertiesToMapWithoutEscaping() {
-        Map<String, String> actual = PropertiesUtils
-            .convertStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
+        Map<String, String> actual =
+                PropertiesUtils.convertStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
 
         assertEquals("test", actual.get("key"));
         assertEquals("test2\ntest", actual.get("key2"));
@@ -73,7 +72,7 @@ class PropertiesUtilsTest {
     @Test
     void shouldConvertAndEscapeStringWidgetPropertiesToMap() {
         Map<String, String> actual =
-            PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2");
+                PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2");
 
         assertEquals("test", actual.get("key"));
         assertEquals("test2", actual.get("key2"));
@@ -82,7 +81,7 @@ class PropertiesUtilsTest {
     @Test
     void shouldConvertAndPreserveEscapeStringWidgetPropertiesToMap() {
         Map<String, String> actual =
-            PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
+                PropertiesUtils.convertAndEscapeStringWidgetPropertiesToMap("key=test\nkey2=test2\\ntest\nkey3=test3");
 
         assertEquals("test", actual.get("key"));
         assertEquals("test2\\ntest", actual.get("key2"));

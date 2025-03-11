@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,13 +50,10 @@ class ScreenControllerTest {
 
     @Test
     void shouldConnectProjectToScreenNotFound() {
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> screenController.connectProjectToScreen("token", "code")
-        );
+                ObjectNotFoundException.class, () -> screenController.connectProjectToScreen("token", "code"));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -67,8 +63,7 @@ class ScreenControllerTest {
         Project project = new Project();
         project.setId(1L);
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
 
         ResponseEntity<Void> actual = screenController.connectProjectToScreen("token", "code");
 
@@ -94,13 +89,11 @@ class ScreenControllerTest {
 
     @Test
     void shouldDisplayScreenCodeEveryConnectedScreensForProjectNotFound() {
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> screenController.displayScreenCodeEveryConnectedScreensForProject("token")
-        );
+                ObjectNotFoundException.class,
+                () -> screenController.displayScreenCodeEveryConnectedScreensForProject("token"));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -110,8 +103,7 @@ class ScreenControllerTest {
         Project project = new Project();
         project.setId(1L);
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
 
         ResponseEntity<Void> actual = screenController.displayScreenCodeEveryConnectedScreensForProject("token");
 
@@ -121,8 +113,7 @@ class ScreenControllerTest {
 
     @Test
     void shouldGetConnectedScreensQuantity() {
-        when(dashboardWebSocketService.countWebsocketClients())
-            .thenReturn(15);
+        when(dashboardWebSocketService.countWebsocketClients()).thenReturn(15);
 
         ResponseEntity<Integer> actual = screenController.getConnectedScreensQuantity();
 

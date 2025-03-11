@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,10 +60,8 @@ class AuthenticationControllerTest {
         signInRequestDto.setUsername("username");
         signInRequestDto.setPassword("password");
 
-        when(authenticationManager.authenticate(any()))
-            .thenReturn(authentication);
-        when(jwtHelperService.createToken(any()))
-            .thenReturn("token");
+        when(authenticationManager.authenticate(any())).thenReturn(authentication);
+        when(jwtHelperService.createToken(any())).thenReturn("token");
 
         ResponseEntity<JwtAuthenticationResponseDto> actual = authenticationController.signIn(signInRequestDto);
 
@@ -74,10 +71,9 @@ class AuthenticationControllerTest {
         assertEquals("token", actual.getBody().getAccessToken());
 
         verify(authenticationManager)
-            .authenticate(Mockito.<UsernamePasswordAuthenticationToken>argThat(auth ->
-                auth.getPrincipal().equals("username")
-                    && auth.getCredentials().equals("password")));
-        verify(jwtHelperService)
-            .createToken(authentication);
+                .authenticate(Mockito.<UsernamePasswordAuthenticationToken>argThat(
+                        auth -> auth.getPrincipal().equals("username")
+                                && auth.getCredentials().equals("password")));
+        verify(jwtHelperService).createToken(authentication);
     }
 }

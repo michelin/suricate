@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.security.oauth2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,22 +65,21 @@ class Oauth2UserServiceTest {
     @Test
     void shouldNotLoadUserWhenIdProviderNotRecognized() {
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("unknownIDP")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
@@ -89,12 +87,10 @@ class Oauth2UserServiceTest {
         attributes.put("username", "myUsername");
 
         when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
-            .thenReturn(ResponseEntity.ok(attributes));
+                .thenReturn(ResponseEntity.ok(attributes));
 
-        Oauth2AuthenticationProcessingException exception = assertThrows(
-            Oauth2AuthenticationProcessingException.class,
-            () -> oauth2UserService.loadUser(request)
-        );
+        Oauth2AuthenticationProcessingException exception =
+                assertThrows(Oauth2AuthenticationProcessingException.class, () -> oauth2UserService.loadUser(request));
 
         assertEquals("ID provider unknownIDP is not recognized", exception.getMessage());
     }
@@ -102,18 +98,20 @@ class Oauth2UserServiceTest {
     @Test
     void shouldNotLoadUserWhenUsernameBlank() {
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
-        OAuth2AccessToken token =
-            new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", Instant.parse("2000-01-01T01:00:00.00Z"),
+        OAuth2AccessToken token = new OAuth2AccessToken(
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
                 Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
@@ -122,12 +120,10 @@ class Oauth2UserServiceTest {
         attributes.put("username", "    ");
 
         when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
-            .thenReturn(ResponseEntity.ok(attributes));
+                .thenReturn(ResponseEntity.ok(attributes));
 
-        Oauth2AuthenticationProcessingException exception = assertThrows(
-            Oauth2AuthenticationProcessingException.class,
-            () -> oauth2UserService.loadUser(request)
-        );
+        Oauth2AuthenticationProcessingException exception =
+                assertThrows(Oauth2AuthenticationProcessingException.class, () -> oauth2UserService.loadUser(request));
 
         assertEquals("Username not found from gitlab", exception.getMessage());
     }
@@ -139,32 +135,29 @@ class Oauth2UserServiceTest {
         attributes.put("email", "   ");
 
         when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
-            .thenReturn(ResponseEntity.ok(attributes));
+                .thenReturn(ResponseEntity.ok(attributes));
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
-        Oauth2AuthenticationProcessingException exception = assertThrows(
-            Oauth2AuthenticationProcessingException.class,
-            () -> oauth2UserService.loadUser(request)
-        );
+        Oauth2AuthenticationProcessingException exception =
+                assertThrows(Oauth2AuthenticationProcessingException.class, () -> oauth2UserService.loadUser(request));
 
         assertEquals("Email not found from Gitlab", exception.getMessage());
     }
@@ -190,30 +183,27 @@ class Oauth2UserServiceTest {
         ApplicationProperties.Authentication authProperties = new ApplicationProperties.Authentication();
         authProperties.setSocialProviders(Collections.singletonList("gitlab"));
 
-        when(applicationProperties.getAuthentication())
-            .thenReturn(authProperties);
+        when(applicationProperties.getAuthentication()).thenReturn(authProperties);
         when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
-            .thenReturn(ResponseEntity.ok(attributes));
-        when(userService.registerUser(any(), any(), any(), any(), any(), any()))
-            .thenReturn(createdUser);
+                .thenReturn(ResponseEntity.ok(attributes));
+        when(userService.registerUser(any(), any(), any(), any(), any(), any())).thenReturn(createdUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
@@ -227,8 +217,13 @@ class Oauth2UserServiceTest {
         assertEquals("myAvatar", actual.getAttributes().get("avatar_url"));
         assertEquals(createdUser, actual.getUser());
         verify(userService)
-            .registerUser("myUsername", "myFirstName", "myLastName", "myEmail", "myAvatar",
-                AuthenticationProvider.GITLAB);
+                .registerUser(
+                        "myUsername",
+                        "myFirstName",
+                        "myLastName",
+                        "myEmail",
+                        "myAvatar",
+                        AuthenticationProvider.GITLAB);
     }
 
     @Test
@@ -256,30 +251,27 @@ class Oauth2UserServiceTest {
         config.setNameCaseParse(true);
         authProperties.setSocialProvidersConfig(Collections.singletonMap("gitlab", config));
 
-        when(applicationProperties.getAuthentication())
-            .thenReturn(authProperties);
+        when(applicationProperties.getAuthentication()).thenReturn(authProperties);
         when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
-            .thenReturn(ResponseEntity.ok(attributes));
-        when(userService.registerUser(any(), any(), any(), any(), any(), any()))
-            .thenReturn(createdUser);
+                .thenReturn(ResponseEntity.ok(attributes));
+        when(userService.registerUser(any(), any(), any(), any(), any(), any())).thenReturn(createdUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
@@ -293,8 +285,13 @@ class Oauth2UserServiceTest {
         assertEquals("myPicture", actual.getAttributes().get("picture"));
         assertEquals(createdUser, actual.getUser());
         verify(userService)
-            .registerUser("myUsername", "myFirstName", "MYLASTNAME", "myEmail", "myPicture",
-                AuthenticationProvider.GITLAB);
+                .registerUser(
+                        "myUsername",
+                        "myFirstName",
+                        "MYLASTNAME",
+                        "myEmail",
+                        "myPicture",
+                        AuthenticationProvider.GITLAB);
     }
 
     @Test
@@ -315,27 +312,25 @@ class Oauth2UserServiceTest {
         createdUser.setRoles(Collections.singleton(role));
 
         when(restOperations.exchange(any(), any(ParameterizedTypeReference.class)))
-            .thenReturn(ResponseEntity.ok(attributes));
-        when(userService.registerUser(any(), any(), any(), any(), any(), any()))
-            .thenReturn(createdUser);
+                .thenReturn(ResponseEntity.ok(attributes));
+        when(userService.registerUser(any(), any(), any(), any(), any(), any())).thenReturn(createdUser);
 
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("gitlab")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .clientId("clientId")
-            .clientSecret("clientSecret")
-            .redirectUri("localhost:8080")
-            .authorizationUri("localhost:8080/authorizationUri")
-            .tokenUri("localhost:8080/tokenUri")
-            .userInfoUri("localhost:8080/userInfoUri")
-            .userNameAttributeName("username")
-            .build();
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .clientId("clientId")
+                .clientSecret("clientSecret")
+                .redirectUri("localhost:8080")
+                .authorizationUri("localhost:8080/authorizationUri")
+                .tokenUri("localhost:8080/tokenUri")
+                .userInfoUri("localhost:8080/userInfoUri")
+                .userNameAttributeName("username")
+                .build();
 
         OAuth2AccessToken token = new OAuth2AccessToken(
-            OAuth2AccessToken.TokenType.BEARER,
-            "token",
-            Instant.parse("2000-01-01T01:00:00.00Z"),
-            Instant.parse("2000-01-02T01:00:00.00Z")
-        );
+                OAuth2AccessToken.TokenType.BEARER,
+                "token",
+                Instant.parse("2000-01-01T01:00:00.00Z"),
+                Instant.parse("2000-01-02T01:00:00.00Z"));
 
         OAuth2UserRequest request = new OAuth2UserRequest(clientRegistration, token);
 
@@ -347,7 +342,6 @@ class Oauth2UserServiceTest {
         assertEquals("myUsername", actual.getAttributes().get("login"));
         assertEquals("myEmail", actual.getAttributes().get("email"));
         assertEquals(createdUser, actual.getUser());
-        verify(userService)
-            .registerUser("myUsername", null, null, "myEmail", null, AuthenticationProvider.GITLAB);
+        verify(userService).registerUser("myUsername", null, null, "myEmail", null, AuthenticationProvider.GITLAB);
     }
 }

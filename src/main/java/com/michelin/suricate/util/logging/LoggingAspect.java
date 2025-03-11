@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.logging;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +25,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-/**
- * Aspect for logging execution time of methods.
- */
+/** Aspect for logging execution time of methods. */
 @Slf4j
 @Aspect
 @Profile("prod")

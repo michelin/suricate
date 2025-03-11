@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.user.AdminUserResponseDto;
@@ -35,17 +34,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/**
- * User mapper.
- */
+/** User mapper. */
 @Component
 @Mapper(
-    componentModel = "spring",
-    uses = {
-        RoleMapper.class
-    },
-    unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+        componentModel = "spring",
+        uses = {RoleMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class UserMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
@@ -82,21 +76,26 @@ public abstract class UserMapper {
     /**
      * Map a connected user to user entity.
      *
-     * @param username             The username
-     * @param firstname            The user firstname
-     * @param lastname             The user lastname
-     * @param email                The user email
+     * @param username The username
+     * @param firstname The user firstname
+     * @param lastname The user lastname
+     * @param email The user email
      * @param authenticationMethod The ID provider used
      * @return The user entity
      */
     @Named("connectedUserToUserEntity")
-    public abstract User connectedUserToUserEntity(String username, String firstname, String lastname, String email,
-                                                   String avatarUrl, AuthenticationProvider authenticationMethod);
+    public abstract User connectedUserToUserEntity(
+            String username,
+            String firstname,
+            String lastname,
+            String email,
+            String avatarUrl,
+            AuthenticationProvider authenticationMethod);
 
     /**
      * Map a user DTO into a user as entity.
      *
-     * @param userRequestDto       The userRequestDto to map
+     * @param userRequestDto The userRequestDto to map
      * @param authenticationMethod The authentication method of the user
      * @return The user entity
      */
