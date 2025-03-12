@@ -40,6 +40,7 @@ import com.michelin.suricate.service.js.JsExecutionService;
 import com.michelin.suricate.service.js.task.JsResultAsyncTask;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -303,6 +304,26 @@ class JsExecutionSchedulerTest {
 
         scheduler.init();
         scheduler.cancelWidgetsExecutionByProject(project);
+
+        verify(projectWidgetService).updateState(WidgetStateEnum.STOPPED, 1L);
+    }
+
+    @Test
+    void shouldCancelWidgetsExecutionByGrid() {
+        Widget widget = new Widget();
+        widget.setId(1L);
+
+        ProjectWidget projectWidget = new ProjectWidget();
+        projectWidget.setId(1L);
+        projectWidget.setBackendConfig("param=value");
+        projectWidget.setData("{\"DATA\": \"titre\"}");
+        projectWidget.setWidget(widget);
+
+        ProjectGrid projectGrid = new ProjectGrid();
+        projectGrid.setId(1L);
+        projectGrid.setWidgets(Set.of(projectWidget));
+
+        scheduler.cancelWidgetsExecutionByGrid(projectGrid);
 
         verify(projectWidgetService).updateState(WidgetStateEnum.STOPPED, 1L);
     }

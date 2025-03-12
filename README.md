@@ -181,7 +181,6 @@ You can log in to Suricate an LDAP.
 To enable this authentication mode, set the following YAML property:
 
 ```yml
----
 application:
   authentication:
     provider: 'ldap'
