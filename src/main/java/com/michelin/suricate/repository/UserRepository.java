@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.User;
@@ -28,16 +27,14 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * User repository.
- */
+/** User repository. */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     /**
      * Find all paginated users.
      *
      * @param specification The specification to apply
-     * @param pageable      The pageable to apply
+     * @param pageable The pageable to apply
      * @return The paginated users
      */
     @EntityGraph(attributePaths = "roles")

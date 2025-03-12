@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.entity;
-
 
 import com.michelin.suricate.model.entity.generic.AbstractAuditingEntity;
 import jakarta.persistence.CascadeType;
@@ -43,9 +41,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.type.YesNoConverter;
 
-/**
- * Project entity.
- */
+/** Project entity. */
 @Entity
 @Getter
 @Setter
@@ -56,12 +52,10 @@ public class Project extends AbstractAuditingEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false)
+    @NotBlank @Column(nullable = false)
     private String name;
 
-    @NotBlank
-    @Column(nullable = false)
+    @NotBlank @Column(nullable = false)
     private String token;
 
     @Column
@@ -89,16 +83,14 @@ public class Project extends AbstractAuditingEntity<Long> {
     @ToString.Exclude
     @ManyToMany
     @JoinTable(
-        name = "user_project",
-        joinColumns = {@JoinColumn(name = "project_id")},
-        inverseJoinColumns = {@JoinColumn(name = "user_id")}
-    )
+            name = "user_project",
+            joinColumns = {@JoinColumn(name = "project_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<User> users = new LinkedHashSet<>();
 
     /**
-     * Hashcode method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Hashcode method
+     * Hashcode method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Hashcode method
      *
      * @return The hash code
      */
@@ -108,9 +100,8 @@ public class Project extends AbstractAuditingEntity<Long> {
     }
 
     /**
-     * Equals method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Equals method
+     * Equals method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Equals method
      *
      * @param other The other object to compare
      * @return true if equals, false otherwise

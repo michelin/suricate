@@ -16,16 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.enumeration;
 
-/**
- * Authentication provider.
- */
+/** Authentication provider. */
 public enum AuthenticationProvider {
     DATABASE,
     LDAP,
     GITHUB,
     GITLAB
 }
-

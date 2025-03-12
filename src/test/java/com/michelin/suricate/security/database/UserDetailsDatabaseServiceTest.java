@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.security.database;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,13 +47,10 @@ class UserDetailsDatabaseServiceTest {
 
     @Test
     void shouldThrowUsernameNotFound() {
-        when(userService.getOneByUsername(any()))
-            .thenReturn(Optional.empty());
+        when(userService.getOneByUsername(any())).thenReturn(Optional.empty());
 
         UsernameNotFoundException exception = assertThrows(
-            UsernameNotFoundException.class,
-            () -> userDetailsDatabaseService.loadUserByUsername("username")
-        );
+                UsernameNotFoundException.class, () -> userDetailsDatabaseService.loadUserByUsername("username"));
 
         assertEquals("Bad credentials", exception.getMessage());
     }
@@ -71,17 +67,17 @@ class UserDetailsDatabaseServiceTest {
         user.setPassword("password");
         user.setRoles(Collections.singleton(role));
 
-        when(userService.getOneByUsername(any()))
-            .thenReturn(Optional.of(user));
+        when(userService.getOneByUsername(any())).thenReturn(Optional.of(user));
 
         LocalUser actual = userDetailsDatabaseService.loadUserByUsername("username");
 
         assertEquals("username", actual.getUsername());
         assertEquals("password", actual.getPassword());
-        assertEquals("ROLE_ADMIN", actual.getAuthorities()
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .toList()
-            .getFirst());
+        assertEquals(
+                "ROLE_ADMIN",
+                actual.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList()
+                        .getFirst());
     }
 }

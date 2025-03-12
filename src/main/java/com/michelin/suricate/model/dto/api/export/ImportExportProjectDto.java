@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.export;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -29,9 +28,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Import export project DTO.
- */
+/** Import export project DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -55,9 +52,7 @@ public class ImportExportProjectDto extends AbstractDto {
     @Schema(description = "The grid properties", requiredMode = Schema.RequiredMode.REQUIRED)
     private GridPropertiesResponseDto gridProperties;
 
-    /**
-     * Import export project grid DTO.
-     */
+    /** Import export project grid DTO. */
     @Data
     public static class ImportExportProjectGridDto {
         @Schema(description = "The list of grids")
@@ -69,9 +64,7 @@ public class ImportExportProjectDto extends AbstractDto {
         @Schema(description = "The time", example = "15")
         private Integer time;
 
-        /**
-         * Import export project widget DTO.
-         */
+        /** Import export project widget DTO. */
         @Data
         public static class ImportExportProjectWidgetDto {
             @Schema(description = "The ID", example = "1")

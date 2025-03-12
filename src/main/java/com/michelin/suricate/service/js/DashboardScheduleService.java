@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.js;
 
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
@@ -38,9 +37,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Dashboard schedule service.
- */
+/** Dashboard schedule service. */
 @Slf4j
 @Service
 public class DashboardScheduleService {
@@ -63,44 +60,51 @@ public class DashboardScheduleService {
     private ProjectService projectService;
 
     /**
-     * Process the Js result.
-     * Update the widget information.
-     * If the Js execution is successful then update the data.
-     * If the Js execution is failed, then just update the log.
-     * Schedule the next javascript execution except if the current execution did not throw a fatal error
+     * Process the Js result. Update the widget information. If the Js execution is successful then update the data. If
+     * the Js execution is failed, then just update the log. Schedule the next javascript execution except if the
+     * current execution did not throw a fatal error
      *
      * @param jsResultDto The Js result
-     * @param scheduler   The Js execution scheduler
+     * @param scheduler The Js execution scheduler
      */
     @Transactional
     public void processJsResult(JsResultDto jsResultDto, JsExecutionScheduler scheduler) {
         if (jsResultDto.isValid()) {
-            log.debug("The JavaScript result is valid for the widget instance: {}. Updating widget in database",
-                jsResultDto.getProjectWidgetId());
+            log.debug(
+                    "The JavaScript result is valid for the widget instance: {}. Updating widget in database",
+                    jsResultDto.getProjectWidgetId());
 
-            projectWidgetService.updateWidgetInstanceAfterSucceededExecution(jsResultDto.getLaunchDate(),
-                jsResultDto.getLog(),
-                jsResultDto.getData(),
-                jsResultDto.getProjectWidgetId(),
-                WidgetStateEnum.RUNNING);
+            projectWidgetService.updateWidgetInstanceAfterSucceededExecution(
+                    jsResultDto.getLaunchDate(),
+                    jsResultDto.getLog(),
+                    jsResultDto.getData(),
+                    jsResultDto.getProjectWidgetId(),
+                    WidgetStateEnum.RUNNING);
         } else {
-            log.debug("The JavaScript result is not valid for the widget instance: {}. Logs: {}. Response data: {}",
-                jsResultDto.getProjectWidgetId(), jsResultDto.getLog(), jsResultDto);
+            log.debug(
+                    "The JavaScript result is not valid for the widget instance: {}. Logs: {}. Response data: {}",
+                    jsResultDto.getProjectWidgetId(),
+                    jsResultDto.getLog(),
+                    jsResultDto);
 
-            projectWidgetService.updateWidgetInstanceAfterFailedExecution(jsResultDto.getLaunchDate(),
-                jsResultDto.getLog(),
-                jsResultDto.getProjectWidgetId(),
-                jsResultDto.getError() == JsExecutionErrorTypeEnum.FATAL ? WidgetStateEnum.STOPPED :
-                    WidgetStateEnum.WARNING);
+            projectWidgetService.updateWidgetInstanceAfterFailedExecution(
+                    jsResultDto.getLaunchDate(),
+                    jsResultDto.getLog(),
+                    jsResultDto.getProjectWidgetId(),
+                    jsResultDto.getError() == JsExecutionErrorTypeEnum.FATAL
+                            ? WidgetStateEnum.STOPPED
+                            : WidgetStateEnum.WARNING);
         }
 
         if (jsResultDto.isFatal()) {
             log.debug(
-                "The JavaScript result contains a fatal error for the widget instance: {}. Logs: {}. Response data: {}",
-                jsResultDto.getProjectWidgetId(), jsResultDto.getLog(), jsResultDto);
+                    "The JavaScript result contains a fatal error for the widget instance: {}. Logs: {}. Response data: {}",
+                    jsResultDto.getProjectWidgetId(),
+                    jsResultDto.getLog(),
+                    jsResultDto);
         } else {
             JsExecutionDto newJsExecutionDto =
-                jsExecutionService.getJsExecutionByProjectWidgetId(jsResultDto.getProjectWidgetId());
+                    jsExecutionService.getJsExecutionByProjectWidgetId(jsResultDto.getProjectWidgetId());
             scheduler.schedule(newJsExecutionDto, false);
         }
 
@@ -110,44 +114,41 @@ public class DashboardScheduleService {
     /**
      * Update the widget information when there is no Js result due to a failure.
      *
-     * @param widgetLogs      The exception message to log
+     * @param widgetLogs The exception message to log
      * @param projectWidgetId The widget instance id
-     * @param projectId       The project id
+     * @param projectId The project id
      */
     @Transactional
     public void updateWidgetInstanceNoJsResult(String widgetLogs, Long projectWidgetId, Long projectId) {
-        projectWidgetService.updateWidgetInstanceAfterFailedExecution(new Date(), widgetLogs, projectWidgetId,
-            WidgetStateEnum.STOPPED);
+        projectWidgetService.updateWidgetInstanceAfterFailedExecution(
+                new Date(), widgetLogs, projectWidgetId, WidgetStateEnum.STOPPED);
 
         sendWidgetUpdateNotification(projectWidgetId, projectId);
     }
 
     /**
-     * Create a new widget event which will be sent through the web sockets
-     * to notify and update the widget on dashboard.
+     * Create a new widget event which will be sent through the web sockets to notify and update the widget on
+     * dashboard.
      *
      * @param projectWidgetId The project widget ID
-     * @param projectId       The project ID
+     * @param projectId The project ID
      */
     public void sendWidgetUpdateNotification(Long projectWidgetId, Long projectId) {
-        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
+        ProjectWidget projectWidget =
+                projectWidgetService.getOne(projectWidgetId).orElse(null);
 
         UpdateEvent event = UpdateEvent.builder()
-            .type(UpdateType.REFRESH_WIDGET)
-            .content(projectWidgetMapper.toProjectWidgetDto(projectWidget))
-            .build();
+                .type(UpdateType.REFRESH_WIDGET)
+                .content(projectWidgetMapper.toProjectWidgetDto(projectWidget))
+                .build();
 
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(
-            projectService.getTokenByProjectId(projectId),
-            projectWidgetId,
-            event
-        );
+                projectService.getTokenByProjectId(projectId), projectWidgetId, event);
     }
 
     /**
-     * Schedule the execution of a given widget instance.
-     * Prepare the Js execution then cancel the current request
-     * and schedule a new request.
+     * Schedule the execution of a given widget instance. Prepare the Js execution then cancel the current request and
+     * schedule a new request.
      *
      * @param projectWidgetId The widget instance ID
      */

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,10 +64,8 @@ class WidgetControllerTest {
         Widget widget = new Widget();
         widget.setId(1L);
 
-        when(widgetService.getAll(any(), any()))
-            .thenReturn(new PageImpl<>(Collections.singletonList(widget)));
-        when(widgetMapper.toWidgetWithoutCategoryParametersDto(any()))
-            .thenReturn(widgetResponseDto);
+        when(widgetService.getAll(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(widget)));
+        when(widgetMapper.toWidgetWithoutCategoryParametersDto(any())).thenReturn(widgetResponseDto);
 
         Page<WidgetResponseDto> actual = widgetController.getWidgets("search", Pageable.unpaged());
 
@@ -79,13 +76,10 @@ class WidgetControllerTest {
 
     @Test
     void shouldGetOneByIdNotFound() {
-        when(widgetService.findOne(any()))
-            .thenReturn(Optional.empty());
+        when(widgetService.findOne(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> widgetController.getOneById(1L)
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> widgetController.getOneById(1L));
 
         assertEquals("Widget '1' not found", exception.getMessage());
     }
@@ -98,10 +92,8 @@ class WidgetControllerTest {
         Widget widget = new Widget();
         widget.setId(1L);
 
-        when(widgetService.findOne(any()))
-            .thenReturn(Optional.of(widget));
-        when(widgetMapper.toWidgetDto(any()))
-            .thenReturn(widgetResponseDto);
+        when(widgetService.findOne(any())).thenReturn(Optional.of(widget));
+        when(widgetMapper.toWidgetDto(any())).thenReturn(widgetResponseDto);
 
         ResponseEntity<WidgetResponseDto> actual = widgetController.getOneById(1L);
 
@@ -114,13 +106,10 @@ class WidgetControllerTest {
         WidgetRequestDto widgetRequestDto = new WidgetRequestDto();
         widgetRequestDto.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
 
-        when(widgetService.updateWidget(any(), any()))
-            .thenReturn(Optional.empty());
+        when(widgetService.updateWidget(any(), any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> widgetController.updateWidget(1L, widgetRequestDto)
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> widgetController.updateWidget(1L, widgetRequestDto));
 
         assertEquals("Widget '1' not found", exception.getMessage());
     }
@@ -133,8 +122,7 @@ class WidgetControllerTest {
         Widget widget = new Widget();
         widget.setId(1L);
 
-        when(widgetService.updateWidget(any(), any()))
-            .thenReturn(Optional.of(widget));
+        when(widgetService.updateWidget(any(), any())).thenReturn(Optional.of(widget));
 
         ResponseEntity<Void> actual = widgetController.updateWidget(1L, widgetRequestDto);
 

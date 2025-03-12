@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,7 +69,7 @@ class CategoryParametersServiceTest {
         categoryParameter.setDataType(DataTypeEnum.TEXT);
 
         when(categoryParametersRepository.findCategoryParametersByCategoryId(1L))
-            .thenReturn(Optional.of(Collections.singletonList(categoryParameter)));
+                .thenReturn(Optional.of(Collections.singletonList(categoryParameter)));
 
         Optional<List<CategoryParameter>> actual = categoryParametersService.getParametersByCategoryId(1L);
 
@@ -78,8 +77,7 @@ class CategoryParametersServiceTest {
         assertEquals(1, actual.get().size());
         assertEquals(categoryParameter, actual.get().getFirst());
 
-        verify(categoryParametersRepository)
-            .findCategoryParametersByCategoryId(1L);
+        verify(categoryParametersRepository).findCategoryParametersByCategoryId(1L);
     }
 
     @Test
@@ -90,9 +88,9 @@ class CategoryParametersServiceTest {
         categoryParameter.setDataType(DataTypeEnum.TEXT);
 
         CategoryParameter_.description = description;
-        when(
-            categoryParametersRepository.findAll(any(CategoryParametersSearchSpecification.class), any(Pageable.class)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(categoryParameter)));
+        when(categoryParametersRepository.findAll(
+                        any(CategoryParametersSearchSpecification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Collections.singletonList(categoryParameter)));
 
         Page<CategoryParameter> actual = categoryParametersService.getAll("search", Pageable.unpaged());
 
@@ -100,10 +98,11 @@ class CategoryParametersServiceTest {
         assertTrue(actual.getContent().contains(categoryParameter));
 
         verify(categoryParametersRepository)
-            .findAll(Mockito.<CategoryParametersSearchSpecification>argThat(
-                    specification -> specification.getSearch().equals("search")
-                        && specification.getAttributes().contains(description.getName())),
-                Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
+                .findAll(
+                        Mockito.<CategoryParametersSearchSpecification>argThat(
+                                specification -> specification.getSearch().equals("search")
+                                        && specification.getAttributes().contains(description.getName())),
+                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -113,16 +112,14 @@ class CategoryParametersServiceTest {
         categoryParameter.setValue("value");
         categoryParameter.setDataType(DataTypeEnum.TEXT);
 
-        when(categoryParametersRepository.findById("key"))
-            .thenReturn(Optional.of(categoryParameter));
+        when(categoryParametersRepository.findById("key")).thenReturn(Optional.of(categoryParameter));
 
         Optional<CategoryParameter> actual = categoryParametersService.getOneByKey("key");
 
         assertTrue(actual.isPresent());
         assertEquals(categoryParameter, actual.get());
 
-        verify(categoryParametersRepository)
-            .findById("key");
+        verify(categoryParametersRepository).findById("key");
     }
 
     @Test
@@ -132,15 +129,13 @@ class CategoryParametersServiceTest {
         categoryParameter.setValue("value");
         categoryParameter.setDataType(DataTypeEnum.TEXT);
 
-        when(categoryParametersRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(categoryParametersRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         categoryParametersService.updateConfiguration(categoryParameter, "newValue");
 
         assertEquals("newValue", categoryParameter.getValue());
 
-        verify(categoryParametersRepository)
-            .save(categoryParameter);
+        verify(categoryParametersRepository).save(categoryParameter);
     }
 
     @Test
@@ -150,17 +145,14 @@ class CategoryParametersServiceTest {
         categoryParameter.setValue("value");
         categoryParameter.setDataType(DataTypeEnum.PASSWORD);
 
-        when(categoryParametersRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
-        when(stringEncryptor.encrypt("newValue"))
-            .thenReturn("encrypted");
+        when(categoryParametersRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
+        when(stringEncryptor.encrypt("newValue")).thenReturn("encrypted");
 
         categoryParametersService.updateConfiguration(categoryParameter, "newValue");
 
         assertEquals("encrypted", categoryParameter.getValue());
 
-        verify(categoryParametersRepository)
-            .save(categoryParameter);
+        verify(categoryParametersRepository).save(categoryParameter);
     }
 
     @Test
@@ -172,8 +164,7 @@ class CategoryParametersServiceTest {
 
         categoryParametersService.deleteOneByKey("key");
 
-        verify(categoryParametersRepository)
-            .deleteById("key");
+        verify(categoryParametersRepository).deleteById("key");
     }
 
     @Test
@@ -187,10 +178,8 @@ class CategoryParametersServiceTest {
         category.setId(1L);
         category.setName("name");
 
-        when(categoryParametersRepository.findById(any()))
-            .thenReturn(Optional.empty());
-        when(categoryParametersRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(categoryParametersRepository.findById(any())).thenReturn(Optional.empty());
+        when(categoryParametersRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         categoryParametersService.addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
 
@@ -199,10 +188,8 @@ class CategoryParametersServiceTest {
         assertEquals("value", categoryParameter.getValue());
         assertFalse(categoryParameter.isExport());
 
-        verify(categoryParametersRepository)
-            .findById("key");
-        verify(categoryParametersRepository)
-            .save(categoryParameter);
+        verify(categoryParametersRepository).findById("key");
+        verify(categoryParametersRepository).save(categoryParameter);
     }
 
     @Test
@@ -222,10 +209,8 @@ class CategoryParametersServiceTest {
         category.setId(1L);
         category.setName("name");
 
-        when(categoryParametersRepository.findById(any()))
-            .thenReturn(Optional.of(currentCategoryParameter));
-        when(categoryParametersRepository.save(any()))
-            .thenAnswer(answer -> answer.getArgument(0));
+        when(categoryParametersRepository.findById(any())).thenReturn(Optional.of(currentCategoryParameter));
+        when(categoryParametersRepository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         categoryParametersService.addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
 
@@ -234,10 +219,8 @@ class CategoryParametersServiceTest {
         assertEquals("oldValue", categoryParameter.getValue());
         assertTrue(categoryParameter.isExport());
 
-        verify(categoryParametersRepository)
-            .findById("key");
-        verify(categoryParametersRepository)
-            .save(categoryParameter);
+        verify(categoryParametersRepository).findById("key");
+        verify(categoryParametersRepository).save(categoryParameter);
     }
 
     @Test
@@ -247,8 +230,8 @@ class CategoryParametersServiceTest {
         categoryParameter.setValue("value");
         categoryParameter.setDataType(DataTypeEnum.TEXT);
 
-        WidgetParam widgetParam = CategoryParametersService
-            .convertCategoryParametersToWidgetParameters(categoryParameter);
+        WidgetParam widgetParam =
+                CategoryParametersService.convertCategoryParametersToWidgetParameters(categoryParameter);
 
         assertEquals("key", widgetParam.getName());
         assertEquals("value", widgetParam.getDefaultValue());

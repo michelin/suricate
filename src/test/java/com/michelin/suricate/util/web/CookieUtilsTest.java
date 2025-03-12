@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,7 +45,8 @@ class CookieUtilsTest {
 
     @Test
     void shouldGetCookieEmpty() {
-        assertTrue(CookieUtils.getCookie(new MockHttpServletRequest(), "myCookie").isEmpty());
+        assertTrue(
+                CookieUtils.getCookie(new MockHttpServletRequest(), "myCookie").isEmpty());
     }
 
     @Test
@@ -117,18 +117,20 @@ class CookieUtilsTest {
 
     @Test
     void shouldSerialize() {
-        assertEquals("rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
-            + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
-            + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU=",
-            CookieUtils.serialize(new Cookie("myCookie", "value")));
+        assertEquals(
+                "rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
+                        + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
+                        + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU=",
+                CookieUtils.serialize(new Cookie("myCookie", "value")));
     }
 
     @Test
     void shouldDeserializeCookieValue() {
-        Cookie cookie = new Cookie("myCookie",
-            "rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
-                + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
-                + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU");
+        Cookie cookie = new Cookie(
+                "myCookie",
+                "rO0ABXNyABtqYWthcnRhLnNlcnZsZXQuaHR0cC5Db29raWUAAAAAAAAAAgIAA0"
+                        + "wACmF0dHJpYnV0ZXN0AA9MamF2YS91dGlsL01hcDtMAARuYW1ldAASTGphdmEvbGF"
+                        + "uZy9TdHJpbmc7TAAFdmFsdWVxAH4AAnhwcHQACG15Q29va2lldAAFdmFsdWU");
 
         Cookie deserialized = CookieUtils.deserialize(cookie, Cookie.class);
 

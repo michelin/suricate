@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import com.michelin.suricate.model.dto.api.setting.SettingResponseDto;
@@ -37,9 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Setting controller.
- */
+/** Setting controller. */
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Setting", description = "Setting Controller")
@@ -56,10 +53,11 @@ public class SettingController {
      * @return The full list of settings
      */
     @Operation(summary = "Get the full list of settings")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "204", description = "No Content")
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "OK"),
+                @ApiResponse(responseCode = "204", description = "No Content")
+            })
     @GetMapping(value = "/v1/settings")
     public ResponseEntity<List<SettingResponseDto>> getAll() {
         Optional<List<Setting>> settingsOptional = settingService.getAll();
@@ -68,9 +66,8 @@ public class SettingController {
             throw new NoContentException(Setting.class);
         }
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(settingMapper.toSettingsDtos(settingsOptional.get()));
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(settingMapper.toSettingsDtos(settingsOptional.get()));
     }
 }

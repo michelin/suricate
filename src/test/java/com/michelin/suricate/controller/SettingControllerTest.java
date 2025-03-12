@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,13 +54,9 @@ class SettingControllerTest {
 
     @Test
     void shouldGetAllNotFound() {
-        when(settingService.getAll())
-            .thenReturn(Optional.empty());
+        when(settingService.getAll()).thenReturn(Optional.empty());
 
-        NoContentException exception = assertThrows(
-            NoContentException.class,
-            () -> settingController.getAll()
-        );
+        NoContentException exception = assertThrows(NoContentException.class, () -> settingController.getAll());
 
         assertEquals("No resource for the class 'Setting'", exception.getMessage());
     }
@@ -74,10 +69,8 @@ class SettingControllerTest {
         Setting setting = new Setting();
         setting.setId(1L);
 
-        when(settingService.getAll())
-            .thenReturn(Optional.of(Collections.singletonList(setting)));
-        when(settingMapper.toSettingsDtos(any()))
-            .thenReturn(Collections.singletonList(settingResponseDto));
+        when(settingService.getAll()).thenReturn(Optional.of(Collections.singletonList(setting)));
+        when(settingMapper.toSettingsDtos(any())).thenReturn(Collections.singletonList(settingResponseDto));
 
         ResponseEntity<List<SettingResponseDto>> actual = settingController.getAll();
 

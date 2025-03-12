@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.role.RoleResponseDto;
@@ -25,9 +24,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
-/**
- * Role mapper.
- */
+/** Role mapper. */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class RoleMapper {
     /**

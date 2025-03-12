@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,16 +58,14 @@ class RoleServiceTest {
         Role role = new Role();
         role.setId(1L);
 
-        when(roleRepository.findByName(any()))
-            .thenReturn(Optional.of(role));
+        when(roleRepository.findByName(any())).thenReturn(Optional.of(role));
 
         Optional<Role> actual = roleService.getRoleByName("name");
 
         assertTrue(actual.isPresent());
         assertEquals(role, actual.get());
 
-        verify(roleRepository)
-            .findByName("name");
+        verify(roleRepository).findByName("name");
     }
 
     @Test
@@ -78,7 +75,7 @@ class RoleServiceTest {
 
         Role_.name = name;
         when(roleRepository.findAll(any(RoleSearchSpecification.class), any(Pageable.class)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(role)));
+                .thenReturn(new PageImpl<>(Collections.singletonList(role)));
 
         Page<Role> actual = roleService.getRoles("search", Pageable.unpaged());
 
@@ -86,10 +83,11 @@ class RoleServiceTest {
         assertEquals(role, actual.get().toList().getFirst());
 
         verify(roleRepository)
-            .findAll(
-                Mockito.<RoleSearchSpecification>argThat(specification -> specification.getSearch().equals("search")
-                    && specification.getAttributes().contains(name.getName())),
-                Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
+                .findAll(
+                        Mockito.<RoleSearchSpecification>argThat(
+                                specification -> specification.getSearch().equals("search")
+                                        && specification.getAttributes().contains(name.getName())),
+                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -97,15 +95,13 @@ class RoleServiceTest {
         Role role = new Role();
         role.setId(1L);
 
-        when(roleRepository.findById(any()))
-            .thenReturn(Optional.of(role));
+        when(roleRepository.findById(any())).thenReturn(Optional.of(role));
 
         Optional<Role> actual = roleService.getOneById(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(role, actual.get());
 
-        verify(roleRepository)
-            .findById(1L);
+        verify(roleRepository).findById(1L);
     }
 }

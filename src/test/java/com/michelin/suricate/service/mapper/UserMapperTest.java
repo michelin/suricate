@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,8 +69,7 @@ class UserMapperTest {
         roleResponseDto.setDescription("description");
         roleResponseDto.setName(UserRoleEnum.ROLE_USER);
 
-        when(roleMapper.toRoleDto(any()))
-            .thenReturn(roleResponseDto);
+        when(roleMapper.toRoleDto(any())).thenReturn(roleResponseDto);
 
         AdminUserResponseDto actual = userMapper.toAdminUserDto(user);
 
@@ -126,13 +124,7 @@ class UserMapperTest {
     @Test
     void shouldConnectedUserToUserEntity() {
         User actual = userMapper.connectedUserToUserEntity(
-            "username",
-            "firstname",
-            "lastname",
-            "email",
-            "url",
-            AuthenticationProvider.GITLAB
-        );
+                "username", "firstname", "lastname", "email", "url", AuthenticationProvider.GITLAB);
 
         assertEquals("username", actual.getUsername());
         assertEquals("firstname", actual.getFirstname());
@@ -154,8 +146,7 @@ class UserMapperTest {
         userRequestDto.setConfirmPassword("password");
         userRequestDto.setRoles(Collections.singletonList(UserRoleEnum.ROLE_USER));
 
-        when(passwordEncoder.encode(any()))
-            .thenReturn("encoded");
+        when(passwordEncoder.encode(any())).thenReturn("encoded");
 
         User actual = userMapper.toUserEntity(userRequestDto, AuthenticationProvider.GITHUB);
 

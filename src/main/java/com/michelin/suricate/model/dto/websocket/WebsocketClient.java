@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.websocket;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -29,9 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Websocket client.
- */
+/** Websocket client. */
 @Builder
 @Getter
 @Setter

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.js.scheduler;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -41,6 +40,7 @@ import com.michelin.suricate.service.js.JsExecutionService;
 import com.michelin.suricate.service.js.task.JsResultAsyncTask;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -79,8 +79,7 @@ class JsExecutionSchedulerTest {
 
     @Test
     void shouldNotScheduleNotExecutableRequest() {
-        when(jsExecutionService.isJsExecutable(any()))
-            .thenReturn(false);
+        when(jsExecutionService.isJsExecutable(any())).thenReturn(false);
 
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectWidgetId(1L);
@@ -88,11 +87,12 @@ class JsExecutionSchedulerTest {
         scheduler.init();
         scheduler.schedule(jsExecutionDto, true);
 
-        verify(jsExecutionService)
-            .isJsExecutable(jsExecutionDto);
+        verify(jsExecutionService).isJsExecutable(jsExecutionDto);
         verify(projectWidgetService)
-            .updateState(argThat(WidgetStateEnum.STOPPED::equals),
-                argThat(projectWidgetId -> projectWidgetId.equals(1L)), any());
+                .updateState(
+                        argThat(WidgetStateEnum.STOPPED::equals),
+                        argThat(projectWidgetId -> projectWidgetId.equals(1L)),
+                        any());
     }
 
     @Test
@@ -107,14 +107,12 @@ class JsExecutionSchedulerTest {
         projectWidget.setId(1L);
         projectWidget.setWidget(widget);
 
-        when(jsExecutionService.isJsExecutable(any()))
-            .thenReturn(true);
-        when(projectWidgetService.getOne(any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(jsExecutionService.isJsExecutable(any())).thenReturn(true);
+        when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForJsExecution(any()))
-            .thenReturn(Collections.singletonList(widgetVariableResponseDto));
+                .thenReturn(Collections.singletonList(widgetVariableResponseDto));
         when(applicationContext.getBean(eq(JsResultAsyncTask.class), any(), any(), any(), any()))
-            .thenReturn(jsResultAsyncTask);
+                .thenReturn(jsResultAsyncTask);
 
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectWidgetId(1L);
@@ -124,15 +122,14 @@ class JsExecutionSchedulerTest {
         scheduler.init();
         scheduler.schedule(jsExecutionDto, false);
 
-        verify(jsExecutionService)
-            .isJsExecutable(jsExecutionDto);
+        verify(jsExecutionService).isJsExecutable(jsExecutionDto);
+        verify(projectWidgetService).getOne(1L);
+        verify(widgetService).getWidgetParametersForJsExecution(widget);
         verify(projectWidgetService)
-            .getOne(1L);
-        verify(widgetService)
-            .getWidgetParametersForJsExecution(widget);
-        verify(projectWidgetService)
-            .updateState(argThat(WidgetStateEnum.RUNNING::equals),
-                argThat(projectWidgetId -> projectWidgetId.equals(1L)), any());
+                .updateState(
+                        argThat(WidgetStateEnum.RUNNING::equals),
+                        argThat(projectWidgetId -> projectWidgetId.equals(1L)),
+                        any());
     }
 
     @Test
@@ -147,14 +144,12 @@ class JsExecutionSchedulerTest {
         projectWidget.setId(1L);
         projectWidget.setWidget(widget);
 
-        when(jsExecutionService.isJsExecutable(any()))
-            .thenReturn(true);
-        when(projectWidgetService.getOne(any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(jsExecutionService.isJsExecutable(any())).thenReturn(true);
+        when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForJsExecution(any()))
-            .thenReturn(Collections.singletonList(widgetVariableResponseDto));
+                .thenReturn(Collections.singletonList(widgetVariableResponseDto));
         when(applicationContext.getBean(eq(JsResultAsyncTask.class), any(), any(), any(), any()))
-            .thenReturn(jsResultAsyncTask);
+                .thenReturn(jsResultAsyncTask);
 
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectWidgetId(1L);
@@ -163,14 +158,10 @@ class JsExecutionSchedulerTest {
         scheduler.init();
         scheduler.schedule(jsExecutionDto, true);
 
-        verify(jsExecutionService)
-            .isJsExecutable(jsExecutionDto);
-        verify(projectWidgetService)
-            .getOne(1L);
-        verify(widgetService)
-            .getWidgetParametersForJsExecution(widget);
-        verify(projectWidgetService, never())
-            .updateState(any(), any(), any());
+        verify(jsExecutionService).isJsExecutable(jsExecutionDto);
+        verify(projectWidgetService).getOne(1L);
+        verify(widgetService).getWidgetParametersForJsExecution(widget);
+        verify(projectWidgetService, never()).updateState(any(), any(), any());
     }
 
     @Test
@@ -185,14 +176,12 @@ class JsExecutionSchedulerTest {
         projectWidget.setId(1L);
         projectWidget.setWidget(widget);
 
-        when(jsExecutionService.isJsExecutable(any()))
-            .thenReturn(true);
-        when(projectWidgetService.getOne(any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(jsExecutionService.isJsExecutable(any())).thenReturn(true);
+        when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForJsExecution(any()))
-            .thenReturn(Collections.singletonList(widgetVariableResponseDto));
+                .thenReturn(Collections.singletonList(widgetVariableResponseDto));
         when(applicationContext.getBean(eq(JsResultAsyncTask.class), any(), any(), any(), any()))
-            .thenReturn(jsResultAsyncTask);
+                .thenReturn(jsResultAsyncTask);
 
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectWidgetId(1L);
@@ -201,14 +190,10 @@ class JsExecutionSchedulerTest {
         scheduler.init();
         scheduler.scheduleJsRequests(Collections.singletonList(jsExecutionDto), true);
 
-        verify(jsExecutionService)
-            .isJsExecutable(jsExecutionDto);
-        verify(projectWidgetService)
-            .getOne(1L);
-        verify(widgetService)
-            .getWidgetParametersForJsExecution(widget);
-        verify(projectWidgetService, never())
-            .updateState(any(), any(), any());
+        verify(jsExecutionService).isJsExecutable(jsExecutionDto);
+        verify(projectWidgetService).getOne(1L);
+        verify(widgetService).getWidgetParametersForJsExecution(widget);
+        verify(projectWidgetService, never()).updateState(any(), any(), any());
     }
 
     @Test
@@ -227,19 +212,14 @@ class JsExecutionSchedulerTest {
         jsExecutionDto.setProjectWidgetId(1L);
         jsExecutionDto.setWidgetState(WidgetStateEnum.RUNNING);
 
-        doThrow(new RuntimeException("error")).when(scheduler)
-            .schedule(jsExecutionDto, true);
+        doThrow(new RuntimeException("error")).when(scheduler).schedule(jsExecutionDto, true);
 
         scheduler.scheduleJsRequests(Collections.singletonList(jsExecutionDto), true);
 
-        verify(jsExecutionService, never())
-            .isJsExecutable(any());
-        verify(projectWidgetService, never())
-            .getOne(any());
-        verify(widgetService, never())
-            .getWidgetParametersForJsExecution(any());
-        verify(projectWidgetService, never())
-            .updateState(any(), any(), any());
+        verify(jsExecutionService, never()).isJsExecutable(any());
+        verify(projectWidgetService, never()).getOne(any());
+        verify(widgetService, never()).getWidgetParametersForJsExecution(any());
+        verify(projectWidgetService, never()).updateState(any(), any(), any());
     }
 
     @Test
@@ -254,14 +234,12 @@ class JsExecutionSchedulerTest {
         projectWidget.setId(1L);
         projectWidget.setWidget(widget);
 
-        when(jsExecutionService.isJsExecutable(any()))
-            .thenReturn(true);
-        when(projectWidgetService.getOne(any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(jsExecutionService.isJsExecutable(any())).thenReturn(true);
+        when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForJsExecution(any()))
-            .thenReturn(Collections.singletonList(widgetVariableResponseDto));
+                .thenReturn(Collections.singletonList(widgetVariableResponseDto));
         when(applicationContext.getBean(eq(JsResultAsyncTask.class), any(), any(), any(), any()))
-            .thenReturn(jsResultAsyncTask);
+                .thenReturn(jsResultAsyncTask);
 
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectWidgetId(1L);
@@ -271,16 +249,11 @@ class JsExecutionSchedulerTest {
         scheduler.schedule(jsExecutionDto, true);
         scheduler.cancelAndScheduleJsExecution(jsExecutionDto);
 
-        verify(jsExecutionService, times(2))
-            .isJsExecutable(jsExecutionDto);
-        verify(projectWidgetService, times(2))
-            .getOne(1L);
-        verify(widgetService, times(2))
-            .getWidgetParametersForJsExecution(widget);
-        verify(scheduler, times(2))
-            .cancelScheduledFutureTask(eq(1L), any());
-        verify(projectWidgetService)
-            .updateState(WidgetStateEnum.STOPPED, 1L);
+        verify(jsExecutionService, times(2)).isJsExecutable(jsExecutionDto);
+        verify(projectWidgetService, times(2)).getOne(1L);
+        verify(widgetService, times(2)).getWidgetParametersForJsExecution(widget);
+        verify(scheduler, times(2)).cancelScheduledFutureTask(eq(1L), any());
+        verify(projectWidgetService).updateState(WidgetStateEnum.STOPPED, 1L);
     }
 
     @Test
@@ -295,14 +268,12 @@ class JsExecutionSchedulerTest {
         projectWidget.setId(1L);
         projectWidget.setWidget(widget);
 
-        when(jsExecutionService.isJsExecutable(any()))
-            .thenReturn(true);
-        when(projectWidgetService.getOne(any()))
-            .thenReturn(Optional.of(projectWidget));
+        when(jsExecutionService.isJsExecutable(any())).thenReturn(true);
+        when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForJsExecution(any()))
-            .thenReturn(Collections.singletonList(widgetVariableResponseDto));
+                .thenReturn(Collections.singletonList(widgetVariableResponseDto));
         when(applicationContext.getBean(eq(JsResultAsyncTask.class), any(), any(), any(), any()))
-            .thenReturn(jsResultAsyncTask);
+                .thenReturn(jsResultAsyncTask);
 
         JsExecutionDto jsExecutionDto = new JsExecutionDto();
         jsExecutionDto.setProjectWidgetId(1L);
@@ -311,16 +282,11 @@ class JsExecutionSchedulerTest {
         scheduler.init();
         scheduler.cancelAndScheduleJsExecution(jsExecutionDto);
 
-        verify(jsExecutionService)
-            .isJsExecutable(jsExecutionDto);
-        verify(projectWidgetService)
-            .getOne(1L);
-        verify(widgetService)
-            .getWidgetParametersForJsExecution(widget);
-        verify(scheduler, never())
-            .cancelScheduledFutureTask(eq(1L), any());
-        verify(projectWidgetService)
-            .updateState(WidgetStateEnum.STOPPED, 1L);
+        verify(jsExecutionService).isJsExecutable(jsExecutionDto);
+        verify(projectWidgetService).getOne(1L);
+        verify(widgetService).getWidgetParametersForJsExecution(widget);
+        verify(scheduler, never()).cancelScheduledFutureTask(eq(1L), any());
+        verify(projectWidgetService).updateState(WidgetStateEnum.STOPPED, 1L);
     }
 
     @Test
@@ -339,7 +305,26 @@ class JsExecutionSchedulerTest {
         scheduler.init();
         scheduler.cancelWidgetsExecutionByProject(project);
 
-        verify(projectWidgetService)
-            .updateState(WidgetStateEnum.STOPPED, 1L);
+        verify(projectWidgetService).updateState(WidgetStateEnum.STOPPED, 1L);
+    }
+
+    @Test
+    void shouldCancelWidgetsExecutionByGrid() {
+        Widget widget = new Widget();
+        widget.setId(1L);
+
+        ProjectWidget projectWidget = new ProjectWidget();
+        projectWidget.setId(1L);
+        projectWidget.setBackendConfig("param=value");
+        projectWidget.setData("{\"DATA\": \"titre\"}");
+        projectWidget.setWidget(widget);
+
+        ProjectGrid projectGrid = new ProjectGrid();
+        projectGrid.setId(1L);
+        projectGrid.setWidgets(Set.of(projectWidget));
+
+        scheduler.cancelWidgetsExecutionByGrid(projectGrid);
+
+        verify(projectWidgetService).updateState(WidgetStateEnum.STOPPED, 1L);
     }
 }

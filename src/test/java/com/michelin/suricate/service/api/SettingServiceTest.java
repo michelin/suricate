@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,16 +48,14 @@ class SettingServiceTest {
         Setting setting = new Setting();
         setting.setId(1L);
 
-        when(settingRepository.findById(any()))
-            .thenReturn(Optional.of(setting));
+        when(settingRepository.findById(any())).thenReturn(Optional.of(setting));
 
         Optional<Setting> actual = settingService.getOneById(1L);
 
         assertTrue(actual.isPresent());
         assertEquals(setting, actual.get());
 
-        verify(settingRepository)
-            .findById(1L);
+        verify(settingRepository).findById(1L);
     }
 
     @Test
@@ -67,15 +64,13 @@ class SettingServiceTest {
         setting.setId(1L);
         List<Setting> settings = Collections.singletonList(setting);
 
-        when(settingRepository.findAllByOrderByDescription())
-            .thenReturn(Optional.of(settings));
+        when(settingRepository.findAllByOrderByDescription()).thenReturn(Optional.of(settings));
 
         Optional<List<Setting>> actual = settingService.getAll();
 
         assertTrue(actual.isPresent());
         assertEquals(setting, actual.get().getFirst());
 
-        verify(settingRepository)
-            .findAllByOrderByDescription();
+        verify(settingRepository).findAllByOrderByDescription();
     }
 }

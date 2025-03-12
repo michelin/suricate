@@ -16,23 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.enumeration;
 
-/**
- * Possible states for widget instance.
- */
+/** Possible states for widget instance. */
 public enum WidgetStateEnum {
-    /**
-     * Widget is running normally.
-     */
+    /** Widget is running normally. */
     RUNNING,
-    /**
-     * Widget is running with some anomalies.
-     */
+    /** Widget is running with some anomalies. */
     WARNING,
-    /**
-     * The widget execution is stopped.
-     */
+    /** The widget execution is stopped. */
     STOPPED
 }

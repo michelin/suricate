@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.projectgrid;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -26,9 +25,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Project grid request DTO.
- */
+/** Project grid request DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -40,9 +37,7 @@ public class ProjectGridRequestDto extends AbstractDto {
     @Schema(description = "The list of grids")
     private List<GridRequestDto> grids;
 
-    /**
-     * Grid request DTO.
-     */
+    /** Grid request DTO. */
     @Data
     public static class GridRequestDto {
         @Schema(description = "The project grid id", example = "1")

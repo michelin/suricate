@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridRequestDto;
@@ -34,9 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Project grid service.
- */
+/** Project grid service. */
 @Service
 public class ProjectGridService {
     @Autowired
@@ -65,7 +62,7 @@ public class ProjectGridService {
     /**
      * Find a grid by id and project token.
      *
-     * @param id    The ID
+     * @param id The ID
      * @param token The project token
      * @return The grid
      */
@@ -87,7 +84,7 @@ public class ProjectGridService {
     /**
      * Persist a given list of project grids.
      *
-     * @param project               The project to update
+     * @param project The project to update
      * @param projectGridRequestDto The new data as DTO
      */
     @Transactional
@@ -97,10 +94,10 @@ public class ProjectGridService {
         projectRepository.save(project);
 
         project.getGrids().forEach(projectGrid -> {
-            Optional<ProjectGridRequestDto.GridRequestDto> gridRequestDtoOptional = projectGridRequestDto.getGrids()
-                .stream()
-                .filter(dto -> dto.getId().equals(projectGrid.getId()))
-                .findFirst();
+            Optional<ProjectGridRequestDto.GridRequestDto> gridRequestDtoOptional =
+                    projectGridRequestDto.getGrids().stream()
+                            .filter(dto -> dto.getId().equals(projectGrid.getId()))
+                            .findFirst();
 
             gridRequestDtoOptional.ifPresent(gridRequestDto -> projectGrid.setTime(gridRequestDto.getTime()));
         });
@@ -112,7 +109,7 @@ public class ProjectGridService {
      * Delete a grid by project id and id.
      *
      * @param project The project
-     * @param id      The grid id
+     * @param id The grid id
      */
     @Transactional
     public void deleteByProjectIdAndId(Project project, Long id) {
@@ -127,9 +124,8 @@ public class ProjectGridService {
 
             projectGridRepository.deleteByProjectIdAndId(project.getId(), id);
 
-            UpdateEvent updateEvent = UpdateEvent.builder()
-                .type(UpdateType.REFRESH_DASHBOARD)
-                .build();
+            UpdateEvent updateEvent =
+                    UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build();
 
             dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
         }

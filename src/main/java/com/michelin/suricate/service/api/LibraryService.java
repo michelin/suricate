@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.entity.Library;
@@ -34,9 +33,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Library service.
- */
+/** Library service. */
 @Service
 public class LibraryService {
     @Autowired
@@ -63,13 +60,12 @@ public class LibraryService {
      */
     @Transactional(readOnly = true)
     public List<Library> getLibrariesByProject(Project project) {
-        List<Long> widgetIds = project.getGrids()
-            .stream()
-            .map(ProjectGrid::getWidgets)
-            .flatMap(Collection::stream)
-            .map(projectWidget -> projectWidget.getWidget().getId())
-            .distinct()
-            .toList();
+        List<Long> widgetIds = project.getGrids().stream()
+                .map(ProjectGrid::getWidgets)
+                .flatMap(Collection::stream)
+                .map(projectWidget -> projectWidget.getWidget().getId())
+                .distinct()
+                .toList();
 
         if (widgetIds.isEmpty()) {
             return Collections.emptyList();
@@ -86,11 +82,10 @@ public class LibraryService {
      */
     @Transactional(readOnly = true)
     public List<String> getLibraryTokensByProject(Project project) {
-        return getLibrariesByProject(project)
-            .stream()
-            .map(library -> library.getAsset().getId())
-            .map(IdUtils::encrypt)
-            .toList();
+        return getLibrariesByProject(project).stream()
+                .map(library -> library.getAsset().getId())
+                .map(IdUtils::encrypt)
+                .toList();
     }
 
     /**

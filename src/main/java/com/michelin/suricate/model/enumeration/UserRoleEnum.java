@@ -16,12 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.enumeration;
 
-/**
- * User role enum.
- */
+/** User role enum. */
 public enum UserRoleEnum {
     ROLE_USER,
     ROLE_ADMIN

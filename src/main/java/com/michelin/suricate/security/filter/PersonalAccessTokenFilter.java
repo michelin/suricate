@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.security.filter;
 
 import com.michelin.suricate.model.entity.PersonalAccessToken;
@@ -40,9 +39,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- * Filter to handle personal access token authentication.
- */
+/** Filter to handle personal access token authentication. */
 @Slf4j
 public class PersonalAccessTokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -52,28 +49,30 @@ public class PersonalAccessTokenFilter extends OncePerRequestFilter {
     private PersonalAccessTokenService patService;
 
     /**
-     * When a request arrives to the Back-End, check if it contains a personal access token.
-     * If it does, validate it and set authentication to Spring context
+     * When a request arrives to the Back-End, check if it contains a personal access token. If it does, validate it and
+     * set authentication to Spring context
      *
-     * @param request     The incoming request
-     * @param response    The response
+     * @param request The incoming request
+     * @param response The response
      * @param filterChain The filter chain
      * @throws IOException Any IO exception
      */
     @Override
-    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
-                                    @NotNull FilterChain filterChain)
-        throws IOException {
+    protected void doFilterInternal(
+            @NotNull HttpServletRequest request,
+            @NotNull HttpServletResponse response,
+            @NotNull FilterChain filterChain)
+            throws IOException {
         try {
             final String token = getPersonalAccessTokenFromRequest(request);
 
             if (StringUtils.hasText(token) && patHelperService.validateToken(token)) {
                 Optional<PersonalAccessToken> patOptional =
-                    patService.findByChecksum(patHelperService.computePersonAccessTokenChecksum(token));
+                        patService.findByChecksum(patHelperService.computePersonAccessTokenChecksum(token));
                 if (patOptional.isPresent()) {
                     LocalUser localUser = new LocalUser(patOptional.get().getUser(), Collections.emptyMap());
                     UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(localUser, null, localUser.getAuthorities());
+                            new UsernamePasswordAuthenticationToken(localUser, null, localUser.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);

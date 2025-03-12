@@ -16,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception;
 
 import com.michelin.suricate.model.enumeration.ApiErrorEnum;
 import java.text.MessageFormat;
 
-/**
- * Username already exist exception.
- */
+/** Username already exist exception. */
 public class UsernameAlreadyExistException extends ApiException {
     private static final String MSG_USERNAME_ALREADY_EXIST = "Username ''{0}'' already exist";
 

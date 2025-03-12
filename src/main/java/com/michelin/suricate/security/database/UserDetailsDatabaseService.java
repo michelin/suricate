@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.security.database;
 
 import com.michelin.suricate.model.entity.User;
@@ -31,9 +30,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-/**
- * User details database service.
- */
+/** User details database service. */
 @Slf4j
 @Service("userDetailsService")
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "database")

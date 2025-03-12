@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.entity;
 
 import com.michelin.suricate.model.entity.generic.AbstractEntity;
@@ -33,9 +32,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Role entity.
- */
+/** Role entity. */
 @Entity(name = "Role")
 @Getter
 @Setter
@@ -57,9 +54,8 @@ public class Role extends AbstractEntity<Long> {
     private Set<User> users = new LinkedHashSet<>();
 
     /**
-     * Hashcode method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Hashcode method
+     * Hashcode method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Hashcode method
      *
      * @return The hash code
      */
@@ -69,9 +65,8 @@ public class Role extends AbstractEntity<Long> {
     }
 
     /**
-     * Equals method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Equals method
+     * Equals method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Equals method
      *
      * @param other The other object to compare
      * @return true if equals, false otherwise

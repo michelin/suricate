@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.token.PersonalAccessTokenResponseDto;
@@ -28,9 +27,7 @@ import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.stereotype.Component;
 
-/**
- * Personal access token mapper.
- */
+/** Personal access token mapper. */
 @Component
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class PersonalAccessTokenMapper {
@@ -41,8 +38,8 @@ public abstract class PersonalAccessTokenMapper {
      * @return The token as DTO
      */
     @Named("toPersonalAccessTokenDto")
-    public abstract PersonalAccessTokenResponseDto toPersonalAccessTokenDto(PersonalAccessToken personalAccessToken,
-                                                                            String value);
+    public abstract PersonalAccessTokenResponseDto toPersonalAccessTokenDto(
+            PersonalAccessToken personalAccessToken, String value);
 
     /**
      * Map a token into a DTO hiding the token value.
@@ -52,7 +49,7 @@ public abstract class PersonalAccessTokenMapper {
      */
     @Named("toPersonalAccessTokenNoValueDto")
     public abstract PersonalAccessTokenResponseDto toPersonalAccessTokenNoValueDto(
-        PersonalAccessToken personalAccessToken);
+            PersonalAccessToken personalAccessToken);
 
     /**
      * Map a list of tokens into a list of DTOs.
@@ -63,5 +60,5 @@ public abstract class PersonalAccessTokenMapper {
     @Named("toPersonalAccessTokensDtos")
     @IterableMapping(qualifiedByName = "toPersonalAccessTokenNoValueDto")
     public abstract List<PersonalAccessTokenResponseDto> toPersonalAccessTokensDtos(
-        List<PersonalAccessToken> personalAccessTokens);
+            List<PersonalAccessToken> personalAccessTokens);
 }

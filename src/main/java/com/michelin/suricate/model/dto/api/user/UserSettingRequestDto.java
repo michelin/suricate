@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.user;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -26,19 +25,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
-/**
- * User setting request DTO.
- */
+/** User setting request DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "The setting saved for the user")
 public class UserSettingRequestDto extends AbstractDto {
     @Schema(description = "The selected value Id if it's a constrained setting", example = "1")
-    @Nullable
-    private Long allowedSettingValueId;
+    @Nullable private Long allowedSettingValueId;
 
     @Schema(description = "The value typed by the user it's an unconstrained field")
-    @Nullable
-    private String unconstrainedValue;
+    @Nullable private String unconstrainedValue;
 }

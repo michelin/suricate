@@ -16,14 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception;
 
 import lombok.Getter;
 
-/**
- * Configuration exception.
- */
+/** Configuration exception. */
 @Getter
 public class ConfigurationException extends RuntimeException {
     private final String propertyName;
@@ -31,7 +28,7 @@ public class ConfigurationException extends RuntimeException {
     /**
      * Constructor.
      *
-     * @param message      Error Message
+     * @param message Error Message
      * @param propertyName property name
      */
     public ConfigurationException(String message, String propertyName) {

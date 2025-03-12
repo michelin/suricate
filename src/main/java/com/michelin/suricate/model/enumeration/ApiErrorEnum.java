@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.enumeration;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -24,17 +23,15 @@ import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-/**
- * Enum used to define the error type.
- */
+/** Enum used to define the error type. */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @Getter
 public enum ApiErrorEnum {
     NO_CONTENT("No Content", "no.content", HttpStatus.NO_CONTENT),
     BAD_REQUEST("Bad request", "bad.request", HttpStatus.BAD_REQUEST),
     PROJECT_TOKEN_INVALID("Cannot decrypt project token", "project.token.invalid", HttpStatus.BAD_REQUEST),
-    AUTHENTICATION_ERROR("Authentication error, token expired or invalid", "authentication.error",
-        HttpStatus.UNAUTHORIZED),
+    AUTHENTICATION_ERROR(
+            "Authentication error, token expired or invalid", "authentication.error", HttpStatus.UNAUTHORIZED),
     NOT_AUTHORIZED("User not authorized", "not.authorized", HttpStatus.UNAUTHORIZED),
     BAD_CREDENTIALS_ERROR("Bad credentials", "authentication.bad.credentials", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("You don't have permission to access to this resource", "user.forbidden", HttpStatus.FORBIDDEN),
@@ -56,8 +53,8 @@ public enum ApiErrorEnum {
      * Constructor.
      *
      * @param message The message
-     * @param key     The key
-     * @param status  The HttpStatus
+     * @param key The key
+     * @param status The HttpStatus
      */
     ApiErrorEnum(String message, String key, HttpStatus status) {
         this.status = status;

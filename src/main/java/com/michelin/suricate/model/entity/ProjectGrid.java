@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.entity;
 
 import com.michelin.suricate.model.entity.generic.AbstractAuditingEntity;
@@ -36,9 +35,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Project grid entity.
- */
+/** Project grid entity. */
 @Entity
 @Getter
 @Setter
@@ -62,9 +59,8 @@ public class ProjectGrid extends AbstractAuditingEntity<Long> {
     private Set<ProjectWidget> widgets = new LinkedHashSet<>();
 
     /**
-     * Hashcode method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Hashcode method
+     * Hashcode method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Hashcode method
      *
      * @return The hash code
      */
@@ -74,9 +70,8 @@ public class ProjectGrid extends AbstractAuditingEntity<Long> {
     }
 
     /**
-     * Equals method.
-     * Do not use lombok @EqualsAndHashCode method as it calls super method
-     * then call the self-defined child Equals method
+     * Equals method. Do not use lombok @EqualsAndHashCode method as it calls super method then call the self-defined
+     * child Equals method
      *
      * @param other The other object to compare
      * @return true if equals, false otherwise

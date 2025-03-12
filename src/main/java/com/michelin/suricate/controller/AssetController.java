@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
@@ -40,9 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-/**
- * Asset controller.
- */
+/** Asset controller. */
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Asset", description = "Asset Controller")
@@ -57,29 +54,34 @@ public class AssetController {
      * @return the asset data
      */
     @Operation(summary = "Get an asset by its token")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Cannot decrypt token",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-        @ApiResponse(responseCode = "401", description = "Invalid token",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "OK"),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Cannot decrypt token",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Invalid token",
+                        content = {@Content(schema = @Schema(implementation = ApiErrorDto.class))})
+            })
     @GetMapping(path = "/v1/assets/{token}/content")
-    public ResponseEntity<byte[]> getAsset(@Parameter(hidden = true) WebRequest webRequest,
-                                           @Parameter(name = "token", description = "The asset Token", required = true)
-                                           @PathVariable("token") String token) {
+    public ResponseEntity<byte[]> getAsset(
+            @Parameter(hidden = true) WebRequest webRequest,
+            @Parameter(name = "token", description = "The asset Token", required = true) @PathVariable("token")
+                    String token) {
         Asset asset = assetService.getAssetById(token);
 
         if (webRequest.checkNotModified(asset.getLastModifiedDate().getTime())) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.parseMediaType(asset.getContentType()))
-            .contentLength(asset.getSize())
-            .lastModified(asset.getLastModifiedDate().getTime())
-            .cacheControl(CacheControl.noCache())
-            .body(asset.getContent());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(asset.getContentType()))
+                .contentLength(asset.getSize())
+                .lastModified(asset.getLastModifiedDate().getTime())
+                .cacheControl(CacheControl.noCache())
+                .body(asset.getContent());
     }
 }

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.entity.PersonalAccessToken;
@@ -29,9 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Personal access token service.
- */
+/** Personal access token service. */
 @Service
 public class PersonalAccessTokenService {
     @Autowired
@@ -74,8 +71,8 @@ public class PersonalAccessTokenService {
     /**
      * Create a JWT token.
      *
-     * @param tokenName     The token name
-     * @param checksum      The token checksum
+     * @param tokenName The token name
+     * @param checksum The token checksum
      * @param connectedUser The authenticated user
      */
     @Transactional

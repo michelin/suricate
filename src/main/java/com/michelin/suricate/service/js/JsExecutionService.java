@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.js;
 
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
@@ -40,9 +39,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Js execution service.
- */
+/** Js execution service. */
 @Slf4j
 @Service
 public class JsExecutionService {
@@ -58,12 +55,11 @@ public class JsExecutionService {
      */
     @Transactional
     public List<JsExecutionDto> getJsExecutionsByProject(final Project project) {
-        return project.getGrids()
-            .stream()
-            .map(ProjectGrid::getWidgets)
-            .flatMap(Collection::stream)
-            .map(this::createJsExecutionByProjectWidget)
-            .toList();
+        return project.getGrids().stream()
+                .map(ProjectGrid::getWidgets)
+                .flatMap(Collection::stream)
+                .map(this::createJsExecutionByProjectWidget)
+                .toList();
     }
 
     /**
@@ -85,9 +81,7 @@ public class JsExecutionService {
      */
     private JsExecutionDto createJsExecutionByProjectWidget(final ProjectWidget projectWidget) {
         String properties = getProjectWidgetConfigurationsWithGlobalOne(
-            projectWidget,
-            projectWidget.getWidget().getCategory().getConfigurations()
-        );
+                projectWidget, projectWidget.getWidget().getCategory().getConfigurations());
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
         Long projectId = projectWidget.getProjectGrid().getProject().getId();
@@ -98,16 +92,7 @@ public class JsExecutionService {
         Date lastSuccess = projectWidget.getLastSuccessDate();
 
         return new JsExecutionDto(
-            properties,
-            script,
-            previousData,
-            projectId,
-            technicalId,
-            delay,
-            timeout,
-            state,
-            lastSuccess
-        );
+                properties, script, previousData, projectId, technicalId, delay, timeout, state, lastSuccess);
     }
 
     /**
@@ -118,20 +103,23 @@ public class JsExecutionService {
      */
     public boolean isJsExecutable(final JsExecutionDto jsExecutionDto) {
         if (!StringUtils.isNotEmpty(jsExecutionDto.getScript())) {
-            log.debug("The widget instance {} has no script. Stopping JavaScript execution",
-                jsExecutionDto.getProjectWidgetId());
+            log.debug(
+                    "The widget instance {} has no script. Stopping JavaScript execution",
+                    jsExecutionDto.getProjectWidgetId());
             return false;
         }
 
         if (!JsonUtils.isValid(jsExecutionDto.getPreviousData())) {
-            log.debug("The widget instance {} has bad formed previous data. Stopping JavaScript execution",
-                jsExecutionDto.getProjectWidgetId());
+            log.debug(
+                    "The widget instance {} has bad formed previous data. Stopping JavaScript execution",
+                    jsExecutionDto.getProjectWidgetId());
             return false;
         }
 
         if (jsExecutionDto.getDelay() == null || jsExecutionDto.getDelay() < 0) {
-            log.debug("The widget instance {} has no delay or delay is < 0. Stopping JavaScript execution",
-                jsExecutionDto.getProjectWidgetId());
+            log.debug(
+                    "The widget instance {} has no delay or delay is < 0. Stopping JavaScript execution",
+                    jsExecutionDto.getProjectWidgetId());
             return false;
         }
 
@@ -141,29 +129,27 @@ public class JsExecutionService {
     /**
      * Get the project widget configurations with the global ones.
      *
-     * @param projectWidget      The project widget
+     * @param projectWidget The project widget
      * @param categoryParameters The global configurations
      * @return Get the full configuration for project widget
      */
-    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget,
-                                                               final Set<CategoryParameter> categoryParameters) {
+    private String getProjectWidgetConfigurationsWithGlobalOne(
+            final ProjectWidget projectWidget, final Set<CategoryParameter> categoryParameters) {
         StringBuilder builder =
-            new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
+                new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
 
         if (!categoryParameters.isEmpty()) {
             builder.append('\n');
 
             for (CategoryParameter categoryParameter : categoryParameters) {
                 if (!projectWidget.getBackendConfig().contains(categoryParameter.getKey())) {
-                    builder
-                        .append(categoryParameter.getKey())
-                        .append('=')
-                        .append(categoryParameter.getValue())
-                        .append('\n');
+                    builder.append(categoryParameter.getKey())
+                            .append('=')
+                            .append(categoryParameter.getValue())
+                            .append('\n');
                 }
             }
         }
-
 
         return builder.toString();
     }

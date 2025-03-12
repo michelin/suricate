@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -65,9 +64,8 @@ class ProjectMapperTest {
     @InjectMocks
     private ProjectMapperImpl projectMapper;
 
-    @NotNull
-    private static ImportExportProjectDto getImportExportProjectDto(ImportExportAssetDto importExportAssetDto,
-                                                                    GridPropertiesResponseDto gridPropsResponseDto) {
+    @NotNull private static ImportExportProjectDto getImportExportProjectDto(
+            ImportExportAssetDto importExportAssetDto, GridPropertiesResponseDto gridPropsResponseDto) {
         ImportExportProjectDto importExportProjectDto = new ImportExportProjectDto();
         importExportProjectDto.setName("name");
         importExportProjectDto.setToken("token");
@@ -75,21 +73,19 @@ class ProjectMapperTest {
         importExportProjectDto.setImage(importExportAssetDto);
         importExportProjectDto.setGridProperties(gridPropsResponseDto);
 
-        ImportExportProjectDto.ImportExportProjectGridDto
-            importExportProjectGridDto = getImportExportProjectGridDto();
+        ImportExportProjectDto.ImportExportProjectGridDto importExportProjectGridDto = getImportExportProjectGridDto();
 
         importExportProjectDto.setGrids(Collections.singletonList(importExportProjectGridDto));
         return importExportProjectDto;
     }
 
-    @NotNull
-    private static ImportExportProjectDto.ImportExportProjectGridDto getImportExportProjectGridDto() {
+    @NotNull private static ImportExportProjectDto.ImportExportProjectGridDto getImportExportProjectGridDto() {
         ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto importExportProjectWidgetDto =
-            new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
+                new ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto();
         importExportProjectWidgetDto.setId(1L);
 
         ImportExportProjectDto.ImportExportProjectGridDto importExportProjectGridDto =
-            new ImportExportProjectDto.ImportExportProjectGridDto();
+                new ImportExportProjectDto.ImportExportProjectGridDto();
         importExportProjectGridDto.setId(1L);
         importExportProjectGridDto.setTime(10);
         importExportProjectGridDto.setWidgets(Collections.singletonList(importExportProjectWidgetDto));
@@ -128,14 +124,10 @@ class ProjectMapperTest {
             grid.setId(1L);
             grid.setTime(10);
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
-            when(libraryService.getLibraryTokensByProject(any()))
-                .thenReturn(Collections.singletonList("libraryToken"));
-            when(assetMapper.toAssetDto(any()))
-                .thenReturn(image);
-            when(projectGridMapper.toProjectGridDto(any()))
-                .thenReturn(grid);
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
+            when(libraryService.getLibraryTokensByProject(any())).thenReturn(Collections.singletonList("libraryToken"));
+            when(assetMapper.toAssetDto(any())).thenReturn(image);
+            when(projectGridMapper.toProjectGridDto(any())).thenReturn(grid);
 
             ProjectResponseDto actual = projectMapper.toProjectDto(project);
 
@@ -187,12 +179,9 @@ class ProjectMapperTest {
             grid.setId(1L);
             grid.setTime(10);
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
-            when(assetMapper.toAssetDto(any()))
-                .thenReturn(image);
-            when(projectGridMapper.toProjectGridDto(any()))
-                .thenReturn(grid);
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
+            when(assetMapper.toAssetDto(any())).thenReturn(image);
+            when(projectGridMapper.toProjectGridDto(any())).thenReturn(grid);
 
             ProjectResponseDto actual = projectMapper.toProjectDtoNoLibrary(project);
 
@@ -237,8 +226,7 @@ class ProjectMapperTest {
         grid.setId(1L);
         grid.setTime(10);
 
-        when(projectGridMapper.toProjectGridDto(any()))
-            .thenReturn(grid);
+        when(projectGridMapper.toProjectGridDto(any())).thenReturn(grid);
 
         ProjectResponseDto actual = projectMapper.toProjectDtoNoAsset(project);
 
@@ -284,12 +272,9 @@ class ProjectMapperTest {
             grid.setId(1L);
             grid.setTime(10);
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
-            when(assetMapper.toAssetDto(any()))
-                .thenReturn(image);
-            when(projectGridMapper.toProjectGridDto(any()))
-                .thenReturn(grid);
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
+            when(assetMapper.toAssetDto(any())).thenReturn(image);
+            when(projectGridMapper.toProjectGridDto(any())).thenReturn(grid);
 
             List<ProjectResponseDto> actual = projectMapper.toProjectsDtos(Collections.singletonList(project));
 
@@ -351,14 +336,11 @@ class ProjectMapperTest {
         importExportAssetDto.setContentType("contentType");
         importExportAssetDto.setContent(new byte[10]);
 
-        when(assetMapper.toImportExportAssetDto(any()))
-            .thenReturn(importExportAssetDto);
+        when(assetMapper.toImportExportAssetDto(any())).thenReturn(importExportAssetDto);
 
-        ImportExportProjectDto.ImportExportProjectGridDto
-            importExportProjectGridDto = getImportExportProjectGridDto();
+        ImportExportProjectDto.ImportExportProjectGridDto importExportProjectGridDto = getImportExportProjectGridDto();
 
-        when(projectGridMapper.toImportExportProjectGridDto(any()))
-            .thenReturn(importExportProjectGridDto);
+        when(projectGridMapper.toImportExportProjectGridDto(any())).thenReturn(importExportProjectGridDto);
 
         ImportExportProjectDto actual = projectMapper.toImportExportProjectDto(project);
 
@@ -401,13 +383,12 @@ class ProjectMapperTest {
         asset.setContentType("contentType");
         asset.setContent(new byte[10]);
 
-        when(assetMapper.toAssetEntity(any()))
-            .thenReturn(asset);
+        when(assetMapper.toAssetEntity(any())).thenReturn(asset);
         when(projectGridMapper.toProjectGridEntity(any(ImportExportProjectDto.ImportExportProjectGridDto.class)))
-            .thenReturn(projectGrid);
+                .thenReturn(projectGrid);
 
         ImportExportProjectDto importExportProjectDto =
-            getImportExportProjectDto(importExportAssetDto, gridPropertiesResponseDto);
+                getImportExportProjectDto(importExportAssetDto, gridPropertiesResponseDto);
 
         Project actual = projectMapper.toProjectEntity(importExportProjectDto);
 
@@ -421,10 +402,10 @@ class ProjectMapperTest {
         assertEquals("contentType", actual.getScreenshot().getContentType());
         assertEquals(1L, new ArrayList<>(actual.getGrids()).getFirst().getId());
         assertEquals(10, new ArrayList<>(actual.getGrids()).getFirst().getTime());
-        assertEquals(1L, new ArrayList<>(new ArrayList<>(actual.getGrids())
-            .getFirst()
-            .getWidgets())
-            .getFirst()
-            .getId());
+        assertEquals(
+                1L,
+                new ArrayList<>(new ArrayList<>(actual.getGrids()).getFirst().getWidgets())
+                        .getFirst()
+                        .getId());
     }
 }

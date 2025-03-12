@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,7 +55,7 @@ class SettingMapperTest {
         allowedSettingValueResponseDto.setDefault(true);
 
         when(allowedSettingValueMapper.toAllowedSettingValuesDtos(any()))
-            .thenReturn(Collections.singletonList(allowedSettingValueResponseDto));
+                .thenReturn(Collections.singletonList(allowedSettingValueResponseDto));
 
         Setting setting = getSetting();
         SettingResponseDto actual = settingMapper.toSettingDto(setting);
@@ -66,7 +65,8 @@ class SettingMapperTest {
         assertTrue(actual.isConstrained());
         assertEquals(DataTypeEnum.TEXT, actual.getDataType());
         assertEquals(SettingType.LANGUAGE, actual.getType());
-        assertEquals(allowedSettingValueResponseDto, actual.getAllowedSettingValues().getFirst());
+        assertEquals(
+                allowedSettingValueResponseDto, actual.getAllowedSettingValues().getFirst());
     }
 
     @Test
@@ -78,7 +78,7 @@ class SettingMapperTest {
         allowedSettingValueResponseDto.setDefault(true);
 
         when(allowedSettingValueMapper.toAllowedSettingValuesDtos(any()))
-            .thenReturn(Collections.singletonList(allowedSettingValueResponseDto));
+                .thenReturn(Collections.singletonList(allowedSettingValueResponseDto));
 
         Setting setting = getSetting();
         List<SettingResponseDto> actual = settingMapper.toSettingsDtos(Collections.singletonList(setting));
@@ -88,11 +88,12 @@ class SettingMapperTest {
         assertTrue(actual.getFirst().isConstrained());
         assertEquals(DataTypeEnum.TEXT, actual.getFirst().getDataType());
         assertEquals(SettingType.LANGUAGE, actual.getFirst().getType());
-        assertEquals(allowedSettingValueResponseDto, actual.getFirst().getAllowedSettingValues().getFirst());
+        assertEquals(
+                allowedSettingValueResponseDto,
+                actual.getFirst().getAllowedSettingValues().getFirst());
     }
 
-    @NotNull
-    private static Setting getSetting() {
+    @NotNull private static Setting getSetting() {
         AllowedSettingValue allowedSettingValue = new AllowedSettingValue();
         allowedSettingValue.setId(1L);
         allowedSettingValue.setTitle("title");

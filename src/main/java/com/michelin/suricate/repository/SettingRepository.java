@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.Setting;
@@ -28,9 +27,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * Setting repository.
- */
+/** Setting repository. */
 @Repository
 public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpecificationExecutor<Setting> {
     /**
@@ -39,8 +36,7 @@ public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpe
      * @param id The setting id
      * @return The setting
      */
-    @NotNull
-    Optional<Setting> findById(@NotNull final Long id);
+    @NotNull Optional<Setting> findById(@NotNull final Long id);
 
     /**
      * Find settings by description.

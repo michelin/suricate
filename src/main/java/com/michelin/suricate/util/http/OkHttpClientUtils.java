@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.http;
 
 import java.security.KeyManagementException;
@@ -34,9 +33,7 @@ import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-/**
- * OK Http client utils.
- */
+/** OK Http client utils. */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OkHttpClientUtils {
@@ -54,9 +51,7 @@ public final class OkHttpClientUtils {
     public static OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificates chain
-            final TrustManager[] trustManager = new TrustManager[] {
-                new AllTrustingTrustManager()
-            };
+            final TrustManager[] trustManager = new TrustManager[] {new AllTrustingTrustManager()};
 
             // Install the all-trusting trust manager
             final SSLContext sslContext = SSLContext.getInstance("TLS");
@@ -69,15 +64,15 @@ public final class OkHttpClientUtils {
             loggingInterceptor.level(HttpLoggingInterceptor.Level.BASIC);
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustManager[0])
-                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-                .addInterceptor(loggingInterceptor)
-                .retryOnConnectionFailure(true)
-                .proxySelector(new WidgetProxySelector())
-                .connectionSpecs(Arrays.asList(ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
-                .hostnameVerifier((s, sslSession) -> true);
+                    .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustManager[0])
+                    .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                    .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                    .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+                    .addInterceptor(loggingInterceptor)
+                    .retryOnConnectionFailure(true)
+                    .proxySelector(new WidgetProxySelector())
+                    .connectionSpecs(Arrays.asList(ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
+                    .hostnameVerifier((s, sslSession) -> true);
 
             return builder.build();
         } catch (NoSuchAlgorithmException e) {

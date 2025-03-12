@@ -16,12 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.enumeration;
 
-/**
- * Enum used to define the type of settings.
- */
+/** Enum used to define the type of settings. */
 public enum SettingType {
     THEME,
     LANGUAGE

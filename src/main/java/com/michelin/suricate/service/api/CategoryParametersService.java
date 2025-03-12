@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.entity.Category;
@@ -36,17 +35,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Category parameters service.
- */
+/** Category parameters service. */
 @Service
 public class CategoryParametersService {
     @Autowired
     private CategoryParametersRepository categoryParametersRepository;
 
     @Autowired
-    @Qualifier("jasyptStringEncryptor")
-    private StringEncryptor stringEncryptor;
+    @Qualifier("jasyptStringEncryptor") private StringEncryptor stringEncryptor;
 
     /**
      * Convert category parameters into widget parameters.
@@ -101,12 +97,14 @@ public class CategoryParametersService {
      * Update a category parameter.
      *
      * @param categoryParameter The category parameter to update
-     * @param newValue          The new value to set
+     * @param newValue The new value to set
      */
     @Transactional
     public void updateConfiguration(CategoryParameter categoryParameter, final String newValue) {
-        categoryParameter.setValue(categoryParameter.getDataType() == DataTypeEnum.PASSWORD
-            ? stringEncryptor.encrypt(newValue) : newValue);
+        categoryParameter.setValue(
+                categoryParameter.getDataType() == DataTypeEnum.PASSWORD
+                        ? stringEncryptor.encrypt(newValue)
+                        : newValue);
 
         categoryParametersRepository.save(categoryParameter);
     }
@@ -124,13 +122,13 @@ public class CategoryParametersService {
      * Add or update a list of category parameters.
      *
      * @param categoryParameters The category parameters
-     * @param category           The related category
+     * @param category The related category
      */
     @Transactional
     public void addOrUpdateCategoryConfiguration(Set<CategoryParameter> categoryParameters, Category category) {
         for (CategoryParameter categoryParameter : categoryParameters) {
             Optional<CategoryParameter> currentConfiguration =
-                categoryParametersRepository.findById(categoryParameter.getKey());
+                    categoryParametersRepository.findById(categoryParameter.getKey());
             categoryParameter.setCategory(category);
 
             if (currentConfiguration.isPresent()) {

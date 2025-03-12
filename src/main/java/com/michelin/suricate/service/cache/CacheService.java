@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.cache;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +24,14 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
-/**
- * Cache service.
- */
+/** Cache service. */
 @Slf4j
 @Service
 public class CacheService {
     @Autowired
     private CacheManager cacheManager;
 
-    /**
-     * Clear all caches.
-     */
+    /** Clear all caches. */
     public void clearAllCache() {
         cacheManager.getCacheNames().forEach(this::clearCache);
     }

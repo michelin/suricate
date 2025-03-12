@@ -16,12 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception.js;
 
-/**
- * Request exception.
- */
+/** Request exception. */
 public class RequestException extends Exception {
     /**
      * Constructor.

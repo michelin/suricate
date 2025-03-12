@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.dto.websocket.UpdateEvent;
@@ -44,14 +43,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Project service.
- */
+/** Project service. */
 @Service
 public class ProjectService {
     @Autowired
-    @Qualifier("jasyptStringEncryptor")
-    private StringEncryptor stringEncryptor;
+    @Qualifier("jasyptStringEncryptor") private StringEncryptor stringEncryptor;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -71,7 +67,7 @@ public class ProjectService {
     /**
      * Get the list of projects.
      *
-     * @param search   The search string
+     * @param search The search string
      * @param pageable The page configurations
      * @return The list paginated
      */
@@ -132,7 +128,7 @@ public class ProjectService {
     /**
      * Create a new project for a user.
      *
-     * @param user    The user how create the project
+     * @param user The user how create the project
      * @param project The project to instantiate
      * @return The project instantiate
      */
@@ -145,7 +141,7 @@ public class ProjectService {
     /**
      * Create or update a list of projects.
      *
-     * @param projects      All the projects to create/update
+     * @param projects All the projects to create/update
      * @param connectedUser The connected user
      * @return The created/updated projects
      */
@@ -156,7 +152,8 @@ public class ProjectService {
 
             if (project.getScreenshot() != null) {
                 if (projectOptional.isPresent() && projectOptional.get().getScreenshot() != null) {
-                    project.getScreenshot().setId(projectOptional.get().getScreenshot().getId());
+                    project.getScreenshot()
+                            .setId(projectOptional.get().getScreenshot().getId());
                 }
 
                 assetService.save(project.getScreenshot());
@@ -172,7 +169,7 @@ public class ProjectService {
 
             project.getGrids().forEach(projectGrid -> {
                 Optional<ProjectGrid> projectGridOptional =
-                    projectGridService.findByIdAndProjectToken(projectGrid.getId(), project.getToken());
+                        projectGridService.findByIdAndProjectToken(projectGrid.getId(), project.getToken());
                 if (projectGridOptional.isPresent()) {
                     projectGrid.setId(projectGridOptional.get().getId());
                 } else {
@@ -185,7 +182,7 @@ public class ProjectService {
 
                 projectGrid.getWidgets().forEach(projectWidget -> {
                     Optional<ProjectWidget> projectWidgetOptional =
-                        projectWidgetService.findByIdAndProjectGridId(projectWidget.getId(), projectGrid.getId());
+                            projectWidgetService.findByIdAndProjectGridId(projectWidget.getId(), projectGrid.getId());
                     if (projectWidgetOptional.isPresent()) {
                         projectWidget.setId(projectWidgetOptional.get().getId());
                     } else {
@@ -205,15 +202,19 @@ public class ProjectService {
     /**
      * Method used to update a project.
      *
-     * @param project      the project to update
-     * @param newName      the new name
+     * @param project the project to update
+     * @param newName the new name
      * @param widgetHeight The new widget height
-     * @param maxColumn    The new max column
-     * @param customCss    The custom CSS style
+     * @param maxColumn The new max column
+     * @param customCss The custom CSS style
      */
     @Transactional
-    public void updateProject(Project project, final String newName, final int widgetHeight, final int maxColumn,
-                              final String customCss) {
+    public void updateProject(
+            Project project,
+            final String newName,
+            final int widgetHeight,
+            final int maxColumn,
+            final String customCss) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
@@ -233,14 +234,15 @@ public class ProjectService {
         projectRepository.save(project);
 
         // Update grid
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(),
-            UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build());
+        dashboardWebsocketService.sendEventToProjectSubscribers(
+                project.getToken(),
+                UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build());
     }
 
     /**
      * Delete a user from a project.
      *
-     * @param user    The user to delete
+     * @param user The user to delete
      * @param project The project related
      */
     public void deleteUserFromProject(User user, Project project) {
@@ -261,14 +263,15 @@ public class ProjectService {
     /**
      * Check if the connected user can access to this project.
      *
-     * @param project       The project
+     * @param project The project
      * @param connectedUser The connected user
      * @return True if he can, false otherwise
      */
     public boolean isConnectedUserCanAccessToProject(final Project project, final LocalUser connectedUser) {
         return SecurityUtils.isAdmin(connectedUser)
-            || project.getUsers().stream()
-            .anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(connectedUser.getUsername()));
+                || project.getUsers().stream()
+                        .anyMatch(
+                                currentUser -> currentUser.getUsername().equalsIgnoreCase(connectedUser.getUsername()));
     }
 
     /**
@@ -279,11 +282,8 @@ public class ProjectService {
     @Transactional
     public void deleteProject(Project project) {
         dashboardWebsocketService.sendEventToProjectSubscribers(
-            project.getToken(),
-            UpdateEvent.builder()
-                .type(UpdateType.DISCONNECT)
-                .build()
-        );
+                project.getToken(),
+                UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
 
         projectRepository.delete(project);
     }
@@ -291,10 +291,10 @@ public class ProjectService {
     /**
      * Add or update a screenshot for a project.
      *
-     * @param project     The project
-     * @param content     The image content
+     * @param project The project
+     * @param content The image content
      * @param contentType The image content type
-     * @param size        The image size
+     * @param size The image size
      */
     public void addOrUpdateScreenshot(Project project, byte[] content, String contentType, long size) {
         Asset screenshotAsset = new Asset();

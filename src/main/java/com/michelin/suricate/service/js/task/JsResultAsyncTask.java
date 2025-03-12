@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.js.task;
 
 import com.michelin.suricate.model.dto.js.JsExecutionDto;
@@ -36,9 +35,7 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
-/**
- * Task that get the result of a Javascript script execution.
- */
+/** Task that get the result of a Javascript script execution. */
 @Slf4j
 @Component
 @Scope(value = "prototype")
@@ -63,14 +60,15 @@ public class JsResultAsyncTask implements Callable<Void> {
      * Constructor.
      *
      * @param scheduledJsExecutionTask The scheduled asynchronous task which will execute the Js execution
-     * @param jsExecutionDto           The Js execution itself
-     * @param scheduler                The Js execution scheduler
+     * @param jsExecutionDto The Js execution itself
+     * @param scheduler The Js execution scheduler
      * @param dashboardScheduleService The dashboard schedule service
      */
-    public JsResultAsyncTask(ScheduledFuture<JsResultDto> scheduledJsExecutionTask,
-                             JsExecutionDto jsExecutionDto,
-                             JsExecutionScheduler scheduler,
-                             DashboardScheduleService dashboardScheduleService) {
+    public JsResultAsyncTask(
+            ScheduledFuture<JsResultDto> scheduledJsExecutionTask,
+            JsExecutionDto jsExecutionDto,
+            JsExecutionScheduler scheduler,
+            DashboardScheduleService dashboardScheduleService) {
         this.scheduledJsExecutionTask = scheduledJsExecutionTask;
         this.jsExecutionDto = jsExecutionDto;
         this.scheduler = scheduler;
@@ -79,51 +77,60 @@ public class JsResultAsyncTask implements Callable<Void> {
     }
 
     /**
-     * Method automatically called by the scheduler after the given delay.
-     * Compute a timeout duration to wait a response from the Js execution request.
-     * Wait for a response from the Js execution task. We wait for the given amount of time.
-     * Update the widget from the Js result and notify the Front-End. Perform some retries
-     * on the widget update. If all the retries fail, then schedule a new Js execution.
+     * Method automatically called by the scheduler after the given delay. Compute a timeout duration to wait a response
+     * from the Js execution request. Wait for a response from the Js execution task. We wait for the given amount of
+     * time. Update the widget from the Js result and notify the Front-End. Perform some retries on the widget update.
+     * If all the retries fail, then schedule a new Js execution.
      */
     @Override
     public Void call() {
         try {
-            long jsExecutionTimeout =
-                jsExecutionDto.getTimeout() == null || jsExecutionDto.getTimeout() < TIMEOUT ? TIMEOUT :
-                    jsExecutionDto.getTimeout();
+            long jsExecutionTimeout = jsExecutionDto.getTimeout() == null || jsExecutionDto.getTimeout() < TIMEOUT
+                    ? TIMEOUT
+                    : jsExecutionDto.getTimeout();
 
             log.debug(
-                "Waiting for the response of the JavaScript execution "
-                    + "of the widget instance {} (until {} seconds before timeout)",
-                jsExecutionDto.getProjectWidgetId(), jsExecutionTimeout);
+                    "Waiting for the response of the JavaScript execution "
+                            + "of the widget instance {} (until {} seconds before timeout)",
+                    jsExecutionDto.getProjectWidgetId(),
+                    jsExecutionTimeout);
 
             // Wait for a response of the Js execution task
             JsResultDto jsResultDto = scheduledJsExecutionTask.get(jsExecutionTimeout, TimeUnit.SECONDS);
 
-            retryTemplate.execute(retryContext -> {
-                log.debug("Update the widget instance {} (try {}/{})", jsResultDto.getProjectWidgetId(),
-                    retryContext.getRetryCount(), MAX_RETRY);
+            retryTemplate.execute(
+                    retryContext -> {
+                        log.debug(
+                                "Update the widget instance {} (try {}/{})",
+                                jsResultDto.getProjectWidgetId(),
+                                retryContext.getRetryCount(),
+                                MAX_RETRY);
 
-                dashboardScheduleService.processJsResult(jsResultDto, scheduler);
+                        dashboardScheduleService.processJsResult(jsResultDto, scheduler);
 
-                return null;
-            }, context -> {
-                log.error("Updating the widget instance {} failed after {} attempts",
-                    jsExecutionDto.getProjectWidgetId(), MAX_RETRY);
+                        return null;
+                    },
+                    context -> {
+                        log.error(
+                                "Updating the widget instance {} failed after {} attempts",
+                                jsExecutionDto.getProjectWidgetId(),
+                                MAX_RETRY);
 
-                scheduler.schedule(jsExecutionDto, false);
+                        scheduler.schedule(jsExecutionDto, false);
 
-                return null;
-            });
+                        return null;
+                    });
         } catch (InterruptedException ie) {
-            log.error("Interrupted exception caught. Re-interrupting the thread for the widget instance {}",
-                jsExecutionDto.getProjectWidgetId());
+            log.error(
+                    "Interrupted exception caught. Re-interrupting the thread for the widget instance {}",
+                    jsExecutionDto.getProjectWidgetId());
 
             Thread.currentThread().interrupt();
         } catch (CancellationException cancellationException) {
             if (scheduledJsExecutionTask.isCancelled()) {
-                log.debug("The JavaScript execution has been canceled for the widget instance {}",
-                    jsExecutionDto.getProjectWidgetId());
+                log.debug(
+                        "The JavaScript execution has been canceled for the widget instance {}",
+                        jsExecutionDto.getProjectWidgetId());
             }
         } catch (Exception exception) {
             Throwable rootCause = ExceptionUtils.getRootCause(exception);
@@ -136,28 +143,30 @@ public class JsResultAsyncTask implements Callable<Void> {
                 widgetLogs = "The JavaScript execution exceeded the timeout defined by the widget";
 
                 log.error(
-                    "The JavaScript execution exceeded the timeout defined by the widget instance {}."
-                        + " The JavaScript execution is going to be cancelled.",
-                    jsExecutionDto.getProjectWidgetId());
+                        "The JavaScript execution exceeded the timeout defined by the widget instance {}."
+                                + " The JavaScript execution is going to be cancelled.",
+                        jsExecutionDto.getProjectWidgetId());
             } else {
                 widgetLogs = rootCause.toString();
 
                 log.error(
-                    "An error has occurred in the JavaScript result task for the widget instance {}."
-                        + " The JavaScript execution is going to be canceled.",
-                    jsExecutionDto.getProjectWidgetId(), exception);
+                        "An error has occurred in the JavaScript result task for the widget instance {}."
+                                + " The JavaScript execution is going to be canceled.",
+                        jsExecutionDto.getProjectWidgetId(),
+                        exception);
             }
 
             scheduledJsExecutionTask.cancel(true);
 
             try {
-                dashboardScheduleService.updateWidgetInstanceNoJsResult(widgetLogs, jsExecutionDto.getProjectWidgetId(),
-                    jsExecutionDto.getProjectId());
+                dashboardScheduleService.updateWidgetInstanceNoJsResult(
+                        widgetLogs, jsExecutionDto.getProjectWidgetId(), jsExecutionDto.getProjectId());
             } catch (Exception exception1) {
                 log.error(
-                    "Cannot update the widget instance {} with no JavaScript result cause of database issue. "
-                        + "Rescheduling a new JavaScript execution",
-                    jsExecutionDto.getProjectWidgetId(), exception1);
+                        "Cannot update the widget instance {} with no JavaScript result cause of database issue. "
+                                + "Rescheduling a new JavaScript execution",
+                        jsExecutionDto.getProjectWidgetId(),
+                        exception1);
 
                 scheduler.schedule(jsExecutionDto, false);
             }
@@ -166,9 +175,7 @@ public class JsResultAsyncTask implements Callable<Void> {
         return null;
     }
 
-    /**
-     * Init the Spring retry template which will perform some retries on the widget update.
-     */
+    /** Init the Spring retry template which will perform some retries on the widget update. */
     private void initRetryTemplate() {
         retryTemplate = new RetryTemplate();
 

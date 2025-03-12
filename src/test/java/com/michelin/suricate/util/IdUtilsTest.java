@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,26 +42,22 @@ class IdUtilsTest {
     @Test
     void shouldHandleExceptionWhenDecrypting() {
         try (MockedStatic<SpringContextUtils> mocked = mockStatic(SpringContextUtils.class)) {
-            when(applicationContext.getBean(anyString()))
-                .thenReturn(new StringEncryptor() {
-                    @Override
-                    public String encrypt(String s) {
-                        return "encrypted";
-                    }
+            when(applicationContext.getBean(anyString())).thenReturn(new StringEncryptor() {
+                @Override
+                public String encrypt(String s) {
+                    return "encrypted";
+                }
 
-                    @Override
-                    public String decrypt(String s) {
-                        return null;
-                    }
-                });
+                @Override
+                public String decrypt(String s) {
+                    return null;
+                }
+            });
 
-            mocked.when(SpringContextUtils::getApplicationContext)
-                .thenReturn(applicationContext);
+            mocked.when(SpringContextUtils::getApplicationContext).thenReturn(applicationContext);
 
-            ProjectTokenInvalidException exception = assertThrows(
-                ProjectTokenInvalidException.class,
-                () -> IdUtils.decrypt(null)
-            );
+            ProjectTokenInvalidException exception =
+                    assertThrows(ProjectTokenInvalidException.class, () -> IdUtils.decrypt(null));
 
             assertEquals("Cannot decrypt token : null", exception.getMessage());
         }
@@ -71,21 +66,19 @@ class IdUtilsTest {
     @Test
     void shouldDecrypt() {
         try (MockedStatic<SpringContextUtils> mocked = mockStatic(SpringContextUtils.class)) {
-            when(applicationContext.getBean(anyString()))
-                .thenReturn(new StringEncryptor() {
-                    @Override
-                    public String encrypt(String s) {
-                        return "encrypted";
-                    }
+            when(applicationContext.getBean(anyString())).thenReturn(new StringEncryptor() {
+                @Override
+                public String encrypt(String s) {
+                    return "encrypted";
+                }
 
-                    @Override
-                    public String decrypt(String s) {
-                        return "10";
-                    }
-                });
+                @Override
+                public String decrypt(String s) {
+                    return "10";
+                }
+            });
 
-            mocked.when(SpringContextUtils::getApplicationContext)
-                .thenReturn(applicationContext);
+            mocked.when(SpringContextUtils::getApplicationContext).thenReturn(applicationContext);
 
             Long actual = IdUtils.decrypt("token");
 
@@ -96,21 +89,19 @@ class IdUtilsTest {
     @Test
     void shouldEncryptNull() {
         try (MockedStatic<SpringContextUtils> mocked = mockStatic(SpringContextUtils.class)) {
-            when(applicationContext.getBean(anyString()))
-                .thenReturn(new StringEncryptor() {
-                    @Override
-                    public String encrypt(String s) {
-                        return "encrypted";
-                    }
+            when(applicationContext.getBean(anyString())).thenReturn(new StringEncryptor() {
+                @Override
+                public String encrypt(String s) {
+                    return "encrypted";
+                }
 
-                    @Override
-                    public String decrypt(String s) {
-                        return "10";
-                    }
-                });
+                @Override
+                public String decrypt(String s) {
+                    return "10";
+                }
+            });
 
-            mocked.when(SpringContextUtils::getApplicationContext)
-                .thenReturn(applicationContext);
+            mocked.when(SpringContextUtils::getApplicationContext).thenReturn(applicationContext);
 
             String actual = IdUtils.encrypt(null);
 
@@ -121,21 +112,19 @@ class IdUtilsTest {
     @Test
     void shouldEncrypt() {
         try (MockedStatic<SpringContextUtils> mocked = mockStatic(SpringContextUtils.class)) {
-            when(applicationContext.getBean(anyString()))
-                .thenReturn(new StringEncryptor() {
-                    @Override
-                    public String encrypt(String s) {
-                        return "encrypted";
-                    }
+            when(applicationContext.getBean(anyString())).thenReturn(new StringEncryptor() {
+                @Override
+                public String encrypt(String s) {
+                    return "encrypted";
+                }
 
-                    @Override
-                    public String decrypt(String s) {
-                        return "10";
-                    }
-                });
+                @Override
+                public String decrypt(String s) {
+                    return "10";
+                }
+            });
 
-            mocked.when(SpringContextUtils::getApplicationContext)
-                .thenReturn(applicationContext);
+            mocked.when(SpringContextUtils::getApplicationContext).thenReturn(applicationContext);
 
             String actual = IdUtils.encrypt(10L);
 
@@ -146,21 +135,19 @@ class IdUtilsTest {
     @Test
     void shouldThrowExceptionWhenEncrypting() {
         try (MockedStatic<SpringContextUtils> mocked = mockStatic(SpringContextUtils.class)) {
-            when(applicationContext.getBean(anyString()))
-                .thenReturn(new StringEncryptor() {
-                    @Override
-                    public String encrypt(String s) {
-                        throw new RuntimeException("error");
-                    }
+            when(applicationContext.getBean(anyString())).thenReturn(new StringEncryptor() {
+                @Override
+                public String encrypt(String s) {
+                    throw new RuntimeException("error");
+                }
 
-                    @Override
-                    public String decrypt(String s) {
-                        return "10";
-                    }
-                });
+                @Override
+                public String decrypt(String s) {
+                    return "10";
+                }
+            });
 
-            mocked.when(SpringContextUtils::getApplicationContext)
-                .thenReturn(applicationContext);
+            mocked.when(SpringContextUtils::getApplicationContext).thenReturn(applicationContext);
 
             String actual = IdUtils.encrypt(10L);
 

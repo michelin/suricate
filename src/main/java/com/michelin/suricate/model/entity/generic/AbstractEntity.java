@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.entity.generic;
 
 import jakarta.persistence.EntityListeners;

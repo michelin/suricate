@@ -16,12 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.enumeration;
 
-/**
- * Hold the list of every repository types.
- */
+/** Hold the list of every repository types. */
 public enum RepositoryTypeEnum {
     REMOTE,
     LOCAL

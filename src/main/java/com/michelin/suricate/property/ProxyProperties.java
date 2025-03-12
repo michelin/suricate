@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.property;
 
 import lombok.Getter;
@@ -25,42 +24,28 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Proxy properties.
- */
+/** Proxy properties. */
 @Getter
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "proxy")
 public class ProxyProperties {
-    /**
-     * Proxy http host.
-     */
+    /** Proxy http host. */
     private String httpHost;
 
-    /**
-     * Proxy http port.
-     */
+    /** Proxy http port. */
     private String httpPort;
 
-    /**
-     * Proxy https host.
-     */
+    /** Proxy https host. */
     private String httpsHost;
 
-    /**
-     * Proxy https port.
-     */
+    /** Proxy https port. */
     private String httpsPort;
 
-    /**
-     * List of all proxy domain to ignore.
-     */
+    /** List of all proxy domain to ignore. */
     private String nonProxyHosts;
 
-    /**
-     * Set JVM settings for http proxy.
-     */
+    /** Set JVM settings for http proxy. */
     public void setProxy() {
         if (!StringUtils.isAllEmpty(httpHost, httpPort) && StringUtils.isNumeric(httpPort)) {
             System.setProperty("http.proxyHost", httpHost);

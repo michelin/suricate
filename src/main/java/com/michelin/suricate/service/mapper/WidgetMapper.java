@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.widget.WidgetResponseDto;
@@ -29,20 +28,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
-/**
- * Widget mapper.
- */
+/** Widget mapper. */
 @Mapper(
-    componentModel = "spring",
-    uses = {
-        WidgetParamMapper.class,
-        CategoryMapper.class
-    },
-    imports = {
-        java.util.stream.Collectors.class
-    },
-    unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+        componentModel = "spring",
+        uses = {WidgetParamMapper.class, CategoryMapper.class},
+        imports = {java.util.stream.Collectors.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class WidgetMapper {
     /**
      * Map a widget into a DTO.
@@ -53,8 +44,10 @@ public abstract class WidgetMapper {
     @Named("toWidgetDto")
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "libraryTechnicalNames", ignore = true)
-    @Mapping(target = "imageToken", expression = "java( widget.getImage() != null "
-        + "? com.michelin.suricate.util.IdUtils.encrypt(widget.getImage().getId()) : null )")
+    @Mapping(
+            target = "imageToken",
+            expression = "java( widget.getImage() != null "
+                    + "? com.michelin.suricate.util.IdUtils.encrypt(widget.getImage().getId()) : null )")
     @Mapping(target = "category", qualifiedByName = "toCategoryWithHiddenValueParametersDto")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
     @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDto")
@@ -69,8 +62,10 @@ public abstract class WidgetMapper {
     @Named("toWidgetWithoutCategoryParametersDto")
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "libraryTechnicalNames", ignore = true)
-    @Mapping(target = "imageToken", expression = "java( widget.getImage() != null "
-        + "? com.michelin.suricate.util.IdUtils.encrypt(widget.getImage().getId()) : null )")
+    @Mapping(
+            target = "imageToken",
+            expression = "java( widget.getImage() != null "
+                    + "? com.michelin.suricate.util.IdUtils.encrypt(widget.getImage().getId()) : null )")
     @Mapping(target = "category", qualifiedByName = "toCategoryWithoutParametersDto")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
     @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDto")

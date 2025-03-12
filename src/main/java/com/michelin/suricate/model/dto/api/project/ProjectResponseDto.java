@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.project;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -29,9 +28,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Project response DTO.
- */
+/** Project response DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -55,8 +52,9 @@ public class ProjectResponseDto extends AbstractDto {
     @Schema(description = "Image of the dashboard")
     private AssetResponseDto image;
 
-    @Schema(description = "The list of the related JS libraries used for the execution of the widgets",
-        type = "java.util.List")
+    @Schema(
+            description = "The list of the related JS libraries used for the execution of the widgets",
+            type = "java.util.List")
     private List<String> librariesToken = new ArrayList<>();
 
     @Schema(description = "The grids", type = "java.util.List")

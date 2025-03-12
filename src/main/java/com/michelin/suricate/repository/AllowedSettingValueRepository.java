@@ -16,16 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.AllowedSettingValue;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * Allowed setting value repository.
- */
+/** Allowed setting value repository. */
 @Repository
-public interface AllowedSettingValueRepository extends CrudRepository<AllowedSettingValue, Long> {
-}
+public interface AllowedSettingValueRepository extends CrudRepository<AllowedSettingValue, Long> {}

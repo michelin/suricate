@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,9 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Json utils.
- */
+/** Json utils. */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JsonUtils {

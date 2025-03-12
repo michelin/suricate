@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import com.michelin.suricate.model.dto.api.export.ImportExportRepositoryDto;
@@ -27,14 +26,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
-/**
- * Repository mapper.
- */
+/** Repository mapper. */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class RepositoryMapper {
     /**
-     * Map a repository into a DTO.
-     * Ignore the widgets repository
+     * Map a repository into a DTO. Ignore the widgets repository
      *
      * @param repository The repository to map
      * @return The repository as DTO
@@ -45,7 +41,7 @@ public abstract class RepositoryMapper {
     /**
      * Map a repository DTO as entity.
      *
-     * @param id                   The repository id
+     * @param id The repository id
      * @param repositoryRequestDto The repository DTO to map
      * @return The repository as entity
      */

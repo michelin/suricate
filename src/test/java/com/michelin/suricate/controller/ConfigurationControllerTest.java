@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

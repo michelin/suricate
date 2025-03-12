@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import java.util.Collection;
@@ -24,15 +23,13 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Utils class used to hide widget properties from logs.
- */
+/** Utils class used to hide widget properties from logs. */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ToStringUtils {
     /**
      * Hide the widget properties from the given logs.
      *
-     * @param outputLogs             The logs to clear
+     * @param outputLogs The logs to clear
      * @param widgetPropertiesValues The widget properties values to hide
      * @return The cleared logs without widget properties
      */
@@ -42,8 +39,9 @@ public final class ToStringUtils {
         if (widgetPropertiesValues != null && clearedLogs != null) {
             for (String widgetPropertiesValue : widgetPropertiesValues) {
                 if (widgetPropertiesValue != null) {
-                    clearedLogs = clearedLogs.replaceAll(widgetPropertiesValue,
-                        StringUtils.leftPad(StringUtils.EMPTY, widgetPropertiesValue.length(), "*"));
+                    clearedLogs = clearedLogs.replaceAll(
+                            widgetPropertiesValue,
+                            StringUtils.leftPad(StringUtils.EMPTY, widgetPropertiesValue.length(), "*"));
                 }
             }
         }

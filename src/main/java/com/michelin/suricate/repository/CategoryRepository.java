@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.Category;
@@ -29,21 +28,27 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * Category repository.
- */
+/** Category repository. */
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Long>, JpaSpecificationExecutor<Category> {
     /**
      * Find all paginated categories.
      *
      * @param specification The specification to apply
-     * @param pageable      The pageable to apply
+     * @param pageable The pageable to apply
      * @return The paginated categories
      */
-    @NotNull
-    @EntityGraph(attributePaths = {"configurations", "image", "widgets", "widgets.repository", "widgets.image",
-        "widgets.libraries", "widgets.widgetParams", "widgets.widgetParams.possibleValuesMap"})
+    @NotNull @EntityGraph(
+            attributePaths = {
+                "configurations",
+                "image",
+                "widgets",
+                "widgets.repository",
+                "widgets.image",
+                "widgets.libraries",
+                "widgets.widgetParams",
+                "widgets.widgetParams.possibleValuesMap"
+            })
     Page<Category> findAll(@NotNull Specification<Category> specification, @NotNull Pageable pageable);
 
     /**

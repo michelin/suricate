@@ -16,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-/**
- * Class containing all error messages.
- */
+/** Class containing all error messages. */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class ErrorMessage {
     public static final String USER_NOT_ALLOWED_PROJECT = "The user is not allowed to modify this project";

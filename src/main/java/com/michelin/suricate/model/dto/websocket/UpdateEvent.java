@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.websocket;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -30,9 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Update event.
- */
+/** Update event. */
 @Builder
 @Getter
 @Setter
@@ -42,6 +39,7 @@ import lombok.Setter;
 public class UpdateEvent extends AbstractDto {
     @Builder.Default
     private Date date = new Date();
+
     private UpdateType type;
     private Serializable content;
 }

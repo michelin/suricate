@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.security.ldap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -63,19 +62,15 @@ class LdapAuthenticationTest {
         ApplicationProperties.Authentication authProperties = new ApplicationProperties.Authentication();
         authProperties.setLdap(ldapProperties);
 
-        when(userService.getOneByEmail(any()))
-            .thenReturn(Optional.empty());
-        when(applicationProperties.getAuthentication())
-            .thenReturn(authProperties);
-        when(dirContextOperations.getStringAttribute(any()))
-            .thenReturn("email");
+        when(userService.getOneByEmail(any())).thenReturn(Optional.empty());
+        when(applicationProperties.getAuthentication()).thenReturn(authProperties);
+        when(dirContextOperations.getStringAttribute(any())).thenReturn("email");
 
         UserDetailsContextMapper mapper = ldapAuthentication.userDetailsContextMapper();
 
         UsernameNotFoundException exception = assertThrows(
-            UsernameNotFoundException.class,
-            () -> mapper.mapUserFromContext(dirContextOperations, "username", Collections.emptyList())
-        );
+                UsernameNotFoundException.class,
+                () -> mapper.mapUserFromContext(dirContextOperations, "username", Collections.emptyList()));
 
         assertEquals("Bad credentials", exception.getMessage());
     }
@@ -98,22 +93,20 @@ class LdapAuthenticationTest {
         ApplicationProperties.Authentication authProperties = new ApplicationProperties.Authentication();
         authProperties.setLdap(ldapProperties);
 
-        when(userService.getOneByEmail(any()))
-            .thenReturn(Optional.of(user));
-        when(applicationProperties.getAuthentication())
-            .thenReturn(authProperties);
-        when(dirContextOperations.getStringAttribute(any()))
-            .thenReturn("email");
+        when(userService.getOneByEmail(any())).thenReturn(Optional.of(user));
+        when(applicationProperties.getAuthentication()).thenReturn(authProperties);
+        when(dirContextOperations.getStringAttribute(any())).thenReturn("email");
 
         UserDetailsContextMapper mapper = ldapAuthentication.userDetailsContextMapper();
         UserDetails actual = mapper.mapUserFromContext(dirContextOperations, "username", Collections.emptyList());
 
         assertEquals("username", actual.getUsername());
         assertEquals("password", actual.getPassword());
-        assertEquals("ROLE_ADMIN", actual.getAuthorities()
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .toList()
-            .getFirst());
+        assertEquals(
+                "ROLE_ADMIN",
+                actual.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList()
+                        .getFirst());
     }
 }

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,7 +60,7 @@ class AllowedSettingValueMapperTest {
         allowedSettingValue.setValue("value");
 
         List<AllowedSettingValueResponseDto> actual =
-            allowedSettingValueMapper.toAllowedSettingValuesDtos(Collections.singletonList(allowedSettingValue));
+                allowedSettingValueMapper.toAllowedSettingValuesDtos(Collections.singletonList(allowedSettingValue));
 
         assertEquals(1L, actual.getFirst().getId());
         assertTrue(actual.getFirst().isDefault());

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.js;
 
 import static com.michelin.suricate.model.enumeration.UpdateType.REFRESH_WIDGET;
@@ -99,21 +98,19 @@ class DashboardScheduleServiceTest {
         dashboardScheduleService.processJsResult(jsResultDto, jsExecutionScheduler);
 
         verify(projectWidgetService)
-            .updateWidgetInstanceAfterSucceededExecution(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
-                "log", "{}", 1L, WidgetStateEnum.RUNNING);
-        verify(jsExecutionService)
-            .getJsExecutionByProjectWidgetId(1L);
-        verify(jsExecutionScheduler)
-            .schedule(jsExecutionDto, false);
-        verify(projectWidgetService)
-            .getOne(1L);
-        verify(projectWidgetMapper)
-            .toProjectWidgetDto(projectWidget);
-        verify(projectService)
-            .getTokenByProjectId(1L);
+                .updateWidgetInstanceAfterSucceededExecution(
+                        Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), "log", "{}", 1L, WidgetStateEnum.RUNNING);
+        verify(jsExecutionService).getJsExecutionByProjectWidgetId(1L);
+        verify(jsExecutionScheduler).schedule(jsExecutionDto, false);
+        verify(projectWidgetService).getOne(1L);
+        verify(projectWidgetMapper).toProjectWidgetDto(projectWidget);
+        verify(projectService).getTokenByProjectId(1L);
         verify(dashboardWebSocketService)
-            .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
-                event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
+                .sendEventToWidgetInstanceSubscribers(
+                        eq("token"),
+                        eq(1L),
+                        argThat(event -> event.getType().equals(REFRESH_WIDGET)
+                                && event.getContent().equals(projectWidgetResponseDto)));
     }
 
     @Test
@@ -142,17 +139,17 @@ class DashboardScheduleServiceTest {
         dashboardScheduleService.processJsResult(jsResultDto, jsExecutionScheduler);
 
         verify(projectWidgetService)
-            .updateWidgetInstanceAfterFailedExecution(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
-                "log", 1L, WidgetStateEnum.WARNING);
-        verify(projectWidgetService)
-            .getOne(1L);
-        verify(projectWidgetMapper)
-            .toProjectWidgetDto(projectWidget);
-        verify(projectService)
-            .getTokenByProjectId(1L);
+                .updateWidgetInstanceAfterFailedExecution(
+                        Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), "log", 1L, WidgetStateEnum.WARNING);
+        verify(projectWidgetService).getOne(1L);
+        verify(projectWidgetMapper).toProjectWidgetDto(projectWidget);
+        verify(projectService).getTokenByProjectId(1L);
         verify(dashboardWebSocketService)
-            .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
-                event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
+                .sendEventToWidgetInstanceSubscribers(
+                        eq("token"),
+                        eq(1L),
+                        argThat(event -> event.getType().equals(REFRESH_WIDGET)
+                                && event.getContent().equals(projectWidgetResponseDto)));
     }
 
     @Test
@@ -181,17 +178,17 @@ class DashboardScheduleServiceTest {
         dashboardScheduleService.processJsResult(jsResultDto, jsExecutionScheduler);
 
         verify(projectWidgetService)
-            .updateWidgetInstanceAfterFailedExecution(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
-                "log", 1L, WidgetStateEnum.STOPPED);
-        verify(projectWidgetService)
-            .getOne(1L);
-        verify(projectWidgetMapper)
-            .toProjectWidgetDto(projectWidget);
-        verify(projectService)
-            .getTokenByProjectId(1L);
+                .updateWidgetInstanceAfterFailedExecution(
+                        Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), "log", 1L, WidgetStateEnum.STOPPED);
+        verify(projectWidgetService).getOne(1L);
+        verify(projectWidgetMapper).toProjectWidgetDto(projectWidget);
+        verify(projectService).getTokenByProjectId(1L);
         verify(dashboardWebSocketService)
-            .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
-                event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
+                .sendEventToWidgetInstanceSubscribers(
+                        eq("token"),
+                        eq(1L),
+                        argThat(event -> event.getType().equals(REFRESH_WIDGET)
+                                && event.getContent().equals(projectWidgetResponseDto)));
     }
 
     @Test
@@ -209,17 +206,16 @@ class DashboardScheduleServiceTest {
         dashboardScheduleService.updateWidgetInstanceNoJsResult("logs", 1L, 1L);
 
         verify(projectWidgetService)
-            .updateWidgetInstanceAfterFailedExecution(any(),
-                eq("logs"), eq(1L), eq(WidgetStateEnum.STOPPED));
-        verify(projectWidgetService)
-            .getOne(1L);
-        verify(projectWidgetMapper)
-            .toProjectWidgetDto(projectWidget);
-        verify(projectService)
-            .getTokenByProjectId(1L);
+                .updateWidgetInstanceAfterFailedExecution(any(), eq("logs"), eq(1L), eq(WidgetStateEnum.STOPPED));
+        verify(projectWidgetService).getOne(1L);
+        verify(projectWidgetMapper).toProjectWidgetDto(projectWidget);
+        verify(projectService).getTokenByProjectId(1L);
         verify(dashboardWebSocketService)
-            .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
-                event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
+                .sendEventToWidgetInstanceSubscribers(
+                        eq("token"),
+                        eq(1L),
+                        argThat(event -> event.getType().equals(REFRESH_WIDGET)
+                                && event.getContent().equals(projectWidgetResponseDto)));
     }
 
     @Test
@@ -236,15 +232,15 @@ class DashboardScheduleServiceTest {
 
         dashboardScheduleService.sendWidgetUpdateNotification(1L, 1L);
 
-        verify(projectWidgetService)
-            .getOne(1L);
-        verify(projectWidgetMapper)
-            .toProjectWidgetDto(projectWidget);
-        verify(projectService)
-            .getTokenByProjectId(1L);
+        verify(projectWidgetService).getOne(1L);
+        verify(projectWidgetMapper).toProjectWidgetDto(projectWidget);
+        verify(projectService).getTokenByProjectId(1L);
         verify(dashboardWebSocketService)
-            .sendEventToWidgetInstanceSubscribers(eq("token"), eq(1L), argThat(event ->
-                event.getType().equals(REFRESH_WIDGET) && event.getContent().equals(projectWidgetResponseDto)));
+                .sendEventToWidgetInstanceSubscribers(
+                        eq("token"),
+                        eq(1L),
+                        argThat(event -> event.getType().equals(REFRESH_WIDGET)
+                                && event.getContent().equals(projectWidgetResponseDto)));
     }
 
     @Test
@@ -253,14 +249,11 @@ class DashboardScheduleServiceTest {
         jsExecutionDto.setProjectId(1L);
 
         when(jsExecutionService.getJsExecutionByProjectWidgetId(any())).thenReturn(jsExecutionDto);
-        when(applicationContext.getBean(JsExecutionScheduler.class))
-            .thenReturn(jsExecutionScheduler);
+        when(applicationContext.getBean(JsExecutionScheduler.class)).thenReturn(jsExecutionScheduler);
 
         dashboardScheduleService.scheduleWidget(1L);
 
-        verify(jsExecutionService)
-            .getJsExecutionByProjectWidgetId(1L);
-        verify(jsExecutionScheduler)
-            .cancelAndScheduleJsExecution(jsExecutionDto);
+        verify(jsExecutionService).getJsExecutionByProjectWidgetId(1L);
+        verify(jsExecutionScheduler).cancelAndScheduleJsExecution(jsExecutionDto);
     }
 }

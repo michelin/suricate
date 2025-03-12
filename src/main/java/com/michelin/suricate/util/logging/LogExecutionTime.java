@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.logging;
 
 import java.lang.annotation.ElementType;
@@ -24,11 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Log execution time annotation.
- */
+/** Log execution time annotation. */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LogExecutionTime {
-
-}
+public @interface LogExecutionTime {}

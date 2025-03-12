@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,9 +49,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class PostgreSqlIntegrationTest {
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres")
-        .withDatabaseName("suricate")
-        .withUsername("sa")
-        .withPassword("sa");
+            .withDatabaseName("suricate")
+            .withUsername("sa")
+            .withPassword("sa");
 
     @Autowired
     private SettingRepository settingRepository;

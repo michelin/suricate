@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.configuration.encoder;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
@@ -27,28 +26,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * String encryptor configuration.
- * Mainly used to encrypt and decrypt secret information for widgets
- */
+/** String encryptor configuration. Mainly used to encrypt and decrypt secret information for widgets */
 @Configuration
 @EnableEncryptableProperties
 public class StringEncryptorConfiguration {
-    /**
-     * String encryptor password.
-     */
+    /** String encryptor password. */
     @Value("${jasypt.encryptor.password}")
     private String encryptorPassword;
 
     /**
      * Method used to create a String encryptor.
      *
-     * @param encryptorPassword      encryptor password
+     * @param encryptorPassword encryptor password
      * @param saltGeneratorClassName salt class name
      * @return The encryptor
      */
-    private static PooledPBEStringEncryptor getPooledPbeStringEncryptor(String encryptorPassword,
-                                                                        String saltGeneratorClassName) {
+    private static PooledPBEStringEncryptor getPooledPbeStringEncryptor(
+            String encryptorPassword, String saltGeneratorClassName) {
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         config.setPassword(encryptorPassword);
         config.setAlgorithm("PBEWithMD5AndDES");

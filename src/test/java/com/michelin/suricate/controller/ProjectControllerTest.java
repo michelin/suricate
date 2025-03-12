@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -109,10 +108,8 @@ class ProjectControllerTest {
         ProjectResponseDto projectResponseDto = new ProjectResponseDto();
         projectResponseDto.setName("name");
 
-        when(projectService.getAll(any(), any()))
-            .thenReturn(new PageImpl<>(Collections.singletonList(project)));
-        when(projectMapper.toProjectDtoNoAsset(any()))
-            .thenReturn(projectResponseDto);
+        when(projectService.getAll(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(project)));
+        when(projectMapper.toProjectDtoNoAsset(any())).thenReturn(projectResponseDto);
 
         Page<ProjectResponseDto> actual = projectController.getAll("search", Pageable.unpaged());
 
@@ -138,13 +135,10 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(userService.getOneByUsername(any()))
-            .thenReturn(Optional.empty());
+        when(userService.getOneByUsername(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.createProject(localUser, projectRequestDto)
-        );
+                ObjectNotFoundException.class, () -> projectController.createProject(localUser, projectRequestDto));
 
         assertEquals("User 'username' not found", exception.getMessage());
     }
@@ -168,16 +162,11 @@ class ProjectControllerTest {
         projectResponseDto.setName("name");
 
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
-        when(userService.getOneByUsername(any()))
-            .thenReturn(Optional.of(user));
-        when(projectService.createProjectForUser(any(), any()))
-            .thenReturn(new Project());
-        when(projectGridMapper.toProjectGridEntity(any(Project.class)))
-            .thenReturn(new ProjectGrid());
-        when(projectGridService.create(any()))
-            .thenReturn(new ProjectGrid());
-        when(projectMapper.toProjectDto(any()))
-            .thenReturn(projectResponseDto);
+        when(userService.getOneByUsername(any())).thenReturn(Optional.of(user));
+        when(projectService.createProjectForUser(any(), any())).thenReturn(new Project());
+        when(projectGridMapper.toProjectGridEntity(any(Project.class))).thenReturn(new ProjectGrid());
+        when(projectGridService.create(any())).thenReturn(new ProjectGrid());
+        when(projectMapper.toProjectDto(any())).thenReturn(projectResponseDto);
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
@@ -191,13 +180,10 @@ class ProjectControllerTest {
 
     @Test
     void shouldGetOneByTokenNotFound() {
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.getOneByToken("token")
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> projectController.getOneByToken("token"));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -210,10 +196,8 @@ class ProjectControllerTest {
         ProjectResponseDto projectResponseDto = new ProjectResponseDto();
         projectResponseDto.setName("name");
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectMapper.toProjectDto(any()))
-            .thenReturn(projectResponseDto);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectMapper.toProjectDto(any())).thenReturn(projectResponseDto);
 
         ResponseEntity<ProjectResponseDto> actual = projectController.getOneByToken("token");
 
@@ -240,13 +224,11 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.updateProject(localUser, "token", projectRequestDto)
-        );
+                ObjectNotFoundException.class,
+                () -> projectController.updateProject(localUser, "token", projectRequestDto));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -271,15 +253,11 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
         ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectController.updateProject(localUser, "token", projectRequestDto)
-        );
+                ApiException.class, () -> projectController.updateProject(localUser, "token", projectRequestDto));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -307,10 +285,8 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
 
         ResponseEntity<Void> actual = projectController.updateProject(localUser, "token", projectRequestDto);
 
@@ -334,13 +310,11 @@ class ProjectControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("name", new byte[10]);
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.updateProjectScreenshot(localUser, "token", file)
-        );
+                ObjectNotFoundException.class,
+                () -> projectController.updateProjectScreenshot(localUser, "token", file));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -364,15 +338,11 @@ class ProjectControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("name", new byte[10]);
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
         ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectController.updateProjectScreenshot(localUser, "token", file)
-        );
+                ApiException.class, () -> projectController.updateProjectScreenshot(localUser, "token", file));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -396,19 +366,13 @@ class ProjectControllerTest {
 
         MockMultipartFile file = mock(MockMultipartFile.class);
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
-        doThrow(new IOException("error")).when(file)
-            .getBytes();
-        when(file.getOriginalFilename())
-            .thenReturn("originalName");
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
+        doThrow(new IOException("error")).when(file).getBytes();
+        when(file.getOriginalFilename()).thenReturn("originalName");
 
         InvalidFileException exception = assertThrows(
-            InvalidFileException.class,
-            () -> projectController.updateProjectScreenshot(localUser, "token", file)
-        );
+                InvalidFileException.class, () -> projectController.updateProjectScreenshot(localUser, "token", file));
 
         assertEquals("The file originalName cannot be read for entity Project '1'", exception.getMessage());
     }
@@ -432,10 +396,8 @@ class ProjectControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("name", "originalName", "image/png", new byte[10]);
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
 
         ResponseEntity<Void> actual = projectController.updateProjectScreenshot(localUser, "token", file);
 
@@ -457,13 +419,10 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.deleteProjectById(localUser, "token")
-        );
+                ObjectNotFoundException.class, () -> projectController.deleteProjectById(localUser, "token"));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -485,15 +444,11 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
-        ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectController.deleteProjectById(localUser, "token")
-        );
+        ApiException exception =
+                assertThrows(ApiException.class, () -> projectController.deleteProjectById(localUser, "token"));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -518,10 +473,8 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
 
         ResponseEntity<Void> actual = projectController.deleteProjectById(localUser, "token");
 
@@ -546,20 +499,15 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         List<ProjectWidgetPositionRequestDto> projectWidgetPositionRequestDtos =
-            Collections.singletonList(projectWidgetPositionRequestDto);
+                Collections.singletonList(projectWidgetPositionRequestDto);
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.updateProjectWidgetsPositionForProject(
-                localUser,
-                "token",
-                projectWidgetPositionRequestDtos
-            )
-        );
+                ObjectNotFoundException.class,
+                () -> projectController.updateProjectWidgetsPositionForProject(
+                        localUser, "token", projectWidgetPositionRequestDtos));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -584,22 +532,16 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
         List<ProjectWidgetPositionRequestDto> projectWidgetPositionRequestDtos =
-            Collections.singletonList(projectWidgetPositionRequestDto);
+                Collections.singletonList(projectWidgetPositionRequestDto);
 
         ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectController.updateProjectWidgetsPositionForProject(
-                localUser,
-                "token",
-                projectWidgetPositionRequestDtos
-            )
-        );
+                ApiException.class,
+                () -> projectController.updateProjectWidgetsPositionForProject(
+                        localUser, "token", projectWidgetPositionRequestDtos));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -624,16 +566,14 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
 
         List<ProjectWidgetPositionRequestDto> projectWidgetPositionRequestDtos =
-            Collections.singletonList(projectWidgetPositionRequestDto);
+                Collections.singletonList(projectWidgetPositionRequestDto);
 
-        ResponseEntity<Void> actual = projectController.updateProjectWidgetsPositionForProject(localUser, "token",
-            projectWidgetPositionRequestDtos);
+        ResponseEntity<Void> actual = projectController.updateProjectWidgetsPositionForProject(
+                localUser, "token", projectWidgetPositionRequestDtos);
 
         assertEquals(HttpStatus.NO_CONTENT, actual.getStatusCode());
         assertNull(actual.getBody());
@@ -641,13 +581,10 @@ class ProjectControllerTest {
 
     @Test
     void shouldGetProjectUsersNotFound() {
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.getProjectUsers("token")
-        );
+        ObjectNotFoundException exception =
+                assertThrows(ObjectNotFoundException.class, () -> projectController.getProjectUsers("token"));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -660,10 +597,8 @@ class ProjectControllerTest {
         UserResponseDto userResponseDto = new UserResponseDto();
         userResponseDto.setUsername("username");
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(userMapper.toUsersDtos(any()))
-            .thenReturn(Collections.singletonList(userResponseDto));
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(userMapper.toUsersDtos(any())).thenReturn(Collections.singletonList(userResponseDto));
 
         ResponseEntity<List<UserResponseDto>> actual = projectController.getProjectUsers("token");
 
@@ -688,13 +623,11 @@ class ProjectControllerTest {
 
         Map<String, String> usernameMap = Collections.singletonMap("username", "username");
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.addUserToProject(localUser, "token", usernameMap)
-        );
+                ObjectNotFoundException.class,
+                () -> projectController.addUserToProject(localUser, "token", usernameMap));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -718,15 +651,11 @@ class ProjectControllerTest {
 
         Map<String, String> usernameMap = Collections.singletonMap("username", "username");
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
         ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectController.addUserToProject(localUser, "token", usernameMap)
-        );
+                ApiException.class, () -> projectController.addUserToProject(localUser, "token", usernameMap));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -750,17 +679,12 @@ class ProjectControllerTest {
 
         Map<String, String> usernameMap = Collections.singletonMap("username", "username");
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
-        when(userService.getOneByUsername(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
+        when(userService.getOneByUsername(any())).thenReturn(Optional.empty());
 
         ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectController.addUserToProject(localUser, "token", usernameMap)
-        );
+                ApiException.class, () -> projectController.addUserToProject(localUser, "token", usernameMap));
 
         assertEquals("User 'username' not found", exception.getMessage());
     }
@@ -784,14 +708,10 @@ class ProjectControllerTest {
 
         Map<String, String> usernameMap = Collections.singletonMap("username", "username");
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
-        when(userService.getOneByUsername(any()))
-            .thenReturn(Optional.of(user));
-        when(projectService.createProjectForUser(any(), any()))
-            .thenReturn(project);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
+        when(userService.getOneByUsername(any())).thenReturn(Optional.of(user));
+        when(projectService.createProjectForUser(any(), any())).thenReturn(project);
 
         ResponseEntity<Void> actual = projectController.addUserToProject(localUser, "token", usernameMap);
 
@@ -813,13 +733,10 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.deleteUserFromProject(localUser, "token", 1L)
-        );
+                ObjectNotFoundException.class, () -> projectController.deleteUserFromProject(localUser, "token", 1L));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -841,15 +758,11 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(false);
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(false);
 
-        ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectController.deleteUserFromProject(localUser, "token", 1L)
-        );
+        ApiException exception =
+                assertThrows(ApiException.class, () -> projectController.deleteUserFromProject(localUser, "token", 1L));
 
         assertEquals("The user is not allowed to modify this project", exception.getMessage());
     }
@@ -871,17 +784,12 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
-        when(userService.getOne(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
+        when(userService.getOne(any())).thenReturn(Optional.empty());
 
-        ApiException exception = assertThrows(
-            ApiException.class,
-            () -> projectController.deleteUserFromProject(localUser, "token", 1L)
-        );
+        ApiException exception =
+                assertThrows(ApiException.class, () -> projectController.deleteUserFromProject(localUser, "token", 1L));
 
         assertEquals("User '1' not found", exception.getMessage());
     }
@@ -903,12 +811,9 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
-        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
-            .thenReturn(true);
-        when(userService.getOne(any()))
-            .thenReturn(Optional.of(user));
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any())).thenReturn(true);
+        when(userService.getOne(any())).thenReturn(Optional.of(user));
 
         ResponseEntity<Void> actual = projectController.deleteUserFromProject(localUser, "token", 1L);
 
@@ -918,13 +823,10 @@ class ProjectControllerTest {
 
     @Test
     void shouldGetProjectWebsocketClientsNotFound() {
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.empty());
+        when(projectService.getOneByToken(any())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(
-            ObjectNotFoundException.class,
-            () -> projectController.getProjectWebsocketClients("token")
-        );
+                ObjectNotFoundException.class, () -> projectController.getProjectWebsocketClients("token"));
 
         assertEquals("Project 'token' not found", exception.getMessage());
     }
@@ -937,10 +839,9 @@ class ProjectControllerTest {
         WebsocketClient websocketClient = new WebsocketClient();
         websocketClient.setSessionId("1");
 
-        when(projectService.getOneByToken(any()))
-            .thenReturn(Optional.of(project));
+        when(projectService.getOneByToken(any())).thenReturn(Optional.of(project));
         when(dashboardWebSocketService.getWebsocketClientsByProjectToken(any()))
-            .thenReturn(Collections.singletonList(websocketClient));
+                .thenReturn(Collections.singletonList(websocketClient));
 
         ResponseEntity<List<WebsocketClient>> actual = projectController.getProjectWebsocketClients("token");
 
@@ -967,10 +868,8 @@ class ProjectControllerTest {
         ProjectResponseDto projectResponseDto = new ProjectResponseDto();
         projectResponseDto.setName("name");
 
-        when(projectService.getAllByUser(any()))
-            .thenReturn(Collections.singletonList(project));
-        when(projectMapper.toProjectsDtos(any()))
-            .thenReturn(Collections.singletonList(projectResponseDto));
+        when(projectService.getAllByUser(any())).thenReturn(Collections.singletonList(project));
+        when(projectMapper.toProjectsDtos(any())).thenReturn(Collections.singletonList(projectResponseDto));
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 

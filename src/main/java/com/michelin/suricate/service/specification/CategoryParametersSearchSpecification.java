@@ -16,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.specification;
 
 import com.michelin.suricate.model.entity.CategoryParameter;
 import com.michelin.suricate.model.entity.CategoryParameter_;
 
-/**
- * Category parameters search specification.
- */
+/** Category parameters search specification. */
 public class CategoryParametersSearchSpecification extends AbstractSearchSpecification<CategoryParameter> {
 
     /**

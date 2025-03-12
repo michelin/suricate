@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +48,7 @@ class PersonalAccessTokenMapperTest {
         personalAccessToken.setCreatedDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
 
         PersonalAccessTokenResponseDto actual =
-            personalAccessTokenMapper.toPersonalAccessTokenDto(personalAccessToken, "value");
+                personalAccessTokenMapper.toPersonalAccessTokenDto(personalAccessToken, "value");
 
         assertEquals("value", actual.getValue());
         assertEquals("name", actual.getName());
@@ -66,7 +65,7 @@ class PersonalAccessTokenMapperTest {
         personalAccessToken.setCreatedDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
 
         PersonalAccessTokenResponseDto actual =
-            personalAccessTokenMapper.toPersonalAccessTokenNoValueDto(personalAccessToken);
+                personalAccessTokenMapper.toPersonalAccessTokenNoValueDto(personalAccessToken);
 
         assertNull(actual.getValue());
         assertEquals("name", actual.getName());
@@ -83,10 +82,12 @@ class PersonalAccessTokenMapperTest {
         personalAccessToken.setCreatedDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
 
         List<PersonalAccessTokenResponseDto> actual =
-            personalAccessTokenMapper.toPersonalAccessTokensDtos(Collections.singletonList(personalAccessToken));
+                personalAccessTokenMapper.toPersonalAccessTokensDtos(Collections.singletonList(personalAccessToken));
 
         assertNull(actual.getFirst().getValue());
         assertEquals("name", actual.getFirst().getName());
-        assertEquals(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")), actual.getFirst().getCreatedDate());
+        assertEquals(
+                Date.from(Instant.parse("2000-01-01T01:00:00.00Z")),
+                actual.getFirst().getCreatedDate());
     }
 }

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -73,8 +72,7 @@ class FilesUtilsTest {
     @Test
     void shouldReadImageAsset() throws IOException {
         Asset actual = FilesUtils.readAsset(
-            new File("src/test/resources/repository/content/github/widgets/count-issues/image.png")
-        );
+                new File("src/test/resources/repository/content/github/widgets/count-issues/image.png"));
 
         assertNotNull(actual);
         assertEquals("image/png", actual.getContentType());

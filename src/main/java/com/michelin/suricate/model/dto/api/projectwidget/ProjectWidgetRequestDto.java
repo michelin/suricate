@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.projectwidget;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -25,9 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Project widget request DTO.
- */
+/** Project widget request DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

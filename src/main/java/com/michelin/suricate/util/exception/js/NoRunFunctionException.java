@@ -16,12 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception.js;
 
-/**
- * No run function exception.
- */
+/** No run function exception. */
 public class NoRunFunctionException extends RuntimeException {
     /**
      * Constructor.

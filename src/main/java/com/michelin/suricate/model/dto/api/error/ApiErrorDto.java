@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.api.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -29,9 +28,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Api error DTO.
- */
+/** Api error DTO. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -65,7 +62,7 @@ public class ApiErrorDto extends AbstractDto {
     /**
      * Constructor.
      *
-     * @param message  The error message
+     * @param message The error message
      * @param apiError The API error enum
      */
     public ApiErrorDto(String message, ApiErrorEnum apiError) {

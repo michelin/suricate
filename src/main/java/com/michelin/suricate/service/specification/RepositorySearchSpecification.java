@@ -16,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.specification;
 
 import com.michelin.suricate.model.entity.Repository;
 import com.michelin.suricate.model.entity.Repository_;
 
-/**
- * Repository search specification.
- */
+/** Repository search specification. */
 public class RepositorySearchSpecification extends AbstractSearchSpecification<Repository> {
 
     /**

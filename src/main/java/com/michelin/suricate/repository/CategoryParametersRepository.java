@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.repository;
 
 import com.michelin.suricate.model.entity.CategoryParameter;
@@ -26,12 +25,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-/**
- * Category parameters repository.
- */
+/** Category parameters repository. */
 @Repository
 public interface CategoryParametersRepository
-    extends JpaRepository<CategoryParameter, String>, JpaSpecificationExecutor<CategoryParameter> {
+        extends JpaRepository<CategoryParameter, String>, JpaSpecificationExecutor<CategoryParameter> {
 
     /**
      * Get the list of category parameters for a category ID.

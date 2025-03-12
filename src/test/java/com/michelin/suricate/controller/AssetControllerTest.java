@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -58,19 +57,15 @@ class AssetControllerTest {
 
         WebRequest webRequest = mock(WebRequest.class);
 
-        when(assetService.getAssetById(any()))
-            .thenReturn(asset);
-        when(webRequest.checkNotModified(anyLong()))
-            .thenReturn(true);
+        when(assetService.getAssetById(any())).thenReturn(asset);
+        when(webRequest.checkNotModified(anyLong())).thenReturn(true);
 
         ResponseEntity<byte[]> actual = assetController.getAsset(webRequest, "token");
 
         assertEquals(HttpStatus.NOT_MODIFIED, actual.getStatusCode());
 
-        verify(assetService)
-            .getAssetById("token");
-        verify(webRequest)
-            .checkNotModified(946688400000L);
+        verify(assetService).getAssetById("token");
+        verify(webRequest).checkNotModified(946688400000L);
     }
 
     @Test
@@ -82,10 +77,8 @@ class AssetControllerTest {
 
         WebRequest webRequest = mock(WebRequest.class);
 
-        when(assetService.getAssetById(any()))
-            .thenReturn(asset);
-        when(webRequest.checkNotModified(anyLong()))
-            .thenReturn(false);
+        when(assetService.getAssetById(any())).thenReturn(asset);
+        when(webRequest.checkNotModified(anyLong())).thenReturn(false);
 
         ResponseEntity<byte[]> actual = assetController.getAsset(webRequest, "token");
 
@@ -95,9 +88,7 @@ class AssetControllerTest {
         assertEquals(HttpStatus.OK, actual.getStatusCode());
         assertArrayEquals(new byte[10], actual.getBody());
 
-        verify(assetService)
-            .getAssetById("token");
-        verify(webRequest)
-            .checkNotModified(946688400000L);
+        verify(assetService).getAssetById("token");
+        verify(webRequest).checkNotModified(946688400000L);
     }
 }

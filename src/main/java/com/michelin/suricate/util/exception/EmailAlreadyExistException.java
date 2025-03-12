@@ -16,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception;
 
 import com.michelin.suricate.model.enumeration.ApiErrorEnum;
 import java.text.MessageFormat;
 
-/**
- * Exception thrown when an email already exist.
- */
+/** Exception thrown when an email already exist. */
 public class EmailAlreadyExistException extends ApiException {
     private static final String MSG_EMAIL_ALREADY_EXIST = "Email ''{0}'' already exist";
 

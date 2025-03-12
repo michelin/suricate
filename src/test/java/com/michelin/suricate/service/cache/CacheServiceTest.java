@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.cache;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -49,12 +48,9 @@ class CacheServiceTest {
 
     @Test
     void shouldClearAllCaches() {
-        when(cacheManager.getCacheNames())
-            .thenReturn(Arrays.asList("cache", "cacheTwo"));
+        when(cacheManager.getCacheNames()).thenReturn(Arrays.asList("cache", "cacheTwo"));
 
-        when(cacheManager.getCache(any()))
-            .thenReturn(cache)
-            .thenReturn(cacheTwo);
+        when(cacheManager.getCache(any())).thenReturn(cache).thenReturn(cacheTwo);
 
         cacheService.clearAllCache();
 
@@ -64,8 +60,7 @@ class CacheServiceTest {
 
     @Test
     void shouldClearCache() {
-        when(cacheManager.getCache(any()))
-            .thenReturn(cache);
+        when(cacheManager.getCache(any())).thenReturn(cache);
 
         cacheService.clearCache("cache");
 
@@ -74,8 +69,7 @@ class CacheServiceTest {
 
     @Test
     void shouldNotClearCacheIfEmpty() {
-        when(cacheManager.getCache(any()))
-            .thenReturn(null);
+        when(cacheManager.getCache(any())).thenReturn(null);
 
         cacheService.clearCache("cache");
 

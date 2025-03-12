@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util;
 
 import com.michelin.suricate.model.enumeration.UserRoleEnum;
@@ -28,9 +27,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-/**
- * Security utils.
- */
+/** Security utils. */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SecurityUtils {
     /**

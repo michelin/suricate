@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.api;
 
 import com.michelin.suricate.model.entity.Role;
@@ -40,9 +39,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * User service.
- */
+/** User service. */
 @Slf4j
 @Service
 public class UserService {
@@ -87,17 +84,22 @@ public class UserService {
     /**
      * Register a new user in ldap/oauth2 authentication mode.
      *
-     * @param username             The username
-     * @param firstname            The user firstname
-     * @param lastname             The user lastname
-     * @param email                The user email
-     * @param avatarUrl            The user avatar URL
+     * @param username The username
+     * @param firstname The user firstname
+     * @param lastname The user lastname
+     * @param email The user email
+     * @param avatarUrl The user avatar URL
      * @param authenticationMethod The ID provider used
      * @return The registered user
      */
     @Transactional
-    public User registerUser(String username, String firstname, String lastname, String email, String avatarUrl,
-                             AuthenticationProvider authenticationMethod) {
+    public User registerUser(
+            String username,
+            String firstname,
+            String lastname,
+            String email,
+            String avatarUrl,
+            AuthenticationProvider authenticationMethod) {
         Optional<User> optionalUser = getOneByEmail(email);
 
         if (optionalUser.isEmpty()) {
@@ -108,31 +110,43 @@ public class UserService {
             }
             username = availableUsername;
 
-            User user = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl,
-                authenticationMethod);
+            User user = userMapper.connectedUserToUserEntity(
+                    username, firstname, lastname, email, avatarUrl, authenticationMethod);
             return create(user);
         }
 
-        return update(optionalUser.get(), optionalUser.get().getUsername(), firstname, lastname, email, avatarUrl,
-            authenticationMethod);
+        return update(
+                optionalUser.get(),
+                optionalUser.get().getUsername(),
+                firstname,
+                lastname,
+                email,
+                avatarUrl,
+                authenticationMethod);
     }
 
     /**
      * Update the user information.
      *
-     * @param user                 The user to update
-     * @param username             The username
-     * @param firstname            The user firstname
-     * @param lastname             The user lastname
-     * @param email                The user email
-     * @param avatarUrl            The user avatar url
+     * @param user The user to update
+     * @param username The username
+     * @param firstname The user firstname
+     * @param lastname The user lastname
+     * @param email The user email
+     * @param avatarUrl The user avatar url
      * @param authenticationMethod The ID provider used
      * @return The updated user
      */
-    public User update(final User user, String username, String firstname, String lastname, String email,
-                       String avatarUrl, AuthenticationProvider authenticationMethod) {
-        User userUpdated =
-            userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
+    public User update(
+            final User user,
+            String username,
+            String firstname,
+            String lastname,
+            String email,
+            String avatarUrl,
+            AuthenticationProvider authenticationMethod) {
+        User userUpdated = userMapper.connectedUserToUserEntity(
+                username, firstname, lastname, email, avatarUrl, authenticationMethod);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());
         userUpdated.setUserSettings(user.getUserSettings());
@@ -188,7 +202,7 @@ public class UserService {
     /**
      * Get all paginated users.
      *
-     * @param search   The specification to apply
+     * @param search The specification to apply
      * @param pageable The pageable to apply
      * @return The paginated users
      */
@@ -211,20 +225,21 @@ public class UserService {
     /**
      * Update a user.
      *
-     * @param userId    The user id
-     * @param username  The username to update
+     * @param userId The user id
+     * @param username The username to update
      * @param firstname The firstname to update
-     * @param lastname  The lastname to update
-     * @param email     The email to update
+     * @param lastname The lastname to update
+     * @param email The email to update
      * @param roleNames The list of role names for the user
      * @return The user updated
      */
-    public Optional<User> updateUser(final Long userId,
-                                     final String username,
-                                     final String firstname,
-                                     final String lastname,
-                                     final String email,
-                                     final List<UserRoleEnum> roleNames) {
+    public Optional<User> updateUser(
+            final Long userId,
+            final String username,
+            final String firstname,
+            final String lastname,
+            final String email,
+            final List<UserRoleEnum> roleNames) {
         Optional<User> userOpt = getOne(userId);
 
         if (userOpt.isEmpty()) {
@@ -261,14 +276,13 @@ public class UserService {
     /**
      * Update the roles for a user.
      *
-     * @param user      The user
+     * @param user The user
      * @param roleNames The roles to set
      */
     private void updateUserRoles(User user, List<UserRoleEnum> roleNames) {
-        Set<Role> rolesToSet = roleNames
-            .stream()
-            .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
-            .collect(Collectors.toSet());
+        Set<Role> rolesToSet = roleNames.stream()
+                .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
+                .collect(Collectors.toSet());
 
         if (!rolesToSet.isEmpty()) {
             user.setRoles(rolesToSet);

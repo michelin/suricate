@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.model.dto.js;
 
 import com.michelin.suricate.model.dto.api.AbstractDto;
@@ -28,9 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Js execution DTO.
- */
+/** Js execution DTO. */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -50,19 +47,26 @@ public class JsExecutionDto extends AbstractDto {
     /**
      * Constructor.
      *
-     * @param properties   The project widget backend config
-     * @param script       The widget js script
+     * @param properties The project widget backend config
+     * @param script The widget js script
      * @param previousData The data of the last execution
-     * @param projectId    The project id
-     * @param technicalId  The project widget id
-     * @param delay        The delay before the next run
-     * @param timeout      The timeout before interruption of the run
-     * @param state        The project widget state
-     * @param lastSuccess  The last success date
+     * @param projectId The project id
+     * @param technicalId The project widget id
+     * @param delay The delay before the next run
+     * @param timeout The timeout before interruption of the run
+     * @param state The project widget state
+     * @param lastSuccess The last success date
      */
-    public JsExecutionDto(String properties, String script, String previousData, Long projectId, Long technicalId,
-                          Long delay, Long timeout,
-                          WidgetStateEnum state, Date lastSuccess) {
+    public JsExecutionDto(
+            String properties,
+            String script,
+            String previousData,
+            Long projectId,
+            Long technicalId,
+            Long delay,
+            Long timeout,
+            WidgetStateEnum state,
+            Date lastSuccess) {
         this.properties = properties;
         this.script = script;
         this.previousData = previousData;

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,8 +49,7 @@ class CategoryMapperTest {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             Category category = getCategory();
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
 
             CategoryResponseDto actual = categoryMapper.toCategoryWithoutParametersDto(category);
 
@@ -89,8 +87,7 @@ class CategoryMapperTest {
             category.setWidgets(Collections.singleton(widget));
             category.setConfigurations(Collections.singleton(categoryParameter));
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
 
             CategoryResponseDto actual = categoryMapper.toCategoryWithHiddenValueParametersDto(category);
 
@@ -117,8 +114,7 @@ class CategoryMapperTest {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             CategoryParameter categoryParameter = getCategoryParameter();
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
 
             CategoryParameterResponseDto actual = categoryMapper.toCategoryParameterDto(categoryParameter);
 
@@ -143,11 +139,10 @@ class CategoryMapperTest {
         try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
             CategoryParameter categoryParameter = getCategoryParameter();
 
-            mocked.when(() -> IdUtils.encrypt(1L))
-                .thenReturn("encrypted");
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("encrypted");
 
             CategoryParameterResponseDto actual =
-                categoryMapper.toCategoryParameterWithHiddenValuesDto(categoryParameter);
+                    categoryMapper.toCategoryParameterWithHiddenValuesDto(categoryParameter);
 
             assertEquals("key", actual.getKey());
             assertEquals("value", actual.getValue());
@@ -158,8 +153,7 @@ class CategoryMapperTest {
         }
     }
 
-    @NotNull
-    private static Category getCategory() {
+    @NotNull private static Category getCategory() {
         CategoryParameter categoryParameter = new CategoryParameter();
         categoryParameter.setKey("key");
 
@@ -179,8 +173,7 @@ class CategoryMapperTest {
         return category;
     }
 
-    @NotNull
-    private static CategoryParameter getCategoryParameter() {
+    @NotNull private static CategoryParameter getCategoryParameter() {
         Asset asset = new Asset();
         asset.setId(1L);
 

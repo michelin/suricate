@@ -16,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.util.exception;
 
 import com.michelin.suricate.model.enumeration.ApiErrorEnum;
 import java.text.MessageFormat;
 
-/**
- * Project token invalid exception.
- */
+/** Project token invalid exception. */
 public class ProjectTokenInvalidException extends ApiException {
     private static final String MSG_PROJECT_TOKEN_INVALID = "Cannot decrypt token : {0}";
 

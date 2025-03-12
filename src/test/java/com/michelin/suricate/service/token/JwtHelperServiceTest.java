@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.service.token;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -112,23 +111,23 @@ class JwtHelperServiceTest {
 
             @Override
             public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
+                // Do nothing
             }
         };
 
-        WeakKeyException exception = assertThrows(
-            WeakKeyException.class,
-            () -> jwtHelperService.createToken(authentication)
-        );
+        WeakKeyException exception =
+                assertThrows(WeakKeyException.class, () -> jwtHelperService.createToken(authentication));
 
-        assertEquals("The specified key byte array is 56 bits which "
-            + "is not secure enough for any JWT HMAC-SHA algorithm.  "
-            + "The JWT JWA Specification (RFC 7518, Section 3.2) states "
-            + "that keys used with HMAC-SHA algorithms MUST have a size >= 256 bits "
-            + "(the key size must be greater than or equal to the hash output size).  "
-            + "Consider using the Jwts.SIG.HS256.key() builder (or HS384.key() or HS512.key()) "
-            + "to create a key guaranteed to be secure enough for your preferred HMAC-SHA algorithm.  "
-            + "See https://tools.ietf.org/html/rfc7518#section-3.2 for more information.", exception.getMessage());
+        assertEquals(
+                "The specified key byte array is 56 bits which "
+                        + "is not secure enough for any JWT HMAC-SHA algorithm.  "
+                        + "The JWT JWA Specification (RFC 7518, Section 3.2) states "
+                        + "that keys used with HMAC-SHA algorithms MUST have a size >= 256 bits "
+                        + "(the key size must be greater than or equal to the hash output size).  "
+                        + "Consider using the Jwts.SIG.HS256.key() builder (or HS384.key() or HS512.key()) "
+                        + "to create a key guaranteed to be secure enough for your preferred HMAC-SHA algorithm.  "
+                        + "See https://tools.ietf.org/html/rfc7518#section-3.2 for more information.",
+                exception.getMessage());
     }
 
     @Test
@@ -191,7 +190,7 @@ class JwtHelperServiceTest {
 
             @Override
             public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
+                // Do nothing
             }
         };
 
@@ -329,7 +328,7 @@ class JwtHelperServiceTest {
 
             @Override
             public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
+                // Do nothing
             }
         };
 
@@ -355,9 +354,9 @@ class JwtHelperServiceTest {
         authPropertiesForValidation.setJwt(jwtPropertiesForValidation);
 
         when(applicationProperties.getAuthentication())
-            .thenReturn(authProperties)
-            .thenReturn(authProperties)
-            .thenReturn(authPropertiesForValidation);
+                .thenReturn(authProperties)
+                .thenReturn(authProperties)
+                .thenReturn(authPropertiesForValidation);
 
         Authentication authentication = new Authentication() {
             @Override
@@ -428,8 +427,7 @@ class JwtHelperServiceTest {
 
         when(applicationProperties.getAuthentication()).thenReturn(authProperties);
 
-        boolean actual = jwtHelperService.validateToken(
-            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImV4cCI"
+        boolean actual = jwtHelperService.validateToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImV4cCI"
                 + "6MTY5NzQ5NTI1NCwiaWF0IjoxNjk3NDk1MjU0LCJtb2RlIjoiR0lUTEFCIi"
                 + "wiYXZhdGFyX3VybCI6ImF2YXRhciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLC"
                 + "JlbWFpbCI6ImVtYWlsIn0.hWX18w6n-_4LDN66iSv1t5itKHd-0QcZQdB1BADvObE");

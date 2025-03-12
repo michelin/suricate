@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.suricate.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,17 +64,22 @@ class UserIntegrationTest {
         userRequestDto.setConfirmPassword("none");
 
         // Sign up
-        restTemplate.exchange("http://localhost:" + port + "/api/v1/users/signup",
-            POST, new HttpEntity<>(userRequestDto), UserResponseDto.class);
+        restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/signup",
+                POST,
+                new HttpEntity<>(userRequestDto),
+                UserResponseDto.class);
 
         SignInRequestDto signInRequestDto = new SignInRequestDto();
         signInRequestDto.setUsername("username");
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
-                POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/signin",
+                POST,
+                new HttpEntity<>(signInRequestDto),
+                JwtAuthenticationResponseDto.class);
 
         assertNotNull(signInResponse.getBody());
 
@@ -83,27 +87,27 @@ class UserIntegrationTest {
         headers.setBearerAuth(signInResponse.getBody().getAccessToken());
 
         // Get user that does not exist
-        ResponseEntity<ApiErrorDto> userNotFoundResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/2",
-                GET, new HttpEntity<>(headers), ApiErrorDto.class);
+        ResponseEntity<ApiErrorDto> userNotFoundResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/2", GET, new HttpEntity<>(headers), ApiErrorDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, userNotFoundResponse.getStatusCode());
         assertNotNull(userNotFoundResponse.getBody());
         assertEquals("User '2' not found", userNotFoundResponse.getBody().getMessage());
 
         // Get user with bad parameter type
-        ResponseEntity<ApiErrorDto> badParameterResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/badParameter",
-                GET, new HttpEntity<>(headers), ApiErrorDto.class);
+        ResponseEntity<ApiErrorDto> badParameterResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/badParameter",
+                GET,
+                new HttpEntity<>(headers),
+                ApiErrorDto.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, badParameterResponse.getStatusCode());
         assertNotNull(badParameterResponse.getBody());
         assertEquals("Bad request", badParameterResponse.getBody().getMessage());
 
         // Get user that exist
-        ResponseEntity<UserResponseDto> userFoundResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/1",
-                GET, new HttpEntity<>(headers), UserResponseDto.class);
+        ResponseEntity<UserResponseDto> userFoundResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/1", GET, new HttpEntity<>(headers), UserResponseDto.class);
 
         assertEquals(HttpStatus.OK, userFoundResponse.getStatusCode());
         assertNotNull(userFoundResponse.getBody());
@@ -123,8 +127,11 @@ class UserIntegrationTest {
         userRequestDto.setConfirmPassword("none");
 
         // Sign up
-        restTemplate.exchange("http://localhost:" + port + "/api/v1/users/signup",
-            POST, new HttpEntity<>(userRequestDto), UserResponseDto.class);
+        restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/signup",
+                POST,
+                new HttpEntity<>(userRequestDto),
+                UserResponseDto.class);
 
         UserRequestDto anotherUserRequestDto = new UserRequestDto();
         anotherUserRequestDto.setUsername("username2");
@@ -135,17 +142,22 @@ class UserIntegrationTest {
         anotherUserRequestDto.setConfirmPassword("none2");
 
         // Sign up another user
-        restTemplate.exchange("http://localhost:" + port + "/api/v1/users/signup",
-            POST, new HttpEntity<>(anotherUserRequestDto), UserResponseDto.class);
+        restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/signup",
+                POST,
+                new HttpEntity<>(anotherUserRequestDto),
+                UserResponseDto.class);
 
         SignInRequestDto signInRequestDto = new SignInRequestDto();
         signInRequestDto.setUsername("username");
         signInRequestDto.setPassword("none");
 
         // Sign in
-        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/auth/signin",
-                POST, new HttpEntity<>(signInRequestDto), JwtAuthenticationResponseDto.class);
+        ResponseEntity<JwtAuthenticationResponseDto> signInResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/signin",
+                POST,
+                new HttpEntity<>(signInRequestDto),
+                JwtAuthenticationResponseDto.class);
 
         assertNotNull(signInResponse.getBody());
 
@@ -157,19 +169,24 @@ class UserIntegrationTest {
         userSettingRequestDto.setUnconstrainedValue("value");
 
         // Should fail to update settings of another user
-        ResponseEntity<ApiErrorDto> accessDeniedResponse = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/username2/settings/1",
-                PUT, new HttpEntity<>(userSettingRequestDto, headers), ApiErrorDto.class);
+        ResponseEntity<ApiErrorDto> accessDeniedResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/username2/settings/1",
+                PUT,
+                new HttpEntity<>(userSettingRequestDto, headers),
+                ApiErrorDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, accessDeniedResponse.getStatusCode());
         assertNotNull(accessDeniedResponse.getBody());
-        assertEquals("You don't have permission to access to this resource",
-            accessDeniedResponse.getBody().getMessage());
+        assertEquals(
+                "You don't have permission to access to this resource",
+                accessDeniedResponse.getBody().getMessage());
 
         // Should update settings
-        ResponseEntity<ApiErrorDto> response = restTemplate
-            .exchange("http://localhost:" + port + "/api/v1/users/username/settings/1",
-                PUT, new HttpEntity<>(userSettingRequestDto, headers), ApiErrorDto.class);
+        ResponseEntity<ApiErrorDto> response = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/users/username/settings/1",
+                PUT,
+                new HttpEntity<>(userSettingRequestDto, headers),
+                ApiErrorDto.class);
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
