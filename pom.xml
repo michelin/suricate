@@ -42,7 +42,7 @@
         <mustache.version>0.9.14</mustache.version>
         <okhttp3.version>4.12.0</okhttp3.version>
         <packaging.type>jar</packaging.type>
-        <palantir.version>2.39.0</palantir.version>
+        <palantir.version>2.58.0</palantir.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>michelin</sonar.organization>
