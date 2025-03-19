@@ -414,7 +414,7 @@ public class UserController {
         User savedUser = userService.create(user);
 
         URI resourceLocation = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/users/" + savedUser.getId())
+                .path("/api/v1/users/" + savedUser.getId())
                 .build()
                 .toUri();
 

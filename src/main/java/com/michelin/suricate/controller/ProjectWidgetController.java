@@ -270,7 +270,7 @@ public class ProjectWidgetController {
         projectWidgetService.createAndRefreshDashboards(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/projectWidgets/" + projectWidget.getId())
+                .path("/api/v1/projectWidgets/" + projectWidget.getId())
                 .build()
                 .toUri();
 

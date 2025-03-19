@@ -140,7 +140,7 @@ public class RepositoryController {
         }
 
         URI resourceLocation = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/repositories/" + repository.getId())
+                .path("/api/v1/repositories/" + repository.getId())
                 .build()
                 .toUri();
 

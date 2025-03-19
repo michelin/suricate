@@ -177,7 +177,7 @@ public class ProjectController {
         project.getGrids().add(projectGridService.create(projectGridMapper.toProjectGridEntity(project)));
 
         URI resourceLocation = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/projects/" + project.getToken())
+                .path("/api/v1/projects/" + project.getToken())
                 .build()
                 .toUri();
 
