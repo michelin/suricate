@@ -9,7 +9,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - '5432:5432'
+      - "5432:5432"
     networks:
       - suricate
     restart: unless-stopped
@@ -18,13 +18,13 @@ services:
     image: michelin/suricate
     environment:
       SPRING_PROFILES_ACTIVE: postgresql
-      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/postgres?currentSchema=suricate'
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/postgres?currentSchema=suricate"
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
     networks:
       - suricate
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
       - postgres
     restart: unless-stopped
