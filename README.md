@@ -28,9 +28,9 @@ Suricate uses WebSockets to control and update dashboards on external displays.
 * [Download](#download)
 * [Install](#install)
 * [Configuration](#configuration)
-  * [Default Configuration](#default-configuration)
   * [Database](#database)
-    * [H2 vs PostgreSQL](#h2-vs-postgresql)
+    * [H2](#h2)
+    * [PostgreSQL](#postgresql)
     * [Initialization with Flyway](#initialization-with-flyway)
   * [Authentication](#authentication)
     * [Database](#database-1)
@@ -78,56 +78,58 @@ After running the command, the application will be accessible on http://localhos
 
 ## Configuration
 
-### Default Configuration
-
-By default, Suricate:
-
-- runs on a H2 file database
-- provides a sign-in/sign-up authentication mode based on the database
-
 ### Database
 
-#### H2 vs PostgreSQL
+Suricate supports multiple database management systems:
 
-Suricate supports running on different database management systems (DBMS):
-
-- H2
+- H2 (default)
 - PostgreSQL
 
-You can define the DBMS you want to use in the `application.yml` file with the `spring.profiles.active`
-parameter:
+#### H2
+
+By default, Suricate runs on an H2 file database, activated through the `h2` profile in `application.yml`:
 
 ```yaml
 spring:
   profiles:
-    active: ## Provider should be 'h2' or 'postgresql'
+    active: 'h2'
 ```
 
-It will activate the default `application-DBMS.yml` configuration file with the required properties for the chosen DBMS.
+This activates the `application-h2.yml` file, which contains the necessary H2 configuration.
 
-You will still need to define your database connection properties in the `application.yml` file:
+#### PostgreSQL
+
+To switch to PostgreSQL, activate the `postgresql` profile:
+
+```yaml
+spring:
+  profiles:
+    active: 'postgresql'
+```
+
+This enables the `application-postgresql.yml` file, which contains the PostgreSQL-specific configuration.
+
+Additionally, you need to provide your database connection details in an external configuration file:
 
 ```yaml
 spring:
   datasource:
-    password: ''
-    url: ''
-    username: ''
+    url: '<your-database-url>'
+    username: '<your-username>'
+    password: '<your-password>'
 ```
-
-Please note that the `application-DBMS.yml` files activate Flyway to automatically set up the database
-structure (tables, constraints, etc.) and the minimum required functional data.
 
 #### Initialization with Flyway
 
-Suricate uses [Flyway](https://docs.spring.io/spring-boot/docs/2.0.0.M5/reference/html/howto-database-initialization.html) to manage the database initialization.
-It is enabled by default to automatically set up the database structure (tables, constraints, etc.) and the minimum
-required functional data at the first start of the application.
+Suricate uses [Flyway](https://docs.spring.io/spring-boot/docs/2.0.0.M5/reference/html/howto-database-initialization.html) for database initialization.
 
-Depending on the database management system you use, Flyway will use the appropriate scripts located in the
-`src/main/resources/flyway` folder.
+By default, Flyway:
+- Automatically sets up the database structure (tables, constraints, etc.).
+- Populates the database with the minimum required functional data on the first startup.
 
-Flyway stores the current version of the database in a table named `schema_version` defined by the following property:
+It applies the appropriate scripts based on your database management system. These scripts are located in `src/main/resources/flyway`.
+
+Flyway maintains the database version in a table named `schema_version`, configured as:
 
 ```yml
 spring:
@@ -135,7 +137,7 @@ spring:
     table: 'schema_version'
 ```
 
-Flyway can be deactivated by setting the following property to `false`:
+If needed, it can be disabled by setting:
 
 ```yml
 spring:
@@ -145,9 +147,14 @@ spring:
 
 ### Authentication
 
-Suricate provides multiple types of authentication that can be activated or deactivated based on your requirements.
+Suricate supports multiple authentication methods:
 
-All the authentication modes deliver a JWT token that is used to authenticate the user on the Back-End.
+- Database Authentication
+- LDAP Authentication
+- Social Login (OIDC - OpenID Connect)
+
+Regardless of the method used, Suricate issues a JWT token to authenticate users on the backend.
+
 You can configure the JWT token using the following properties:
 
 ```yml

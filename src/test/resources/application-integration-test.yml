@@ -24,8 +24,5 @@ spring:
       enabled: true
   jpa:
     open-in-view: false
-    properties:
-      hibernate:
-        dialect: 'org.hibernate.dialect.H2Dialect'
   main:
     banner-mode: 'off'
