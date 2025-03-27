@@ -51,15 +51,15 @@ jobs:
         id: build
         run: mvn clean package -P production
 
-      - name: Metadata
-        id: metadata
-        run: echo current_version=$(echo $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)) >> $GITHUB_OUTPUT
-
       - name: Publish test report
         if: always()
         uses: mikepenz/action-junit-report@v5
         with:
           report_paths: 'target/surefire-reports/TEST-*.xml'
+
+      - name: Metadata
+        id: metadata
+        run: echo current_version=$(echo $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)) >> $GITHUB_OUTPUT
 
       - name: Grype source code
         id: grype_source_code
