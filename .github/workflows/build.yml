@@ -48,7 +48,6 @@ jobs:
         run: mvn spotless:check
 
       - name: Build
-        id: build
         run: mvn clean package -P production
 
       - name: Publish test report
