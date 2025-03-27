@@ -1,15 +1,22 @@
-name: Pull Request
+name: Build
 
 on:
+  push:
+    branches:
+      - 'master'
   pull_request:
     branches:
       - 'master'
       - 'hotfix/v*.*.*'
+  schedule:
+    - cron: '0 5 * * 1'
 
 jobs:
   back-end:
     name: Back-End
     runs-on: ubuntu-latest
+    outputs:
+      current_version: ${{ steps.metadata.outputs.current_version }}
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
@@ -41,7 +48,12 @@ jobs:
         run: mvn spotless:check
 
       - name: Build
+        id: build
         run: mvn clean package -P production
+
+      - name: Metadata
+        id: metadata
+        run: echo current_version=$(echo $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)) >> $GITHUB_OUTPUT
 
       - name: Publish test report
         if: always()
@@ -49,7 +61,23 @@ jobs:
         with:
           report_paths: 'target/surefire-reports/TEST-*.xml'
 
-      - name: Upload
+      - name: Grype source code
+        id: grype_source_code
+        uses: anchore/scan-action@v6
+        with:
+          path: .
+          fail-build: true
+          severity-cutoff: high
+          only-fixed: true
+
+      - name: Upload Grype source code report
+        if: always() && steps.grype_source_code.outputs.sarif != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.grype_source_code.outputs.sarif }}
+          category: 'source-code'
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: jar
@@ -57,7 +85,7 @@ jobs:
 
       - name: Sonar
         if: github.event.pull_request.head.repo.fork == false
-        run: mvn verify sonar:sonar -DcentralAnalyzerEnabled=false
+        run: mvn verify sonar:sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -91,6 +119,7 @@ jobs:
     name: Docker
     runs-on: ubuntu-latest
     needs: [ front-end, back-end ]
+    if: endsWith(needs.back-end.outputs.current_version, '-SNAPSHOT')
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
@@ -113,3 +142,27 @@ jobs:
 
       - name: Docker
         run: mvn package -P production -DskipTests jib:dockerBuild
+
+      - name: Grype Docker image
+        if: endsWith(steps.metadata.outputs.current_version, '-SNAPSHOT')
+        id: grype_docker_image
+        uses: anchore/scan-action@v6
+        with:
+          image: michelin/suricate:${{ needs.back-end.outputs.current_version }}
+          fail-build: true
+          severity-cutoff: high
+          only-fixed: true
+
+      - name: Upload Grype Docker image report
+        if: always() && steps.grype_docker_image.outputs.sarif != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.grype_docker_image.outputs.sarif }}
+          category: 'docker-image'
+
+      - name: Docker
+        if: github.ref == 'refs/heads/main'
+        run: mvn package -P production -DskipTests jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}

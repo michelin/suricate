@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.4</version>
     </parent>
 
     <groupId>com.michelin.suricate</groupId>
@@ -338,7 +338,7 @@
                 <version>${jib-maven-plugin.version}</version>
                 <configuration>
                     <from>
-                        <image>eclipse-temurin:21.0.1_12-jre-alpine</image>
+                        <image>eclipse-temurin:21-jre-alpine</image>
                     </from>
                     <to>
                         <image>docker.io/michelin/${project.artifactId}:${project.version}</image>
@@ -425,6 +425,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -455,7 +456,7 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <nodeVersion>v22.13.0</nodeVersion>
+                                    <nodeVersion>v22.14.0</nodeVersion>
                                 </configuration>
                             </execution>
 
