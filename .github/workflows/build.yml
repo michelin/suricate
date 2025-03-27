@@ -144,7 +144,6 @@ jobs:
         run: mvn package -P production -DskipTests jib:dockerBuild
 
       - name: Grype Docker image
-        if: endsWith(steps.metadata.outputs.current_version, '-SNAPSHOT')
         id: grype_docker_image
         uses: anchore/scan-action@v6
         with:
