@@ -33,7 +33,6 @@
         <jasypt.version>3.0.5</jasypt.version>
         <java.version>21</java.version>
         <jgit.version>7.2.0.202503040940-r</jgit.version>
-        <jib-maven-plugin.version>3.4.5</jib-maven-plugin.version>
         <jjwt.version>0.12.6</jjwt.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <lombok.version>1.18.36</lombok.version>
@@ -66,7 +65,6 @@
     </dependencyManagement>
 
     <dependencies>
-
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
@@ -280,7 +278,6 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
@@ -330,20 +327,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>${jib-maven-plugin.version}</version>
-                <configuration>
-                    <from>
-                        <image>eclipse-temurin:21-jre-alpine</image>
-                    </from>
-                    <to>
-                        <image>docker.io/michelin/${project.artifactId}:${project.version}</image>
-                    </to>
-                </configuration>
             </plugin>
 
             <plugin>
