@@ -89,7 +89,7 @@ Suricate supports multiple database management systems:
 
 By default, Suricate runs on an H2 file database, activated through the `h2` profile in `application.yml`:
 
-```yaml
+```yml
 spring:
   profiles:
     active: 'h2'
@@ -101,7 +101,7 @@ This activates the `application-h2.yml` file, which contains the necessary H2 co
 
 To switch to PostgreSQL, activate the `postgresql` profile:
 
-```yaml
+```yml
 spring:
   profiles:
     active: 'postgresql'
@@ -111,7 +111,7 @@ This enables the `application-postgresql.yml` file, which contains the PostgreSQ
 
 Additionally, you need to provide your database connection details in an external configuration file:
 
-```yaml
+```yml
 spring:
   datasource:
     url: '<your-database-url>'
@@ -325,7 +325,7 @@ Simply replace `<provider>` with the appropriate social provider, such as `githu
 
 #### Personal Access Token
 
-The application allows for the generation of personal access tokens, which can be used for authentication. The following
+The application allows for the generation of personal access tokens for authentication. The following
 properties are used for token generation and verification:
 
 ```yml
@@ -339,6 +339,12 @@ application:
 It is recommended to update the _checksumSecret_ with a different secret for each environment, to enhance security.
 
 The _prefix_ is used by the application to identify the token type and parse it.
+
+You can use a personal access token to authenticate API requests as follows:
+
+```console
+curl http://localhost:8080/api/v1/projects -H "Authorization: Token <your-token>"
+```
 
 ### Widgets
 
