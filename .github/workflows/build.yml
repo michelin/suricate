@@ -129,7 +129,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: suricate
-          path: ${{ github.workspace }}/target/suricate.jar
+          path: ${{ github.workspace }}/target
 
       - name: Docker build
         run: docker build -f .docker/Dockerfile -t michelin/suricate:${{ needs.back-end.outputs.current_version }} .

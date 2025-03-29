@@ -9,7 +9,7 @@
                888##88           \   \    |  |  |  | |      /     |  | |  |      /  /_\  \    |  |     |   __|
                88888##8      .----)   |   |  `--'  | |  |\  \----.|  | |  `----./  _____  \   |  |     |  |____
                ${AnsiColor.RED}&${AnsiColor.YELLOW}o${AnsiColor.DEFAULT}&8888##     |_______/     \______/  | _| `._____||__|  \______/__/     \__\  |__|     |_______|
-               8888${AnsiColor.RED}o${AnsiColor.YELLOW}::${AnsiColor.DEFAULT}888#                                                built with ${AnsiColor.GREEN}Spring Boot${AnsiColor.DEFAULT} v${spring-boot.version}
+               8888${AnsiColor.RED}o${AnsiColor.YELLOW}::${AnsiColor.DEFAULT}888#                                                Built with ${AnsiColor.GREEN}Spring Boot${AnsiColor.DEFAULT} v${spring-boot.version}
                888888${AnsiColor.RED}&oo${AnsiColor.DEFAULT}88#*
                ${AnsiColor.RED}ooo${AnsiColor.DEFAULT}&8888${AnsiColor.RED}oo${AnsiColor.DEFAULT}888
                888888888&${AnsiColor.RED}&${AnsiColor.DEFAULT}888
