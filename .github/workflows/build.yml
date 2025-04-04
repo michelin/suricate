@@ -103,16 +103,15 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: Build
+      - name: Lint
         run: |
           npm install --no-progress
+          npm run lint
+
+      - name: Build
+        run: |
           npm run build -- --configuration production
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Test
-        run: npm run test-ci
+          npm run test
 
   docker:
     name: Docker
