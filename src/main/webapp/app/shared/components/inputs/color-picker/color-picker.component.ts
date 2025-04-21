@@ -20,7 +20,7 @@
 import { Component } from '@angular/core';
 import { MatLabel } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerDirective } from 'ngx-color-picker';
 
 import { BaseInputComponent } from '../base-input/base-input/base-input.component';
 
@@ -31,7 +31,7 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
   selector: 'suricate-color-picker',
   templateUrl: './color-picker.component.html',
   styleUrls: ['./color-picker.component.scss'],
-  imports: [MatLabel, ColorPickerModule, TranslatePipe]
+  imports: [MatLabel, ColorPickerDirective, TranslatePipe]
 })
 export class ColorPickerComponent extends BaseInputComponent {
   /**

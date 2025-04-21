@@ -2,6 +2,7 @@
   "admin": "Admin",
   "authentication.failed.with.providers": "Authentication failed",
   "authentication.bad.credentials": "The credentials are wrong",
+  "bad.request": "Invalid request",
   "back": "Back",
   "background.color": "Background color",
   "branch": "Branch",
