@@ -52,13 +52,12 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
@@ -116,10 +115,8 @@ public class WebConfig implements WebMvcConfigurer {
             Oauth2UserService userService,
             OpenIdcUserService openIdcUserService,
             @Autowired(required = false) Oauth2AuthenticationSuccessHandler oauth2SuccessHandler,
-            Oauth2AuthenticationFailureHandler oauth2FailureHandler,
-            HandlerMappingIntrospector introspector)
+            Oauth2AuthenticationFailureHandler oauth2FailureHandler)
             throws Exception {
-        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
         http.cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfiguration()))
                 .sessionManagement(sessionManagementConfigurer ->
@@ -135,47 +132,63 @@ public class WebConfig implements WebMvcConfigurer {
                             .requestMatchers(CorsUtils::isPreFlightRequest)
                             .permitAll()
                             // Make other MVC requests served by the DispatcherServlet
-                            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.OPTIONS, "/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.OPTIONS, "/**"))
                             .permitAll()
                             // Actuator
-                            .requestMatchers(mvcMatcherBuilder.pattern("/actuator/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/actuator/**"))
                             .permitAll()
                             // Swagger
-                            .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui.html"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui.html"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/v3/api-docs/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/v3/api-docs/**"))
                             .permitAll()
                             // Suricate API
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/auth/signin"))
-                            .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/users/signup"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/api/*/auth/signin"))
                             .permitAll()
                             .requestMatchers(
-                                    mvcMatcherBuilder.pattern("/api/*/configurations/authentication-providers"))
+                                    PathPatternRequestMatcher.withDefaults().matcher("/api/*/users/signup"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projects/{projectToken}"))
+                            .requestMatchers(PathPatternRequestMatcher.withDefaults()
+                                    .matcher("/api/*/configurations/authentication-providers"))
                             .permitAll()
                             .requestMatchers(
-                                    mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectToken}/projectWidgets"))
+                                    PathPatternRequestMatcher.withDefaults().matcher("/api/*/projects/{projectToken}"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/projectWidgets/{projectWidgetId}"))
+                            .requestMatchers(PathPatternRequestMatcher.withDefaults()
+                                    .matcher("/api/*/projectWidgets/{projectToken}/projectWidgets"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/widgets/{widgetId}"))
+                            .requestMatchers(PathPatternRequestMatcher.withDefaults()
+                                    .matcher("/api/*/projectWidgets/{projectWidgetId}"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/settings"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/api/*/widgets/{widgetId}"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/*/assets/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/api/*/settings"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/ws/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/api/*/assets/**"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/oauth2/authorization/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/ws/**"))
                             .permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/api/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/api/oauth2/authorization/**"))
+                            .permitAll()
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher("/api/**"))
                             .authenticated()
                             // Front-End
-                            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/**"))
+                            .requestMatchers(
+                                    PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/**"))
                             .permitAll();
 
                     if (h2Enabled) {
