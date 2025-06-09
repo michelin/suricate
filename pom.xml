@@ -32,7 +32,7 @@
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
         <jasypt.version>3.0.5</jasypt.version>
         <java.version>21</java.version>
-        <jgit.version>7.2.1.202505142326-r</jgit.version>
+        <jgit.version>7.3.0.202506031305-r</jgit.version>
         <jjwt.version>0.12.6</jjwt.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <lombok.version>1.18.38</lombok.version>
