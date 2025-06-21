@@ -1,91 +1,91 @@
 application:
   authentication:
     jwt:
-      signingKey: 'changeitchangeitchangeitchangeit'
+      signingKey: "changeitchangeitchangeitchangeit"
       tokenValidityMs: 86400000
     ldap:
-      firstNameAttributeName: ''
-      lastNameAttributeName: ''
-      mailAttributeName: ''
-      password: ''
-      url: ''
-      userDnPatterns: ''
-      userSearchBase: ''
-      userSearchFilter: ''
-      username: ''
+      firstNameAttributeName: ""
+      lastNameAttributeName: ""
+      mailAttributeName: ""
+      password: ""
+      url: ""
+      userDnPatterns: ""
+      userSearchBase: ""
+      userSearchFilter: ""
+      username: ""
     oauth2:
-      defaultTargetUrl: 'http://localhost:4200/login'
+      defaultTargetUrl: "http://localhost:4200/login"
       useReferer: false
     pat:
-      checksumSecret: 'changeit'
-      prefix: 'sup'
-    provider: 'database'
+      checksumSecret: "changeit"
+      prefix: "sup"
+    provider: "database"
   cors:
     allowCredentials: true
-    allowedHeaders: 'Content-Type, Accept, Authorization, X-Requested-With'
-    allowedMethods: 'GET,POST,OPTIONS,DELETE,PUT'
-    allowedOriginPatterns: '*'
+    allowedHeaders: "Content-Type, Accept, Authorization, X-Requested-With"
+    allowedMethods: "GET,POST,OPTIONS,DELETE,PUT"
+    allowedOriginPatterns: "*"
     maxAge: 3600
   ssl:
     keyStore:
-      password: ''
-      path: ''
-      type: ''
+      password: ""
+      path: ""
+      type: ""
     trustStore:
-      password: ''
-      path: ''
-      type: ''
+      password: ""
+      path: ""
+      type: ""
   swagger:
-    contactEmail: 'loic.greffier@michelin.com'
-    contactName: 'Michelin'
-    contactUrl: 'https://github.com/michelin/suricate'
-    description: 'REST API of the Suricate application.'
-    license: 'Apache 2.0'
-    licenseUrl: 'https://www.apache.org/licenses/LICENSE-2.0.html'
-    title: 'Suricate'
+    contactEmail: "loic.greffier@michelin.com"
+    contactName: "Michelin"
+    contactUrl: "https://github.com/michelin/suricate"
+    description: "REST API of the Suricate application."
+    license: "Apache 2.0"
+    licenseUrl: "https://www.apache.org/licenses/LICENSE-2.0.html"
+    title: "Suricate"
     version: 1
   widgets:
-    cloneDir: '/tmp'
+    cloneDir: "/tmp"
     updateEnable: true
 jasypt:
   encryptor:
-    password: 'changeitchangeitchangeitchangeit'
+    password: "changeitchangeitchangeitchangeit"
 logging:
   file:
-    name: '/tmp/suricate/suricate.log'
+    name: "/tmp/suricate/suricate.log"
   level:
     com:
       michelin:
-        suricate: 'DEBUG'
+        suricate: "DEBUG"
     org:
       springframework:
         boot:
-          actuate: 'INFO'
+          actuate: "INFO"
         security:
           web:
             csrf:
-              CsrfFilter: 'DEBUG'
+              CsrfFilter: "DEBUG"
         web:
           client:
-            RestTemplate: 'DEBUG'
+            RestTemplate: "DEBUG"
 management:
   endpoint:
     flyway:
-      access: unrestricted
+      access: "unrestricted"
     health:
-      access: unrestricted
+      access: "unrestricted"
   endpoints:
     access:
-      default: unrestricted
+      default: "unrestricted"
   health:
     ldap:
       enabled: false
 proxy:
-  httpHost: ''
-  httpPort: ''
-  httpsHost: ''
-  httpsPort: ''
-  nonProxyHosts: ''
+  httpHost: ""
+  httpPort: ""
+  httpsHost: ""
+  httpsPort: ""
+  nonProxyHosts: ""
 server:
   error:
     whitelabel:
@@ -93,12 +93,12 @@ server:
   port: 8080
 spring:
   autoconfigure:
-    exclude: 'org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration'
+    exclude: "org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration"
   flyway:
-    table: 'schema_version'
+    table: "schema_version"
   jpa:
     hibernate:
-      ddl-auto: 'validate'
+      ddl-auto: "validate"
     open-in-view: false
     properties:
       hibernate:
@@ -106,13 +106,13 @@ spring:
   mustache:
     check-template-location: false
   profiles:
-    active: 'h2'
+    active: "h2"
   servlet:
     multipart:
-      max-file-size: '10MB'
-      max-request-size: '10MB'
+      max-file-size: "10MB"
+      max-request-size: "10MB"
 springdoc:
-  paths-to-match: '/api/**'
+  paths-to-match: "/api/**"
   swagger-ui:
-    tags-sorter: 'alpha'
+    tags-sorter: "alpha"
   writer-with-order-by-keys: true

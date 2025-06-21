@@ -1,22 +1,22 @@
 application:
   authentication:
-    provider: 'database'
+    provider: "database"
   widgets:
     updateEnable: false
 logging:
   level:
     io:
       suricate:
-        monitoring: 'INFO'
+        monitoring: "INFO"
     org:
       hibernate:
-        SQL: 'INFO'
+        SQL: "INFO"
 spring:
   datasource:
-    driverClassName: 'org.postgresql.Driver'
+    driverClassName: "org.postgresql.Driver"
   flyway:
-    locations: 'classpath:flyway/postgresql'
+    locations: "classpath:flyway/postgresql"
   jpa:
     open-in-view: false
   main:
-    banner-mode: 'off'
+    banner-mode: "off"

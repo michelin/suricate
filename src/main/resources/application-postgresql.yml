@@ -1,8 +1,8 @@
 spring:
   datasource:
-    driverClassName: 'org.postgresql.Driver'
-    password: 'changeme'
-    url: 'jdbc:postgresql://localhost:5432/postgres?currentSchema=suricate'
-    username: 'postgres'
+    driverClassName: "org.postgresql.Driver"
+    password: "changeme"
+    url: "jdbc:postgresql://localhost:5432/postgres?currentSchema=suricate"
+    username: "postgres"
   flyway:
-    locations: 'classpath:flyway/postgresql'
+    locations: "classpath:flyway/postgresql"
