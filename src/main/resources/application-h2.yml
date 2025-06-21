@@ -1,11 +1,11 @@
 spring:
   datasource:
-    driverClassName: 'org.h2.Driver'
-    password: ''
-    url: 'jdbc:h2:file:./h2/suricate;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=VALUE'
-    username: 'sa'
+    driverClassName: "org.h2.Driver"
+    password: ""
+    url: "jdbc:h2:file:./h2/suricate;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=VALUE"
+    username: "sa"
   flyway:
-    locations: 'classpath:flyway/postgresql,classpath:flyway/h2'
+    locations: "classpath:flyway/postgresql,classpath:flyway/h2"
   h2:
     console:
       enabled: true

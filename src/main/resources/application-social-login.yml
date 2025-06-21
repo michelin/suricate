@@ -1,6 +1,6 @@
 application:
   authentication:
-    socialProviders: 'github'
+    socialProviders: "github"
     socialProvidersConfig:
       gitlab:
         nameCaseParse: false
@@ -10,18 +10,14 @@ spring:
       client:
         provider:
           gitlab:
-            issuer-uri: 'https://gitlab.com'
-            # Required for OAuth2. Default discovered "user-info-uri" endpoint not working (HTTP 403), so we override it with API user info endpoint
-            # user-info-uri: 'https://gitlab.com/api/v4/user'
-            # user-name-attribute: 'username'
+            issuer-uri: "https://gitlab.com"
         registration:
-          github: # GitHub provider already predefined in CommonOAuth2Provider
-            client-id: '<github-client-id>'
-            client-secret: '<github-client-secret>'
+          github:
+            client-id: "<github-client-id>"
+            client-secret: "<github-client-secret>"
           gitlab:
-            authorization-grant-type: 'authorization_code'
-            client-id: '<gitlab-client-id>'
-            client-secret: '<gitlab-client-secret>'
-            redirect-uri: 'http://localhost:8080/login/oauth2/code/gitlab'
-            scope: 'read_user,openid,profile,email' # OIDC
-            # scope: 'read_user'
+            authorization-grant-type: "authorization_code"
+            client-id: "<gitlab-client-id>"
+            client-secret: "<gitlab-client-secret>"
+            redirect-uri: "http://localhost:8080/login/oauth2/code/gitlab"
+            scope: "read_user,openid,profile,email"

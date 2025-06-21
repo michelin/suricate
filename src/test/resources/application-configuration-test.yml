@@ -1,40 +1,40 @@
 application:
   authentication:
-    provider: 'database'
+    provider: "database"
   ssl:
     keyStore:
-      password: 'keyStorePassword'
-      path: 'src/test/resources/fake-store'
-      type: 'keyStoreType'
+      password: "keyStorePassword"
+      path: "src/test/resources/fake-store"
+      type: "keyStoreType"
     trustStore:
-      password: 'trustStorePassword'
-      path: 'src/test/resources/fake-store'
-      type: 'trustStoreType'
+      password: "trustStorePassword"
+      path: "src/test/resources/fake-store"
+      type: "trustStoreType"
   widgets:
     updateEnable: false
 logging:
   level:
     io:
       suricate:
-        monitoring: 'INFO'
+        monitoring: "INFO"
     org:
       hibernate:
-        SQL: 'INFO'
+        SQL: "INFO"
 proxy:
-  httpHost: 'httpHost'
+  httpHost: "httpHost"
   httpPort: 8080
-  httpsHost: 'httpsHost'
+  httpsHost: "httpsHost"
   httpsPort: 443
-  nonProxyHosts: 'nonProxyHosts'
+  nonProxyHosts: "nonProxyHosts"
 spring:
   datasource:
-    driverClassName: 'org.h2.Driver'
-    password: ''
-    url: 'jdbc:h2:mem:test;NON_KEYWORDS=VALUE'
-    username: 'sa'
+    driverClassName: "org.h2.Driver"
+    password: ""
+    url: "jdbc:h2:mem:test;NON_KEYWORDS=VALUE"
+    username: "sa"
   flyway:
-    locations: 'classpath:flyway/postgresql,classpath:flyway/h2'
+    locations: "classpath:flyway/postgresql,classpath:flyway/h2"
   jpa:
     open-in-view: false
   main:
-    banner-mode: 'off'
+    banner-mode: "off"
