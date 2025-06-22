@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { IMessage, RxStompConfig } from '@stomp/rx-stomp';
 import { Observable } from 'rxjs';
 import SockJS from 'sockjs-client/dist/sockjs';
@@ -30,17 +30,12 @@ import { RxStompService } from '../rx-stomp/rx-stomp.service';
  */
 @Injectable({ providedIn: 'root' })
 export class WebsocketService {
+  private readonly rxStompService = inject(RxStompService);
+
   /**
    * The base WS url
    */
   private static readonly baseWsEndpoint = `${EnvironmentService.backendUrl}/ws`;
-
-  /**
-   * The constructor
-   *
-   * @param rxStompService The stomp service for websockets
-   */
-  constructor(private readonly rxStompService: RxStompService) {}
 
   /**
    * Get the websocket config

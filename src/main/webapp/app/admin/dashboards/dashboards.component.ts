@@ -19,7 +19,7 @@
 
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -60,6 +60,10 @@ import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/fo
   ]
 })
 export class DashboardsComponent extends ListComponent<Project, ProjectRequest> {
+  private readonly httpProjectService: HttpProjectService;
+  private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
+  private readonly projectUsersFormFieldsService = inject(ProjectUsersFormFieldsService);
+
   /**
    * Project selected in the list for modifications
    */
@@ -67,17 +71,11 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
 
   /**
    * Constructor
-   *
-   * @param httpProjectService Manage the http calls for a project
-   * @param projectFormFieldsService Build form fields for a project
-   * @param projectUsersFormFieldsService Build form fields for projects users
    */
-  constructor(
-    private readonly httpProjectService: HttpProjectService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService,
-    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService
-  ) {
-    super(httpProjectService);
+  constructor() {
+    const httpProjectService = inject(HttpProjectService);
+    super();
+    this.httpProjectService = httpProjectService;
 
     this.initHeaderConfiguration();
     this.initListConfiguration();

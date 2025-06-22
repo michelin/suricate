@@ -19,7 +19,7 @@
 
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject, EMPTY, forkJoin, ObservableInput, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
@@ -61,6 +61,10 @@ import { RepositoryFormFieldsService } from '../../shared/services/frontend/form
   ]
 })
 export class RepositoriesComponent extends ListComponent<Repository, RepositoryRequest> {
+  private readonly httpRepositoryService: HttpRepositoryService;
+  private readonly repositoryFormFieldsService = inject(RepositoryFormFieldsService);
+  private readonly datePipe = inject(DatePipe);
+
   /**
    * The repository being built
    */
@@ -73,17 +77,12 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
 
   /**
    * Constructor
-   *
-   * @param httpRepositoryService The HTTP repository service
-   * @param repositoryFormFieldsService The repository form fields service
-   * @param datePipe The date pipe
    */
-  constructor(
-    private readonly httpRepositoryService: HttpRepositoryService,
-    private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
-    private readonly datePipe: DatePipe
-  ) {
-    super(httpRepositoryService);
+  constructor() {
+    const httpRepositoryService = inject(HttpRepositoryService);
+    super();
+    this.httpRepositoryService = httpRepositoryService;
+
     this.initListConfiguration();
     this.initFilter();
   }

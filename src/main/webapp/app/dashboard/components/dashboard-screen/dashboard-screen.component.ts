@@ -22,6 +22,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -76,6 +77,11 @@ declare global {
   ]
 })
 export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDestroy {
+  private readonly renderer = inject(Renderer2);
+  private readonly httpProjectService = inject(HttpProjectService);
+  private readonly websocketService = inject(WebsocketService);
+  private readonly libraryService = inject(LibraryService);
+
   /**
    * Reference on the span containing all the required JS libraries
    */
@@ -154,21 +160,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
-
-  /**
-   * The constructor
-   *
-   * @param renderer The renderer Angular entity
-   * @param httpProjectService Back-End service used to manage the project
-   * @param websocketService Front-End service used to manage the web sockets
-   * @param libraryService Front-End service used to manage the libraries
-   */
-  constructor(
-    private readonly renderer: Renderer2,
-    private readonly httpProjectService: HttpProjectService,
-    private readonly websocketService: WebsocketService,
-    private readonly libraryService: LibraryService
-  ) {}
 
   /**
    * On changes method

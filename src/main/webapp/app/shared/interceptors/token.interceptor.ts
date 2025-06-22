@@ -18,7 +18,7 @@
  */
 
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -30,11 +30,7 @@ import { AuthenticationService } from '../services/frontend/authentication/authe
  */
 @Injectable({ providedIn: 'root' })
 export class TokenInterceptor implements HttpInterceptor {
-  /**
-   * Constructor
-   * @param router The router
-   */
-  constructor(private readonly router: Router) {}
+  private readonly router = inject(Router);
 
   /**
    * Intercept the HTTP requests and add the token to them

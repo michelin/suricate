@@ -19,7 +19,7 @@
 
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HeaderComponent } from '../../layout/components/header/header.component';
@@ -54,13 +54,17 @@ import { HttpWidgetService } from '../../shared/services/backend/http-widget/htt
   ]
 })
 export class CatalogComponent extends ListComponent<Widget, WidgetRequest> {
+  private readonly httpWidgetService: HttpWidgetService;
+
   /**
    * Constructor
    *
    * @param httpWidgetService Suricate service used to manage the http calls for widgets
    */
-  constructor(private readonly httpWidgetService: HttpWidgetService) {
-    super(httpWidgetService);
+  constructor() {
+    const httpWidgetService = inject(HttpWidgetService);
+    super();
+    this.httpWidgetService = httpWidgetService;
 
     this.initHeaderConfiguration();
     this.initFilter();

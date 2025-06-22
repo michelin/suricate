@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
@@ -33,19 +33,8 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest> {
-  /**
-   * Global endpoint for Widgets
-   */
   private static readonly widgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/widgets`;
-
-  /**
-   * Constructor
-   *
-   * @param {HttpClient} httpClient The http client service
-   */
-  constructor(private readonly httpClient: HttpClient) {
-    super();
-  }
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Get the list of widgets

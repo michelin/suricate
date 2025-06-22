@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -37,12 +37,7 @@ import { HttpRoleService } from '../../../backend/http-role/http-role.service';
  */
 @Injectable({ providedIn: 'root' })
 export class UserFormFieldsService {
-  /**
-   * Constructor
-   *
-   * @param httpRoleService Suricate service used to manage http calls for role
-   */
-  constructor(private readonly httpRoleService: HttpRoleService) {}
+  private readonly httpRoleService = inject(HttpRoleService);
 
   /**
    * Build the form fields of the user

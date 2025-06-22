@@ -93,16 +93,13 @@ import { MosaicComponent } from '../mosaic/mosaic.component';
   ]
 })
 export class InputComponent extends BaseInputComponent implements OnInit {
+  protected translateService = inject(TranslateService);
+
   /**
    * A reference to a component. Used to take screenshot
    */
   @Input()
   public componentRef: ElementRef;
-
-  /**
-   * Translate service
-   */
-  protected translateService: TranslateService;
 
   /**
    * The data type enum
@@ -123,14 +120,6 @@ export class InputComponent extends BaseInputComponent implements OnInit {
    * Configuration for the delete row button
    */
   public deleteRowButtonConfiguration: ButtonConfiguration<{ formGroup: UntypedFormGroup; index: number }>[];
-
-  /**
-   * Constructor
-   */
-  constructor() {
-    super();
-    this.translateService = inject(TranslateService);
-  }
 
   /**
    * Called when the component is init

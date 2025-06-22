@@ -50,6 +50,14 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
   standalone: true
 })
 export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
+  private readonly childService = inject<AbstractHttpService<TRet, TReq>>(AbstractHttpService);
+  protected dialogService = inject(DialogService);
+  protected sidenavService = inject(SidenavService);
+  protected translateService = inject(TranslateService);
+  protected toastService = inject(ToastService);
+  protected router = inject(Router);
+  private readonly formService = inject(FormService);
+
   /**
    * Key for the research field
    */
@@ -63,37 +71,7 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   /**
    * Subject used to emit the value when the research is modified
    */
-  private researchChanged: Subject<string> = new Subject<string>();
-
-  /**
-   * Frontend service used to display dialogs
-   */
-  protected dialogService: DialogService;
-
-  /**
-   * The sidenav service used to display the sidenav
-   */
-  protected sidenavService: SidenavService;
-
-  /**
-   * ngx-translate service used to manage the translations
-   */
-  protected translateService: TranslateService;
-
-  /**
-   * Frontend service used to display messages
-   */
-  protected toastService: ToastService;
-
-  /**
-   * The form service
-   */
-  private readonly formService: FormService;
-
-  /**
-   * Angular service used to manage routes
-   */
-  protected router: Router;
+  private readonly researchChanged: Subject<string> = new Subject<string>();
 
   /**
    * Configuration of the header component
@@ -144,20 +122,6 @@ export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
    * The form displayed by the sidenav
    */
   public formGroup: UntypedFormGroup;
-
-  /**
-   * Constructor
-   *
-   * @param childService The child http service
-   */
-  constructor(private readonly childService: AbstractHttpService<TRet, TReq>) {
-    this.dialogService = inject(DialogService);
-    this.sidenavService = inject(SidenavService);
-    this.translateService = inject(TranslateService);
-    this.toastService = inject(ToastService);
-    this.router = inject(Router);
-    this.formService = inject(FormService);
-  }
 
   /**
    * Called when the component is init

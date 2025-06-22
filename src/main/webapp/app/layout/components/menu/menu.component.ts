@@ -18,7 +18,7 @@
  */
 
 import { NgOptimizedImage } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
@@ -69,6 +69,9 @@ import { FooterComponent } from '../footer/footer.component';
   ]
 })
 export class MenuComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly settingsService = inject(SettingsService);
+
   /**
    * The user connected
    */
@@ -88,16 +91,6 @@ export class MenuComponent implements OnInit {
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
-
-  /**
-   * Constructor
-   * @param router Angular service used to manage routes
-   * @param settingsService Frontend service used to manage settings
-   */
-  constructor(
-    private readonly router: Router,
-    private readonly settingsService: SettingsService
-  ) {}
 
   /**
    * Called when the component is init

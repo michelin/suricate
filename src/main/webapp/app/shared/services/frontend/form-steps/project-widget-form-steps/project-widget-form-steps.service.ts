@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { EMPTY, from, Observable, of } from 'rxjs';
 import { map, switchMap, tap, toArray } from 'rxjs/operators';
@@ -44,6 +44,9 @@ import { HttpWidgetService } from '../../../backend/http-widget/http-widget.serv
  */
 @Injectable({ providedIn: 'root' })
 export class ProjectWidgetFormStepsService {
+  private readonly httpCategoryService = inject(HttpCategoryService);
+  private readonly httpWidgetService = inject(HttpWidgetService);
+
   /**
    * Key used for the step where we select a category
    */
@@ -63,17 +66,6 @@ export class ProjectWidgetFormStepsService {
    * Key used to store the widget ID
    */
   public static readonly widgetIdFieldKey = 'widgetId';
-
-  /**
-   * Constructor
-   *
-   * @param httpCategoryService HTTP category service
-   * @param httpWidgetService HTTP widget service
-   */
-  constructor(
-    private readonly httpCategoryService: HttpCategoryService,
-    private readonly httpWidgetService: HttpWidgetService
-  ) {}
 
   /**
    * Generation of the form options for widget params

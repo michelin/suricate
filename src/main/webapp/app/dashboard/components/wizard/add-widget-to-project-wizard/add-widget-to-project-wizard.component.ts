@@ -18,7 +18,7 @@
  */
 
 import { NgOptimizedImage } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { MatStep, MatStepLabel, MatStepper, MatStepperIcon } from '@angular/material/stepper';
@@ -59,27 +59,16 @@ import { ToastService } from '../../../../shared/services/frontend/toast/toast.s
   ]
 })
 export class AddWidgetToProjectWizardComponent extends WizardComponent implements OnInit {
-  /**
-   * Constructor
-   * @param projectWidgetFormStepsService The project widget form steps service
-   * @param httpProjectWidgetsService The http project widget service
-   * @param httpProjectService The http project service
-   * @param toastService The toast service
-   */
-  constructor(
-    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
-    private readonly httpProjectWidgetsService: HttpProjectWidgetService,
-    private readonly httpProjectService: HttpProjectService,
-    private readonly toastService: ToastService
-  ) {
-    super();
-    this.initHeaderConfiguration();
-  }
+  private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
+  private readonly httpProjectWidgetsService = inject(HttpProjectWidgetService);
+  private readonly httpProjectService = inject(HttpProjectService);
+  private readonly toastService = inject(ToastService);
 
   /**
    * Called when the component is init
    */
   public override ngOnInit(): void {
+    this.initHeaderConfiguration();
     this.projectWidgetFormStepsService.generateGlobalSteps().subscribe((formSteps: FormStep[]) => {
       this.wizardConfiguration = { steps: formSteps };
 

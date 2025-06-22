@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -37,12 +37,7 @@ import { FormStep } from '../../../models/frontend/form/form-step';
  */
 @Injectable({ providedIn: 'root' })
 export class FormService {
-  /**
-   * Constructor
-   *
-   * @param formBuilder The form builder service
-   */
-  constructor(private readonly formBuilder: UntypedFormBuilder) {}
+  private readonly formBuilder = inject(UntypedFormBuilder);
 
   /**
    * Validate the form

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
@@ -32,16 +32,8 @@ import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-f
  */
 @Injectable({ providedIn: 'root' })
 export class WidgetConfigurationFormFieldsService {
-  /**
-   * Constructor
-   *
-   * @param formService The form service
-   * @param projectWidgetFormStepsService The project widget form step service
-   */
-  constructor(
-    private readonly formService: FormService,
-    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService
-  ) {}
+  private readonly formService = inject(FormService);
+  private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
 
   /**
    * Get the list of steps for a dashboard

@@ -17,14 +17,12 @@
  * under the License.
  */
 
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
-  MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -41,17 +39,11 @@ import { ButtonsComponent } from '../buttons/buttons.component';
 @Component({
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.scss'],
-  imports: [
-    MatDialogTitle,
-    CdkScrollable,
-    MatDialogContent,
-    MatDialogActions,
-    ButtonsComponent,
-    MatDialogClose,
-    TranslatePipe
-  ]
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, ButtonsComponent, MatDialogClose, TranslatePipe]
 })
 export class ConfirmDialogComponent {
+  private readonly data = inject<ConfirmationDialogConfiguration>(MAT_DIALOG_DATA);
+
   /**
    * The configuration of the confirmation dialog
    */
@@ -64,15 +56,9 @@ export class ConfirmDialogComponent {
 
   /**
    * Constructor
-   *
-   * @param confirmationDialogRef Reference on the instance of this dialog
-   * @param data The data given to the dialog
    */
-  constructor(
-    private readonly confirmationDialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private readonly data: ConfirmationDialogConfiguration
-  ) {
-    this.configuration = data;
+  constructor() {
+    this.configuration = this.data;
     this.initYesNoButtonsConfiguration();
   }
 

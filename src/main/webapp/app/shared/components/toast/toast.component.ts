@@ -19,7 +19,7 @@
 
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { NgClass } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -106,10 +106,12 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
   imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
 })
 export class ToastComponent implements OnInit, OnDestroy {
+  private readonly toastService = inject(ToastService);
+
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private unsubscribe: Subject<void> = new Subject<void>();
+  private readonly unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * The component state
@@ -140,13 +142,6 @@ export class ToastComponent implements OnInit, OnDestroy {
    * The list of material icon codes
    */
   public materialIconRecords = MaterialIconRecords;
-
-  /**
-   * Constructor
-   *
-   * @param toastService The toast service to inject
-   */
-  constructor(private toastService: ToastService) {}
 
   /**
    * Called when the component is init

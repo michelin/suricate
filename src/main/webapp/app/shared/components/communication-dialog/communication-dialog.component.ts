@@ -19,7 +19,7 @@
 
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { NgClass } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -54,6 +54,8 @@ import { ButtonsComponent } from '../buttons/buttons.component';
   ]
 })
 export class CommunicationDialogComponent implements OnInit {
+  private readonly data = inject<CommunicationDialogConfiguration>(MAT_DIALOG_DATA);
+
   /**
    * The configuration of the confirmation dialog
    */
@@ -65,18 +67,10 @@ export class CommunicationDialogComponent implements OnInit {
   public buttons: ButtonConfiguration<unknown>[] = [];
 
   /**
-   * Constructor
-   *
-   * @param data The data object that contains every information to display
-   */
-  constructor(@Inject(MAT_DIALOG_DATA) private readonly data: CommunicationDialogConfiguration) {
-    this.initButtons();
-  }
-
-  /**
    * Called when the dialog is init
    */
   public ngOnInit(): void {
+    this.initButtons();
     this.configuration = this.data;
   }
 

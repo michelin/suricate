@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -34,23 +34,14 @@ import { HttpUserService } from '../../shared/services/backend/http-user/http-us
  */
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
+  private readonly translateService = inject(TranslateService);
+  private readonly httpSettingService = inject(HttpSettingService);
+  private readonly httpUserService = inject(HttpUserService);
+
   /**
    * Theme of the user
    */
-  private currentThemeValueSubject = new Subject<string>();
-
-  /**
-   * Constructor
-   *
-   * @param translateService The translate service to inject
-   * @param httpSettingService The http setting service
-   * @param httpUserService The http user service to inject
-   */
-  constructor(
-    private translateService: TranslateService,
-    private httpSettingService: HttpSettingService,
-    private httpUserService: HttpUserService
-  ) {}
+  private readonly currentThemeValueSubject = new Subject<string>();
 
   /**
    * Init default settings when any user is connected

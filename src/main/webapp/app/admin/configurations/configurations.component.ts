@@ -19,7 +19,7 @@
 
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 
 import { HeaderComponent } from '../../layout/components/header/header.component';
@@ -34,6 +34,7 @@ import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
 import { WidgetConfigurationRequest } from '../../shared/models/backend/widget-configuration/widget-configuration-request';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
 import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 
@@ -55,20 +56,19 @@ import { WidgetConfigurationFormFieldsService } from '../../shared/services/fron
     NgOptimizedImage,
     ButtonsComponent,
     PaginatorComponent
-  ]
+  ],
+  providers: [{ provide: AbstractHttpService, useClass: HttpCategoryParametersService }]
 })
 export class ConfigurationsComponent extends ListComponent<CategoryParameter, WidgetConfigurationRequest> {
+  private readonly httpCategoryParametersService: HttpCategoryParametersService;
+  private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
+
   /**
    * Constructor
-   *
-   * @param httpCategoryParametersService Suricate service used to manage http calls for category parameters
-   * @param widgetConfigurationFormFieldsService Frontend service used to build form fields for project configuration
    */
-  constructor(
-    private readonly httpCategoryParametersService: HttpCategoryParametersService,
-    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService
-  ) {
-    super(httpCategoryParametersService);
+  constructor() {
+    super();
+    this.httpCategoryParametersService = inject(HttpCategoryParametersService);
 
     this.initHeaderConfiguration();
     this.initListConfiguration();

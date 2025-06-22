@@ -26,9 +26,6 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpAssetService {
-  /**
-   * Global assets endpoint
-   */
   private static readonly assetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/assets`;
 
   /**

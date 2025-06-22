@@ -41,9 +41,4 @@ export class FooterComponent {
    * The env type
    */
   public environment = EnvironmentService.appEnv;
-
-  /**
-   * The current year
-   */
-  public year = new Date().getFullYear();
 }

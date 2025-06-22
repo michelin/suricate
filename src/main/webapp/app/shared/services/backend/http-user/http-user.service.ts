@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
@@ -38,12 +38,7 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
 @Injectable({ providedIn: 'root' })
 export class HttpUserService implements AbstractHttpService<User, UserRequest> {
   public static readonly usersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/users`;
-
-  /**
-   * Constructor
-   * @param httpClient The http client
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Get the list of users

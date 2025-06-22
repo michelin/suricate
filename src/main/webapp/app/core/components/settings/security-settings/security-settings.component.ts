@@ -20,7 +20,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardActions, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -85,6 +85,13 @@ import { ToastService } from '../../../../shared/services/frontend/toast/toast.s
   ]
 })
 export class SecuritySettingsComponent implements OnInit {
+  private readonly formService = inject(FormService);
+  private readonly toastService = inject(ToastService);
+  private readonly translateService = inject(TranslateService);
+  private readonly httpUserService = inject(HttpUserService);
+  private readonly dialogService = inject(DialogService);
+  private readonly clipboard = inject(Clipboard);
+
   /**
    * The columns of the token table
    */
@@ -129,24 +136,6 @@ export class SecuritySettingsComponent implements OnInit {
    * The user tokens
    */
   public tokens: PersonalAccessToken[];
-
-  /**
-   * Constructor
-   * @param formService The form service
-   * @param toastService The toast service
-   * @param translateService The translate service
-   * @param httpUserService The http user service
-   * @param dialogService The dialog service
-   * @param clipboard The clipboard service
-   */
-  constructor(
-    private readonly formService: FormService,
-    private readonly toastService: ToastService,
-    private readonly translateService: TranslateService,
-    private readonly httpUserService: HttpUserService,
-    private readonly dialogService: DialogService,
-    private readonly clipboard: Clipboard
-  ) {}
 
   /**
    * Init method

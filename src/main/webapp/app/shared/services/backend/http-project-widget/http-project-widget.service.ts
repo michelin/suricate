@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ProjectWidget } from '../../../models/backend/project-widget/project-widget';
@@ -30,17 +30,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpProjectWidgetService {
-  /**
-   * Global endpoint for project widgets
-   */
   private static readonly projectWidgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projectWidgets`;
-
-  /**
-   * Constructor
-   *
-   * @param {HttpClient} httpClient The http client service
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Get a project widget by id

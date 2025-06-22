@@ -29,9 +29,6 @@ import { EnvironmentService } from '../../frontend/environment/environment.servi
  */
 @Injectable({ providedIn: 'root' })
 export abstract class AbstractHttpService<TRet, TReq> {
-  /**
-   * The base API url
-   */
   public static readonly baseApiEndpoint = `${EnvironmentService.backendUrl}/api`;
 
   /**

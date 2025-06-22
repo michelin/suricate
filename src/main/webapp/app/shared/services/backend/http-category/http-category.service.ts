@@ -17,7 +17,7 @@
  * under the License.
  */
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Category } from '../../../models/backend/category/category';
@@ -33,17 +33,8 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpCategoryService {
-  /**
-   * Global endpoint for Widgets
-   */
   private static readonly categoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/categories`;
-
-  /**
-   * Constructor
-   *
-   * @param httpClient the http client to inject
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Retrieve the full list of categories

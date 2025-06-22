@@ -18,7 +18,7 @@
  */
 
 import { NgOptimizedImage } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { MatIcon } from '@angular/material/icon';
@@ -59,6 +59,12 @@ import { ImageUtils } from '../../../shared/utils/image.utils';
   ]
 })
 export class HomeComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly httpProjectService = inject(HttpProjectService);
+  private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
+  private readonly sidenavService = inject(SidenavService);
+  private readonly toastService = inject(ToastService);
+
   /**
    * Configuration of the header
    */
@@ -83,23 +89,6 @@ export class HomeComponent implements OnInit {
    * The list of dashboards
    */
   public projects: Project[];
-
-  /**
-   * Constructor
-   *
-   * @param router The router
-   * @param httpProjectService The HTTP project service
-   * @param projectFormFieldsService The project form fields service
-   * @param sidenavService The sidenav service
-   * @param toastService The toast service
-   */
-  constructor(
-    private readonly router: Router,
-    private readonly httpProjectService: HttpProjectService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService,
-    private readonly sidenavService: SidenavService,
-    private readonly toastService: ToastService
-  ) {}
 
   /**
    * Init method

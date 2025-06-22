@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
@@ -32,17 +32,8 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpRoleService {
-  /**
-   * Global roles endpoint
-   */
   private static readonly rolesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/roles`;
-
-  /**
-   * Constructor
-   *
-   * @param httpClient The http client service to inject
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Get the list of roles

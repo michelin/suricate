@@ -18,7 +18,7 @@
  */
 
 import { KeyValuePipe, NgOptimizedImage } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { IMessage } from '@stomp/rx-stomp';
 import { Observable, Subject } from 'rxjs';
@@ -55,6 +55,12 @@ import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.c
   ]
 })
 export class DashboardTvComponent implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly httpProjectService = inject(HttpProjectService);
+  private readonly httpProjectWidgetsService = inject(HttpProjectWidgetService);
+  private readonly websocketService = inject(WebsocketService);
+
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
@@ -96,28 +102,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public timer = 0;
   public timerPercentage = 100;
   public timerInterval: NodeJS.Timeout;
-
-  /**
-   * The constructor
-   *
-   * @param router              Service used to manage app's route
-   * @param activatedRoute      Service used to manage the route activated by the component
-   * @param httpProjectService  Service used to manage http calls for a project
-   * @param httpProjectWidgetsService  The HTTP project widgets service
-   * @param websocketService    Service used to manage websocket
-   */
-  constructor(
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly httpProjectService: HttpProjectService,
-    private readonly httpProjectWidgetsService: HttpProjectWidgetService,
-    private readonly websocketService: WebsocketService
-  ) {}
-
-  /**********************************************************************************************************/
-  /*                      COMPONENT LIFE CYCLE                                                              */
-
-  /**********************************************************************************************************/
 
   /**
    * Called when the component is init for the first time

@@ -18,7 +18,7 @@
  */
 
 import { TitleCasePipe } from '@angular/common';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
@@ -37,26 +37,19 @@ import { CustomValidator } from '../../../../validators/custom-validator';
  */
 @Injectable({ providedIn: 'root' })
 export class RepositoryFormFieldsService {
+  private readonly translateService = inject(TranslateService);
+  private readonly customAsyncValidatorService = inject(CustomAsyncValidatorService);
+
   /**
    * Records used to manage the creation of the form fields related to the repository type
    */
-  private static repositoryTypeFormFieldsRecords: Record<RepositoryTypeEnum, (repository: Repository) => FormField[]> =
-    {
-      [RepositoryTypeEnum.LOCAL]: (repository: Repository) =>
-        RepositoryFormFieldsService.getLocalFormFields(repository),
-      [RepositoryTypeEnum.REMOTE]: (repository: Repository) =>
-        RepositoryFormFieldsService.getRemoteFormFields(repository)
-    };
-
-  /**
-   * Constructor
-   * @param translateService The translate service
-   * @param customAsyncValidatorService The async validator service
-   */
-  constructor(
-    private readonly translateService: TranslateService,
-    private readonly customAsyncValidatorService: CustomAsyncValidatorService
-  ) {}
+  private static readonly repositoryTypeFormFieldsRecords: Record<
+    RepositoryTypeEnum,
+    (repository: Repository) => FormField[]
+  > = {
+    [RepositoryTypeEnum.LOCAL]: (repository: Repository) => RepositoryFormFieldsService.getLocalFormFields(repository),
+    [RepositoryTypeEnum.REMOTE]: (repository: Repository) => RepositoryFormFieldsService.getRemoteFormFields(repository)
+  };
 
   /**
    * Get the form fields related to the local type

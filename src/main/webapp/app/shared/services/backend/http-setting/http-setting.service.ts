@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Setting } from '../../../models/backend/setting/setting';
@@ -29,17 +29,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpSettingService {
-  /**
-   * Global endpoint for settings
-   */
   private static readonly settingsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/settings`;
-
-  /**
-   * Constructor
-   *
-   * @param httpClient the http client to inject
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Get the list of settings
