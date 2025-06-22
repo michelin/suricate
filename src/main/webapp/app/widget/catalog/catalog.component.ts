@@ -19,7 +19,7 @@
 
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HeaderComponent } from '../../layout/components/header/header.component';
@@ -30,6 +30,7 @@ import { PaginatorComponent } from '../../shared/components/paginator/paginator.
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { Widget } from '../../shared/models/backend/widget/widget';
 import { WidgetRequest } from '../../shared/models/backend/widget/widget-request';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
 import { HttpAssetService } from '../../shared/services/backend/http-asset/http-asset.service';
 import { HttpWidgetService } from '../../shared/services/backend/http-widget/http-widget.service';
 
@@ -51,20 +52,15 @@ import { HttpWidgetService } from '../../shared/services/backend/http-widget/htt
     NgOptimizedImage,
     ButtonsComponent,
     PaginatorComponent
-  ]
+  ],
+  providers: [{ provide: AbstractHttpService, useClass: HttpWidgetService }]
 })
 export class CatalogComponent extends ListComponent<Widget, WidgetRequest> {
-  private readonly httpWidgetService: HttpWidgetService;
-
   /**
    * Constructor
-   *
-   * @param httpWidgetService Suricate service used to manage the http calls for widgets
    */
   constructor() {
-    const httpWidgetService = inject(HttpWidgetService);
     super();
-    this.httpWidgetService = httpWidgetService;
 
     this.initHeaderConfiguration();
     this.initFilter();

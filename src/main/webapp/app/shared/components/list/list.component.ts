@@ -49,7 +49,7 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
   styleUrls: ['./list.component.scss'],
   standalone: true
 })
-export class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
+export abstract class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
   private readonly childService = inject<AbstractHttpService<TRet, TReq>>(AbstractHttpService);
   protected dialogService = inject(DialogService);
   protected sidenavService = inject(SidenavService);

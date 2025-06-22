@@ -37,6 +37,7 @@ import { Project } from '../../shared/models/backend/project/project';
 import { ProjectRequest } from '../../shared/models/backend/project/project-request';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
 import { HttpProjectService } from '../../shared/services/backend/http-project/http-project.service';
 import { CssService } from '../../shared/services/frontend/css/css.service';
 import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
@@ -57,10 +58,11 @@ import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/fo
     NgOptimizedImage,
     ButtonsComponent,
     PaginatorComponent
-  ]
+  ],
+  providers: [{ provide: AbstractHttpService, useClass: HttpProjectService }]
 })
 export class DashboardsComponent extends ListComponent<Project, ProjectRequest> {
-  private readonly httpProjectService: HttpProjectService;
+  private readonly httpProjectService = inject(HttpProjectService);
   private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
   private readonly projectUsersFormFieldsService = inject(ProjectUsersFormFieldsService);
 
@@ -73,10 +75,7 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
    * Constructor
    */
   constructor() {
-    const httpProjectService = inject(HttpProjectService);
     super();
-    this.httpProjectService = httpProjectService;
-
     this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();

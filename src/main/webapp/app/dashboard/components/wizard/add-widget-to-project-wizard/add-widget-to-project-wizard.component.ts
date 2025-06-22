@@ -64,9 +64,6 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
   private readonly httpProjectService = inject(HttpProjectService);
   private readonly toastService = inject(ToastService);
 
-  /**
-   * Called when the component is init
-   */
   public override ngOnInit(): void {
     this.initHeaderConfiguration();
     this.projectWidgetFormStepsService.generateGlobalSteps().subscribe((formSteps: FormStep[]) => {

@@ -37,6 +37,7 @@ import { Repository } from '../../shared/models/backend/repository/repository';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
 import { HttpRepositoryService } from '../../shared/services/backend/http-repository/http-repository.service';
 import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
 
@@ -58,10 +59,11 @@ import { RepositoryFormFieldsService } from '../../shared/services/frontend/form
     NgOptimizedImage,
     ButtonsComponent,
     PaginatorComponent
-  ]
+  ],
+  providers: [{ provide: AbstractHttpService, useClass: HttpRepositoryService }]
 })
 export class RepositoriesComponent extends ListComponent<Repository, RepositoryRequest> {
-  private readonly httpRepositoryService: HttpRepositoryService;
+  private readonly httpRepositoryService = inject(HttpRepositoryService);
   private readonly repositoryFormFieldsService = inject(RepositoryFormFieldsService);
   private readonly datePipe = inject(DatePipe);
 
@@ -79,10 +81,7 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
    * Constructor
    */
   constructor() {
-    const httpRepositoryService = inject(HttpRepositoryService);
     super();
-    this.httpRepositoryService = httpRepositoryService;
-
     this.initListConfiguration();
     this.initFilter();
   }

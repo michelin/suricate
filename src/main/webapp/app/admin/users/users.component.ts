@@ -34,6 +34,7 @@ import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Role } from '../../shared/models/backend/role/role';
 import { User } from '../../shared/models/backend/user/user';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
 import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
 
@@ -55,10 +56,11 @@ import { UserFormFieldsService } from '../../shared/services/frontend/form-field
     NgOptimizedImage,
     ButtonsComponent,
     PaginatorComponent
-  ]
+  ],
+  providers: [{ provide: AbstractHttpService, useClass: HttpAdminUserService }]
 })
 export class UsersComponent extends ListComponent<User, UserRequest> implements OnInit {
-  private readonly httpAdminUserService: HttpAdminUserService;
+  private readonly httpAdminUserService = inject(HttpAdminUserService);
   private readonly userFormFieldsService = inject(UserFormFieldsService);
 
   /**
@@ -70,18 +72,12 @@ export class UsersComponent extends ListComponent<User, UserRequest> implements 
    * Constructor
    */
   constructor() {
-    const httpAdminUserService = inject(HttpAdminUserService);
     super();
-    this.httpAdminUserService = httpAdminUserService;
-
     this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();
   }
 
-  /**
-   * Called when the component is init
-   */
   public override ngOnInit(): void {
     super.ngOnInit();
   }

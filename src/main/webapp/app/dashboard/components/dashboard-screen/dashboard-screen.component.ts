@@ -33,7 +33,7 @@ import {
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { KtdGridComponent, KtdGridItemComponent, KtdGridItemPlaceholder } from '@katoid/angular-grid-layout';
-import { KtdGridLayout } from '@katoid/angular-grid-layout/lib/grid.definitions';
+import { KtdGridLayout } from '@katoid/angular-grid-layout';
 import { IMessage } from '@stomp/rx-stomp';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

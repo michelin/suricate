@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
@@ -27,7 +26,6 @@ import { EnvironmentService } from '../../frontend/environment/environment.servi
 /**
  * Service used to define the minimum requirement for a http service
  */
-@Injectable({ providedIn: 'root' })
 export abstract class AbstractHttpService<TRet, TReq> {
   public static readonly baseApiEndpoint = `${EnvironmentService.backendUrl}/api`;
 

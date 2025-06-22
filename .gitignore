@@ -8,3 +8,4 @@ node_modules/
 coverage/
 package-lock.json
 /.eslintcache
+dist

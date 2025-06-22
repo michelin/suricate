@@ -60,7 +60,7 @@ import { WidgetConfigurationFormFieldsService } from '../../shared/services/fron
   providers: [{ provide: AbstractHttpService, useClass: HttpCategoryParametersService }]
 })
 export class ConfigurationsComponent extends ListComponent<CategoryParameter, WidgetConfigurationRequest> {
-  private readonly httpCategoryParametersService: HttpCategoryParametersService;
+  private readonly httpCategoryParametersService = inject(HttpCategoryParametersService);
   private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
 
   /**
@@ -68,8 +68,6 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter, Wi
    */
   constructor() {
     super();
-    this.httpCategoryParametersService = inject(HttpCategoryParametersService);
-
     this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();
