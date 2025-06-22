@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { KtdGridLayoutItem } from '@katoid/angular-grid-layout/lib/grid.definitions';
+import { KtdGridLayoutItem } from '@katoid/angular-grid-layout';
 
 /**
  * Class that manage the utility function for grid items management

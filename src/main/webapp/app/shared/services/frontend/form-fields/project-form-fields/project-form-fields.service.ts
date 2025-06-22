@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -33,6 +33,8 @@ import { CssService } from '../../css/css.service';
  */
 @Injectable({ providedIn: 'root' })
 export class ProjectFormFieldsService {
+  private readonly translateService = inject(TranslateService);
+
   /**
    * Key of the form field for project name
    */
@@ -69,20 +71,14 @@ export class ProjectFormFieldsService {
   public static readonly progressBarFormFieldKey = 'displayProgressBar';
 
   /**
-   * Constructor
-   */
-  constructor(private translateService: TranslateService) {}
-
-  /**
    * Get the list of form fields for a dashboard
    *
    * @param project The project used for an edition
    */
   public generateProjectFormFields(project?: Project): FormField[] {
-    const backgroundColor =
-      project && project.gridProperties.cssStyle
-        ? CssService.extractCssValue(project.gridProperties.cssStyle, '.grid', 'background-color')
-        : '#87878700';
+    const backgroundColor = project?.gridProperties.cssStyle
+      ? CssService.extractCssValue(project.gridProperties.cssStyle, '.grid', 'background-color')
+      : '#87878700';
 
     return [
       {

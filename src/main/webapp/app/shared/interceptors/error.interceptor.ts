@@ -18,7 +18,7 @@
  */
 
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -32,15 +32,8 @@ import { ToastService } from '../services/frontend/toast/toast.service';
  */
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
-  /**
-   * Constructor
-   * @param router The router
-   * @param toastService The toast service
-   */
-  constructor(
-    private router: Router,
-    private toastService: ToastService
-  ) {}
+  private readonly router = inject(Router);
+  private readonly toastService = inject(ToastService);
 
   /**
    * Method that intercept the request

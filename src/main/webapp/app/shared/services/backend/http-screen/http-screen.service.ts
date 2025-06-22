@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
@@ -28,17 +28,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpScreenService {
-  /**
-   * Global endpoint for screens
-   */
   private static readonly screensApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/screens`;
-
-  /**
-   * The constructor
-   *
-   * @param httpClient The http client service
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Send the notification for connect a new tv to this dashboard

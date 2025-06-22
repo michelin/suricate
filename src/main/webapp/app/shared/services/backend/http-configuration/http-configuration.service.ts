@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { AuthenticationProvider } from '../../../enums/authentication-provider.enum';
@@ -29,16 +29,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpConfigurationService {
-  /**
-   * Global configurations endpoint
-   */
   private static readonly configurationsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/configurations`;
-
-  /**
-   * Constructor
-   * @param httpClient The http client service
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Get the authentication providers authorized by the Back-End

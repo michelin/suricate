@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 /**
@@ -28,11 +28,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   standalone: true
 })
 export class SafeHtmlPipe implements PipeTransform {
-  /**
-   * The constructor
-   * @param {DomSanitizer} domSanitizer The dom sanitizer service
-   */
-  constructor(private readonly domSanitizer: DomSanitizer) {}
+  private readonly domSanitizer = inject(DomSanitizer);
 
   /**
    * The transform function

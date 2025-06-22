@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
@@ -33,19 +33,8 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpCategoryParametersService extends AbstractHttpService<CategoryParameter, WidgetConfigurationRequest> {
-  /**
-   * Global configurations endpoint
-   */
   private static readonly configurationsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/category-parameters`;
-
-  /**
-   * Constructor
-   *
-   * @param httpClient The http client service
-   */
-  constructor(private readonly httpClient: HttpClient) {
-    super();
-  }
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Get all parameters of all categories

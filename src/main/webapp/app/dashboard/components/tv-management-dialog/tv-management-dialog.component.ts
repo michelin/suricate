@@ -18,7 +18,7 @@
  */
 
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -67,6 +67,13 @@ import { CustomValidator } from '../../../shared/validators/custom-validator';
   ]
 })
 export class TvManagementDialogComponent implements OnInit {
+  private readonly data = inject<{
+    project: Project;
+  }>(MAT_DIALOG_DATA);
+  private readonly httpProjectService = inject(HttpProjectService);
+  private readonly httpScreenService = inject(HttpScreenService);
+  private readonly formService = inject(FormService);
+
   /**
    * The configuration of the share button
    */
@@ -113,26 +120,10 @@ export class TvManagementDialogComponent implements OnInit {
   public materialIconRecords = MaterialIconRecords;
 
   /**
-   * Constructor
-   *
-   * @param data Angular service used to inject data in the modal
-   * @param httpProjectService Suricate service used to manage HTTP calls for project
-   * @param httpScreenService Suricate service used to manage HTTP calls for screens
-   * @param formService Frontend service used to help on form creation
-   */
-  constructor(
-    @Inject(MAT_DIALOG_DATA) private readonly data: { project: Project },
-    private readonly httpProjectService: HttpProjectService,
-    private readonly httpScreenService: HttpScreenService,
-    private readonly formService: FormService
-  ) {
-    this.initButtonsConfiguration();
-  }
-
-  /**
    * When the component is initialized
    */
   public ngOnInit(): void {
+    this.initButtonsConfiguration();
     this.project = this.data.project;
     this.getConnectedWebsocketClient();
     this.generateFormFields();

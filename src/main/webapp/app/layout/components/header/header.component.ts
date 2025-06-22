@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -35,27 +35,24 @@ import { HeaderConfiguration } from '../../../shared/models/frontend/header/head
   imports: [ButtonsComponent, MatDivider, TranslatePipe]
 })
 export class HeaderComponent implements OnInit {
+  private readonly route = inject(Router);
+
   /**
    * The configuration of the header
    */
   @Input()
   public configuration: HeaderConfiguration;
+
   /**
    * True if the menu should be display on the page
    */
   @Input()
   public showMenu = true;
+
   /**
    * The page name
    */
   public pageName: string;
-
-  /**
-   * The constructor
-   *
-   * @param {Router} route Angular service used to manage routes
-   */
-  constructor(private readonly route: Router) {}
 
   /**
    * When the component is init

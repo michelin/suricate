@@ -19,7 +19,7 @@
 
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgClass, NgOptimizedImage, TitleCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 
 import { HeaderComponent } from '../../layout/components/header/header.component';
@@ -34,6 +34,7 @@ import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Role } from '../../shared/models/backend/role/role';
 import { User } from '../../shared/models/backend/user/user';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
 import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
 import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
 
@@ -55,9 +56,13 @@ import { UserFormFieldsService } from '../../shared/services/frontend/form-field
     NgOptimizedImage,
     ButtonsComponent,
     PaginatorComponent
-  ]
+  ],
+  providers: [{ provide: AbstractHttpService, useClass: HttpAdminUserService }]
 })
 export class UsersComponent extends ListComponent<User, UserRequest> implements OnInit {
+  private readonly httpAdminUserService = inject(HttpAdminUserService);
+  private readonly userFormFieldsService = inject(UserFormFieldsService);
+
   /**
    * User selected in the list for modification
    */
@@ -65,24 +70,14 @@ export class UsersComponent extends ListComponent<User, UserRequest> implements 
 
   /**
    * Constructor
-   *
-   * @param httpAdminUserService Manage the http calls for users as admin
-   * @param userFormFieldsService Build the form fields for a user
    */
-  constructor(
-    private readonly httpAdminUserService: HttpAdminUserService,
-    private readonly userFormFieldsService: UserFormFieldsService
-  ) {
-    super(httpAdminUserService);
-
+  constructor() {
+    super();
     this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();
   }
 
-  /**
-   * Called when the component is init
-   */
   public override ngOnInit(): void {
     super.ngOnInit();
   }

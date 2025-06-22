@@ -19,7 +19,7 @@
 
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject, EMPTY, forkJoin, ObservableInput, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
@@ -37,6 +37,7 @@ import { Repository } from '../../shared/models/backend/repository/repository';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
 import { HttpRepositoryService } from '../../shared/services/backend/http-repository/http-repository.service';
 import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
 
@@ -58,9 +59,14 @@ import { RepositoryFormFieldsService } from '../../shared/services/frontend/form
     NgOptimizedImage,
     ButtonsComponent,
     PaginatorComponent
-  ]
+  ],
+  providers: [{ provide: AbstractHttpService, useClass: HttpRepositoryService }]
 })
 export class RepositoriesComponent extends ListComponent<Repository, RepositoryRequest> {
+  private readonly httpRepositoryService = inject(HttpRepositoryService);
+  private readonly repositoryFormFieldsService = inject(RepositoryFormFieldsService);
+  private readonly datePipe = inject(DatePipe);
+
   /**
    * The repository being built
    */
@@ -73,17 +79,9 @@ export class RepositoriesComponent extends ListComponent<Repository, RepositoryR
 
   /**
    * Constructor
-   *
-   * @param httpRepositoryService The HTTP repository service
-   * @param repositoryFormFieldsService The repository form fields service
-   * @param datePipe The date pipe
    */
-  constructor(
-    private readonly httpRepositoryService: HttpRepositoryService,
-    private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
-    private readonly datePipe: DatePipe
-  ) {
-    super(httpRepositoryService);
+  constructor() {
+    super();
     this.initListConfiguration();
     this.initFilter();
   }

@@ -18,7 +18,7 @@
  */
 
 import { NgClass, TitleCasePipe } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -63,6 +63,17 @@ import { LibraryService } from '../../../services/library/library.service';
   imports: [NgClass, SpinnerComponent, WidgetHtmlDirective, MatIcon, MatTooltip, SafeHtmlPipe, TranslatePipe]
 })
 export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
+  private readonly translateService = inject(TranslateService);
+  private readonly httpWidgetService = inject(HttpWidgetService);
+  private readonly httpProjectWidgetService = inject(HttpProjectWidgetService);
+  private readonly websocketService = inject(WebsocketService);
+  private readonly dialogService = inject(DialogService);
+  private readonly sidenavService = inject(SidenavService);
+  private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
+  private readonly toastService = inject(ToastService);
+  private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
+  private readonly libraryService = inject(LibraryService);
+
   /**
    * The projectWidget to display
    */
@@ -115,33 +126,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
-
-  /**
-   * Constructor
-   *
-   * @param translateService Front-End service used to manage translations
-   * @param httpWidgetService Back-End service used to manage http calls for widgets
-   * @param httpProjectWidgetService Back-End service used to manage http calls for project widgets
-   * @param websocketService Front-End service used to manage websocket connections
-   * @param dialogService Front-End service used to manage dialog
-   * @param sidenavService Front-End service used to manage sidenav
-   * @param projectWidgetFormStepsService Front-End service used to generate steps for project widget
-   * @param toastService Front-End service used to display messages
-   * @param widgetConfigurationFormFieldsService Front-End service used to manage the widget's category settings
-   * @param libraryService Front-End service used to manage the libraries
-   */
-  constructor(
-    private readonly translateService: TranslateService,
-    private readonly httpWidgetService: HttpWidgetService,
-    private readonly httpProjectWidgetService: HttpProjectWidgetService,
-    private readonly websocketService: WebsocketService,
-    private readonly dialogService: DialogService,
-    private readonly sidenavService: SidenavService,
-    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
-    private readonly toastService: ToastService,
-    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
-    private readonly libraryService: LibraryService
-  ) {}
 
   /**
    * Called when the component is init

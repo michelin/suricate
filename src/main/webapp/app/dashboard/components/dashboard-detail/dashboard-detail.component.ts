@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
@@ -81,6 +81,22 @@ import { TvManagementDialogComponent } from '../tv-management-dialog/tv-manageme
   ]
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly matDialog = inject(MatDialog);
+  private readonly translateService = inject(TranslateService);
+  private readonly httpProjectService = inject(HttpProjectService);
+  private readonly httpProjectWidgetsService = inject(HttpProjectWidgetService);
+  private readonly httpProjectGridsService = inject(HttpProjectGridService);
+  private readonly httpScreenService = inject(HttpScreenService);
+  private readonly projectUsersFormFieldsService = inject(ProjectUsersFormFieldsService);
+  private readonly dashboardService = inject(DashboardService);
+  private readonly sidenavService = inject(SidenavService);
+  private readonly toastService = inject(ToastService);
+  private readonly dialogService = inject(DialogService);
+  private readonly websocketService = inject(WebsocketService);
+  private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
+
   /**
    * The dashboard screen
    */
@@ -90,7 +106,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private unsubscribe: Subject<void> = new Subject<void>();
+  private readonly unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * Hold the configuration of the header component
@@ -146,43 +162,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
-
-  /**
-   * Constructor
-   *
-   * @param router Angular service used to manage App's route
-   * @param activatedRoute Angular service used to manage the route activated by the component
-   * @param matDialog Angular material service used to manage dialog
-   * @param translateService NgxTranslate service used to manage translations
-   * @param httpProjectService Suricate service used to manage http calls for project
-   * @param httpProjectWidgetsService Suricate service used to manage http calls for project
-   * @param httpProjectGridsService The HTTP project grids service
-   * @param httpScreenService Suricate service used to manage http calls for screen service
-   * @param projectUsersFormFieldsService Frontend service used to generate form fields for projectUsers
-   * @param dashboardService Frontend service used to manage dashboards
-   * @param sidenavService Frontend service used to manage sidenav
-   * @param toastService Frontend service used to manage toast message
-   * @param dialogService Frontend service used to manage dialog
-   * @param websocketService Frontend service used to manage websockets
-   * @param projectFormFieldsService Frontend service used to build project form fields
-   */
-  constructor(
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly matDialog: MatDialog,
-    private readonly translateService: TranslateService,
-    private readonly httpProjectService: HttpProjectService,
-    private readonly httpProjectWidgetsService: HttpProjectWidgetService,
-    private readonly httpProjectGridsService: HttpProjectGridService,
-    private readonly httpScreenService: HttpScreenService,
-    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
-    private readonly dashboardService: DashboardService,
-    private readonly sidenavService: SidenavService,
-    private readonly toastService: ToastService,
-    private readonly dialogService: DialogService,
-    private readonly websocketService: WebsocketService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService
-  ) {}
 
   /**
    * Called when the component is init

@@ -18,7 +18,7 @@
  */
 
 import { UpperCasePipe } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -55,6 +55,9 @@ import { SlideToggleComponent } from '../inputs/slide-toggle/slide-toggle.compon
   ]
 })
 export class FormSidenavComponent implements OnInit, OnDestroy {
+  private readonly formService = inject(FormService);
+  private readonly sidenavService = inject(SidenavService);
+
   /**
    * Send an event to the parent component used to open the sidebar
    */
@@ -88,22 +91,10 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   public buttons: ButtonConfiguration<unknown>[] = [];
 
   /**
-   * Constructor
-   *
-   * @param formService Frontend service used to manage the forms
-   * @param sidenavService Sidenav service used to manage the side navs
-   */
-  constructor(
-    private readonly formService: FormService,
-    private readonly sidenavService: SidenavService
-  ) {
-    this.initButtons();
-  }
-
-  /**
    * Called when the component is init
    */
   public ngOnInit(): void {
+    this.initButtons();
     this.sidenavService
       .listenFormSidenavMessages()
       .pipe(takeUntil(this.unsubscribe))

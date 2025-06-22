@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, ElementRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 import { ProjectWidget } from '../../models/backend/project-widget/project-widget';
 
@@ -29,18 +29,13 @@ import { ProjectWidget } from '../../models/backend/project-widget/project-widge
   standalone: true
 })
 export class WidgetHtmlDirective implements OnChanges {
+  private readonly elementRef = inject(ElementRef);
+
   /**
    * The rendered project widget
    */
   @Input()
   public projectWidget: ProjectWidget;
-
-  /**
-   * Constructor
-   *
-   * @param elementRef The reference to the element where the directive is set
-   */
-  constructor(private readonly elementRef: ElementRef) {}
 
   /**
    * On changes

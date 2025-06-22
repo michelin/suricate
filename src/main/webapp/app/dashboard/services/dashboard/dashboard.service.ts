@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -30,6 +30,8 @@ import { NumberUtils } from '../../../shared/utils/number.utils';
  */
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
+  private readonly httpProjectService = inject(HttpProjectService);
+
   /**
    * Define the min bound for the screen code random generation
    */
@@ -39,12 +41,6 @@ export class DashboardService {
    * Define the max bound for the screen code random generation
    */
   private static readonly maxScreenCodeBound = 999999;
-
-  /**
-   * Constructor
-   * @param httpProjectService Service used to manage http calls for project
-   */
-  constructor(private readonly httpProjectService: HttpProjectService) {}
 
   /**
    * Generate a random screen code

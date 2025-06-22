@@ -18,7 +18,7 @@
  */
 
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -41,6 +41,11 @@ import { DialogService } from './shared/services/frontend/dialog/dialog.service'
   imports: [SidenavComponent, ToastComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
+  private readonly matDialog = inject(MatDialog);
+  private readonly overlayContainer = inject(OverlayContainer);
+  private readonly settingsService = inject(SettingsService);
+  private readonly dialogService = inject(DialogService);
+
   /**
    * The current theme
    */
@@ -50,21 +55,6 @@ export class AppComponent implements OnInit, OnDestroy {
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
   private readonly unsubscribe: Subject<void> = new Subject<void>();
-
-  /**
-   * The constructor
-   *
-   * @param matDialog Angular material service used to display dialog
-   * @param overlayContainer Angular service used to manage DOM information
-   * @param settingsService Suricate service used to manage the settings
-   * @param dialogService Frontend service used to manage dialogs
-   */
-  constructor(
-    private readonly matDialog: MatDialog,
-    private readonly overlayContainer: OverlayContainer,
-    private readonly settingsService: SettingsService,
-    private readonly dialogService: DialogService
-  ) {}
 
   /**
    * Called at the init of the app

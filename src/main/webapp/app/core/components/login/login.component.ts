@@ -19,7 +19,7 @@
 
 import { NgOptimizedImage } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { MatDivider } from '@angular/material/divider';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -59,6 +59,13 @@ import { ToastService } from '../../../shared/services/frontend/toast/toast.serv
   ]
 })
 export class LoginComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly httpConfigurationService = inject(HttpConfigurationService);
+  private readonly authenticationService = inject(AuthenticationService);
+  private readonly formService = inject(FormService);
+  private readonly toastService = inject(ToastService);
+
   /**
    * The login form
    */
@@ -93,24 +100,6 @@ export class LoginComponent implements OnInit {
    * OAuth2 authentication with GitLab endpoint
    */
   public gitlabAuthenticationEndpoint = AuthenticationService.GITLAB_AUTH_URL;
-
-  /**
-   * Constructor
-   * @param router Service used to manage the application routes
-   * @param route Service used to manage the activated route
-   * @param httpConfigurationService Service used to manage http calls for configurations
-   * @param authenticationService Service used to manage authentications
-   * @param formService Front-End service used to manage forms
-   * @param toastService The toast service
-   */
-  constructor(
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly httpConfigurationService: HttpConfigurationService,
-    private readonly authenticationService: AuthenticationService,
-    private readonly formService: FormService,
-    private readonly toastService: ToastService
-  ) {}
 
   /**
    * Init method

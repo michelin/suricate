@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -36,16 +36,8 @@ import { HttpUserService } from '../../../backend/http-user/http-user.service';
  */
 @Injectable({ providedIn: 'root' })
 export class ProjectUsersFormFieldsService {
-  /**
-   * Constructor
-   *
-   * @param httpProjectService Service used to manage the projects
-   * @param httpUserService Service used to manage http calls for user
-   */
-  constructor(
-    private readonly httpProjectService: HttpProjectService,
-    private readonly httpUserService: HttpUserService
-  ) {}
+  private readonly httpProjectService = inject(HttpProjectService);
+  private readonly httpUserService = inject(HttpUserService);
 
   /**
    * Generate the configuration between a dashboard and the associated users.

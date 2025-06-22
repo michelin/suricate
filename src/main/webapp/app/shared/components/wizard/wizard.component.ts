@@ -45,31 +45,16 @@ import { ProjectWidgetFormStepsService } from '../../services/frontend/form-step
   standalone: true
 })
 export class WizardComponent implements OnInit {
+  private readonly formService = inject(FormService);
+  private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
+  protected readonly activatedRoute = inject(ActivatedRoute);
+  protected readonly router = inject(Router);
+
   /**
    * Reference on the stepper
    */
   @ViewChild('wizardStepper', { static: true })
   public wizardStepper: MatStepper;
-
-  /**
-   * Frontend service used to help on the form creation
-   */
-  private readonly formService: FormService;
-
-  /**
-   * Frontend service used to help on the widget configuration form fields creation
-   */
-  private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
-
-  /**
-   * Angular service used to manage the route activated by the current component
-   */
-  protected readonly activatedRoute: ActivatedRoute;
-
-  /**
-   * Angular service used to manage application routes
-   */
-  protected readonly router: Router;
 
   /**
    * The token of the dashboard
@@ -110,16 +95,6 @@ export class WizardComponent implements OnInit {
    * The current step
    */
   public currentStep: FormStep;
-
-  /**
-   * Constructor
-   */
-  constructor() {
-    this.formService = inject(FormService);
-    this.widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
-    this.activatedRoute = inject(ActivatedRoute);
-    this.router = inject(Router);
-  }
 
   /**
    * Called when the component is init

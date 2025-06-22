@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
 import { ActivatedRoute, Event, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -39,6 +39,9 @@ import { MenuComponent } from '../menu/menu.component';
   imports: [MatSidenavContainer, MatSidenav, FormSidenavComponent, MenuComponent, MatSidenavContent, RouterOutlet]
 })
 export class SidenavComponent implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
+
   /**
    * Reference on the form sidenav
    */
@@ -54,16 +57,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
    * Used to hide or display the menu using activated routes
    */
   public shouldHideMenu = true;
-
-  /**
-   * Constructor
-   * @param router Angular service used to manage routes
-   * @param activatedRoute Angular service used to retrieve the component activated route
-   */
-  constructor(
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute
-  ) {}
 
   /**
    * Init method

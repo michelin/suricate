@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -30,11 +30,7 @@ import { HttpRepositoryService } from '../services/backend/http-repository/http-
   providedIn: 'root'
 })
 export class CustomAsyncValidatorService {
-  /**
-   * Constructor
-   * @param httpRepositoryService The HTTP repository service
-   */
-  constructor(private readonly httpRepositoryService: HttpRepositoryService) {}
+  private readonly httpRepositoryService = inject(HttpRepositoryService);
 
   /**
    * Check repository priority uniqueness

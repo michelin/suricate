@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { from, mergeMap } from 'rxjs';
 import { toArray } from 'rxjs/operators';
@@ -44,6 +44,11 @@ import { SettingsService } from '../../../services/settings.service';
   imports: [InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent]
 })
 export class UxSettingsComponent implements OnInit {
+  private readonly settingsService = inject(SettingsService);
+  private readonly settingsFormFieldsService = inject(SettingsFormFieldsService);
+  private readonly formService = inject(FormService);
+  private readonly httpUserService = inject(HttpUserService);
+
   /**
    * The form group for UX settings
    */
@@ -63,20 +68,6 @@ export class UxSettingsComponent implements OnInit {
    * The user settings
    */
   public userSettings: UserSetting[];
-
-  /**
-   * Constructor
-   * @param settingsService The settings service
-   * @param settingsFormFieldsService The settings form fields service
-   * @param formService The form service
-   * @param httpUserService The http user service
-   */
-  constructor(
-    private readonly settingsService: SettingsService,
-    private readonly settingsFormFieldsService: SettingsFormFieldsService,
-    private readonly formService: FormService,
-    private readonly httpUserService: HttpUserService
-  ) {}
 
   /**
    * Init method

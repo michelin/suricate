@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -39,6 +39,8 @@ import { EnvironmentService } from '../environment/environment.service';
  */
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+  private readonly httpClient = inject(HttpClient);
+
   /**
    * OAuth2 URL
    */
@@ -68,12 +70,6 @@ export class AuthenticationService {
    * Auth0 service used to manage JWT with Angular
    */
   private static readonly jwtHelperService = new JwtHelperService();
-
-  /**
-   * Constructor
-   * @param httpClient Angular service used make http calls
-   */
-  constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Get the access token store in local storage

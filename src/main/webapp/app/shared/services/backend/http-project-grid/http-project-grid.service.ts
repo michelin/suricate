@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { GridRequest } from '../../../models/backend/project-grid/grid-request';
@@ -28,17 +28,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectGridService {
-  /**
-   * Global endpoint for project grids
-   */
   private static readonly projectGridsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projectGrids`;
-
-  /**
-   * Constructor
-   *
-   * @param httpClient the http client to inject
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Get grid by project token and grid id

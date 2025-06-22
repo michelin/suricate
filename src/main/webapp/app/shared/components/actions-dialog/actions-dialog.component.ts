@@ -18,7 +18,7 @@
  */
 
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -48,17 +48,12 @@ import { ButtonsComponent } from '../buttons/buttons.component';
   ]
 })
 export class ActionsDialogComponent implements OnInit {
+  private readonly data = inject<ActionsDialogConfiguration>(MAT_DIALOG_DATA);
+
   /**
    * The configuration of the confirmation dialog
    */
   public configuration: ActionsDialogConfiguration;
-
-  /**
-   * Constructor
-   *
-   * @param data The data given to the dialog
-   */
-  constructor(@Inject(MAT_DIALOG_DATA) private readonly data: ActionsDialogConfiguration) {}
 
   /**
    * Init method

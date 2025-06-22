@@ -19,7 +19,7 @@
 
 import { NgOptimizedImage } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { throwError } from 'rxjs';
@@ -52,6 +52,12 @@ import { CustomValidator } from '../../../shared/validators/custom-validator';
   imports: [NgOptimizedImage, SpinnerComponent, FormsModule, ReactiveFormsModule, InputComponent, ButtonsComponent]
 })
 export class RegisterComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly httpConfigurationService = inject(HttpConfigurationService);
+  private readonly authenticationService = inject(AuthenticationService);
+  private readonly formService = inject(FormService);
+  private readonly toastService = inject(ToastService);
+
   /**
    * The register form
    */
@@ -71,23 +77,6 @@ export class RegisterComponent implements OnInit {
    * Define if the spinner should be running or not
    */
   public loading = true;
-
-  /**
-   * Constructor
-   *
-   * @param router Angular service used to manage application routes
-   * @param httpConfigurationService Suricate service used to manage the configuration of the application
-   * @param authenticationService Suricate service used to manage the authentication on the application
-   * @param formService Frontend service used to manage the forms creations
-   * @param toastService Frontend service used to display the toast messages
-   */
-  constructor(
-    private readonly router: Router,
-    private readonly httpConfigurationService: HttpConfigurationService,
-    private readonly authenticationService: AuthenticationService,
-    private readonly formService: FormService,
-    private readonly toastService: ToastService
-  ) {}
 
   /**
    * Called when the component is init

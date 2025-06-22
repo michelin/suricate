@@ -18,7 +18,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 
 import { HttpFilter } from '../../../models/backend/http-filter';
@@ -33,17 +33,8 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpRepositoryService implements AbstractHttpService<Repository, RepositoryRequest> {
-  /**
-   * Global repositories endpoint
-   */
   private static readonly repositoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/repositories`;
-
-  /**
-   * Constructor
-   *
-   * @param {HttpClient} httpClient The http client to inject
-   */
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
 
   /**
    * Return the list of every repository

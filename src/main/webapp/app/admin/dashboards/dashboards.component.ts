@@ -19,7 +19,7 @@
 
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -37,6 +37,7 @@ import { Project } from '../../shared/models/backend/project/project';
 import { ProjectRequest } from '../../shared/models/backend/project/project-request';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
 import { HttpProjectService } from '../../shared/services/backend/http-project/http-project.service';
 import { CssService } from '../../shared/services/frontend/css/css.service';
 import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
@@ -57,9 +58,14 @@ import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/fo
     NgOptimizedImage,
     ButtonsComponent,
     PaginatorComponent
-  ]
+  ],
+  providers: [{ provide: AbstractHttpService, useClass: HttpProjectService }]
 })
 export class DashboardsComponent extends ListComponent<Project, ProjectRequest> {
+  private readonly httpProjectService = inject(HttpProjectService);
+  private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
+  private readonly projectUsersFormFieldsService = inject(ProjectUsersFormFieldsService);
+
   /**
    * Project selected in the list for modifications
    */
@@ -67,18 +73,9 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
 
   /**
    * Constructor
-   *
-   * @param httpProjectService Manage the http calls for a project
-   * @param projectFormFieldsService Build form fields for a project
-   * @param projectUsersFormFieldsService Build form fields for projects users
    */
-  constructor(
-    private readonly httpProjectService: HttpProjectService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService,
-    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService
-  ) {
-    super(httpProjectService);
-
+  constructor() {
+    super();
     this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();

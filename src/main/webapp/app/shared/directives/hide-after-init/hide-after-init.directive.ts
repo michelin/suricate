@@ -17,24 +17,20 @@
  * under the License.
  */
 
-import { AfterViewInit, Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Directive({
   selector: '[hideAfterInit]',
   standalone: true
 })
 export class HideAfterInitDirective implements OnChanges, AfterViewInit {
+  private readonly elementRef = inject(ElementRef);
+
   /**
    * True if the element should be hidden
    */
   @Input()
   public hide: boolean;
-
-  /**
-   * Constructor
-   * @param elementRef The reference to the element where the directive is set
-   */
-  constructor(private readonly elementRef: ElementRef) {}
 
   /**
    * After view init
