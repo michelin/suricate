@@ -39,7 +39,7 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <mustache.version>0.9.14</mustache.version>
-        <okhttp3.version>4.12.0</okhttp3.version>
+        <okhttp3.version>5.0.0</okhttp3.version>
         <packaging.type>jar</packaging.type>
         <palantir.version>2.58.0</palantir.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
