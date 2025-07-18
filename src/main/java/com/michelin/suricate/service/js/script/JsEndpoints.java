@@ -88,13 +88,12 @@ public final class JsEndpoints {
                             + response.request().url() + " (code " + response.code()
                             + ").");
                 } else {
+                    String bodyString = response.body().string();
                     throw new RequestException("A request error occurred during the execution of the request /"
                             + response.request().method() + " "
                             + response.request().url() + " (code " + response.code()
                             + "). Error body details: "
-                            + (response.body() != null
-                                    ? Objects.requireNonNull(response.body()).string()
-                                    : "Empty body"));
+                            + (StringUtils.isNotBlank(bodyString) ? bodyString : "Empty body"));
                 }
             }
         }
