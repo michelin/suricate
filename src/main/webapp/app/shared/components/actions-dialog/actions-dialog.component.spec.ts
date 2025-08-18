@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { IconEnum } from '../../enums/icon.enum';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
@@ -34,19 +34,13 @@ describe('ActionsDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ActionsDialogComponent,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
-            deps: [HttpClient]
-          }
-        })
-      ],
+      imports: [ActionsDialogComponent],
       providers: [
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideTranslateService({
+          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+        }),
         { provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }
       ]
     }).compileComponents();

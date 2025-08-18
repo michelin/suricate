@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { CatalogComponent } from './catalog.component';
 
@@ -32,17 +32,15 @@ describe('CatalogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        CatalogComponent,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
-            deps: [HttpClient]
-          }
+      imports: [CatalogComponent],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideAnimationsAsync(),
+        provideTranslateService({
+          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
         })
-      ],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideAnimationsAsync()]
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CatalogComponent);

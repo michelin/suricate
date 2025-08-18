@@ -17,10 +17,9 @@
  * under the License.
  */
 
-import { HttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { SidenavComponent } from '../../../layout/components/sidenav/sidenav.component';
 import { ButtonsComponent } from './buttons.component';
@@ -31,14 +30,10 @@ describe('ButtonsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        SidenavComponent,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
-            deps: [HttpClient]
-          }
+      imports: [SidenavComponent],
+      providers: [
+        provideTranslateService({
+          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
         })
       ]
     }).compileComponents();

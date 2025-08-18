@@ -57,7 +57,7 @@ export class SettingsService {
         .allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
 
       // This language will be used as a fallback when a translation is not found in the current language
-      this.translateService.setDefaultLang(defaultLanguageCode);
+      this.translateService.setFallbackLang(defaultLanguageCode);
 
       this.translateService.use(defaultLanguageCode);
     });
