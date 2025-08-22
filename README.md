@@ -401,4 +401,3 @@ JWT token in the `Authorization` header.
 We welcome contributions from the community! Before you get started, please take a look at
 our [contribution guide](https://github.com/michelin/suricate/blob/master/CONTRIBUTING.md) to learn about our guidelines
 and best practices. We appreciate your help in making Suricate a better tool for everyone.
-If anyone requires it, we can provide partial extracts of your data before the shutdown.
