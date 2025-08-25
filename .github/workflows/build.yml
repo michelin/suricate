@@ -56,9 +56,12 @@ jobs:
         with:
           report_paths: 'target/surefire-reports/TEST-*.xml'
 
-      - name: Metadata
-        id: metadata
-        run: echo current_version=$(echo $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)) >> $GITHUB_OUTPUT
+      - name: Sonar
+        if: github.event.pull_request.head.repo.fork == false
+        run: mvn verify sonar:sonar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Grype source code
         id: grype_source_code
@@ -82,12 +85,9 @@ jobs:
           name: suricate
           path: ${{ github.workspace }}/target/suricate.jar
 
-      - name: Sonar
-        if: github.event.pull_request.head.repo.fork == false
-        run: mvn verify sonar:sonar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Metadata
+        id: metadata
+        run: echo current_version=$(echo $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)) >> $GITHUB_OUTPUT
 
   front-end:
     name: Front-End
