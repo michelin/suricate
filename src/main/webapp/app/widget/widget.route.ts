@@ -23,10 +23,10 @@ import { authGuard } from '../shared/guards/auth/auth.guard';
 import { CatalogComponent } from './catalog/catalog.component';
 
 export const widgetRoutes: Routes = [
-  {
-    path: 'widgets/catalog',
-    component: CatalogComponent,
-    canActivate: [authGuard],
-    canActivateChild: [authGuard]
-  }
+	{
+		path: 'widgets/catalog',
+		component: CatalogComponent,
+		canActivate: [authGuard],
+		canActivateChild: [authGuard]
+	}
 ];

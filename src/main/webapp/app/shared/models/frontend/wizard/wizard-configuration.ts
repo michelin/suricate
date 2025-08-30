@@ -23,8 +23,8 @@ import { FormStep } from '../form/form-step';
  * Class used to configure the wizard component
  */
 export class WizardConfiguration {
-  /**
-   * The steps of the wizard
-   */
-  steps: FormStep[];
+	/**
+	 * The steps of the wizard
+	 */
+	steps: FormStep[];
 }

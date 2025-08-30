@@ -33,19 +33,19 @@ import { TokenInterceptor } from './app/shared/interceptors/token.interceptor';
 import { environment } from './environments/environment';
 
 if (environment.production) {
-  enableProdMode();
+	enableProdMode();
 }
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    provideHttpClient(withInterceptorsFromDi()),
-    provideAnimationsAsync(),
-    provideRouter(appRoutes),
-    provideTranslateService({
-      loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-    }),
-    DatePipe
-  ]
+	providers: [
+		{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+		{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+		provideHttpClient(withInterceptorsFromDi()),
+		provideAnimationsAsync(),
+		provideRouter(appRoutes),
+		provideTranslateService({
+			loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+		}),
+		DatePipe
+	]
 }).catch((err) => console.error(err));

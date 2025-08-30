@@ -26,22 +26,22 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SettingsService } from './settings.service';
 
 describe('SettingsService', () => {
-  let service: SettingsService;
+	let service: SettingsService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        })
-      ]
-    });
-    service = TestBed.inject(SettingsService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				})
+			]
+		});
+		service = TestBed.inject(SettingsService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

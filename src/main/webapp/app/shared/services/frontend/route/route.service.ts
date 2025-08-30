@@ -25,16 +25,16 @@ import { ActivatedRoute } from '@angular/router';
  */
 @Injectable({ providedIn: 'root' })
 export class RouteService {
-  /**
-   * Get the deeper activated route from the current route
-   *
-   * @param activatedRoute The activated route given
-   */
-  public static getDeeperActivatedRoute(activatedRoute: ActivatedRoute): ActivatedRoute {
-    if (activatedRoute.firstChild) {
-      return this.getDeeperActivatedRoute(activatedRoute.firstChild);
-    }
+	/**
+	 * Get the deeper activated route from the current route
+	 *
+	 * @param activatedRoute The activated route given
+	 */
+	public static getDeeperActivatedRoute(activatedRoute: ActivatedRoute): ActivatedRoute {
+		if (activatedRoute.firstChild) {
+			return this.getDeeperActivatedRoute(activatedRoute.firstChild);
+		}
 
-    return activatedRoute;
-  }
+		return activatedRoute;
+	}
 }

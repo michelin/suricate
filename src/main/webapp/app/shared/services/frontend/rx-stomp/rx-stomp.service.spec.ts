@@ -22,14 +22,14 @@ import { TestBed } from '@angular/core/testing';
 import { RxStompService } from './rx-stomp.service';
 
 describe('RxStompService', () => {
-  let service: RxStompService;
+	let service: RxStompService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(RxStompService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(RxStompService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

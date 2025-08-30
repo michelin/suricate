@@ -6,6 +6,5 @@ target
 node_modules/
 *.log
 coverage/
-package-lock.json
 /.eslintcache
 dist

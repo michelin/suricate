@@ -29,64 +29,64 @@ import { ConfirmationDialogConfiguration } from '../../../models/frontend/dialog
  */
 @Injectable({ providedIn: 'root' })
 export class DialogService {
-  /**
-   * Subject used to manage confirmation dialog message
-   */
-  private readonly confirmationDialogSubject = new Subject<ConfirmationDialogConfiguration>();
+	/**
+	 * Subject used to manage confirmation dialog message
+	 */
+	private readonly confirmationDialogSubject = new Subject<ConfirmationDialogConfiguration>();
 
-  /**
-   * Subject used to manage the communication dialog message
-   */
-  private readonly communicationDialogSubject = new Subject<CommunicationDialogConfiguration>();
+	/**
+	 * Subject used to manage the communication dialog message
+	 */
+	private readonly communicationDialogSubject = new Subject<CommunicationDialogConfiguration>();
 
-  /**
-   * Subject used to manage the actions' dialog message
-   */
-  private readonly actionsDialogSubject = new Subject<ActionsDialogConfiguration>();
+	/**
+	 * Subject used to manage the actions' dialog message
+	 */
+	private readonly actionsDialogSubject = new Subject<ActionsDialogConfiguration>();
 
-  /**
-   * Used to retrieve the messages
-   */
-  public listenConfirmationMessages(): Observable<ConfirmationDialogConfiguration> {
-    return this.confirmationDialogSubject.asObservable();
-  }
+	/**
+	 * Used to retrieve the messages
+	 */
+	public listenConfirmationMessages(): Observable<ConfirmationDialogConfiguration> {
+		return this.confirmationDialogSubject.asObservable();
+	}
 
-  /**
-   * Used to send a new confirmation message
-   *
-   * @param confirmationConfiguration
-   */
-  public confirm(confirmationConfiguration: ConfirmationDialogConfiguration): void {
-    this.confirmationDialogSubject.next(confirmationConfiguration);
-  }
+	/**
+	 * Used to send a new confirmation message
+	 *
+	 * @param confirmationConfiguration
+	 */
+	public confirm(confirmationConfiguration: ConfirmationDialogConfiguration): void {
+		this.confirmationDialogSubject.next(confirmationConfiguration);
+	}
 
-  /**
-   * Used to retrieve the communication messages
-   */
-  public listenCommunicationMessages(): Observable<CommunicationDialogConfiguration> {
-    return this.communicationDialogSubject.asObservable();
-  }
+	/**
+	 * Used to retrieve the communication messages
+	 */
+	public listenCommunicationMessages(): Observable<CommunicationDialogConfiguration> {
+		return this.communicationDialogSubject.asObservable();
+	}
 
-  /**
-   * Used to send a new communication message
-   */
-  public info(communicationDialogConfiguration: CommunicationDialogConfiguration): void {
-    return this.communicationDialogSubject.next(communicationDialogConfiguration);
-  }
+	/**
+	 * Used to send a new communication message
+	 */
+	public info(communicationDialogConfiguration: CommunicationDialogConfiguration): void {
+		return this.communicationDialogSubject.next(communicationDialogConfiguration);
+	}
 
-  /**
-   * Used to retrieve the actions messages
-   */
-  public listenActionsMessages(): Observable<ActionsDialogConfiguration> {
-    return this.actionsDialogSubject.asObservable();
-  }
+	/**
+	 * Used to retrieve the actions messages
+	 */
+	public listenActionsMessages(): Observable<ActionsDialogConfiguration> {
+		return this.actionsDialogSubject.asObservable();
+	}
 
-  /**
-   * Used to send a new actions' message
-   *
-   * @param actionsConfiguration
-   */
-  public actions(actionsConfiguration: ActionsDialogConfiguration): void {
-    this.actionsDialogSubject.next(actionsConfiguration);
-  }
+	/**
+	 * Used to send a new actions' message
+	 *
+	 * @param actionsConfiguration
+	 */
+	public actions(actionsConfiguration: ActionsDialogConfiguration): void {
+		this.actionsDialogSubject.next(actionsConfiguration);
+	}
 }

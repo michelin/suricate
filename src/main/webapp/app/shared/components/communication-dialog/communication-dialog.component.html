@@ -1,11 +1,11 @@
 <div class="communication-dialog-wrapper">
-  <h1 mat-dialog-title>{{ configuration.title | translate }}</h1>
+	<h1 mat-dialog-title>{{ configuration.title | translate }}</h1>
 
-  <mat-dialog-content class="spacer" [ngClass]="{ 'communication-dialog-error': configuration.isErrorMessage }">
-    {{ configuration.message }}
-  </mat-dialog-content>
+	<mat-dialog-content class="spacer" [ngClass]="{ 'communication-dialog-error': configuration.isErrorMessage }">
+		{{ configuration.message }}
+	</mat-dialog-content>
 
-  <mat-dialog-actions>
-    <suricate-buttons [configurations]="buttons" matDialogClose></suricate-buttons>
-  </mat-dialog-actions>
+	<mat-dialog-actions>
+		<suricate-buttons [configurations]="buttons" matDialogClose></suricate-buttons>
+	</mat-dialog-actions>
 </div>

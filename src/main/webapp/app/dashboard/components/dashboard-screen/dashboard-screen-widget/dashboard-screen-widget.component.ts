@@ -57,214 +57,214 @@ import { LibraryService } from '../../../services/library/library.service';
  * Display the grid stack widgets
  */
 @Component({
-  selector: 'suricate-dashboard-screen-widget',
-  templateUrl: './dashboard-screen-widget.component.html',
-  styleUrls: ['./dashboard-screen-widget.component.scss'],
-  imports: [NgClass, SpinnerComponent, WidgetHtmlDirective, MatIcon, MatTooltip, SafeHtmlPipe, TranslatePipe]
+	selector: 'suricate-dashboard-screen-widget',
+	templateUrl: './dashboard-screen-widget.component.html',
+	styleUrls: ['./dashboard-screen-widget.component.scss'],
+	imports: [NgClass, SpinnerComponent, WidgetHtmlDirective, MatIcon, MatTooltip, SafeHtmlPipe, TranslatePipe]
 })
 export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
-  private readonly translateService = inject(TranslateService);
-  private readonly httpWidgetService = inject(HttpWidgetService);
-  private readonly httpProjectWidgetService = inject(HttpProjectWidgetService);
-  private readonly websocketService = inject(WebsocketService);
-  private readonly dialogService = inject(DialogService);
-  private readonly sidenavService = inject(SidenavService);
-  private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
-  private readonly toastService = inject(ToastService);
-  private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
-  private readonly libraryService = inject(LibraryService);
+	private readonly translateService = inject(TranslateService);
+	private readonly httpWidgetService = inject(HttpWidgetService);
+	private readonly httpProjectWidgetService = inject(HttpProjectWidgetService);
+	private readonly websocketService = inject(WebsocketService);
+	private readonly dialogService = inject(DialogService);
+	private readonly sidenavService = inject(SidenavService);
+	private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
+	private readonly toastService = inject(ToastService);
+	private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
+	private readonly libraryService = inject(LibraryService);
 
-  /**
-   * The projectWidget to display
-   */
-  @Input()
-  public projectWidget: ProjectWidget;
+	/**
+	 * The projectWidget to display
+	 */
+	@Input()
+	public projectWidget: ProjectWidget;
 
-  /**
-   * Tell if the screen is in read only mode
-   */
-  @Input()
-  public readOnly: boolean;
+	/**
+	 * Tell if the screen is in read only mode
+	 */
+	@Input()
+	public readOnly: boolean;
 
-  /**
-   * The project token
-   */
-  @Input()
-  public projectToken: string;
+	/**
+	 * The project token
+	 */
+	@Input()
+	public projectToken: string;
 
-  /**
-   * Subject used to unsubscribe all the subscriptions when the component is destroyed
-   */
-  private readonly unsubscribe: Subject<void> = new Subject<void>();
+	/**
+	 * Subject used to unsubscribe all the subscriptions when the component is destroyed
+	 */
+	private readonly unsubscribe: Subject<void> = new Subject<void>();
 
-  /**
-   * The widget related to this project widget
-   */
-  public widget: Widget;
+	/**
+	 * The widget related to this project widget
+	 */
+	public widget: Widget;
 
-  /**
-   * The enumeration that hold the state of a widget (used in HTML)
-   */
-  public widgetStateEnum = WidgetStateEnum;
+	/**
+	 * The enumeration that hold the state of a widget (used in HTML)
+	 */
+	public widgetStateEnum = WidgetStateEnum;
 
-  /**
-   * Is the widget loading or not
-   */
-  public loading = true;
+	/**
+	 * Is the widget loading or not
+	 */
+	public loading = true;
 
-  /**
-   * Used to display the buttons when the screen is not readonly
-   */
-  public displayButtons = false;
+	/**
+	 * Used to display the buttons when the screen is not readonly
+	 */
+	public displayButtons = false;
 
-  /**
-   * The list of icons
-   */
-  public iconEnum = IconEnum;
+	/**
+	 * The list of icons
+	 */
+	public iconEnum = IconEnum;
 
-  /**
-   * The list of material icons
-   */
-  public materialIconRecords = MaterialIconRecords;
+	/**
+	 * The list of material icons
+	 */
+	public materialIconRecords = MaterialIconRecords;
 
-  /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    this.initWebsocketConnectionForProjectWidget();
+	/**
+	 * Called when the component is init
+	 */
+	public ngOnInit(): void {
+		this.initWebsocketConnectionForProjectWidget();
 
-    this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
-      this.widget = widget;
+		this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
+			this.widget = widget;
 
-      this.libraryService.allExternalLibrariesLoaded.subscribe((areExternalLibrariesLoaded: boolean) => {
-        this.loading = !areExternalLibrariesLoaded;
-      });
-    });
-  }
+			this.libraryService.allExternalLibrariesLoaded.subscribe((areExternalLibrariesLoaded: boolean) => {
+				this.loading = !areExternalLibrariesLoaded;
+			});
+		});
+	}
 
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
-  }
+	/**
+	 * Called when the component is destroyed
+	 */
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
+		this.unsubscribe.complete();
+	}
 
-  /**
-   * Subscribe to widget events
-   */
-  private initWebsocketConnectionForProjectWidget(): void {
-    const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
+	/**
+	 * Subscribe to widget events
+	 */
+	private initWebsocketConnectionForProjectWidget(): void {
+		const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
 
-    this.websocketService
-      .watch(projectWidgetSubscriptionUrl)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((stompMessage: IMessage) => {
-        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+		this.websocketService
+			.watch(projectWidgetSubscriptionUrl)
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((stompMessage: IMessage) => {
+				const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WebsocketUpdateTypeEnum.REFRESH_WIDGET) {
-          this.refreshProjectWidget();
-        }
-      });
-  }
+				if (updateEvent.type === WebsocketUpdateTypeEnum.REFRESH_WIDGET) {
+					this.refreshProjectWidget();
+				}
+			});
+	}
 
-  /**
-   * Refresh this project widget
-   */
-  private refreshProjectWidget(): void {
-    this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe((projectWidget) => {
-      this.projectWidget = projectWidget;
-    });
-  }
+	/**
+	 * Refresh this project widget
+	 */
+	private refreshProjectWidget(): void {
+		this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe((projectWidget) => {
+			this.projectWidget = projectWidget;
+		});
+	}
 
-  /**
-   * Delete The project widget
-   */
-  public displayDeleteProjectWidgetDialog(): void {
-    const titleCasePipe = new TitleCasePipe();
+	/**
+	 * Delete The project widget
+	 */
+	public displayDeleteProjectWidgetDialog(): void {
+		const titleCasePipe = new TitleCasePipe();
 
-    this.dialogService.confirm({
-      title: 'widget.delete',
-      message: `${this.translateService.instant('widget.delete.confirm')} ${titleCasePipe.transform(this.widget.name)} widget ?`,
-      accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe()
-    });
-  }
+		this.dialogService.confirm({
+			title: 'widget.delete',
+			message: `${this.translateService.instant('widget.delete.confirm')} ${titleCasePipe.transform(this.widget.name)} widget ?`,
+			accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe()
+		});
+	}
 
-  /**
-   * Display the form sidenav used to edit a project widget
-   */
-  public displayEditFormSidenav(): void {
-    this.sidenavService.openFormSidenav({
-      title: 'widget.edit',
-      formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(
-        this.widget.params,
-        this.projectWidget.backendConfig
-      ),
-      save: (formGroup: UntypedFormGroup) => this.saveWidget(formGroup),
-      slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
-    });
-  }
+	/**
+	 * Display the form sidenav used to edit a project widget
+	 */
+	public displayEditFormSidenav(): void {
+		this.sidenavService.openFormSidenav({
+			title: 'widget.edit',
+			formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(
+				this.widget.params,
+				this.projectWidget.backendConfig
+			),
+			save: (formGroup: UntypedFormGroup) => this.saveWidget(formGroup),
+			slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
+		});
+	}
 
-  /**
-   * Save the widget modifications
-   *
-   * @param formGroup The form group
-   */
-  public saveWidget(formGroup: UntypedFormGroup) {
-    this.loading = true;
+	/**
+	 * Save the widget modifications
+	 *
+	 * @param formGroup The form group
+	 */
+	public saveWidget(formGroup: UntypedFormGroup) {
+		this.loading = true;
 
-    const projectWidgetRequest: ProjectWidgetRequest = {
-      widgetId: this.projectWidget.widgetId,
-      customStyle: this.projectWidget.customStyle,
-      backendConfig: Object.keys(formGroup.value)
-        .filter((key: string) => formGroup.get(key).value != null && String(formGroup.get(key).value).trim() !== '')
-        .map((key: string) => `${key}=${String(formGroup.get(key).value).replace(/\n/g, '\\n')}`)
-        .join('\n')
-    };
+		const projectWidgetRequest: ProjectWidgetRequest = {
+			widgetId: this.projectWidget.widgetId,
+			customStyle: this.projectWidget.customStyle,
+			backendConfig: Object.keys(formGroup.value)
+				.filter((key: string) => formGroup.get(key).value != null && String(formGroup.get(key).value).trim() !== '')
+				.map((key: string) => `${key}=${String(formGroup.get(key).value).replace(/\n/g, '\\n')}`)
+				.join('\n')
+		};
 
-    this.httpProjectWidgetService
-      .updateOneById(this.projectWidget.id, projectWidgetRequest)
-      .subscribe((updatedProjectWidget: ProjectWidget) => {
-        this.loading = false;
-        this.projectWidget = updatedProjectWidget;
-        this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
-      });
-  }
+		this.httpProjectWidgetService
+			.updateOneById(this.projectWidget.id, projectWidgetRequest)
+			.subscribe((updatedProjectWidget: ProjectWidget) => {
+				this.loading = false;
+				this.projectWidget = updatedProjectWidget;
+				this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
+			});
+	}
 
-  /**
-   * Build the configuration to display the slide toggle button for editing the category of the widget
-   *
-   * @param categoryParameters The settings of the category
-   */
-  public buildSlideToggleButtonConfiguration(categoryParameters: CategoryParameter[]): SlideToggleButtonConfiguration {
-    return {
-      displaySlideToggleButton: categoryParameters.length > 0,
-      toggleChecked:
-        categoryParameters.filter((categorySetting) =>
-          this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(
-            categorySetting.key,
-            this.projectWidget.backendConfig
-          )
-        ).length > 0,
-      slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: UntypedFormGroup, formFields: FormField[]) =>
-        this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
-          categoryParameters,
-          event.checked,
-          formGroup,
-          formFields,
-          this.projectWidget.backendConfig
-        )
-    };
-  }
+	/**
+	 * Build the configuration to display the slide toggle button for editing the category of the widget
+	 *
+	 * @param categoryParameters The settings of the category
+	 */
+	public buildSlideToggleButtonConfiguration(categoryParameters: CategoryParameter[]): SlideToggleButtonConfiguration {
+		return {
+			displaySlideToggleButton: categoryParameters.length > 0,
+			toggleChecked:
+				categoryParameters.filter((categorySetting) =>
+					this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(
+						categorySetting.key,
+						this.projectWidget.backendConfig
+					)
+				).length > 0,
+			slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: UntypedFormGroup, formFields: FormField[]) =>
+				this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
+					categoryParameters,
+					event.checked,
+					formGroup,
+					formFields,
+					this.projectWidget.backendConfig
+				)
+		};
+	}
 
-  /**
-   * call the popup that display the execution log
-   */
-  public displayLogProjectWidgetDialog(): void {
-    this.dialogService.info({
-      title: 'widget.log',
-      message: this.projectWidget.log ? this.projectWidget.log : '',
-      isErrorMessage: !!this.projectWidget.log
-    });
-  }
+	/**
+	 * call the popup that display the execution log
+	 */
+	public displayLogProjectWidgetDialog(): void {
+		this.dialogService.info({
+			title: 'widget.log',
+			message: this.projectWidget.log ? this.projectWidget.log : '',
+			isErrorMessage: !!this.projectWidget.log
+		});
+	}
 }

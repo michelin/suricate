@@ -18,8 +18,8 @@
  */
 
 export enum AuthenticationProvider {
-  LDAP = 'LDAP',
-  DATABASE = 'DATABASE',
-  GITHUB = 'GITHUB',
-  GITLAB = 'GITLAB'
+	LDAP = 'LDAP',
+	DATABASE = 'DATABASE',
+	GITHUB = 'GITHUB',
+	GITLAB = 'GITLAB'
 }

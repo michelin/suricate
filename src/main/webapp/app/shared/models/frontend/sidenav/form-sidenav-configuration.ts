@@ -29,43 +29,43 @@ import { ValueChangedEvent } from '../form/value-changed-event';
  * Configuration used by the form sidenav
  */
 export interface FormSidenavConfiguration {
-  /**
-   * The title of the sidenav
-   */
-  title: string;
+	/**
+	 * The title of the sidenav
+	 */
+	title: string;
 
-  /**
-   * The fields of the form to display
-   */
-  formFields: FormField[];
+	/**
+	 * The fields of the form to display
+	 */
+	formFields: FormField[];
 
-  /**
-   * Display a message when there is no field to display
-   */
-  noFieldsMessage?: string;
+	/**
+	 * Display a message when there is no field to display
+	 */
+	noFieldsMessage?: string;
 
-  /**
-   * The function to call when the form should be sent
-   */
-  save?: (formGroup: UntypedFormGroup) => void;
+	/**
+	 * The function to call when the form should be sent
+	 */
+	save?: (formGroup: UntypedFormGroup) => void;
 
-  /**
-   * Function to call when a value of a field has changed
-   */
-  onValueChanged?: (valueChangedEvent: ValueChangedEvent) => Observable<FormField[]>;
+	/**
+	 * Function to call when a value of a field has changed
+	 */
+	onValueChanged?: (valueChangedEvent: ValueChangedEvent) => Observable<FormField[]>;
 
-  /**
-   * Used to hide the save action
-   */
-  hideSaveAction?: boolean;
+	/**
+	 * Used to hide the save action
+	 */
+	hideSaveAction?: boolean;
 
-  /**
-   * Configuration of the slide toggle button
-   */
-  slideToggleButtonConfiguration?: SlideToggleButtonConfiguration;
+	/**
+	 * Configuration of the slide toggle button
+	 */
+	slideToggleButtonConfiguration?: SlideToggleButtonConfiguration;
 
-  /**
-   * A reference to a component. Used to take screenshot
-   */
-  componentRef?: ElementRef;
+	/**
+	 * A reference to a component. Used to take screenshot
+	 */
+	componentRef?: ElementRef;
 }

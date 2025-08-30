@@ -32,111 +32,111 @@ import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-f
  */
 @Injectable({ providedIn: 'root' })
 export class WidgetConfigurationFormFieldsService {
-  private readonly formService = inject(FormService);
-  private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
+	private readonly formService = inject(FormService);
+	private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
 
-  /**
-   * Get the list of steps for a dashboard
-   *
-   * @param configuration The project used for an edition
-   */
-  public generateFormFields(configuration?: CategoryParameter): FormField[] {
-    return [
-      {
-        key: 'key',
-        label: 'key',
-        type: DataTypeEnum.TEXT,
-        value: configuration ? configuration.key : null,
-        readOnly: true,
-        iconPrefix: IconEnum.KEY
-      },
-      {
-        key: 'category',
-        label: 'category',
-        type: DataTypeEnum.TEXT,
-        value: configuration.category ? configuration.category.name : null,
-        readOnly: true,
-        iconPrefix: IconEnum.WIDGET
-      },
-      {
-        key: 'value',
-        label: 'value',
-        type: configuration.dataType,
-        value: configuration ? configuration.value : null,
-        iconPrefix: IconEnum.VALUE,
-        iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
-        validators: [Validators.required]
-      }
-    ];
-  }
+	/**
+	 * Get the list of steps for a dashboard
+	 *
+	 * @param configuration The project used for an edition
+	 */
+	public generateFormFields(configuration?: CategoryParameter): FormField[] {
+		return [
+			{
+				key: 'key',
+				label: 'key',
+				type: DataTypeEnum.TEXT,
+				value: configuration ? configuration.key : null,
+				readOnly: true,
+				iconPrefix: IconEnum.KEY
+			},
+			{
+				key: 'category',
+				label: 'category',
+				type: DataTypeEnum.TEXT,
+				value: configuration.category ? configuration.category.name : null,
+				readOnly: true,
+				iconPrefix: IconEnum.WIDGET
+			},
+			{
+				key: 'value',
+				label: 'value',
+				type: configuration.dataType,
+				value: configuration ? configuration.value : null,
+				iconPrefix: IconEnum.VALUE,
+				iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
+				validators: [Validators.required]
+			}
+		];
+	}
 
-  /**
-   * Generate an array of form fields for the given category parameters
-   *
-   * @param categorySettings The widget settings
-   * @param widgetBackendConfig The current widget backend configuration
-   */
-  public generateCategoryParametersFormFields(
-    categorySettings: CategoryParameter[],
-    widgetBackendConfig: string
-  ): FormField[] {
-    const formFields: FormField[] = [];
+	/**
+	 * Generate an array of form fields for the given category parameters
+	 *
+	 * @param categorySettings The widget settings
+	 * @param widgetBackendConfig The current widget backend configuration
+	 */
+	public generateCategoryParametersFormFields(
+		categorySettings: CategoryParameter[],
+		widgetBackendConfig: string
+	): FormField[] {
+		const formFields: FormField[] = [];
 
-    categorySettings.forEach((configuration) => {
-      let backendConfigValue = null;
+		categorySettings.forEach((configuration) => {
+			let backendConfigValue = null;
 
-      if (widgetBackendConfig) {
-        backendConfigValue = this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(
-          configuration.key,
-          widgetBackendConfig
-        );
-      }
+			if (widgetBackendConfig) {
+				backendConfigValue = this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(
+					configuration.key,
+					widgetBackendConfig
+				);
+			}
 
-      formFields.push({
-        key: configuration.key,
-        label: configuration.description,
-        type: configuration.dataType,
-        value: backendConfigValue || configuration.value,
-        iconPrefix: IconEnum.VALUE,
-        iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
-        validators: [Validators.required]
-      });
-    });
+			formFields.push({
+				key: configuration.key,
+				label: configuration.description,
+				type: configuration.dataType,
+				value: backendConfigValue || configuration.value,
+				iconPrefix: IconEnum.VALUE,
+				iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
+				validators: [Validators.required]
+			});
+		});
 
-    return formFields;
-  }
+		return formFields;
+	}
 
-  /**
-   * Add or remove widget's category fields & controls to the given form.
-   *
-   * @param categorySettings The information about the settings of the category
-   * @param checked If yes, add the fields & controls to the given form, otherwise, remove them. Matches to the slide toggle button activation.
-   * @param formGroup The form group to which controls will be added
-   * @param fields A field array to which new fields will be added
-   * @param widgetBackendConfig The current widget backend configuration
-   */
-  public addOrRemoveCategoryParametersFormFields(
-    categorySettings: CategoryParameter[],
-    checked: boolean,
-    formGroup: UntypedFormGroup,
-    fields: FormField[],
-    widgetBackendConfig?: string
-  ): void {
-    const categorySettingsFormFields = this.generateCategoryParametersFormFields(categorySettings, widgetBackendConfig);
+	/**
+	 * Add or remove widget's category fields & controls to the given form.
+	 *
+	 * @param categorySettings The information about the settings of the category
+	 * @param checked If yes, add the fields & controls to the given form, otherwise, remove them. Matches to the slide toggle button activation.
+	 * @param formGroup The form group to which controls will be added
+	 * @param fields A field array to which new fields will be added
+	 * @param widgetBackendConfig The current widget backend configuration
+	 */
+	public addOrRemoveCategoryParametersFormFields(
+		categorySettings: CategoryParameter[],
+		checked: boolean,
+		formGroup: UntypedFormGroup,
+		fields: FormField[],
+		widgetBackendConfig?: string
+	): void {
+		const categorySettingsFormFields = this.generateCategoryParametersFormFields(categorySettings, widgetBackendConfig);
 
-    if (checked) {
-      fields.unshift(...categorySettingsFormFields);
-      this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
-    } else {
-      for (const categoryField of categorySettingsFormFields) {
-        const index = fields.findIndex((field) => field.key === categoryField.key);
+		if (checked) {
+			fields.unshift(...categorySettingsFormFields);
+			this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+		} else {
+			for (const categoryField of categorySettingsFormFields) {
+				const index = fields.findIndex((field) => field.key === categoryField.key);
 
-        if (index !== -1) {
-          fields.splice(index, 1);
-        }
-      }
+				if (index !== -1) {
+					fields.splice(index, 1);
+				}
+			}
 
-      this.formService.removeControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
-    }
-  }
+			this.formService.removeControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+		}
+	}
 }

@@ -22,14 +22,14 @@ import { TestBed } from '@angular/core/testing';
 import { HttpAssetService } from './http-asset.service';
 
 describe('HttpAssetService', () => {
-  let service: HttpAssetService;
+	let service: HttpAssetService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(HttpAssetService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(HttpAssetService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

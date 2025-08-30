@@ -44,207 +44,207 @@ import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fi
 import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 
 @Component({
-  templateUrl: '../../shared/components/list/list.component.html',
-  styleUrls: ['../../shared/components/list/list.component.scss'],
-  imports: [
-    HeaderComponent,
-    InputComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    SpinnerComponent,
-    CdkDropList,
-    CdkDrag,
-    NgClass,
-    NgOptimizedImage,
-    ButtonsComponent,
-    PaginatorComponent
-  ],
-  providers: [{ provide: AbstractHttpService, useClass: HttpProjectService }]
+	templateUrl: '../../shared/components/list/list.component.html',
+	styleUrls: ['../../shared/components/list/list.component.scss'],
+	imports: [
+		HeaderComponent,
+		InputComponent,
+		FormsModule,
+		ReactiveFormsModule,
+		SpinnerComponent,
+		CdkDropList,
+		CdkDrag,
+		NgClass,
+		NgOptimizedImage,
+		ButtonsComponent,
+		PaginatorComponent
+	],
+	providers: [{ provide: AbstractHttpService, useClass: HttpProjectService }]
 })
 export class DashboardsComponent extends ListComponent<Project, ProjectRequest> {
-  private readonly httpProjectService = inject(HttpProjectService);
-  private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
-  private readonly projectUsersFormFieldsService = inject(ProjectUsersFormFieldsService);
+	private readonly httpProjectService = inject(HttpProjectService);
+	private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
+	private readonly projectUsersFormFieldsService = inject(ProjectUsersFormFieldsService);
 
-  /**
-   * Project selected in the list for modifications
-   */
-  private projectSelected: Project;
+	/**
+	 * Project selected in the list for modifications
+	 */
+	private projectSelected: Project;
 
-  /**
-   * Constructor
-   */
-  constructor() {
-    super();
-    this.initHeaderConfiguration();
-    this.initListConfiguration();
-    this.initFilter();
-  }
+	/**
+	 * Constructor
+	 */
+	constructor() {
+		super();
+		this.initHeaderConfiguration();
+		this.initListConfiguration();
+		this.initFilter();
+	}
 
-  /**
-   * Function used to not propagate the event
-   *
-   * @param event The event to stop
-   */
-  private static stopEventPropagation(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-  }
+	/**
+	 * Function used to not propagate the event
+	 *
+	 * @param event The event to stop
+	 */
+	private static stopEventPropagation(event: Event): void {
+		event.preventDefault();
+		event.stopPropagation();
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  protected override getFirstLabel(project: Project): string {
-    return project.name;
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	protected override getFirstLabel(project: Project): string {
+		return project.name;
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  protected override getSecondLabel(project: Project): string {
-    return project.token;
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	protected override getSecondLabel(project: Project): string {
+		return project.token;
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  public override redirectToBean(project: Project): void {
-    this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	public override redirectToBean(project: Project): void {
+		this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
+	}
 
-  /**
-   * Function used to configure the header of the list component
-   */
-  private initHeaderConfiguration(): void {
-    this.headerConfiguration = { title: 'dashboard.list' };
-  }
+	/**
+	 * Function used to configure the header of the list component
+	 */
+	private initHeaderConfiguration(): void {
+		this.headerConfiguration = { title: 'dashboard.list' };
+	}
 
-  /**
-   * Function used to init the configuration of the list
-   */
-  private initListConfiguration(): void {
-    this.listConfiguration = {
-      enableShowBean: true,
-      buttons: [
-        {
-          icon: IconEnum.USERS,
-          tooltip: { message: 'user.edit' },
-          variant: 'miniFab',
-          callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project)
-        },
-        {
-          icon: IconEnum.EDIT,
-          tooltip: { message: 'dashboard.edit' },
-          variant: 'miniFab',
-          callback: (event: Event, project: Project) => this.openFormSidenav(event, project)
-        },
-        {
-          icon: IconEnum.DELETE,
-          tooltip: { message: 'dashboard.delete' },
-          color: ButtonColorEnum.WARN,
-          variant: 'miniFab',
-          callback: (event: Event, project: Project) => this.deleteProject(event, project)
-        }
-      ]
-    };
-  }
+	/**
+	 * Function used to init the configuration of the list
+	 */
+	private initListConfiguration(): void {
+		this.listConfiguration = {
+			enableShowBean: true,
+			buttons: [
+				{
+					icon: IconEnum.USERS,
+					tooltip: { message: 'user.edit' },
+					variant: 'miniFab',
+					callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project)
+				},
+				{
+					icon: IconEnum.EDIT,
+					tooltip: { message: 'dashboard.edit' },
+					variant: 'miniFab',
+					callback: (event: Event, project: Project) => this.openFormSidenav(event, project)
+				},
+				{
+					icon: IconEnum.DELETE,
+					tooltip: { message: 'dashboard.delete' },
+					color: ButtonColorEnum.WARN,
+					variant: 'miniFab',
+					callback: (event: Event, project: Project) => this.deleteProject(event, project)
+				}
+			]
+		};
+	}
 
-  /**
-   * Init filter for list component
-   */
-  private initFilter(): void {
-    this.httpFilter.sort = ['name,asc'];
-  }
+	/**
+	 * Init filter for list component
+	 */
+	private initFilter(): void {
+		this.httpFilter.sort = ['name,asc'];
+	}
 
-  /**
-   * Open the form sidenav
-   *
-   * @param event The click event
-   * @param project The project clicked on the list
-   */
-  private openFormSidenav(event: Event, project: Project): void {
-    DashboardsComponent.stopEventPropagation(event);
-    this.projectSelected = project;
+	/**
+	 * Open the form sidenav
+	 *
+	 * @param event The click event
+	 * @param project The project clicked on the list
+	 */
+	private openFormSidenav(event: Event, project: Project): void {
+		DashboardsComponent.stopEventPropagation(event);
+		this.projectSelected = project;
 
-    this.sidenavService.openFormSidenav({
-      title: project ? 'dashboard.edit' : 'dashboard.create',
-      formFields: this.projectFormFieldsService.generateProjectFormFields(project),
-      save: (formGroup: UntypedFormGroup) => this.editProject(formGroup)
-    });
-  }
+		this.sidenavService.openFormSidenav({
+			title: project ? 'dashboard.edit' : 'dashboard.create',
+			formFields: this.projectFormFieldsService.generateProjectFormFields(project),
+			save: (formGroup: UntypedFormGroup) => this.editProject(formGroup)
+		});
+	}
 
-  /**
-   * Redirect on the edit page
-   *
-   * @param formGroup The form group
-   */
-  private editProject(formGroup: UntypedFormGroup): void {
-    const projectRequest: ProjectRequest = formGroup.value;
-    projectRequest.cssStyle = CssService.buildCssFile([
-      CssService.buildCssGridBackgroundColor(projectRequest.gridBackgroundColor)
-    ]);
+	/**
+	 * Redirect on the edit page
+	 *
+	 * @param formGroup The form group
+	 */
+	private editProject(formGroup: UntypedFormGroup): void {
+		const projectRequest: ProjectRequest = formGroup.value;
+		projectRequest.cssStyle = CssService.buildCssFile([
+			CssService.buildCssGridBackgroundColor(projectRequest.gridBackgroundColor)
+		]);
 
-    this.httpProjectService.update(this.projectSelected.token, projectRequest).subscribe(() => {
-      this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
-      this.refreshList();
-    });
-  }
+		this.httpProjectService.update(this.projectSelected.token, projectRequest).subscribe(() => {
+			this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
+			this.refreshList();
+		});
+	}
 
-  /**
-   * Function used to delete a project
-   *
-   * @param event The click event
-   * @param project The project to delete
-   */
-  private deleteProject(event: Event, project: Project): void {
-    DashboardsComponent.stopEventPropagation(event);
+	/**
+	 * Function used to delete a project
+	 *
+	 * @param event The click event
+	 * @param project The project to delete
+	 */
+	private deleteProject(event: Event, project: Project): void {
+		DashboardsComponent.stopEventPropagation(event);
 
-    this.dialogService.confirm({
-      title: 'dashboard.delete',
-      message: `${this.translateService.instant('dashboard.delete.confirm')} ${project.name.toUpperCase()} ?`,
-      accept: () => {
-        this.httpProjectService.delete(project.token).subscribe(() => {
-          this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
-          this.refreshList();
-        });
-      }
-    });
-  }
+		this.dialogService.confirm({
+			title: 'dashboard.delete',
+			message: `${this.translateService.instant('dashboard.delete.confirm')} ${project.name.toUpperCase()} ?`,
+			accept: () => {
+				this.httpProjectService.delete(project.token).subscribe(() => {
+					this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
+					this.refreshList();
+				});
+			}
+		});
+	}
 
-  /**
-   * Open the form sidenav used to manage users
-   *
-   * @param event The click event
-   * @param project The project clicked on the list
-   */
-  private openUserFormSidenav(event: Event, project: Project): void {
-    DashboardsComponent.stopEventPropagation(event);
-    this.projectSelected = project;
+	/**
+	 * Open the form sidenav used to manage users
+	 *
+	 * @param event The click event
+	 * @param project The project clicked on the list
+	 */
+	private openUserFormSidenav(event: Event, project: Project): void {
+		DashboardsComponent.stopEventPropagation(event);
+		this.projectSelected = project;
 
-    this.sidenavService.openFormSidenav({
-      title: 'user.add',
-      formFields: this.projectUsersFormFieldsService.generateProjectUsersFormFields(project.token),
-      hideSaveAction: true,
-      onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
-    });
-  }
+		this.sidenavService.openFormSidenav({
+			title: 'user.add',
+			formFields: this.projectUsersFormFieldsService.generateProjectUsersFormFields(project.token),
+			hideSaveAction: true,
+			onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
+		});
+	}
 
-  /**
-   * On value changed callback, called when selecting a user to add to a dashboard
-   *
-   * @param valueChangedEvent The event
-   */
-  private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
-    if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
-      return this.httpProjectService
-        .addUserToProject(this.projectSelected.token, valueChangedEvent.value as string)
-        .pipe(
-          switchMap(() =>
-            of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.projectSelected.token))
-          )
-        );
-    }
+	/**
+	 * On value changed callback, called when selecting a user to add to a dashboard
+	 *
+	 * @param valueChangedEvent The event
+	 */
+	private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
+		if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
+			return this.httpProjectService
+				.addUserToProject(this.projectSelected.token, valueChangedEvent.value as string)
+				.pipe(
+					switchMap(() =>
+						of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.projectSelected.token))
+					)
+				);
+		}
 
-    return EMPTY;
-  }
+		return EMPTY;
+	}
 }

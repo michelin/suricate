@@ -23,36 +23,36 @@ import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-to
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'suricate-slide-toggle',
-  templateUrl: './slide-toggle.component.html',
-  styleUrls: ['./slide-toggle.component.scss'],
-  imports: [MatSlideToggle, FormsModule, TranslatePipe]
+	selector: 'suricate-slide-toggle',
+	templateUrl: './slide-toggle.component.html',
+	styleUrls: ['./slide-toggle.component.scss'],
+	imports: [MatSlideToggle, FormsModule, TranslatePipe]
 })
 export class SlideToggleComponent {
-  /**
-   * The label of the slide toggle
-   */
-  @Input()
-  public label: string;
+	/**
+	 * The label of the slide toggle
+	 */
+	@Input()
+	public label: string;
 
-  /**
-   * Is the toggle button checked or not
-   */
-  @Input()
-  public toggleChecked: boolean;
+	/**
+	 * Is the toggle button checked or not
+	 */
+	@Input()
+	public toggleChecked: boolean;
 
-  /**
-   * The event emitter
-   */
-  @Output()
-  slideToggleButtonPressed = new EventEmitter<MatSlideToggleChange>();
+	/**
+	 * The event emitter
+	 */
+	@Output()
+	slideToggleButtonPressed = new EventEmitter<MatSlideToggleChange>();
 
-  /**
-   * Trigger the event emitter when the slide toggle button is pressed
-   *
-   * @param event The current MatSlideToggleChange event
-   */
-  public slideToggleChange(event: MatSlideToggleChange): void {
-    this.slideToggleButtonPressed.emit(event);
-  }
+	/**
+	 * Trigger the event emitter when the slide toggle button is pressed
+	 *
+	 * @param event The current MatSlideToggleChange event
+	 */
+	public slideToggleChange(event: MatSlideToggleChange): void {
+		this.slideToggleButtonPressed.emit(event);
+	}
 }

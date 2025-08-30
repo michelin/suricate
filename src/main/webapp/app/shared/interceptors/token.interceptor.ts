@@ -30,36 +30,36 @@ import { AuthenticationService } from '../services/frontend/authentication/authe
  */
 @Injectable({ providedIn: 'root' })
 export class TokenInterceptor implements HttpInterceptor {
-  private readonly router = inject(Router);
+	private readonly router = inject(Router);
 
-  /**
-   * Intercept the HTTP requests and add the token to them
-   * @param request The request sent
-   * @param next The next interceptor
-   */
-  public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (
-      !request?.url ||
-      (request.url.startsWith('http') &&
-        !(AbstractHttpService.baseApiEndpoint && request.url.startsWith(AbstractHttpService.baseApiEndpoint)))
-    ) {
-      return next.handle(request);
-    }
+	/**
+	 * Intercept the HTTP requests and add the token to them
+	 * @param request The request sent
+	 * @param next The next interceptor
+	 */
+	public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+		if (
+			!request?.url ||
+			(request.url.startsWith('http') &&
+				!(AbstractHttpService.baseApiEndpoint && request.url.startsWith(AbstractHttpService.baseApiEndpoint)))
+		) {
+			return next.handle(request);
+		}
 
-    try {
-      if (AuthenticationService.isLoggedIn()) {
-        request = request.clone({
-          setHeaders: {
-            Authorization: `Bearer ${AuthenticationService.getAccessToken()}`
-          }
-        });
-      }
-    } catch (ignoredError) {
-      // Catch "isLoggedIn" errors. Token probably has been tampered
-      AuthenticationService.logout();
-      this.router.navigate(['/login']);
-    }
+		try {
+			if (AuthenticationService.isLoggedIn()) {
+				request = request.clone({
+					setHeaders: {
+						Authorization: `Bearer ${AuthenticationService.getAccessToken()}`
+					}
+				});
+			}
+		} catch (ignoredError) {
+			// Catch "isLoggedIn" errors. Token probably has been tampered
+			AuthenticationService.logout();
+			this.router.navigate(['/login']);
+		}
 
-    return next.handle(request);
-  }
+		return next.handle(request);
+	}
 }

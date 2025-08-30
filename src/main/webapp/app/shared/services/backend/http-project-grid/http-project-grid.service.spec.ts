@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { HttpProjectGridService } from './http-project-grid.service';
 
 describe('HttpProjectGridService', () => {
-  let service: HttpProjectGridService;
+	let service: HttpProjectGridService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(HttpProjectGridService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(HttpProjectGridService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

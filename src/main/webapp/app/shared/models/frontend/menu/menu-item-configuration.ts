@@ -24,7 +24,7 @@ import { LinkConfiguration } from '../link/link-configuration';
  * Represent a category of the menu
  */
 export class MenuItemConfiguration {
-  label: string;
-  linkConfiguration: LinkConfiguration;
-  icon: IconEnum;
+	label: string;
+	linkConfiguration: LinkConfiguration;
+	icon: IconEnum;
 }

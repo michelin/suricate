@@ -1,13 +1,13 @@
 <div class="color-picker">
-  <mat-label class="label">{{ field.label | translate }}</mat-label>
-  <div
-    class="color-picker-wrapper"
-    [cpWidth]="'591px'"
-    [cpToggle]="true"
-    [cpDialogDisplay]="'inline'"
-    [cpOutputFormat]="'hex'"
-    [cpAlphaChannel]="'always'"
-    [colorPicker]="getFieldValue()"
-    (colorPickerChange)="colorChanged($event)"
-  ></div>
+	<mat-label class="label">{{ field.label | translate }}</mat-label>
+	<div
+		class="color-picker-wrapper"
+		[cpWidth]="'591px'"
+		[cpToggle]="true"
+		[cpDialogDisplay]="'inline'"
+		[cpOutputFormat]="'hex'"
+		[cpAlphaChannel]="'always'"
+		[colorPicker]="getFieldValue()"
+		(colorPickerChange)="colorChanged($event)"
+	></div>
 </div>

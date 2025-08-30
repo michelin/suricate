@@ -22,21 +22,21 @@ import { ThemePalette } from '@angular/material/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
-  selector: 'suricate-progress-bar',
-  templateUrl: './progress-bar.component.html',
-  styleUrls: ['./progress-bar.component.scss'],
-  imports: [MatProgressBar]
+	selector: 'suricate-progress-bar',
+	templateUrl: './progress-bar.component.html',
+	styleUrls: ['./progress-bar.component.scss'],
+	imports: [MatProgressBar]
 })
 export class ProgressBarComponent {
-  /**
-   * The color to use with the spinner
-   */
-  @Input()
-  public color: ThemePalette;
+	/**
+	 * The color to use with the spinner
+	 */
+	@Input()
+	public color: ThemePalette;
 
-  /**
-   * The value of the progress bar
-   */
-  @Input()
-  public value: number;
+	/**
+	 * The value of the progress bar
+	 */
+	@Input()
+	public value: number;
 }

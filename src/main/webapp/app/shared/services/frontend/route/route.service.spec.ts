@@ -22,14 +22,14 @@ import { TestBed } from '@angular/core/testing';
 import { RouteService } from './route.service';
 
 describe('RouteService', () => {
-  let service: RouteService;
+	let service: RouteService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(RouteService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(RouteService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

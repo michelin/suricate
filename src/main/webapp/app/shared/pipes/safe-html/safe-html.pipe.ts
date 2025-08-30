@@ -24,19 +24,19 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
  * Transform a string into a SafeHtml
  */
 @Pipe({
-  name: 'safeHtml',
-  standalone: true
+	name: 'safeHtml',
+	standalone: true
 })
 export class SafeHtmlPipe implements PipeTransform {
-  private readonly domSanitizer = inject(DomSanitizer);
+	private readonly domSanitizer = inject(DomSanitizer);
 
-  /**
-   * The transform function
-   *
-   * @param {string} valueToSanitize The string value to sanitize
-   * @returns {SafeHtml}
-   */
-  public transform(valueToSanitize: string): SafeHtml {
-    return this.domSanitizer.bypassSecurityTrustHtml(valueToSanitize);
-  }
+	/**
+	 * The transform function
+	 *
+	 * @param {string} valueToSanitize The string value to sanitize
+	 * @returns {SafeHtml}
+	 */
+	public transform(valueToSanitize: string): SafeHtml {
+		return this.domSanitizer.bypassSecurityTrustHtml(valueToSanitize);
+	}
 }

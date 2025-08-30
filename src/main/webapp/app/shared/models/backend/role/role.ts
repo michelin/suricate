@@ -23,7 +23,7 @@ import { RoleEnum } from '../../../enums/role.enum';
  * The Role entity
  */
 export class Role {
-  id: number;
-  name: RoleEnum;
-  description: string;
+	id: number;
+	name: RoleEnum;
+	description: string;
 }

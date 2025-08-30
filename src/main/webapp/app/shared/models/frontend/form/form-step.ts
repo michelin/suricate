@@ -29,53 +29,53 @@ import { FormField } from './form-field';
  * Describe a step of the wizard
  */
 export class FormStep {
-  /**
-   * The key of the step
-   */
-  key: string;
+	/**
+	 * The key of the step
+	 */
+	key: string;
 
-  /**
-   * The title of the step
-   */
-  title: string;
+	/**
+	 * The title of the step
+	 */
+	title: string;
 
-  /**
-   * The icon that should displayed in the step
-   */
-  icon: IconEnum;
+	/**
+	 * The icon that should displayed in the step
+	 */
+	icon: IconEnum;
 
-  /**
-   * If we want to display an image on the step
-   */
-  imageLink?: LinkConfiguration;
+	/**
+	 * If we want to display an image on the step
+	 */
+	imageLink?: LinkConfiguration;
 
-  /**
-   * Description of the step
-   */
-  description?: string;
+	/**
+	 * Description of the step
+	 */
+	description?: string;
 
-  /**
-   * Information of the step
-   */
-  information?: string;
+	/**
+	 * Information of the step
+	 */
+	information?: string;
 
-  /**
-   * Category of the step
-   */
-  category?: Category;
+	/**
+	 * Category of the step
+	 */
+	category?: Category;
 
-  /**
-   * The form field for the step
-   */
-  fields?: FormField[];
+	/**
+	 * The form field for the step
+	 */
+	fields?: FormField[];
 
-  /**
-   * Used to retrieve fields in an async way
-   */
-  asyncFields?: (formGroup?: UntypedFormGroup, step?: FormStep) => Observable<FormField[]>;
+	/**
+	 * Used to retrieve fields in an async way
+	 */
+	asyncFields?: (formGroup?: UntypedFormGroup, step?: FormStep) => Observable<FormField[]>;
 
-  /**
-   * If the step is optional
-   */
-  optional?: boolean;
+	/**
+	 * If the step is optional
+	 */
+	optional?: boolean;
 }

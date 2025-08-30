@@ -21,8 +21,8 @@
  * The toast type enum managed by the ToastComponent
  */
 export enum ToastTypeEnum {
-  SUCCESS = 'success',
-  INFO = 'info',
-  WARNING = 'warning',
-  DANGER = 'danger'
+	SUCCESS = 'success',
+	INFO = 'info',
+	WARNING = 'warning',
+	DANGER = 'danger'
 }

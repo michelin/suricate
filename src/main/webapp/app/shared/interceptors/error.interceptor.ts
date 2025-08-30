@@ -32,39 +32,39 @@ import { ToastService } from '../services/frontend/toast/toast.service';
  */
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
-  private readonly router = inject(Router);
-  private readonly toastService = inject(ToastService);
+	private readonly router = inject(Router);
+	private readonly toastService = inject(ToastService);
 
-  /**
-   * Method that intercept the request
-   * @param request The request
-   * @param next The next handler
-   * @return The http request as event
-   */
-  public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    return next.handle(request).pipe(
-      tap({
-        error: (httpError: HttpErrorResponse) => {
-          switch (httpError.status) {
-            // Authentication error, token invalid or expired
-            case 401:
-              AuthenticationService.logout();
-              this.router.navigate(['/login']);
-              break;
+	/**
+	 * Method that intercept the request
+	 * @param request The request
+	 * @param next The next handler
+	 * @return The http request as event
+	 */
+	public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+		return next.handle(request).pipe(
+			tap({
+				error: (httpError: HttpErrorResponse) => {
+					switch (httpError.status) {
+						// Authentication error, token invalid or expired
+						case 401:
+							AuthenticationService.logout();
+							this.router.navigate(['/login']);
+							break;
 
-            case 0:
-              this.displayUnknownErrorMessage();
-              break;
-          }
-        }
-      })
-    );
-  }
+						case 0:
+							this.displayUnknownErrorMessage();
+							break;
+					}
+				}
+			})
+		);
+	}
 
-  /**
-   * Display the message when an unknown error occurred
-   */
-  private displayUnknownErrorMessage(): void {
-    this.toastService.sendMessage('server.unavailable', ToastTypeEnum.DANGER, 'server.unavailable.explanation');
-  }
+	/**
+	 * Display the message when an unknown error occurred
+	 */
+	private displayUnknownErrorMessage(): void {
+		this.toastService.sendMessage('server.unavailable', ToastTypeEnum.DANGER, 'server.unavailable.explanation');
+	}
 }

@@ -27,39 +27,39 @@ import { EnvironmentService } from '../../frontend/environment/environment.servi
  * Service used to define the minimum requirement for a http service
  */
 export abstract class AbstractHttpService<TRet, TReq> {
-  public static readonly baseApiEndpoint = `${EnvironmentService.backendUrl}/api`;
+	public static readonly baseApiEndpoint = `${EnvironmentService.backendUrl}/api`;
 
-  /**
-   * Function used to retrieve the list of Objects
-   */
-  abstract getAll(filter?: HttpFilter): Observable<PageModel<TRet>>;
+	/**
+	 * Function used to retrieve the list of Objects
+	 */
+	abstract getAll(filter?: HttpFilter): Observable<PageModel<TRet>>;
 
-  /**
-   * Function used to retrieve an Object of type T
-   *
-   * @param id The object id to retrieve
-   */
-  abstract getById(id: number | string): Observable<TRet>;
+	/**
+	 * Function used to retrieve an Object of type T
+	 *
+	 * @param id The object id to retrieve
+	 */
+	abstract getById(id: number | string): Observable<TRet>;
 
-  /**
-   * Function used to create an object of type T
-   *
-   * @param entity The object that we want to create
-   */
-  abstract create(entity: TReq): Observable<TRet>;
+	/**
+	 * Function used to create an object of type T
+	 *
+	 * @param entity The object that we want to create
+	 */
+	abstract create(entity: TReq): Observable<TRet>;
 
-  /**
-   * Function used to update an object of type T
-   *
-   * @param id The object id if to update
-   * @param entity The new object for this id
-   */
-  abstract update(id: number | string, entity: TReq): Observable<void>;
+	/**
+	 * Function used to update an object of type T
+	 *
+	 * @param id The object id if to update
+	 * @param entity The new object for this id
+	 */
+	abstract update(id: number | string, entity: TReq): Observable<void>;
 
-  /**
-   * Function used to delete an object
-   *
-   * @param id The object id to delete
-   */
-  abstract delete(id: number | string): Observable<void>;
+	/**
+	 * Function used to delete an object
+	 *
+	 * @param id The object id to delete
+	 */
+	abstract delete(id: number | string): Observable<void>;
 }

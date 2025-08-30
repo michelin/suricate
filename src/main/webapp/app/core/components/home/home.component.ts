@@ -44,126 +44,126 @@ import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 
 @Component({
-  selector: 'suricate-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  imports: [
-    HeaderComponent,
-    SpinnerComponent,
-    MatGridList,
-    MatGridTile,
-    MatIcon,
-    RouterLink,
-    NgOptimizedImage,
-    TranslatePipe
-  ]
+	selector: 'suricate-home',
+	templateUrl: './home.component.html',
+	styleUrls: ['./home.component.scss'],
+	imports: [
+		HeaderComponent,
+		SpinnerComponent,
+		MatGridList,
+		MatGridTile,
+		MatIcon,
+		RouterLink,
+		NgOptimizedImage,
+		TranslatePipe
+	]
 })
 export class HomeComponent implements OnInit {
-  private readonly router = inject(Router);
-  private readonly httpProjectService = inject(HttpProjectService);
-  private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
-  private readonly sidenavService = inject(SidenavService);
-  private readonly toastService = inject(ToastService);
+	private readonly router = inject(Router);
+	private readonly httpProjectService = inject(HttpProjectService);
+	private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
+	private readonly sidenavService = inject(SidenavService);
+	private readonly toastService = inject(ToastService);
 
-  /**
-   * Configuration of the header
-   */
-  public headerConfiguration: HeaderConfiguration;
+	/**
+	 * Configuration of the header
+	 */
+	public headerConfiguration: HeaderConfiguration;
 
-  /**
-   * Tell when the list of dashboards is loading
-   */
-  public isLoading: boolean;
+	/**
+	 * Tell when the list of dashboards is loading
+	 */
+	public isLoading: boolean;
 
-  /**
-   * The list of material icons
-   */
-  public materialIconRecords = MaterialIconRecords;
+	/**
+	 * The list of material icons
+	 */
+	public materialIconRecords = MaterialIconRecords;
 
-  /**
-   * The list of icons
-   */
-  public iconEnum = IconEnum;
+	/**
+	 * The list of icons
+	 */
+	public iconEnum = IconEnum;
 
-  /**
-   * The list of dashboards
-   */
-  public projects: Project[];
+	/**
+	 * The list of dashboards
+	 */
+	public projects: Project[];
 
-  /**
-   * Init method
-   */
-  ngOnInit(): void {
-    this.initHeaderConfiguration();
+	/**
+	 * Init method
+	 */
+	ngOnInit(): void {
+		this.initHeaderConfiguration();
 
-    this.httpProjectService.getAllForCurrentUser().subscribe((dashboards: Project[]) => {
-      this.isLoading = false;
-      this.projects = dashboards;
-    });
-  }
+		this.httpProjectService.getAllForCurrentUser().subscribe((dashboards: Project[]) => {
+			this.isLoading = false;
+			this.projects = dashboards;
+		});
+	}
 
-  /**
-   * Used to init the header component
-   */
-  private initHeaderConfiguration(): void {
-    this.headerConfiguration = {
-      title: 'dashboard.list.my',
-      actions: [
-        {
-          icon: IconEnum.ADD,
-          variant: 'miniFab',
-          type: ButtonTypeEnum.BUTTON,
-          tooltip: { message: 'dashboard.create' },
-          callback: () => this.openCreateDashboardFormSidenav()
-        }
-      ]
-    };
-  }
+	/**
+	 * Used to init the header component
+	 */
+	private initHeaderConfiguration(): void {
+		this.headerConfiguration = {
+			title: 'dashboard.list.my',
+			actions: [
+				{
+					icon: IconEnum.ADD,
+					variant: 'miniFab',
+					type: ButtonTypeEnum.BUTTON,
+					tooltip: { message: 'dashboard.create' },
+					callback: () => this.openCreateDashboardFormSidenav()
+				}
+			]
+		};
+	}
 
-  /**
-   * Display the side nav bar used to create a dashboard
-   */
-  public openCreateDashboardFormSidenav(): void {
-    this.sidenavService.openFormSidenav({
-      title: 'dashboard.create',
-      formFields: this.projectFormFieldsService.generateProjectFormFields(),
-      save: (formGroup: UntypedFormGroup) => this.saveDashboard(formGroup)
-    });
-  }
+	/**
+	 * Display the side nav bar used to create a dashboard
+	 */
+	public openCreateDashboardFormSidenav(): void {
+		this.sidenavService.openFormSidenav({
+			title: 'dashboard.create',
+			formFields: this.projectFormFieldsService.generateProjectFormFields(),
+			save: (formGroup: UntypedFormGroup) => this.saveDashboard(formGroup)
+		});
+	}
 
-  /**
-   * Create a new dashboard
-   *
-   * @param formGroup The form group
-   */
-  private saveDashboard(formGroup: UntypedFormGroup): void {
-    const formData: ProjectRequest = formGroup.value;
-    formData.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(formData.gridBackgroundColor)]);
+	/**
+	 * Create a new dashboard
+	 *
+	 * @param formGroup The form group
+	 */
+	private saveDashboard(formGroup: UntypedFormGroup): void {
+		const formData: ProjectRequest = formGroup.value;
+		formData.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(formData.gridBackgroundColor)]);
 
-    this.httpProjectService.create(formData).subscribe((project: Project) => {
-      if (formData.image) {
-        const contentType: string = ImageUtils.getContentTypeFromBase64URL(formData.image);
-        const blob: Blob = FileUtils.base64ToBlob(
-          ImageUtils.getDataFromBase64URL(formData.image),
-          ImageUtils.getContentTypeFromBase64URL(formData.image)
-        );
+		this.httpProjectService.create(formData).subscribe((project: Project) => {
+			if (formData.image) {
+				const contentType: string = ImageUtils.getContentTypeFromBase64URL(formData.image);
+				const blob: Blob = FileUtils.base64ToBlob(
+					ImageUtils.getDataFromBase64URL(formData.image),
+					ImageUtils.getContentTypeFromBase64URL(formData.image)
+				);
 
-        const file: File = FileUtils.convertBlobToFile(blob, `${project.token}.${contentType.split('/')[1]}`);
+				const file: File = FileUtils.convertBlobToFile(blob, `${project.token}.${contentType.split('/')[1]}`);
 
-        this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();
-      }
+				this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();
+			}
 
-      this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
-      this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
-    });
-  }
+			this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
+			this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
+		});
+	}
 
-  /**
-   * Get the asset url
-   *
-   * @param assetToken The asset used to build the url
-   */
-  public getContentUrl(assetToken: string): string {
-    return HttpAssetService.getContentUrl(assetToken);
-  }
+	/**
+	 * Get the asset url
+	 *
+	 * @param assetToken The asset used to build the url
+	 */
+	public getContentUrl(assetToken: string): string {
+		return HttpAssetService.getContentUrl(assetToken);
+	}
 }

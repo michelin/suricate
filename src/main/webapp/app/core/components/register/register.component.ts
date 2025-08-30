@@ -46,123 +46,123 @@ import { CustomValidator } from '../../../shared/validators/custom-validator';
  * Component used to register a new user
  */
 @Component({
-  selector: 'suricate-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
-  imports: [NgOptimizedImage, SpinnerComponent, FormsModule, ReactiveFormsModule, InputComponent, ButtonsComponent]
+	selector: 'suricate-register',
+	templateUrl: './register.component.html',
+	styleUrls: ['./register.component.scss'],
+	imports: [NgOptimizedImage, SpinnerComponent, FormsModule, ReactiveFormsModule, InputComponent, ButtonsComponent]
 })
 export class RegisterComponent implements OnInit {
-  private readonly router = inject(Router);
-  private readonly httpConfigurationService = inject(HttpConfigurationService);
-  private readonly authenticationService = inject(AuthenticationService);
-  private readonly formService = inject(FormService);
-  private readonly toastService = inject(ToastService);
+	private readonly router = inject(Router);
+	private readonly httpConfigurationService = inject(HttpConfigurationService);
+	private readonly authenticationService = inject(AuthenticationService);
+	private readonly formService = inject(FormService);
+	private readonly toastService = inject(ToastService);
 
-  /**
-   * The register form
-   */
-  public registerForm: UntypedFormGroup;
+	/**
+	 * The register form
+	 */
+	public registerForm: UntypedFormGroup;
 
-  /**
-   * The description of the form
-   */
-  public formFields: FormField[];
+	/**
+	 * The description of the form
+	 */
+	public formFields: FormField[];
 
-  /**
-   * The list of buttons to display in the form
-   */
-  public buttonConfigurations: ButtonConfiguration<unknown>[];
+	/**
+	 * The list of buttons to display in the form
+	 */
+	public buttonConfigurations: ButtonConfiguration<unknown>[];
 
-  /**
-   * Define if the spinner should be running or not
-   */
-  public loading = true;
+	/**
+	 * Define if the spinner should be running or not
+	 */
+	public loading = true;
 
-  /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    if (AuthenticationService.isLoggedIn()) {
-      this.navigateToHomePage();
-      return;
-    }
+	/**
+	 * Called when the component is init
+	 */
+	public ngOnInit(): void {
+		if (AuthenticationService.isLoggedIn()) {
+			this.navigateToHomePage();
+			return;
+		}
 
-    this.httpConfigurationService
-      .getAuthenticationProviders()
-      .subscribe((authenticationProviders: AuthenticationProvider[]) => {
-        if (authenticationProviders.indexOf(AuthenticationProvider.LDAP) > -1) {
-          this.router.navigate(['/login']);
-        }
-      });
+		this.httpConfigurationService
+			.getAuthenticationProviders()
+			.subscribe((authenticationProviders: AuthenticationProvider[]) => {
+				if (authenticationProviders.indexOf(AuthenticationProvider.LDAP) > -1) {
+					this.router.navigate(['/login']);
+				}
+			});
 
-    this.initButtons();
-    this.initRegisterForm();
+		this.initButtons();
+		this.initRegisterForm();
 
-    this.loading = false;
-  }
+		this.loading = false;
+	}
 
-  /**
-   * Send the register form, and authenticate the user when everything is ok
-   */
-  public signUp(): void {
-    this.formService.validate(this.registerForm);
+	/**
+	 * Send the register form, and authenticate the user when everything is ok
+	 */
+	public signUp(): void {
+		this.formService.validate(this.registerForm);
 
-    if (this.registerForm.valid) {
-      this.loading = true;
-      const userRequest: UserRequest = this.registerForm.value;
+		if (this.registerForm.valid) {
+			this.loading = true;
+			const userRequest: UserRequest = this.registerForm.value;
 
-      this.authenticationService
-        .signup(userRequest)
-        .pipe(
-          mergeMap(() => {
-            const credentials: Credentials = { username: userRequest.username, password: userRequest.password };
-            return this.authenticationService.authenticate(credentials);
-          }),
-          catchError((error) => {
-            return throwError(() => error);
-          })
-        )
-        .subscribe({
-          next: () => this.navigateToHomePage(),
-          error: (error: HttpErrorResponse) => {
-            this.loading = false;
-            this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
-          }
-        });
-    } else {
-      this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);
-    }
-  }
+			this.authenticationService
+				.signup(userRequest)
+				.pipe(
+					mergeMap(() => {
+						const credentials: Credentials = { username: userRequest.username, password: userRequest.password };
+						return this.authenticationService.authenticate(credentials);
+					}),
+					catchError((error) => {
+						return throwError(() => error);
+					})
+				)
+				.subscribe({
+					next: () => this.navigateToHomePage(),
+					error: (error: HttpErrorResponse) => {
+						this.loading = false;
+						this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
+					}
+				});
+		} else {
+			this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);
+		}
+	}
 
-  /**
-   * Initialize the list of buttons to use in the application
-   */
-  private initButtons(): void {
-    this.buttonConfigurations = [
-      {
-        label: 'sign.up',
-        type: ButtonTypeEnum.SUBMIT
-      }
-    ];
-  }
+	/**
+	 * Initialize the list of buttons to use in the application
+	 */
+	private initButtons(): void {
+		this.buttonConfigurations = [
+			{
+				label: 'sign.up',
+				type: ButtonTypeEnum.SUBMIT
+			}
+		];
+	}
 
-  /**
-   * Init the register form
-   */
-  private initRegisterForm(): void {
-    this.formFields = RegisterFormFieldsService.generateFormFields();
-    this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
-    this.formService.setValidatorsForControl(this.registerForm.get('confirmPassword'), [
-      Validators.required,
-      Validators.minLength(3),
-      CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
-    ]);
-  }
+	/**
+	 * Init the register form
+	 */
+	private initRegisterForm(): void {
+		this.formFields = RegisterFormFieldsService.generateFormFields();
+		this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
+		this.formService.setValidatorsForControl(this.registerForm.get('confirmPassword'), [
+			Validators.required,
+			Validators.minLength(3),
+			CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
+		]);
+	}
 
-  /**
-   * Redirect to the home page
-   */
-  private navigateToHomePage(): void {
-    this.router.navigate(['/home']);
-  }
+	/**
+	 * Redirect to the home page
+	 */
+	private navigateToHomePage(): void {
+		this.router.navigate(['/home']);
+	}
 }

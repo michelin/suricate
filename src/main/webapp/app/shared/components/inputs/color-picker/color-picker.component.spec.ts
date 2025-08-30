@@ -29,59 +29,59 @@ import { FormField } from '../../../models/frontend/form/form-field';
 import { ColorPickerComponent } from './color-picker.component';
 
 describe('ColorPickerComponent', () => {
-  let component: ColorPickerComponent;
-  let fixture: ComponentFixture<ColorPickerComponent>;
+	let component: ColorPickerComponent;
+	let fixture: ComponentFixture<ColorPickerComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ColorPickerComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        })
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [ColorPickerComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				})
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(ColorPickerComponent);
-    const formBuilder = TestBed.inject(UntypedFormBuilder);
+		fixture = TestBed.createComponent(ColorPickerComponent);
+		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
-    component = fixture.componentInstance;
-    component.field = buildMockedFormField(DataTypeEnum.COLOR_PICKER);
-    component.formGroup = buildMockedFormGroup(DataTypeEnum.COLOR_PICKER, formBuilder);
+		component = fixture.componentInstance;
+		component.field = buildMockedFormField(DataTypeEnum.COLOR_PICKER);
+		component.formGroup = buildMockedFormGroup(DataTypeEnum.COLOR_PICKER, formBuilder);
 
-    fixture.detectChanges();
-  });
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  /**
-   * Build a mocked FormField for the unit tests
-   *
-   * @param type The type of the field to create
-   */
-  function buildMockedFormField(type: DataTypeEnum): FormField {
-    return {
-      key: 'Key',
-      type: type
-    };
-  }
+	/**
+	 * Build a mocked FormField for the unit tests
+	 *
+	 * @param type The type of the field to create
+	 */
+	function buildMockedFormField(type: DataTypeEnum): FormField {
+		return {
+			key: 'Key',
+			type: type
+		};
+	}
 
-  /**
-   * Build a mocked FormGroup for the unit tests
-   *
-   * @param type The type of the field to create
-   * @param formBuilder The form builder to use to create the form group
-   */
-  function buildMockedFormGroup(type: DataTypeEnum, formBuilder: UntypedFormBuilder): UntypedFormGroup {
-    const customField = buildMockedFormField(type);
+	/**
+	 * Build a mocked FormGroup for the unit tests
+	 *
+	 * @param type The type of the field to create
+	 * @param formBuilder The form builder to use to create the form group
+	 */
+	function buildMockedFormGroup(type: DataTypeEnum, formBuilder: UntypedFormBuilder): UntypedFormGroup {
+		const customField = buildMockedFormField(type);
 
-    const formGroup: UntypedFormGroup = formBuilder.group({});
-    formGroup.addControl(customField.key, new UntypedFormControl(customField.value));
+		const formGroup: UntypedFormGroup = formBuilder.group({});
+		formGroup.addControl(customField.key, new UntypedFormControl(customField.value));
 
-    return formGroup;
-  }
+		return formGroup;
+	}
 });

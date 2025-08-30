@@ -21,12 +21,12 @@
  * Describe the options used by the select-input component
  */
 export interface FormOption {
-  /**
-   * The label displayed to the user
-   */
-  label: string;
-  /**
-   * The value to persist in the form
-   */
-  value: string;
+	/**
+	 * The label displayed to the user
+	 */
+	label: string;
+	/**
+	 * The value to persist in the form
+	 */
+	value: string;
 }

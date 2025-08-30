@@ -41,161 +41,161 @@ import { SlideToggleComponent } from '../inputs/slide-toggle/slide-toggle.compon
  * Component used to display the form sidenav
  */
 @Component({
-  selector: 'suricate-form-sidenav',
-  templateUrl: './form-sidenav.component.html',
-  styleUrls: ['./form-sidenav.component.scss'],
-  imports: [
-    SlideToggleComponent,
-    InputComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    ButtonsComponent,
-    UpperCasePipe,
-    TranslatePipe
-  ]
+	selector: 'suricate-form-sidenav',
+	templateUrl: './form-sidenav.component.html',
+	styleUrls: ['./form-sidenav.component.scss'],
+	imports: [
+		SlideToggleComponent,
+		InputComponent,
+		FormsModule,
+		ReactiveFormsModule,
+		ButtonsComponent,
+		UpperCasePipe,
+		TranslatePipe
+	]
 })
 export class FormSidenavComponent implements OnInit, OnDestroy {
-  private readonly formService = inject(FormService);
-  private readonly sidenavService = inject(SidenavService);
+	private readonly formService = inject(FormService);
+	private readonly sidenavService = inject(SidenavService);
 
-  /**
-   * Send an event to the parent component used to open the sidebar
-   */
-  @Output()
-  public openFormSidenav: EventEmitter<void> = new EventEmitter<void>();
+	/**
+	 * Send an event to the parent component used to open the sidebar
+	 */
+	@Output()
+	public openFormSidenav: EventEmitter<void> = new EventEmitter<void>();
 
-  /**
-   * Send an event to the parent component used to close the sidebar
-   */
-  @Output()
-  public closeFormSidenav: EventEmitter<void> = new EventEmitter<void>();
+	/**
+	 * Send an event to the parent component used to close the sidebar
+	 */
+	@Output()
+	public closeFormSidenav: EventEmitter<void> = new EventEmitter<void>();
 
-  /**
-   * The configuration of the sidenav
-   */
-  public configuration: FormSidenavConfiguration;
+	/**
+	 * The configuration of the sidenav
+	 */
+	public configuration: FormSidenavConfiguration;
 
-  /**
-   * The form displayed by the sidenav
-   */
-  public formGroup: UntypedFormGroup;
+	/**
+	 * The form displayed by the sidenav
+	 */
+	public formGroup: UntypedFormGroup;
 
-  /**
-   * Subject used to unsubscribe all the subscriptions when the component is destroyed
-   */
-  private readonly unsubscribe: Subject<void> = new Subject<void>();
+	/**
+	 * Subject used to unsubscribe all the subscriptions when the component is destroyed
+	 */
+	private readonly unsubscribe: Subject<void> = new Subject<void>();
 
-  /**
-   * The buttons
-   */
-  public buttons: ButtonConfiguration<unknown>[] = [];
+	/**
+	 * The buttons
+	 */
+	public buttons: ButtonConfiguration<unknown>[] = [];
 
-  /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    this.initButtons();
-    this.sidenavService
-      .listenFormSidenavMessages()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((configuration: FormSidenavConfiguration) => {
-        this.configuration = configuration;
-        this.formGroup = this.formService.generateFormGroupForFields(this.configuration.formFields);
+	/**
+	 * Called when the component is init
+	 */
+	public ngOnInit(): void {
+		this.initButtons();
+		this.sidenavService
+			.listenFormSidenavMessages()
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((configuration: FormSidenavConfiguration) => {
+				this.configuration = configuration;
+				this.formGroup = this.formService.generateFormGroupForFields(this.configuration.formFields);
 
-        if (this.configuration?.slideToggleButtonConfiguration?.toggleChecked) {
-          this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
-            { source: undefined, checked: true },
-            this.formGroup,
-            this.configuration.formFields
-          );
-        }
+				if (this.configuration?.slideToggleButtonConfiguration?.toggleChecked) {
+					this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
+						{ source: undefined, checked: true },
+						this.formGroup,
+						this.configuration.formFields
+					);
+				}
 
-        this.openSidenav();
-      });
-  }
+				this.openSidenav();
+			});
+	}
 
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
-  }
+	/**
+	 * Called when the component is destroyed
+	 */
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
+		this.unsubscribe.complete();
+	}
 
-  /**
-   * Init the buttons
-   */
-  private initButtons(): void {
-    this.buttons.push(
-      {
-        label: 'close',
-        icon: IconEnum.CLOSE,
-        color: ButtonColorEnum.WARN,
-        callback: () => this.closeSidenav()
-      },
-      {
-        label: 'save',
-        icon: IconEnum.SAVE,
-        hidden: () => this.configuration.hideSaveAction,
-        callback: () => this.save()
-      }
-    );
-  }
+	/**
+	 * Init the buttons
+	 */
+	private initButtons(): void {
+		this.buttons.push(
+			{
+				label: 'close',
+				icon: IconEnum.CLOSE,
+				color: ButtonColorEnum.WARN,
+				callback: () => this.closeSidenav()
+			},
+			{
+				label: 'save',
+				icon: IconEnum.SAVE,
+				hidden: () => this.configuration.hideSaveAction,
+				callback: () => this.save()
+			}
+		);
+	}
 
-  /**
-   * Used to open the sidenav
-   */
-  private openSidenav(): void {
-    this.openFormSidenav.emit();
-  }
+	/**
+	 * Used to open the sidenav
+	 */
+	private openSidenav(): void {
+		this.openFormSidenav.emit();
+	}
 
-  /**
-   * Used to close the sidenav
-   */
-  private closeSidenav(): void {
-    this.closeFormSidenav.emit();
-  }
+	/**
+	 * Used to close the sidenav
+	 */
+	private closeSidenav(): void {
+		this.closeFormSidenav.emit();
+	}
 
-  /**
-   * Execute save action on click
-   */
-  private save(): void {
-    this.formService.validate(this.formGroup);
+	/**
+	 * Execute save action on click
+	 */
+	private save(): void {
+		this.formService.validate(this.formGroup);
 
-    if (this.formGroup.valid) {
-      this.configuration.save(this.formGroup);
-      this.closeSidenav();
-    }
-  }
+		if (this.formGroup.valid) {
+			this.configuration.save(this.formGroup);
+			this.closeSidenav();
+		}
+	}
 
-  /**
-   * Called when a value has changed
-   *
-   * @param valueChangedEvent The value changed
-   */
-  public valueChanged(valueChangedEvent: ValueChangedEvent): void {
-    if (this.configuration.onValueChanged) {
-      this.configuration
-        .onValueChanged(valueChangedEvent)
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((formFields: FormField[]) => {
-          this.formGroup = this.formService.generateFormGroupForFields(formFields);
-          this.configuration.formFields = formFields;
-        });
-    }
-  }
+	/**
+	 * Called when a value has changed
+	 *
+	 * @param valueChangedEvent The value changed
+	 */
+	public valueChanged(valueChangedEvent: ValueChangedEvent): void {
+		if (this.configuration.onValueChanged) {
+			this.configuration
+				.onValueChanged(valueChangedEvent)
+				.pipe(takeUntil(this.unsubscribe))
+				.subscribe((formFields: FormField[]) => {
+					this.formGroup = this.formService.generateFormGroupForFields(formFields);
+					this.configuration.formFields = formFields;
+				});
+		}
+	}
 
-  /**
-   * Add the settings of the widget's category to the current widget settings form
-   *
-   * @param event The values retrieved from the child component event emitter
-   */
-  public getCategorySettings(event: MatSlideToggleChange): void {
-    this.configuration.slideToggleButtonConfiguration.toggleChecked = event.checked;
-    this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
-      event,
-      this.formGroup,
-      this.configuration.formFields
-    );
-  }
+	/**
+	 * Add the settings of the widget's category to the current widget settings form
+	 *
+	 * @param event The values retrieved from the child component event emitter
+	 */
+	public getCategorySettings(event: MatSlideToggleChange): void {
+		this.configuration.slideToggleButtonConfiguration.toggleChecked = event.checked;
+		this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
+			event,
+			this.formGroup,
+			this.configuration.formFields
+		);
+	}
 }

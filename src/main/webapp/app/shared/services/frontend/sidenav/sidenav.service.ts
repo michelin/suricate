@@ -27,24 +27,24 @@ import { FormSidenavConfiguration } from '../../../models/frontend/sidenav/form-
  */
 @Injectable({ providedIn: 'root' })
 export class SidenavService {
-  /**
-   * Subject used to manage form sidenav messages
-   */
-  private formSidenavSubject = new Subject<FormSidenavConfiguration>();
+	/**
+	 * Subject used to manage form sidenav messages
+	 */
+	private formSidenavSubject = new Subject<FormSidenavConfiguration>();
 
-  /**
-   * Function used to listen for new form sidenav request
-   */
-  public listenFormSidenavMessages(): Observable<FormSidenavConfiguration> {
-    return this.formSidenavSubject.asObservable();
-  }
+	/**
+	 * Function used to listen for new form sidenav request
+	 */
+	public listenFormSidenavMessages(): Observable<FormSidenavConfiguration> {
+		return this.formSidenavSubject.asObservable();
+	}
 
-  /**
-   * Function used to open the form sidenav
-   *
-   * @param formSidenavConfiguration The form sidenav configuration
-   */
-  public openFormSidenav(formSidenavConfiguration: FormSidenavConfiguration): void {
-    this.formSidenavSubject.next(formSidenavConfiguration);
-  }
+	/**
+	 * Function used to open the form sidenav
+	 *
+	 * @param formSidenavConfiguration The form sidenav configuration
+	 */
+	public openFormSidenav(formSidenavConfiguration: FormSidenavConfiguration): void {
+		this.formSidenavSubject.next(formSidenavConfiguration);
+	}
 }

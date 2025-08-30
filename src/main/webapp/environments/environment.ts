@@ -23,14 +23,14 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false,
-  environment: 'Development',
-  backend_url: 'http://localhost:8080',
-  oauth2_frontend_redirect_url: 'http://localhost:4200/login',
+	production: false,
+	environment: 'Development',
+	backend_url: 'http://localhost:8080',
+	oauth2_frontend_redirect_url: 'http://localhost:4200/login',
 
-  // Configuration for WebSockets
-  wsHeartbeatIncoming: 0,
-  wsHeartbeatOutgoing: 20000,
-  wsReconnectDelay: 5000,
-  wsDebug: false
+	// Configuration for WebSockets
+	wsHeartbeatIncoming: 0,
+	wsHeartbeatOutgoing: 20000,
+	wsReconnectDelay: 5000,
+	wsDebug: false
 };

@@ -23,18 +23,18 @@ export type ValueChangedType = 'inputChange' | 'optionSelected' | 'fileChanged' 
  * Event that manage change event on form
  */
 export interface ValueChangedEvent {
-  /**
-   * The key of field
-   */
-  fieldKey: string;
+	/**
+	 * The key of field
+	 */
+	fieldKey: string;
 
-  /**
-   * The new value
-   */
-  value: number | string | boolean | Date;
+	/**
+	 * The new value
+	 */
+	value: number | string | boolean | Date;
 
-  /**
-   * The type of the event, if the user is typing or if an option as bean selected
-   */
-  type: ValueChangedType;
+	/**
+	 * The type of the event, if the user is typing or if an option as bean selected
+	 */
+	type: ValueChangedType;
 }

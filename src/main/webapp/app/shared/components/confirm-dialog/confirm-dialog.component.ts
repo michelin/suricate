@@ -19,11 +19,11 @@
 
 import { Component, inject } from '@angular/core';
 import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogTitle
+	MAT_DIALOG_DATA,
+	MatDialogActions,
+	MatDialogClose,
+	MatDialogContent,
+	MatDialogTitle
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -37,46 +37,46 @@ import { ButtonsComponent } from '../buttons/buttons.component';
  * Confirmation dialog
  */
 @Component({
-  templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.scss'],
-  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, ButtonsComponent, MatDialogClose, TranslatePipe]
+	templateUrl: './confirm-dialog.component.html',
+	styleUrls: ['./confirm-dialog.component.scss'],
+	imports: [MatDialogTitle, MatDialogContent, MatDialogActions, ButtonsComponent, MatDialogClose, TranslatePipe]
 })
 export class ConfirmDialogComponent {
-  private readonly data = inject<ConfirmationDialogConfiguration>(MAT_DIALOG_DATA);
+	private readonly data = inject<ConfirmationDialogConfiguration>(MAT_DIALOG_DATA);
 
-  /**
-   * The configuration of the confirmation dialog
-   */
-  public configuration: ConfirmationDialogConfiguration;
+	/**
+	 * The configuration of the confirmation dialog
+	 */
+	public configuration: ConfirmationDialogConfiguration;
 
-  /**
-   * The configuration of the yes/no buttons
-   */
-  public yesNoButtonsConfiguration: ButtonConfiguration<unknown>[];
+	/**
+	 * The configuration of the yes/no buttons
+	 */
+	public yesNoButtonsConfiguration: ButtonConfiguration<unknown>[];
 
-  /**
-   * Constructor
-   */
-  constructor() {
-    this.configuration = this.data;
-    this.initYesNoButtonsConfiguration();
-  }
+	/**
+	 * Constructor
+	 */
+	constructor() {
+		this.configuration = this.data;
+		this.initYesNoButtonsConfiguration();
+	}
 
-  /**
-   * Init the buttons configurations
-   */
-  private initYesNoButtonsConfiguration(): void {
-    this.yesNoButtonsConfiguration = [
-      {
-        label: 'no',
-        icon: IconEnum.CLOSE
-      },
-      {
-        label: 'yes',
-        icon: IconEnum.SAVE,
-        color: ButtonColorEnum.WARN,
-        callback: () => this.configuration.accept()
-      }
-    ];
-  }
+	/**
+	 * Init the buttons configurations
+	 */
+	private initYesNoButtonsConfiguration(): void {
+		this.yesNoButtonsConfiguration = [
+			{
+				label: 'no',
+				icon: IconEnum.CLOSE
+			},
+			{
+				label: 'yes',
+				icon: IconEnum.SAVE,
+				color: ButtonColorEnum.WARN,
+				callback: () => this.configuration.accept()
+			}
+		];
+	}
 }

@@ -28,40 +28,40 @@ import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/c
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 
 describe('ConfirmDialogComponent', () => {
-  let component: ConfirmDialogComponent;
-  let fixture: ComponentFixture<ConfirmDialogComponent>;
+	let component: ConfirmDialogComponent;
+	let fixture: ComponentFixture<ConfirmDialogComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ConfirmDialogComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        }),
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: buildCommunicationDialogConfiguration() }
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [ConfirmDialogComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				}),
+				{ provide: MatDialogRef, useValue: {} },
+				{ provide: MAT_DIALOG_DATA, useValue: buildCommunicationDialogConfiguration() }
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(ConfirmDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(ConfirmDialogComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  /**
-   * Build a mocked CommunicationDialogConfiguration for the unit tests
-   */
-  function buildCommunicationDialogConfiguration(): CommunicationDialogConfiguration {
-    return {
-      title: 'Title',
-      message: 'Message',
-      isErrorMessage: true
-    };
-  }
+	/**
+	 * Build a mocked CommunicationDialogConfiguration for the unit tests
+	 */
+	function buildCommunicationDialogConfiguration(): CommunicationDialogConfiguration {
+		return {
+			title: 'Title',
+			message: 'Message',
+			isErrorMessage: true
+		};
+	}
 });

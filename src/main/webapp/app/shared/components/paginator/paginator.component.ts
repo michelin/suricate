@@ -26,55 +26,55 @@ import { HttpFilterService } from '../../services/backend/http-filter/http-filte
  * Component used to display the paginator
  */
 @Component({
-  selector: 'suricate-paginator',
-  templateUrl: './paginator.component.html',
-  styleUrls: ['./paginator.component.scss'],
-  imports: [MatPaginator]
+	selector: 'suricate-paginator',
+	templateUrl: './paginator.component.html',
+	styleUrls: ['./paginator.component.scss'],
+	imports: [MatPaginator]
 })
 export class PaginatorComponent {
-  /**
-   * Hide the page size
-   */
-  @Input()
-  hidePageSize: boolean;
+	/**
+	 * Hide the page size
+	 */
+	@Input()
+	hidePageSize: boolean;
 
-  /**
-   * The current page to display
-   */
-  @Input()
-  currentPage: number;
+	/**
+	 * The current page to display
+	 */
+	@Input()
+	currentPage: number;
 
-  /**
-   * Number of elements per paged
-   */
-  @Input()
-  pageNbElements: number;
+	/**
+	 * Number of elements per paged
+	 */
+	@Input()
+	pageNbElements: number;
 
-  /**
-   * Total of fetch elements
-   */
-  @Input()
-  totalElements: number;
+	/**
+	 * Total of fetch elements
+	 */
+	@Input()
+	totalElements: number;
 
-  /**
-   * Event emit when the page has changed
-   */
-  @Output()
-  pageChange = new EventEmitter<PageEvent>();
+	/**
+	 * Event emit when the page has changed
+	 */
+	@Output()
+	pageChange = new EventEmitter<PageEvent>();
 
-  /**
-   * Used to emit an event when the page has changed
-   *
-   * @param pageEvent The Angular material page event
-   */
-  public onPageChanged(pageEvent: PageEvent): void {
-    this.pageChange.emit(pageEvent);
-  }
+	/**
+	 * Used to emit an event when the page has changed
+	 *
+	 * @param pageEvent The Angular material page event
+	 */
+	public onPageChanged(pageEvent: PageEvent): void {
+		this.pageChange.emit(pageEvent);
+	}
 
-  /**
-   * Returns the default size options for paginated lists
-   */
-  public getDefaultSizeOptions(): number[] {
-    return HttpFilterService.DEFAULT_PAGE_SIZE_OPTIONS;
-  }
+	/**
+	 * Returns the default size options for paginated lists
+	 */
+	public getDefaultSizeOptions(): number[] {
+		return HttpFilterService.DEFAULT_PAGE_SIZE_OPTIONS;
+	}
 }

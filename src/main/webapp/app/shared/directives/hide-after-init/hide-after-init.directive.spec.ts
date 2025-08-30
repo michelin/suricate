@@ -23,19 +23,19 @@ import { TestBed } from '@angular/core/testing';
 import { HideAfterInitDirective } from './hide-after-init.directive';
 
 describe('HideAfterInit', () => {
-  let directive: HideAfterInitDirective;
+	let directive: HideAfterInitDirective;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [HideAfterInitDirective, { provide: ElementRef, useClass: MockElementRef }]
-    });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [HideAfterInitDirective, { provide: ElementRef, useClass: MockElementRef }]
+		});
 
-    directive = TestBed.inject(HideAfterInitDirective);
-  });
+		directive = TestBed.inject(HideAfterInitDirective);
+	});
 
-  it('should create', () => {
-    expect(directive).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(directive).toBeTruthy();
+	});
 });
 
 class MockElementRef extends ElementRef {}

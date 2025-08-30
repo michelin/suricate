@@ -33,28 +33,28 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpCategoryService {
-  private static readonly categoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/categories`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly categoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/categories`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Retrieve the full list of categories
-   *
-   * @returns The categories as observable
-   */
-  public getAll(filter?: HttpFilter): Observable<PageModel<Category>> {
-    const url = `${HttpCategoryService.categoriesApiEndpoint}`;
+	/**
+	 * Retrieve the full list of categories
+	 *
+	 * @returns The categories as observable
+	 */
+	public getAll(filter?: HttpFilter): Observable<PageModel<Category>> {
+		const url = `${HttpCategoryService.categoriesApiEndpoint}`;
 
-    return this.httpClient.get<PageModel<Category>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
+		return this.httpClient.get<PageModel<Category>>(HttpFilterService.getFilteredUrl(url, filter));
+	}
 
-  /**
-   * Get the full list of widgets for a category
-   *
-   * @param categoryId The category id
-   */
-  public getCategoryWidgets(categoryId: number): Observable<Widget[]> {
-    const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/widgets`;
+	/**
+	 * Get the full list of widgets for a category
+	 *
+	 * @param categoryId The category id
+	 */
+	public getCategoryWidgets(categoryId: number): Observable<Widget[]> {
+		const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/widgets`;
 
-    return this.httpClient.get<Widget[]>(url);
-  }
+		return this.httpClient.get<Widget[]>(url);
+	}
 }

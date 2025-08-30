@@ -22,14 +22,14 @@ import { TestBed } from '@angular/core/testing';
 import { WebsocketService } from './websocket.service';
 
 describe('WebsocketService', () => {
-  let service: WebsocketService;
+	let service: WebsocketService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(WebsocketService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(WebsocketService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

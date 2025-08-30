@@ -25,12 +25,12 @@ import { GridProperties } from './grid-properties';
  * The project entity
  */
 export class Project {
-  token: string;
-  name: string;
-  gridProperties: GridProperties = new GridProperties();
-  screenshotToken: string;
-  librariesToken: string[];
-  image: Asset = new Asset();
-  grids: ProjectGrid[];
-  displayProgressBar: boolean;
+	token: string;
+	name: string;
+	gridProperties: GridProperties = new GridProperties();
+	screenshotToken: string;
+	librariesToken: string[];
+	image: Asset = new Asset();
+	grids: ProjectGrid[];
+	displayProgressBar: boolean;
 }

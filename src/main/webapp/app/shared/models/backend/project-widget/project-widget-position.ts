@@ -21,8 +21,8 @@
  * The project widget position
  */
 export interface ProjectWidgetPosition {
-  gridColumn: number;
-  gridRow: number;
-  width: number;
-  height: number;
+	gridColumn: number;
+	gridRow: number;
+	width: number;
+	height: number;
 }

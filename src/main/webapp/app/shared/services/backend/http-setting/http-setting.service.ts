@@ -29,15 +29,15 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpSettingService {
-  private static readonly settingsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/settings`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly settingsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/settings`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get the list of settings
-   */
-  public getAll(): Observable<Setting[]> {
-    const url = `${HttpSettingService.settingsApiEndpoint}`;
+	/**
+	 * Get the list of settings
+	 */
+	public getAll(): Observable<Setting[]> {
+		const url = `${HttpSettingService.settingsApiEndpoint}`;
 
-    return this.httpClient.get<Setting[]>(url);
-  }
+		return this.httpClient.get<Setting[]>(url);
+	}
 }

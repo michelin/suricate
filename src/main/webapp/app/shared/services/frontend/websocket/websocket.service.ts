@@ -30,53 +30,53 @@ import { RxStompService } from '../rx-stomp/rx-stomp.service';
  */
 @Injectable({ providedIn: 'root' })
 export class WebsocketService {
-  private readonly rxStompService = inject(RxStompService);
+	private readonly rxStompService = inject(RxStompService);
 
-  /**
-   * The base WS url
-   */
-  private static readonly baseWsEndpoint = `${EnvironmentService.backendUrl}/ws`;
+	/**
+	 * The base WS url
+	 */
+	private static readonly baseWsEndpoint = `${EnvironmentService.backendUrl}/ws`;
 
-  /**
-   * Get the websocket config
-   *
-   * @returns The config
-   */
-  private getWebsocketConfig(): RxStompConfig {
-    const configuration = new RxStompConfig();
-    configuration.webSocketFactory = () => new SockJS(WebsocketService.baseWsEndpoint);
-    configuration.brokerURL = WebsocketService.baseWsEndpoint;
-    configuration.heartbeatIncoming = EnvironmentService.wsHeartbeatIncoming;
-    configuration.heartbeatOutgoing = EnvironmentService.wsHeartbeatOutgoing;
-    configuration.reconnectDelay = EnvironmentService.wsReconnectDelay;
-    if (EnvironmentService.wsDebug) {
-      configuration.debug = (str: string) => console.log(new Date(), str);
-    }
+	/**
+	 * Get the websocket config
+	 *
+	 * @returns The config
+	 */
+	private getWebsocketConfig(): RxStompConfig {
+		const configuration = new RxStompConfig();
+		configuration.webSocketFactory = () => new SockJS(WebsocketService.baseWsEndpoint);
+		configuration.brokerURL = WebsocketService.baseWsEndpoint;
+		configuration.heartbeatIncoming = EnvironmentService.wsHeartbeatIncoming;
+		configuration.heartbeatOutgoing = EnvironmentService.wsHeartbeatOutgoing;
+		configuration.reconnectDelay = EnvironmentService.wsReconnectDelay;
+		if (EnvironmentService.wsDebug) {
+			configuration.debug = (str: string) => console.log(new Date(), str);
+		}
 
-    return configuration;
-  }
+		return configuration;
+	}
 
-  /**
-   * Start the websocket connection
-   */
-  public startConnection(): void {
-    this.rxStompService.configure(this.getWebsocketConfig());
-    this.rxStompService.activate();
-  }
+	/**
+	 * Start the websocket connection
+	 */
+	public startConnection(): void {
+		this.rxStompService.configure(this.getWebsocketConfig());
+		this.rxStompService.activate();
+	}
 
-  /**
-   * Subscribe to a queue name
-   *
-   * @param {string} destination The subscription url
-   */
-  public watch(destination: string): Observable<IMessage> {
-    return this.rxStompService.watch(destination);
-  }
+	/**
+	 * Subscribe to a queue name
+	 *
+	 * @param {string} destination The subscription url
+	 */
+	public watch(destination: string): Observable<IMessage> {
+		return this.rxStompService.watch(destination);
+	}
 
-  /**
-   * Disconnect the client
-   */
-  public disconnect() {
-    this.rxStompService.deactivate().then();
-  }
+	/**
+	 * Disconnect the client
+	 */
+	public disconnect() {
+		this.rxStompService.deactivate().then();
+	}
 }

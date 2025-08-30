@@ -34,45 +34,45 @@ import { FormOption } from '../../../../models/frontend/form/form-option';
  */
 @Injectable({ providedIn: 'root' })
 export class SettingsFormFieldsService {
-  /**
-   * Get the list of fields for the settings
-   */
-  public generateSettingsFormFields(userSettings: UserSetting[]): Observable<FormField[]> {
-    return from(userSettings).pipe(
-      map((userSetting: UserSetting) => {
-        return {
-          key: userSetting.setting.type,
-          label: userSetting.setting.description,
-          iconPrefix: IconEnum[userSetting.setting.type],
-          type: userSetting.setting.dataType,
-          value: userSetting.settingValue.value,
-          validators: [Validators.required],
-          options: () => this.generateOptions(userSetting.setting)
-        };
-      }),
-      toArray()
-    );
-  }
+	/**
+	 * Get the list of fields for the settings
+	 */
+	public generateSettingsFormFields(userSettings: UserSetting[]): Observable<FormField[]> {
+		return from(userSettings).pipe(
+			map((userSetting: UserSetting) => {
+				return {
+					key: userSetting.setting.type,
+					label: userSetting.setting.description,
+					iconPrefix: IconEnum[userSetting.setting.type],
+					type: userSetting.setting.dataType,
+					value: userSetting.settingValue.value,
+					validators: [Validators.required],
+					options: () => this.generateOptions(userSetting.setting)
+				};
+			}),
+			toArray()
+		);
+	}
 
-  /**
-   * Generate the options of the settings
-   *
-   * @param setting The setting
-   * @private A form option
-   */
-  private generateOptions(setting: Setting): Observable<FormOption[]> {
-    if (setting.allowedSettingValues) {
-      return from(setting.allowedSettingValues).pipe(
-        map((allowedSettingValue: AllowedSettingValue) => {
-          return {
-            label: allowedSettingValue.title,
-            value: allowedSettingValue.value
-          };
-        }),
-        toArray()
-      );
-    }
+	/**
+	 * Generate the options of the settings
+	 *
+	 * @param setting The setting
+	 * @private A form option
+	 */
+	private generateOptions(setting: Setting): Observable<FormOption[]> {
+		if (setting.allowedSettingValues) {
+			return from(setting.allowedSettingValues).pipe(
+				map((allowedSettingValue: AllowedSettingValue) => {
+					return {
+						label: allowedSettingValue.title,
+						value: allowedSettingValue.value
+					};
+				}),
+				toArray()
+			);
+		}
 
-    return EMPTY;
-  }
+		return EMPTY;
+	}
 }

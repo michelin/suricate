@@ -21,6 +21,6 @@
  * Link between a setting and a user
  */
 export class UserSettingRequest {
-  allowedSettingValueId?: number;
-  unconstrainedValue?: string;
+	allowedSettingValueId?: number;
+	unconstrainedValue?: string;
 }

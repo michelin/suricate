@@ -21,12 +21,12 @@
  * The project widget request
  */
 export interface ProjectWidgetRequest {
-  backendConfig?: string;
-  gridColumn?: number;
-  customStyle?: string;
-  data?: string;
-  height?: number;
-  gridRow?: number;
-  width?: number;
-  widgetId: number;
+	backendConfig?: string;
+	gridColumn?: number;
+	customStyle?: string;
+	data?: string;
+	height?: number;
+	gridRow?: number;
+	width?: number;
+	widgetId: number;
 }

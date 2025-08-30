@@ -33,68 +33,68 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpRepositoryService implements AbstractHttpService<Repository, RepositoryRequest> {
-  private static readonly repositoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/repositories`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly repositoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/repositories`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Return the list of every repository
-   */
-  public getAll(filter?: HttpFilter): Observable<PageModel<Repository>> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
+	/**
+	 * Return the list of every repository
+	 */
+	public getAll(filter?: HttpFilter): Observable<PageModel<Repository>> {
+		const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
 
-    return this.httpClient.get<PageModel<Repository>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
+		return this.httpClient.get<PageModel<Repository>>(HttpFilterService.getFilteredUrl(url, filter));
+	}
 
-  /**
-   * Get the repository id
-   *
-   * @param repositoryId The repository id
-   */
-  public getById(repositoryId: number): Observable<Repository> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}`;
+	/**
+	 * Get the repository id
+	 *
+	 * @param repositoryId The repository id
+	 */
+	public getById(repositoryId: number): Observable<Repository> {
+		const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}`;
 
-    return this.httpClient.get<Repository>(url);
-  }
+		return this.httpClient.get<Repository>(url);
+	}
 
-  /**
-   * Add a repository
-   *
-   * @param repositoryRequest The repository to add
-   */
-  public create(repositoryRequest: RepositoryRequest): Observable<Repository> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
+	/**
+	 * Add a repository
+	 *
+	 * @param repositoryRequest The repository to add
+	 */
+	public create(repositoryRequest: RepositoryRequest): Observable<Repository> {
+		const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
 
-    return this.httpClient.post<Repository>(url, repositoryRequest);
-  }
+		return this.httpClient.post<Repository>(url, repositoryRequest);
+	}
 
-  /**
-   * Update a repository
-   *
-   * @param repositoryId The repository id
-   * @param repositoryRequest The repository with information updated
-   * @param disableSync Disable the synchronization of the repository
-   */
-  public update(repositoryId: number, repositoryRequest: RepositoryRequest, disableSync = false): Observable<void> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}?disableSync=${disableSync}`;
+	/**
+	 * Update a repository
+	 *
+	 * @param repositoryId The repository id
+	 * @param repositoryRequest The repository with information updated
+	 * @param disableSync Disable the synchronization of the repository
+	 */
+	public update(repositoryId: number, repositoryRequest: RepositoryRequest, disableSync = false): Observable<void> {
+		const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}?disableSync=${disableSync}`;
 
-    return this.httpClient.put<void>(url, repositoryRequest);
-  }
+		return this.httpClient.put<void>(url, repositoryRequest);
+	}
 
-  /**
-   * Synchronize all repositories
-   */
-  public synchronize(): Observable<void> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/synchronize`;
+	/**
+	 * Synchronize all repositories
+	 */
+	public synchronize(): Observable<void> {
+		const url = `${HttpRepositoryService.repositoriesApiEndpoint}/synchronize`;
 
-    return this.httpClient.put<void>(url, null);
-  }
+		return this.httpClient.put<void>(url, null);
+	}
 
-  /**
-   * Delete a repository
-   */
-  public delete(id: number): Observable<void> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${id}`;
+	/**
+	 * Delete a repository
+	 */
+	public delete(id: number): Observable<void> {
+		const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${id}`;
 
-    return this.httpClient.delete<void>(url);
-  }
+		return this.httpClient.delete<void>(url);
+	}
 }

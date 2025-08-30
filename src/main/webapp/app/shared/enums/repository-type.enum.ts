@@ -21,6 +21,6 @@
  * Hold the repository types
  */
 export enum RepositoryTypeEnum {
-  REMOTE = 'REMOTE',
-  LOCAL = 'LOCAL'
+	REMOTE = 'REMOTE',
+	LOCAL = 'LOCAL'
 }

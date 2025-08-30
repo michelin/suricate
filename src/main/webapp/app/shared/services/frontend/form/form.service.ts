@@ -19,12 +19,12 @@
 
 import { inject, Injectable } from '@angular/core';
 import {
-  AbstractControl,
-  UntypedFormArray,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-  ValidatorFn
+	AbstractControl,
+	UntypedFormArray,
+	UntypedFormBuilder,
+	UntypedFormControl,
+	UntypedFormGroup,
+	ValidatorFn
 } from '@angular/forms';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
@@ -37,145 +37,145 @@ import { FormStep } from '../../../models/frontend/form/form-step';
  */
 @Injectable({ providedIn: 'root' })
 export class FormService {
-  private readonly formBuilder = inject(UntypedFormBuilder);
+	private readonly formBuilder = inject(UntypedFormBuilder);
 
-  /**
-   * Validate the form
-   *
-   * @param formGroup The form to validate
-   */
-  public validate(formGroup: UntypedFormGroup): void {
-    Object.keys(formGroup.controls).forEach((field) => {
-      const control = formGroup.get(field);
+	/**
+	 * Validate the form
+	 *
+	 * @param formGroup The form to validate
+	 */
+	public validate(formGroup: UntypedFormGroup): void {
+		Object.keys(formGroup.controls).forEach((field) => {
+			const control = formGroup.get(field);
 
-      if (control instanceof UntypedFormControl) {
-        control.markAsTouched({ onlySelf: true });
-      } else if (control instanceof UntypedFormGroup) {
-        this.validate(control);
-      }
-    });
-  }
+			if (control instanceof UntypedFormControl) {
+				control.markAsTouched({ onlySelf: true });
+			} else if (control instanceof UntypedFormGroup) {
+				this.validate(control);
+			}
+		});
+	}
 
-  /**
-   * Generate a form group for the steps
-   *
-   * @param steps The form steps to instantiate
-   * @return The generated form group for the list of steps give in argument
-   */
-  public generateFormGroupForSteps(steps: FormStep[]): UntypedFormGroup {
-    const formGroup = this.formBuilder.group({});
+	/**
+	 * Generate a form group for the steps
+	 *
+	 * @param steps The form steps to instantiate
+	 * @return The generated form group for the list of steps give in argument
+	 */
+	public generateFormGroupForSteps(steps: FormStep[]): UntypedFormGroup {
+		const formGroup = this.formBuilder.group({});
 
-    steps.forEach((step: FormStep) => {
-      formGroup.addControl(step.key, this.generateFormGroupForFields(step.fields));
-    });
+		steps.forEach((step: FormStep) => {
+			formGroup.addControl(step.key, this.generateFormGroupForFields(step.fields));
+		});
 
-    return formGroup;
-  }
+		return formGroup;
+	}
 
-  /**
-   * Generate a form group for the fields
-   *
-   * @param fields The form fields to instantiate
-   * @return The generated form group for the list of fields give in argument
-   */
-  public generateFormGroupForFields(fields: FormField[]): UntypedFormGroup {
-    const formGroup = this.formBuilder.group({});
+	/**
+	 * Generate a form group for the fields
+	 *
+	 * @param fields The form fields to instantiate
+	 * @return The generated form group for the list of fields give in argument
+	 */
+	public generateFormGroupForFields(fields: FormField[]): UntypedFormGroup {
+		const formGroup = this.formBuilder.group({});
 
-    if (fields) {
-      fields.forEach((field) => {
-        if (field.type === DataTypeEnum.FIELDS) {
-          // TODO: Delete this. FIELDS does not exist anymore I think
-          formGroup.addControl(field.key, this.generateFormArrayForField(field));
-        } else {
-          formGroup.addControl(field.key, this.generateFormControl(field));
-        }
-      });
-    }
+		if (fields) {
+			fields.forEach((field) => {
+				if (field.type === DataTypeEnum.FIELDS) {
+					// TODO: Delete this. FIELDS does not exist anymore I think
+					formGroup.addControl(field.key, this.generateFormArrayForField(field));
+				} else {
+					formGroup.addControl(field.key, this.generateFormControl(field));
+				}
+			});
+		}
 
-    return formGroup;
-  }
+		return formGroup;
+	}
 
-  /**
-   * Add controls to the given form group for the given fields
-   *
-   * @param form The form from which add the controls
-   * @param fields The form fields to instantiate
-   */
-  public addControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
-    if (fields) {
-      fields.forEach((field) => {
-        if (field.type === DataTypeEnum.FIELDS) {
-          form.addControl(field.key, this.generateFormArrayForField(field));
-        } else {
-          form.addControl(field.key, this.generateFormControl(field));
-        }
-      });
-    }
-  }
+	/**
+	 * Add controls to the given form group for the given fields
+	 *
+	 * @param form The form from which add the controls
+	 * @param fields The form fields to instantiate
+	 */
+	public addControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
+		if (fields) {
+			fields.forEach((field) => {
+				if (field.type === DataTypeEnum.FIELDS) {
+					form.addControl(field.key, this.generateFormArrayForField(field));
+				} else {
+					form.addControl(field.key, this.generateFormControl(field));
+				}
+			});
+		}
+	}
 
-  /**
-   * Remove controls from the given form group for the given fields
-   *
-   * @param form The form from which remove the controls
-   * @param fields The form fields for which we want to remove the controls
-   */
-  public removeControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
-    if (fields) {
-      fields.forEach((field) => {
-        form.removeControl(field.key);
-      });
-    }
-  }
+	/**
+	 * Remove controls from the given form group for the given fields
+	 *
+	 * @param form The form from which remove the controls
+	 * @param fields The form fields for which we want to remove the controls
+	 */
+	public removeControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
+		if (fields) {
+			fields.forEach((field) => {
+				form.removeControl(field.key);
+			});
+		}
+	}
 
-  /**
-   * Create a form array used for fields data type
-   *
-   * @param field The parent field (with type equals to dataType.fields)
-   */
-  private generateFormArrayForField(field: FormField): UntypedFormArray {
-    const formArray = this.formBuilder.array([]);
+	/**
+	 * Create a form array used for fields data type
+	 *
+	 * @param field The parent field (with type equals to dataType.fields)
+	 */
+	private generateFormArrayForField(field: FormField): UntypedFormArray {
+		const formArray = this.formBuilder.array([]);
 
-    if (field?.fields && field?.values) {
-      field.values.subscribe((values: UserProject[]) => {
-        values.forEach((value: UserProject) => {
-          const formGroup = this.formBuilder.group({});
-          field.fields.forEach((innerField: FormField) => {
-            formGroup.addControl(
-              innerField.key,
-              this.generateFormControl(innerField, value[innerField.key] ? value[innerField.key] : '')
-            );
-          });
+		if (field?.fields && field?.values) {
+			field.values.subscribe((values: UserProject[]) => {
+				values.forEach((value: UserProject) => {
+					const formGroup = this.formBuilder.group({});
+					field.fields.forEach((innerField: FormField) => {
+						formGroup.addControl(
+							innerField.key,
+							this.generateFormControl(innerField, value[innerField.key] ? value[innerField.key] : '')
+						);
+					});
 
-          formArray.push(formGroup);
-        });
-      });
-    }
+					formArray.push(formGroup);
+				});
+			});
+		}
 
-    return formArray;
-  }
+		return formArray;
+	}
 
-  /**
-   * Generate a form control for a specific field
-   *
-   * @param field The field used to create the form control
-   * @param value if we want to force the value
-   * @return The form control that represent the field
-   */
-  private generateFormControl(field: FormField, value?: string | number): UntypedFormControl {
-    return this.formBuilder.control(
-      { value: value || field.value, disabled: field.disabled },
-      field.validators,
-      field.asyncValidators
-    );
-  }
+	/**
+	 * Generate a form control for a specific field
+	 *
+	 * @param field The field used to create the form control
+	 * @param value if we want to force the value
+	 * @return The form control that represent the field
+	 */
+	private generateFormControl(field: FormField, value?: string | number): UntypedFormControl {
+		return this.formBuilder.control(
+			{ value: value || field.value, disabled: field.disabled },
+			field.validators,
+			field.asyncValidators
+		);
+	}
 
-  /**
-   * Set validators for a form control
-   *
-   * @param formControl The form control
-   * @param validators The validators to set
-   */
-  public setValidatorsForControl(formControl: AbstractControl, validators: ValidatorFn | ValidatorFn[] | null) {
-    formControl.setValidators(validators);
-  }
+	/**
+	 * Set validators for a form control
+	 *
+	 * @param formControl The form control
+	 * @param validators The validators to set
+	 */
+	public setValidatorsForControl(formControl: AbstractControl, validators: ValidatorFn | ValidatorFn[] | null) {
+		formControl.setValidators(validators);
+	}
 }

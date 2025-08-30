@@ -29,29 +29,29 @@ import { appRoutes } from '../../../app.routes';
 import { FormSidenavComponent } from './form-sidenav.component';
 
 describe('FormSidenavComponent', () => {
-  let component: FormSidenavComponent;
-  let fixture: ComponentFixture<FormSidenavComponent>;
+	let component: FormSidenavComponent;
+	let fixture: ComponentFixture<FormSidenavComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormSidenavComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideAnimationsAsync(),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        }),
-        provideRouter(appRoutes)
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [FormSidenavComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideAnimationsAsync(),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				}),
+				provideRouter(appRoutes)
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(FormSidenavComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(FormSidenavComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

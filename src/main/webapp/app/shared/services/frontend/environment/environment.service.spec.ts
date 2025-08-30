@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { EnvironmentService } from './environment.service';
 
 describe('EnvironmentService', () => {
-  let service: EnvironmentService;
+	let service: EnvironmentService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(EnvironmentService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(EnvironmentService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

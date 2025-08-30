@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { HttpRepositoryService } from './http-repository.service';
 
 describe('HttpRepositoryService', () => {
-  let service: HttpRepositoryService;
+	let service: HttpRepositoryService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(HttpRepositoryService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(HttpRepositoryService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

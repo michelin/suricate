@@ -18,14 +18,14 @@
  */
 
 export const environment = {
-  production: true,
-  environment: 'Production',
-  backend_url: '',
-  oauth2_frontend_redirect_url: '/login',
+	production: true,
+	environment: 'Production',
+	backend_url: '',
+	oauth2_frontend_redirect_url: '/login',
 
-  // Configuration for WebSockets
-  wsHeartbeatIncoming: 0,
-  wsHeartbeatOutgoing: 20000,
-  wsReconnectDelay: 5000,
-  wsDebug: false
+	// Configuration for WebSockets
+	wsHeartbeatIncoming: 0,
+	wsHeartbeatOutgoing: 20000,
+	wsReconnectDelay: 5000,
+	wsDebug: false
 };

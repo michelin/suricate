@@ -42,149 +42,149 @@ import { UserFormFieldsService } from '../../shared/services/frontend/form-field
  * Component used to display the list of users
  */
 @Component({
-  templateUrl: '../../shared/components/list/list.component.html',
-  styleUrls: ['../../shared/components/list/list.component.scss'],
-  imports: [
-    HeaderComponent,
-    InputComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    SpinnerComponent,
-    CdkDropList,
-    CdkDrag,
-    NgClass,
-    NgOptimizedImage,
-    ButtonsComponent,
-    PaginatorComponent
-  ],
-  providers: [{ provide: AbstractHttpService, useClass: HttpAdminUserService }]
+	templateUrl: '../../shared/components/list/list.component.html',
+	styleUrls: ['../../shared/components/list/list.component.scss'],
+	imports: [
+		HeaderComponent,
+		InputComponent,
+		FormsModule,
+		ReactiveFormsModule,
+		SpinnerComponent,
+		CdkDropList,
+		CdkDrag,
+		NgClass,
+		NgOptimizedImage,
+		ButtonsComponent,
+		PaginatorComponent
+	],
+	providers: [{ provide: AbstractHttpService, useClass: HttpAdminUserService }]
 })
 export class UsersComponent extends ListComponent<User, UserRequest> implements OnInit {
-  private readonly httpAdminUserService = inject(HttpAdminUserService);
-  private readonly userFormFieldsService = inject(UserFormFieldsService);
+	private readonly httpAdminUserService = inject(HttpAdminUserService);
+	private readonly userFormFieldsService = inject(UserFormFieldsService);
 
-  /**
-   * User selected in the list for modification
-   */
-  private userSelected: User;
+	/**
+	 * User selected in the list for modification
+	 */
+	private userSelected: User;
 
-  /**
-   * Constructor
-   */
-  constructor() {
-    super();
-    this.initHeaderConfiguration();
-    this.initListConfiguration();
-    this.initFilter();
-  }
+	/**
+	 * Constructor
+	 */
+	constructor() {
+		super();
+		this.initHeaderConfiguration();
+		this.initListConfiguration();
+		this.initFilter();
+	}
 
-  public override ngOnInit(): void {
-    super.ngOnInit();
-  }
+	public override ngOnInit(): void {
+		super.ngOnInit();
+	}
 
-  /**
-   * Function used to configure the header of the list component
-   */
-  private initHeaderConfiguration(): void {
-    this.headerConfiguration = { title: 'user.list' };
-  }
+	/**
+	 * Function used to configure the header of the list component
+	 */
+	private initHeaderConfiguration(): void {
+		this.headerConfiguration = { title: 'user.list' };
+	}
 
-  /**
-   * Function used to init the configuration of the list
-   */
-  private initListConfiguration(): void {
-    this.listConfiguration = {
-      buttons: [
-        {
-          icon: IconEnum.EDIT,
-          tooltip: { message: 'user.edit' },
-          variant: 'miniFab',
-          callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser.bind(this))
-        },
-        {
-          icon: IconEnum.DELETE,
-          tooltip: { message: 'user.delete' },
-          color: ButtonColorEnum.WARN,
-          variant: 'miniFab',
-          callback: (event: Event, user: User) => this.deleteUser(event, user)
-        }
-      ]
-    };
-  }
+	/**
+	 * Function used to init the configuration of the list
+	 */
+	private initListConfiguration(): void {
+		this.listConfiguration = {
+			buttons: [
+				{
+					icon: IconEnum.EDIT,
+					tooltip: { message: 'user.edit' },
+					variant: 'miniFab',
+					callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser.bind(this))
+				},
+				{
+					icon: IconEnum.DELETE,
+					tooltip: { message: 'user.delete' },
+					color: ButtonColorEnum.WARN,
+					variant: 'miniFab',
+					callback: (event: Event, user: User) => this.deleteUser(event, user)
+				}
+			]
+		};
+	}
 
-  /**
-   * Init filter for list component
-   */
-  private initFilter(): void {
-    this.httpFilter.sort = ['username,asc'];
-  }
+	/**
+	 * Init filter for list component
+	 */
+	private initFilter(): void {
+		this.httpFilter.sort = ['username,asc'];
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  protected override getFirstLabel(user: User): string {
-    return `${user.firstname} ${user.lastname} (${user.username})`;
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	protected override getFirstLabel(user: User): string {
+		return `${user.firstname} ${user.lastname} (${user.username})`;
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  protected override getSecondLabel(user: User): string {
-    return user.email;
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	protected override getSecondLabel(user: User): string {
+		return user.email;
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  protected override getThirdLabel(user: User): string {
-    return user.roles.map((role: Role) => role.name).join(', ');
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	protected override getThirdLabel(user: User): string {
+		return user.roles.map((role: Role) => role.name).join(', ');
+	}
 
-  /**
-   * Open the form sidenav
-   *
-   * @param event The click event
-   * @param user The user clicked on the list
-   * @param saveCallback The function to call when save button is clicked
-   */
-  private openFormSidenav(event: Event, user: User, saveCallback: (formGroup: UntypedFormGroup) => void): void {
-    this.userSelected = user;
+	/**
+	 * Open the form sidenav
+	 *
+	 * @param event The click event
+	 * @param user The user clicked on the list
+	 * @param saveCallback The function to call when save button is clicked
+	 */
+	private openFormSidenav(event: Event, user: User, saveCallback: (formGroup: UntypedFormGroup) => void): void {
+		this.userSelected = user;
 
-    this.sidenavService.openFormSidenav({
-      title: user ? 'user.edit' : 'user.add',
-      formFields: this.userFormFieldsService.generateFormFields(user),
-      save: (formGroup: UntypedFormGroup) => saveCallback(formGroup)
-    });
-  }
+		this.sidenavService.openFormSidenav({
+			title: user ? 'user.edit' : 'user.add',
+			formFields: this.userFormFieldsService.generateFormFields(user),
+			save: (formGroup: UntypedFormGroup) => saveCallback(formGroup)
+		});
+	}
 
-  /**
-   * Edit a user
-   * @param formGroup The form group
-   */
-  private editUser(formGroup: UntypedFormGroup): void {
-    const userRequest: UserRequest = formGroup.value;
-    this.httpAdminUserService.update(this.userSelected.id, userRequest).subscribe(() => {
-      super.refreshList();
-    });
-  }
+	/**
+	 * Edit a user
+	 * @param formGroup The form group
+	 */
+	private editUser(formGroup: UntypedFormGroup): void {
+		const userRequest: UserRequest = formGroup.value;
+		this.httpAdminUserService.update(this.userSelected.id, userRequest).subscribe(() => {
+			super.refreshList();
+		});
+	}
 
-  /**
-   * Function used to delete a user
-   * @param event The click event
-   * @param user The user to delete
-   */
-  private deleteUser(event: Event, user: User): void {
-    const titleCasePipe = new TitleCasePipe();
+	/**
+	 * Function used to delete a user
+	 * @param event The click event
+	 * @param user The user to delete
+	 */
+	private deleteUser(event: Event, user: User): void {
+		const titleCasePipe = new TitleCasePipe();
 
-    this.dialogService.confirm({
-      title: 'user.delete',
-      message: `${this.translateService.instant('user.delete.confirm')} ${titleCasePipe.transform(user.username)} ?`,
-      accept: () => {
-        this.httpAdminUserService.delete(user.id).subscribe(() => {
-          this.toastService.sendMessage('user.delete.success', ToastTypeEnum.SUCCESS);
-          this.refreshList();
-        });
-      }
-    });
-  }
+		this.dialogService.confirm({
+			title: 'user.delete',
+			message: `${this.translateService.instant('user.delete.confirm')} ${titleCasePipe.transform(user.username)} ?`,
+			accept: () => {
+				this.httpAdminUserService.delete(user.id).subscribe(() => {
+					this.toastService.sendMessage('user.delete.success', ToastTypeEnum.SUCCESS);
+					this.refreshList();
+				});
+			}
+		});
+	}
 }

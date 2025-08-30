@@ -21,12 +21,12 @@
  * Configuration used by the confirmation dialog
  */
 export class DialogConfiguration {
-  /**
-   * The title of the confirmation dialog
-   */
-  title: string;
-  /**
-   * The message to display
-   */
-  message: string;
+	/**
+	 * The title of the confirmation dialog
+	 */
+	title: string;
+	/**
+	 * The message to display
+	 */
+	message: string;
 }

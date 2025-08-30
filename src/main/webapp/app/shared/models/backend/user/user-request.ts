@@ -23,11 +23,11 @@ import { Role } from '../role/role';
  * The user entity
  */
 export interface UserRequest {
-  username: string;
-  firstname: string;
-  lastname: string;
-  password: string;
-  confirmPassword: string;
-  email: string;
-  roles: Role[];
+	username: string;
+	firstname: string;
+	lastname: string;
+	password: string;
+	confirmPassword: string;
+	email: string;
+	roles: Role[];
 }

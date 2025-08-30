@@ -24,13 +24,13 @@ import { WidgetParamValue } from './widget-param-value';
  * The widget param entity
  */
 export interface WidgetParam {
-  name: string;
-  description: string;
-  defaultValue: string;
-  type: DataTypeEnum;
-  acceptFileRegex?: string;
-  usageExample?: string;
-  usageTooltip?: string;
-  required: boolean;
-  values?: WidgetParamValue[];
+	name: string;
+	description: string;
+	defaultValue: string;
+	type: DataTypeEnum;
+	acceptFileRegex?: string;
+	usageExample?: string;
+	usageTooltip?: string;
+	required: boolean;
+	values?: WidgetParamValue[];
 }

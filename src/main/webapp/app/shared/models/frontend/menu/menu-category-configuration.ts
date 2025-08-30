@@ -23,12 +23,12 @@ import { MenuItemConfiguration } from './menu-item-configuration';
  * Represent a category of the menu
  */
 export class MenuCategoryConfiguration {
-  /**
-   * The label key to use with the translate service
-   */
-  label: string;
-  /**
-   * The list of items in this category
-   */
-  items: MenuItemConfiguration[] = [];
+	/**
+	 * The label key to use with the translate service
+	 */
+	label: string;
+	/**
+	 * The list of items in this category
+	 */
+	items: MenuItemConfiguration[] = [];
 }

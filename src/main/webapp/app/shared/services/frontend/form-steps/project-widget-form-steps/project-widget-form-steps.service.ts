@@ -44,241 +44,241 @@ import { HttpWidgetService } from '../../../backend/http-widget/http-widget.serv
  */
 @Injectable({ providedIn: 'root' })
 export class ProjectWidgetFormStepsService {
-  private readonly httpCategoryService = inject(HttpCategoryService);
-  private readonly httpWidgetService = inject(HttpWidgetService);
+	private readonly httpCategoryService = inject(HttpCategoryService);
+	private readonly httpWidgetService = inject(HttpWidgetService);
 
-  /**
-   * Key used for the step where we select a category
-   */
-  public static readonly selectCategoryStepKey = 'categoryStep';
+	/**
+	 * Key used for the step where we select a category
+	 */
+	public static readonly selectCategoryStepKey = 'categoryStep';
 
-  /**
-   * Key used for the step where we select a widget
-   */
-  public static readonly selectWidgetStepKey = 'widgetStep';
+	/**
+	 * Key used for the step where we select a widget
+	 */
+	public static readonly selectWidgetStepKey = 'widgetStep';
 
-  /**
-   * Key used for the step where we configure a widget
-   */
-  public static readonly configureWidgetStepKey = 'widgetConfigurationStep';
+	/**
+	 * Key used for the step where we configure a widget
+	 */
+	public static readonly configureWidgetStepKey = 'widgetConfigurationStep';
 
-  /**
-   * Key used to store the widget ID
-   */
-  public static readonly widgetIdFieldKey = 'widgetId';
+	/**
+	 * Key used to store the widget ID
+	 */
+	public static readonly widgetIdFieldKey = 'widgetId';
 
-  /**
-   * Generation of the form options for widget params
-   *
-   * @param widgetParam The widget param
-   */
-  private static getFormOptionsForWidgetParam(widgetParam: WidgetParam): Observable<FormOption[]> {
-    let formOptions: FormOption[] = [];
+	/**
+	 * Generation of the form options for widget params
+	 *
+	 * @param widgetParam The widget param
+	 */
+	private static getFormOptionsForWidgetParam(widgetParam: WidgetParam): Observable<FormOption[]> {
+		let formOptions: FormOption[] = [];
 
-    if (widgetParam.values && widgetParam.values.length > 0) {
-      formOptions = widgetParam.values.map((widgetParamValue: WidgetParamValue) => {
-        return {
-          label: widgetParamValue.value,
-          value: widgetParamValue.jsKey
-        };
-      });
-    }
+		if (widgetParam.values && widgetParam.values.length > 0) {
+			formOptions = widgetParam.values.map((widgetParamValue: WidgetParamValue) => {
+				return {
+					label: widgetParamValue.value,
+					value: widgetParamValue.jsKey
+				};
+			});
+		}
 
-    return of(formOptions);
-  }
+		return of(formOptions);
+	}
 
-  /**
-   * Get the list of steps for the widget addition to a dashboard
-   */
-  public generateGlobalSteps(): Observable<FormStep[]> {
-    return of([
-      {
-        key: ProjectWidgetFormStepsService.selectCategoryStepKey,
-        title: 'category.select',
-        icon: IconEnum.CATEGORY,
-        fields: [
-          {
-            key: 'categoryId',
-            type: DataTypeEnum.MOSAIC,
-            columnNumber: 4,
-            mosaicOptions: () => this.getAvailableCategories(),
-            validators: [Validators.required]
-          }
-        ]
-      },
-      {
-        key: ProjectWidgetFormStepsService.selectWidgetStepKey,
-        title: 'widget.select',
-        icon: IconEnum.WIDGET,
-        fields: [
-          {
-            key: ProjectWidgetFormStepsService.widgetIdFieldKey,
-            type: DataTypeEnum.MOSAIC,
-            columnNumber: 4,
-            mosaicOptions: (formGroup: UntypedFormGroup) => this.getAvailableWidgetsByCategory(formGroup),
-            validators: [Validators.required]
-          }
-        ]
-      },
-      {
-        key: ProjectWidgetFormStepsService.configureWidgetStepKey,
-        title: 'widget.configuration',
-        icon: IconEnum.WIDGET_CONFIGURATION,
-        asyncFields: (formGroup: UntypedFormGroup, step: FormStep) => this.getWidgetConfigurationFields(formGroup, step)
-      }
-    ]);
-  }
+	/**
+	 * Get the list of steps for the widget addition to a dashboard
+	 */
+	public generateGlobalSteps(): Observable<FormStep[]> {
+		return of([
+			{
+				key: ProjectWidgetFormStepsService.selectCategoryStepKey,
+				title: 'category.select',
+				icon: IconEnum.CATEGORY,
+				fields: [
+					{
+						key: 'categoryId',
+						type: DataTypeEnum.MOSAIC,
+						columnNumber: 4,
+						mosaicOptions: () => this.getAvailableCategories(),
+						validators: [Validators.required]
+					}
+				]
+			},
+			{
+				key: ProjectWidgetFormStepsService.selectWidgetStepKey,
+				title: 'widget.select',
+				icon: IconEnum.WIDGET,
+				fields: [
+					{
+						key: ProjectWidgetFormStepsService.widgetIdFieldKey,
+						type: DataTypeEnum.MOSAIC,
+						columnNumber: 4,
+						mosaicOptions: (formGroup: UntypedFormGroup) => this.getAvailableWidgetsByCategory(formGroup),
+						validators: [Validators.required]
+					}
+				]
+			},
+			{
+				key: ProjectWidgetFormStepsService.configureWidgetStepKey,
+				title: 'widget.configuration',
+				icon: IconEnum.WIDGET_CONFIGURATION,
+				asyncFields: (formGroup: UntypedFormGroup, step: FormStep) => this.getWidgetConfigurationFields(formGroup, step)
+			}
+		]);
+	}
 
-  /**
-   * Generate the form fields for a widget instance when creating or editing it
-   *
-   * @param widgetParams The params of the widget
-   * @param widgetConfig The configuration already set
-   */
-  public generateWidgetParametersFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
-    const formFields: FormField[] = [];
+	/**
+	 * Generate the form fields for a widget instance when creating or editing it
+	 *
+	 * @param widgetParams The params of the widget
+	 * @param widgetConfig The configuration already set
+	 */
+	public generateWidgetParametersFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
+		const formFields: FormField[] = [];
 
-    widgetParams.forEach((widgetParam: WidgetParam) => {
-      let configValue = null;
-      if (widgetConfig) {
-        configValue = this.retrieveProjectWidgetValueFromConfig(widgetParam.name, widgetConfig);
-      }
+		widgetParams.forEach((widgetParam: WidgetParam) => {
+			let configValue = null;
+			if (widgetConfig) {
+				configValue = this.retrieveProjectWidgetValueFromConfig(widgetParam.name, widgetConfig);
+			}
 
-      const formField: FormField = {
-        key: widgetParam.name,
-        type: widgetParam.type,
-        label: widgetParam.description,
-        placeholder: widgetParam.usageExample,
-        value: configValue || widgetParam.defaultValue,
-        iconPrefix: widgetParam.usageTooltip ? IconEnum.HELP : undefined,
-        iconPrefixTooltip: widgetParam.usageTooltip ? widgetParam.usageTooltip : undefined,
-        iconSuffix: widgetParam.type === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
-        options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
-        validators: this.getValidatorsForWidgetParam(widgetParam)
-      };
+			const formField: FormField = {
+				key: widgetParam.name,
+				type: widgetParam.type,
+				label: widgetParam.description,
+				placeholder: widgetParam.usageExample,
+				value: configValue || widgetParam.defaultValue,
+				iconPrefix: widgetParam.usageTooltip ? IconEnum.HELP : undefined,
+				iconPrefixTooltip: widgetParam.usageTooltip ? widgetParam.usageTooltip : undefined,
+				iconSuffix: widgetParam.type === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
+				options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
+				validators: this.getValidatorsForWidgetParam(widgetParam)
+			};
 
-      if (widgetParam.type === DataTypeEnum.MULTIPLE) {
-        formField.value = formField.value ? (formField.value as string).split(',') : undefined;
-      }
+			if (widgetParam.type === DataTypeEnum.MULTIPLE) {
+				formField.value = formField.value ? (formField.value as string).split(',') : undefined;
+			}
 
-      if (widgetParam.type === DataTypeEnum.BOOLEAN) {
-        formField.value = JSON.parse(String(formField.value ? formField.value : false));
-      }
+			if (widgetParam.type === DataTypeEnum.BOOLEAN) {
+				formField.value = JSON.parse(String(formField.value ? formField.value : false));
+			}
 
-      formFields.push(formField);
-    });
+			formFields.push(formField);
+		});
 
-    return formFields;
-  }
+		return formFields;
+	}
 
-  /**
-   * Get the available categories for widgets
-   */
-  private getAvailableCategories(): Observable<MosaicFormOption[]> {
-    return this.httpCategoryService.getAll(HttpFilterService.getInfiniteFilter(['name,asc'])).pipe(
-      switchMap((categoriesPaged: PageModel<Category>) => {
-        return from(categoriesPaged.content).pipe(
-          map((category: Category) => {
-            return {
-              value: category.id,
-              description: category.name,
-              imageUrl: HttpAssetService.getContentUrl(category.assetToken)
-            };
-          }),
-          toArray()
-        );
-      })
-    );
-  }
+	/**
+	 * Get the available categories for widgets
+	 */
+	private getAvailableCategories(): Observable<MosaicFormOption[]> {
+		return this.httpCategoryService.getAll(HttpFilterService.getInfiniteFilter(['name,asc'])).pipe(
+			switchMap((categoriesPaged: PageModel<Category>) => {
+				return from(categoriesPaged.content).pipe(
+					map((category: Category) => {
+						return {
+							value: category.id,
+							description: category.name,
+							imageUrl: HttpAssetService.getContentUrl(category.assetToken)
+						};
+					}),
+					toArray()
+				);
+			})
+		);
+	}
 
-  /**
-   * Get the available widgets for a given category
-   */
-  private getAvailableWidgetsByCategory(formGroup: UntypedFormGroup): Observable<MosaicFormOption[]> {
-    const categoryId = formGroup.root.value['categoryStep']['categoryId'];
+	/**
+	 * Get the available widgets for a given category
+	 */
+	private getAvailableWidgetsByCategory(formGroup: UntypedFormGroup): Observable<MosaicFormOption[]> {
+		const categoryId = formGroup.root.value['categoryStep']['categoryId'];
 
-    if (categoryId || categoryId === 0) {
-      return this.httpCategoryService.getCategoryWidgets(categoryId).pipe(
-        switchMap((widgets: Widget[]) => {
-          return from(widgets).pipe(
-            map((widget: Widget) => {
-              return {
-                value: widget.id,
-                description: widget.description,
-                imageUrl: HttpAssetService.getContentUrl(widget.imageToken)
-              };
-            }),
-            toArray()
-          );
-        })
-      );
-    }
+		if (categoryId || categoryId === 0) {
+			return this.httpCategoryService.getCategoryWidgets(categoryId).pipe(
+				switchMap((widgets: Widget[]) => {
+					return from(widgets).pipe(
+						map((widget: Widget) => {
+							return {
+								value: widget.id,
+								description: widget.description,
+								imageUrl: HttpAssetService.getContentUrl(widget.imageToken)
+							};
+						}),
+						toArray()
+					);
+				})
+			);
+		}
 
-    return EMPTY;
-  }
+		return EMPTY;
+	}
 
-  /**
-   * Get the widget configuration fields to configure it
-   *
-   * @param formGroup The form group of the selected widget
-   * @param step the current step
-   */
-  private getWidgetConfigurationFields(formGroup: UntypedFormGroup, step: FormStep): Observable<FormField[]> {
-    const widgetId = formGroup.root.value['widgetStep']['widgetId'];
+	/**
+	 * Get the widget configuration fields to configure it
+	 *
+	 * @param formGroup The form group of the selected widget
+	 * @param step the current step
+	 */
+	private getWidgetConfigurationFields(formGroup: UntypedFormGroup, step: FormStep): Observable<FormField[]> {
+		const widgetId = formGroup.root.value['widgetStep']['widgetId'];
 
-    if (widgetId || widgetId === 0) {
-      return this.httpWidgetService.getById(widgetId).pipe(
-        tap((widget: Widget) => {
-          step.description = widget.description;
-          step.information = widget.info;
-          step.category = widget.category;
-          step.imageLink = { link: HttpAssetService.getContentUrl(widget.imageToken) };
-        }),
-        map((widget: Widget) => {
-          return this.generateWidgetParametersFormFields(widget.params);
-        })
-      );
-    }
+		if (widgetId || widgetId === 0) {
+			return this.httpWidgetService.getById(widgetId).pipe(
+				tap((widget: Widget) => {
+					step.description = widget.description;
+					step.information = widget.info;
+					step.category = widget.category;
+					step.imageLink = { link: HttpAssetService.getContentUrl(widget.imageToken) };
+				}),
+				map((widget: Widget) => {
+					return this.generateWidgetParametersFormFields(widget.params);
+				})
+			);
+		}
 
-    return EMPTY;
-  }
+		return EMPTY;
+	}
 
-  /**
-   * Generation of the validators for the widget param
-   *
-   * @param widgetParam The widget param
-   */
-  private getValidatorsForWidgetParam(widgetParam: WidgetParam): ValidatorFn[] {
-    const formValidators: ValidatorFn[] = [];
+	/**
+	 * Generation of the validators for the widget param
+	 *
+	 * @param widgetParam The widget param
+	 */
+	private getValidatorsForWidgetParam(widgetParam: WidgetParam): ValidatorFn[] {
+		const formValidators: ValidatorFn[] = [];
 
-    if (widgetParam.required) {
-      formValidators.push(Validators.required);
-    }
+		if (widgetParam.required) {
+			formValidators.push(Validators.required);
+		}
 
-    if (widgetParam.acceptFileRegex) {
-      formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
-    }
+		if (widgetParam.acceptFileRegex) {
+			formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
+		}
 
-    if (widgetParam.type === DataTypeEnum.NUMBER) {
-      formValidators.push(CustomValidator.isDigits);
-    }
+		if (widgetParam.type === DataTypeEnum.NUMBER) {
+			formValidators.push(CustomValidator.isDigits);
+		}
 
-    return formValidators;
-  }
+		return formValidators;
+	}
 
-  /**
-   * Retrieve the value of an existing parameter from all the widget configuration from the given key.
-   *
-   * @param key The configuration key
-   * @param widgetConfig The list of configurations
-   */
-  public retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
-    const parameter = widgetConfig.split('\n').find((keyValue) => keyValue.split('=')[0] === key);
+	/**
+	 * Retrieve the value of an existing parameter from all the widget configuration from the given key.
+	 *
+	 * @param key The configuration key
+	 * @param widgetConfig The list of configurations
+	 */
+	public retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
+		const parameter = widgetConfig.split('\n').find((keyValue) => keyValue.split('=')[0] === key);
 
-    if (parameter) {
-      return parameter.replace(key, '').replace('=', '').replace(/\\n/g, '\n');
-    }
+		if (parameter) {
+			return parameter.replace(key, '').replace('=', '').replace(/\\n/g, '\n');
+		}
 
-    return null;
-  }
+		return null;
+	}
 }

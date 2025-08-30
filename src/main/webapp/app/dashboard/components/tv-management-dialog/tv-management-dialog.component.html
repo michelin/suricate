@@ -1,47 +1,52 @@
 <h1 matDialogTitle class="little title">
-  {{ 'screen.management' | translate }}
+	{{ 'screen.management' | translate }}
 </h1>
 
 <mat-dialog-content>
-  <!-- Register screen part -->
-  @if (registerScreenCodeFormField) {
-    <form>
-      <h2 class="little title">{{ 'screen.enroll' | translate }}</h2>
-      <div class="input-wrapper">
-        @for (field of formFields; track field) {
-          <suricate-input
-            class="screen-code-input"
-            [formGroup]="registerScreenCodeFormField"
-            [field]="field"
-          ></suricate-input>
-        }
-        <suricate-buttons class="enroll-screen-button" [configurations]="shareButtonsConfiguration"></suricate-buttons>
-      </div>
-    </form>
-  }
+	<!-- Register screen part -->
+	@if (registerScreenCodeFormField) {
+		<form>
+			<h2 class="little title">{{ 'screen.enroll' | translate }}</h2>
+			<div class="input-wrapper">
+				@for (field of formFields; track field) {
+					<suricate-input
+						class="screen-code-input"
+						[formGroup]="registerScreenCodeFormField"
+						[field]="field"
+					></suricate-input>
+				}
+				<suricate-buttons class="enroll-screen-button" [configurations]="shareButtonsConfiguration"></suricate-buttons>
+			</div>
+		</form>
+	}
 
-  <!-- Registered screen part -->
-  <div>
-    <div>
-      <h2 class="little title">{{ 'screen.linked' | translate }} - {{ websocketClients?.length }} {{ 'client' | translate }}</h2>
-      <mat-divider></mat-divider>
-    </div>
+	<!-- Registered screen part -->
+	<div>
+		<div>
+			<h2 class="little title">
+				{{ 'screen.linked' | translate }} - {{ websocketClients?.length }} {{ 'client' | translate }}
+			</h2>
+			<mat-divider></mat-divider>
+		</div>
 
-    <!-- screen codes -->
-    <div id="connected-screen-container">
-      @for (websocketClient of websocketClients; track websocketClient) {
-        <div class="connected-screens">
-          <mat-icon class="screen-icon">
-            {{ materialIconRecords[iconEnum.TV] }}
-          </mat-icon>
-          <span class="screen-code"> {{ 'screen.code' | translate }}: {{ websocketClient.screenCode }} </span>
-          <suricate-buttons [configurations]="connectedScreenButtonsConfiguration" [object]="websocketClient"></suricate-buttons>
-        </div>
-      }
-    </div>
-  </div>
+		<!-- screen codes -->
+		<div id="connected-screen-container">
+			@for (websocketClient of websocketClients; track websocketClient) {
+				<div class="connected-screens">
+					<mat-icon class="screen-icon">
+						{{ materialIconRecords[iconEnum.TV] }}
+					</mat-icon>
+					<span class="screen-code"> {{ 'screen.code' | translate }}: {{ websocketClient.screenCode }} </span>
+					<suricate-buttons
+						[configurations]="connectedScreenButtonsConfiguration"
+						[object]="websocketClient"
+					></suricate-buttons>
+				</div>
+			}
+		</div>
+	</div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <suricate-buttons [configurations]="genericButtonsConfiguration" matDialogClose></suricate-buttons>
+	<suricate-buttons [configurations]="genericButtonsConfiguration" matDialogClose></suricate-buttons>
 </mat-dialog-actions>

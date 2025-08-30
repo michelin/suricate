@@ -21,13 +21,13 @@
  * Hold the information used to define an angular router link
  */
 export class LinkConfiguration {
-  /**
-   * The redirection link
-   */
-  link: string | string[];
+	/**
+	 * The redirection link
+	 */
+	link: string | string[];
 
-  /**
-   * The link target if needed (blank, ...)
-   */
-  target?: string;
+	/**
+	 * The link target if needed (blank, ...)
+	 */
+	target?: string;
 }

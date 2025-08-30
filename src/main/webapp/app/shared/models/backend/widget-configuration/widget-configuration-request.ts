@@ -21,5 +21,5 @@
  * The configuration request
  */
 export interface WidgetConfigurationRequest {
-  value: string;
+	value: string;
 }

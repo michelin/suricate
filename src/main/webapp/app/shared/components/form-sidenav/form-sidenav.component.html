@@ -1,30 +1,30 @@
 @if (formGroup) {
-  <div class="form-sidenav-container">
-    <h1>{{ configuration.title | translate | uppercase }}</h1>
-    @if (configuration.noFieldsMessage && configuration.formFields.length === 0) {
-      <p>{{ configuration.noFieldsMessage | translate }}</p>
-    }
-    @if (configuration.slideToggleButtonConfiguration?.displaySlideToggleButton) {
-      <suricate-slide-toggle
-        [label]="'widget.parameters.category.override.title'"
-        [toggleChecked]="configuration?.slideToggleButtonConfiguration?.toggleChecked"
-        (slideToggleButtonPressed)="getCategorySettings($event)"
-        >
-      </suricate-slide-toggle>
-    }
-    <div class="settings-main-container">
-      <div>
-        @for (field of configuration.formFields; track field) {
-          <suricate-input
-            [formGroup]="formGroup"
-            [componentRef]="configuration.componentRef"
-            [field]="field"
-            (valueChangeEvent)="valueChanged($event)"
-            >
-          </suricate-input>
-        }
-      </div>
-      <suricate-buttons class="sidenav-buttons" [configurations]="buttons"> </suricate-buttons>
-    </div>
-  </div>
+	<div class="form-sidenav-container">
+		<h1>{{ configuration.title | translate | uppercase }}</h1>
+		@if (configuration.noFieldsMessage && configuration.formFields.length === 0) {
+			<p>{{ configuration.noFieldsMessage | translate }}</p>
+		}
+		@if (configuration.slideToggleButtonConfiguration?.displaySlideToggleButton) {
+			<suricate-slide-toggle
+				[label]="'widget.parameters.category.override.title'"
+				[toggleChecked]="configuration?.slideToggleButtonConfiguration?.toggleChecked"
+				(slideToggleButtonPressed)="getCategorySettings($event)"
+			>
+			</suricate-slide-toggle>
+		}
+		<div class="settings-main-container">
+			<div>
+				@for (field of configuration.formFields; track field) {
+					<suricate-input
+						[formGroup]="formGroup"
+						[componentRef]="configuration.componentRef"
+						[field]="field"
+						(valueChangeEvent)="valueChanged($event)"
+					>
+					</suricate-input>
+				}
+			</div>
+			<suricate-buttons class="sidenav-buttons" [configurations]="buttons"> </suricate-buttons>
+		</div>
+	</div>
 }

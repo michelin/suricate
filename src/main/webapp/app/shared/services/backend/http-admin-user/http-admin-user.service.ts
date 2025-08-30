@@ -31,57 +31,57 @@ import { HttpUserService } from '../http-user/http-user.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpAdminUserService implements AbstractHttpService<User, UserRequest> {
-  public static readonly adminUsersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/admin/users`;
-  private readonly httpClient = inject(HttpClient);
+	public static readonly adminUsersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/admin/users`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get the list of users
-   * @returns The list of users
-   */
-  public getAll(filter?: HttpFilter): Observable<PageModel<User>> {
-    const url = `${HttpAdminUserService.adminUsersApiEndpoint}`;
+	/**
+	 * Get the list of users
+	 * @returns The list of users
+	 */
+	public getAll(filter?: HttpFilter): Observable<PageModel<User>> {
+		const url = `${HttpAdminUserService.adminUsersApiEndpoint}`;
 
-    return this.httpClient.get<PageModel<User>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
+		return this.httpClient.get<PageModel<User>>(HttpFilterService.getFilteredUrl(url, filter));
+	}
 
-  /**
-   * Get a user by id
-   * @param userId The user id to find
-   * @returns The user found
-   */
-  public getById(userId: number): Observable<User> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
+	/**
+	 * Get a user by id
+	 * @param userId The user id to find
+	 * @returns The user found
+	 */
+	public getById(userId: number): Observable<User> {
+		const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
-    return this.httpClient.get<User>(url);
-  }
+		return this.httpClient.get<User>(url);
+	}
 
-  /**
-   * Function used to create a new user
-   */
-  public create(userRequest: UserRequest): Observable<User> {
-    const url = `${HttpUserService.usersApiEndpoint}`;
+	/**
+	 * Function used to create a new user
+	 */
+	public create(userRequest: UserRequest): Observable<User> {
+		const url = `${HttpUserService.usersApiEndpoint}`;
 
-    return this.httpClient.post<User>(url, userRequest);
-  }
+		return this.httpClient.post<User>(url, userRequest);
+	}
 
-  /**
-   * Update a user
-   * @param {number} id The userId to update
-   * @param entity The user request
-   */
-  public update(id: number, entity: User | UserRequest): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/${id}`;
+	/**
+	 * Update a user
+	 * @param {number} id The userId to update
+	 * @param entity The user request
+	 */
+	public update(id: number, entity: User | UserRequest): Observable<void> {
+		const url = `${HttpUserService.usersApiEndpoint}/${id}`;
 
-    return this.httpClient.put<void>(url, entity);
-  }
+		return this.httpClient.put<void>(url, entity);
+	}
 
-  /**
-   * Delete a user
-   * @param userId The user id to delete
-   */
-  public delete(userId: number): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
+	/**
+	 * Delete a user
+	 * @param userId The user id to delete
+	 */
+	public delete(userId: number): Observable<void> {
+		const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
-    return this.httpClient.delete<void>(url);
-  }
+		return this.httpClient.delete<void>(url);
+	}
 }

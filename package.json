@@ -81,6 +81,6 @@
     "typescript-eslint": "^8.39.1"
   },
   "lint-staged": {
-    "**/*.{js,mjs,cjs,ts}": "eslint --cache --fix --max-warnings 0 src/main/webapp"
+    "**/*.{html,ts}": "eslint --fix"
   }
 }

@@ -25,10 +25,10 @@ import { AllowedSettingValue } from './allowed-setting-value';
  * Represent a setting for the users
  */
 export interface Setting {
-  id: number;
-  description: string;
-  constrained: boolean;
-  dataType: DataTypeEnum;
-  type: SettingsTypeEnum;
-  allowedSettingValues?: AllowedSettingValue[];
+	id: number;
+	description: string;
+	constrained: boolean;
+	dataType: DataTypeEnum;
+	type: SettingsTypeEnum;
+	allowedSettingValues?: AllowedSettingValue[];
 }

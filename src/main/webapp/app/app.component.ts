@@ -35,117 +35,117 @@ import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog
 import { DialogService } from './shared/services/frontend/dialog/dialog.service';
 
 @Component({
-  selector: 'suricate-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  imports: [SidenavComponent, ToastComponent]
+	selector: 'suricate-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.scss'],
+	imports: [SidenavComponent, ToastComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private readonly matDialog = inject(MatDialog);
-  private readonly overlayContainer = inject(OverlayContainer);
-  private readonly settingsService = inject(SettingsService);
-  private readonly dialogService = inject(DialogService);
+	private readonly matDialog = inject(MatDialog);
+	private readonly overlayContainer = inject(OverlayContainer);
+	private readonly settingsService = inject(SettingsService);
+	private readonly dialogService = inject(DialogService);
 
-  /**
-   * The current theme
-   */
-  public theme: string;
+	/**
+	 * The current theme
+	 */
+	public theme: string;
 
-  /**
-   * Subject used to unsubscribe all the subscriptions when the component is destroyed
-   */
-  private readonly unsubscribe: Subject<void> = new Subject<void>();
+	/**
+	 * Subject used to unsubscribe all the subscriptions when the component is destroyed
+	 */
+	private readonly unsubscribe: Subject<void> = new Subject<void>();
 
-  /**
-   * Called at the init of the app
-   */
-  public ngOnInit(): void {
-    this.subscribeToConfirmationDialog();
-    this.subscribeToCommunicationDialog();
-    this.subscribeToActionsDialog();
-    this.subscribeToThemeChanging();
+	/**
+	 * Called at the init of the app
+	 */
+	public ngOnInit(): void {
+		this.subscribeToConfirmationDialog();
+		this.subscribeToCommunicationDialog();
+		this.subscribeToActionsDialog();
+		this.subscribeToThemeChanging();
 
-    this.settingsService.initDefaultSettings();
-  }
+		this.settingsService.initDefaultSettings();
+	}
 
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
-  }
+	/**
+	 * Called when the component is destroyed
+	 */
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
+		this.unsubscribe.complete();
+	}
 
-  /**
-   * Used to change the current when asked
-   */
-  private subscribeToThemeChanging(): void {
-    this.settingsService
-      .getCurrentThemeValue()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((theme: string) => {
-        this.overlayContainer.getContainerElement().parentElement.classList.remove(this.theme);
-        this.overlayContainer.getContainerElement().parentElement.classList.add(theme);
-        this.theme = theme;
-      });
-  }
+	/**
+	 * Used to change the current when asked
+	 */
+	private subscribeToThemeChanging(): void {
+		this.settingsService
+			.getCurrentThemeValue()
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((theme: string) => {
+				this.overlayContainer.getContainerElement().parentElement.classList.remove(this.theme);
+				this.overlayContainer.getContainerElement().parentElement.classList.add(theme);
+				this.theme = theme;
+			});
+	}
 
-  /**
-   * Function that display the confirmation dialog when using the dialog service
-   */
-  private subscribeToConfirmationDialog(): void {
-    this.dialogService
-      .listenConfirmationMessages()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
-        const dialogConfig: MatDialogConfig = {
-          role: 'dialog',
-          width: '600px',
-          height: '200px',
-          data: confirmationConfiguration,
-          autoFocus: false
-        };
+	/**
+	 * Function that display the confirmation dialog when using the dialog service
+	 */
+	private subscribeToConfirmationDialog(): void {
+		this.dialogService
+			.listenConfirmationMessages()
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
+				const dialogConfig: MatDialogConfig = {
+					role: 'dialog',
+					width: '600px',
+					height: '200px',
+					data: confirmationConfiguration,
+					autoFocus: false
+				};
 
-        this.matDialog.open(ConfirmDialogComponent, dialogConfig);
-      });
-  }
+				this.matDialog.open(ConfirmDialogComponent, dialogConfig);
+			});
+	}
 
-  /**
-   * Function that display the communication dialog when using the dialog service
-   */
-  private subscribeToCommunicationDialog(): void {
-    this.dialogService
-      .listenCommunicationMessages()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((communicationDialogConfiguration: CommunicationDialogConfiguration) => {
-        const dialogConfig: MatDialogConfig = {
-          role: 'dialog',
-          width: '700px',
-          height: '80%',
-          data: communicationDialogConfiguration,
-          autoFocus: false
-        };
+	/**
+	 * Function that display the communication dialog when using the dialog service
+	 */
+	private subscribeToCommunicationDialog(): void {
+		this.dialogService
+			.listenCommunicationMessages()
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((communicationDialogConfiguration: CommunicationDialogConfiguration) => {
+				const dialogConfig: MatDialogConfig = {
+					role: 'dialog',
+					width: '700px',
+					height: '80%',
+					data: communicationDialogConfiguration,
+					autoFocus: false
+				};
 
-        this.matDialog.open(CommunicationDialogComponent, dialogConfig);
-      });
-  }
+				this.matDialog.open(CommunicationDialogComponent, dialogConfig);
+			});
+	}
 
-  /**
-   * Function that display the actions' dialog when using the dialog service
-   */
-  private subscribeToActionsDialog(): void {
-    this.dialogService
-      .listenActionsMessages()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((actionsDialogConfiguration: ActionsDialogConfiguration) => {
-        const dialogConfig: MatDialogConfig = {
-          role: 'dialog',
-          width: '600px',
-          height: '200px',
-          data: actionsDialogConfiguration
-        };
+	/**
+	 * Function that display the actions' dialog when using the dialog service
+	 */
+	private subscribeToActionsDialog(): void {
+		this.dialogService
+			.listenActionsMessages()
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((actionsDialogConfiguration: ActionsDialogConfiguration) => {
+				const dialogConfig: MatDialogConfig = {
+					role: 'dialog',
+					width: '600px',
+					height: '200px',
+					data: actionsDialogConfiguration
+				};
 
-        this.matDialog.open(ActionsDialogComponent, dialogConfig);
-      });
-  }
+				this.matDialog.open(ActionsDialogComponent, dialogConfig);
+			});
+	}
 }

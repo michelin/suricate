@@ -18,7 +18,7 @@
  */
 
 export interface PersonalAccessToken {
-  name: string;
-  value: string;
-  createdDate: Date;
+	name: string;
+	value: string;
+	createdDate: Date;
 }

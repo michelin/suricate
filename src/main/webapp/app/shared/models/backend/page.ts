@@ -18,16 +18,16 @@
  */
 
 export class Page {
-  /**
-   * The number of the current page
-   */
-  number: number;
-  /**
-   * The requested size of the page
-   */
-  size: number;
-  /**
-   * The total number of elements available
-   */
-  totalElements: number;
+	/**
+	 * The number of the current page
+	 */
+	number: number;
+	/**
+	 * The requested size of the page
+	 */
+	size: number;
+	/**
+	 * The total number of elements available
+	 */
+	totalElements: number;
 }

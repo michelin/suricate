@@ -21,5 +21,5 @@
  * Color used for buttons
  */
 export enum ButtonColorEnum {
-  WARN = 'WARN'
+	WARN = 'WARN'
 }

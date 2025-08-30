@@ -1,157 +1,152 @@
 @if (field.type !== dataType.FIELDS) {
-  <div class="input-wrapper">
-    <!------------------------------------------------------------------------------------------------------->
-    <!---                        MAT FORM FIELDS/ERROR                                                    --->
-    <!------------------------------------------------------------------------------------------------------->
-    @if (isHtmlInput()) {
-      <mat-form-field
-        appearance="outline"
-        [floatLabel]="field.placeholder ? 'always' : 'auto'"
-        [ngClass]="{ 'mat-form-field-readonly': field.readOnly }"
-        >
-        <!-- Mat Icon prefix -->
-        @if (field.iconPrefix) {
-          <mat-icon
-            matPrefix
-            color="primary"
-            [matTooltip]="field.iconPrefixTooltip"
-            matTooltipPosition="above"
-            matTooltipClass="icon-prefix-tooltip"
-            >
-            {{ materialIconRecords[field.iconPrefix] }}
-          </mat-icon>
-        }
-        <!-- Mat label -->
-        <mat-label> {{ field.label | translate }} </mat-label>
-        <!-- SIMPLE INPUT -->
-        @if (isSimpleInput()) {
-          <input
-            matInput
-            [id]="field.key"
-            [placeholder]="field.placeholder"
-            [type]="field.type.toString().toLowerCase()"
-            [formControl]="$any(getFormControl())"
-            [required]="isRequired()"
-            [readonly]="field.readOnly"
-            [matAutocomplete]="autocomplete"
-            (input)="emitValueChangeEventFromType('inputChange')"
-            />
-            <!-- Autocomplete -->
-            <mat-autocomplete #autocomplete="matAutocomplete"
-                              (optionSelected)="emitValueChangeEventFromType('optionSelected')">
-              @for (option of options; track option) {
-                <mat-option [value]="option.value">
-                  {{ option.label }}
-                </mat-option>
-              }
-            </mat-autocomplete>
-          }
-          <!-- TEXT AREA INPUT -->
-          @if (field.type === dataType.TEXTAREA) {
-            <textarea
-              matInput
-              [id]="field.key"
-              [placeholder]="field.placeholder"
-              [formControl]="$any(getFormControl())"
-              [required]="isRequired()"
-              [readonly]="field.readOnly"
-              (input)="emitValueChangeEventFromType('inputChange')"
-            ></textarea>
-          }
-          <!-- SELECT INPUT -->
-          @if (isSelectInput()) {
-            <mat-select
-              [id]="field.key"
-              [formControl]="$any(getFormControl())"
-              [multiple]="field.type === dataType.MULTIPLE"
-              [required]="isRequired()"
-              (selectionChange)="emitValueChangeEventFromType('optionSelected')"
-              >
-              @if (!isRequired() && field.type === dataType.COMBO) {
-                <mat-option [value]="">None</mat-option>
-              }
-              @for (option of options; track option) {
-                <mat-option [value]="option.value">
-                  {{ option.label }}
-                </mat-option>
-              }
-            </mat-select>
-          }
-          <!-- Mat Icon suffix -->
-          @if (field.iconSuffix) {
-            <mat-icon (click)="suffixActions()" matTooltip="" matSuffix color="primary">
-              {{ materialIconRecords[field.iconSuffix] }}
-            </mat-icon>
-          }
-          <!-- Display an hint the user -->
-          @if (field.hint && !isInputFieldOnError()) {
-            <mat-hint align="start">
-              <span> {{ field.hint | translate }}</span>
-            </mat-hint>
-          }
+	<div class="input-wrapper">
+		<!------------------------------------------------------------------------------------------------------->
+		<!---                        MAT FORM FIELDS/ERROR                                                    --->
+		<!------------------------------------------------------------------------------------------------------->
+		@if (isHtmlInput()) {
+			<mat-form-field
+				appearance="outline"
+				[floatLabel]="field.placeholder ? 'always' : 'auto'"
+				[ngClass]="{ 'mat-form-field-readonly': field.readOnly }"
+			>
+				<!-- Mat Icon prefix -->
+				@if (field.iconPrefix) {
+					<mat-icon
+						matPrefix
+						color="primary"
+						[matTooltip]="field.iconPrefixTooltip"
+						matTooltipPosition="above"
+						matTooltipClass="icon-prefix-tooltip"
+					>
+						{{ materialIconRecords[field.iconPrefix] }}
+					</mat-icon>
+				}
+				<!-- Mat label -->
+				<mat-label> {{ field.label | translate }} </mat-label>
+				<!-- SIMPLE INPUT -->
+				@if (isSimpleInput()) {
+					<input
+						matInput
+						[id]="field.key"
+						[placeholder]="field.placeholder"
+						[type]="field.type.toString().toLowerCase()"
+						[formControl]="$any(getFormControl())"
+						[required]="isRequired()"
+						[readonly]="field.readOnly"
+						[matAutocomplete]="autocomplete"
+						(input)="emitValueChangeEventFromType('inputChange')"
+					/>
+					<!-- Autocomplete -->
+					<mat-autocomplete
+						#autocomplete="matAutocomplete"
+						(optionSelected)="emitValueChangeEventFromType('optionSelected')"
+					>
+						@for (option of options; track option) {
+							<mat-option [value]="option.value">
+								{{ option.label }}
+							</mat-option>
+						}
+					</mat-autocomplete>
+				}
+				<!-- TEXT AREA INPUT -->
+				@if (field.type === dataType.TEXTAREA) {
+					<textarea
+						matInput
+						[id]="field.key"
+						[placeholder]="field.placeholder"
+						[formControl]="$any(getFormControl())"
+						[required]="isRequired()"
+						[readonly]="field.readOnly"
+						(input)="emitValueChangeEventFromType('inputChange')"
+					></textarea>
+				}
+				<!-- SELECT INPUT -->
+				@if (isSelectInput()) {
+					<mat-select
+						[id]="field.key"
+						[formControl]="$any(getFormControl())"
+						[multiple]="field.type === dataType.MULTIPLE"
+						[required]="isRequired()"
+						(selectionChange)="emitValueChangeEventFromType('optionSelected')"
+					>
+						@if (!isRequired() && field.type === dataType.COMBO) {
+							<mat-option [value]="">None</mat-option>
+						}
+						@for (option of options; track option) {
+							<mat-option [value]="option.value">
+								{{ option.label }}
+							</mat-option>
+						}
+					</mat-select>
+				}
+				<!-- Mat Icon suffix -->
+				@if (field.iconSuffix) {
+					<mat-icon (click)="suffixActions()" matTooltip="" matSuffix color="primary">
+						{{ materialIconRecords[field.iconSuffix] }}
+					</mat-icon>
+				}
+				<!-- Display an hint the user -->
+				@if (field.hint && !isInputFieldOnError()) {
+					<mat-hint align="start">
+						<span> {{ field.hint | translate }}</span>
+					</mat-hint>
+				}
 
-          @if (dataType.FILE !== field.type && isInputFieldOnError()) {
-            <mat-error>
-              {{ getInputErrors() | translate }}
-            </mat-error>
-          }
-      </mat-form-field>
-    }
+				@if (dataType.FILE !== field.type && isInputFieldOnError()) {
+					<mat-error>
+						{{ getInputErrors() | translate }}
+					</mat-error>
+				}
+			</mat-form-field>
+		}
 
-    @if (dataType.BOOLEAN === field.type) {
-      <suricate-checkbox
-        [field]="field"
-        [formGroup]="formGroup"
-        (valueChangeEvent)="emitValueChangeEvent($event)"
-        >
-      </suricate-checkbox>
-    }
+		@if (dataType.BOOLEAN === field.type) {
+			<suricate-checkbox [field]="field" [formGroup]="formGroup" (valueChangeEvent)="emitValueChangeEvent($event)">
+			</suricate-checkbox>
+		}
 
-    @if (dataType.FILE === field.type) {
-      <suricate-file-input
-        [field]="field"
-        [formGroup]="formGroup"
-        [componentRef]="componentRef"
-        (valueChangeEvent)="emitValueChangeEvent($event)"
-        >
-      </suricate-file-input>
-    }
+		@if (dataType.FILE === field.type) {
+			<suricate-file-input
+				[field]="field"
+				[formGroup]="formGroup"
+				[componentRef]="componentRef"
+				(valueChangeEvent)="emitValueChangeEvent($event)"
+			>
+			</suricate-file-input>
+		}
 
-    @if (dataType.COLOR_PICKER === field.type) {
-      <suricate-color-picker [field]="field" [formGroup]="formGroup"> </suricate-color-picker>
-    }
-  </div>
+		@if (dataType.COLOR_PICKER === field.type) {
+			<suricate-color-picker [field]="field" [formGroup]="formGroup"> </suricate-color-picker>
+		}
+	</div>
 }
 
 @if (field.type === dataType.FIELDS) {
-  <div class="input-wrapper inner-form-group">
-    <h1>{{ field.label | translate }}</h1>
+	<div class="input-wrapper inner-form-group">
+		<h1>{{ field.label | translate }}</h1>
 
-    @for (innerFormGroup of $any(getFormControlAsFormArray()); track innerFormGroup; let index = $index) {
-      <div class="fields-container">
-        @for (innerField of field.fields; track innerField) {
-          @if (innerField.type !== dataType.HIDDEN) {
-            <suricate-input
-              [style.width.%]="getInnerFormSize()"
-              [field]="innerField"
-              [formGroup]="innerFormGroup"
-            >
-            </suricate-input>
-          }
-        }
-        @if (field.deleteRow) {
-          <suricate-buttons class="delete-row" [configurations]="deleteRowButtonConfiguration" [object]='{ formGroup: innerFormGroup, index: index}'> </suricate-buttons>
-        }
-      </div>
-    }
-  </div>
+		@for (innerFormGroup of $any(getFormControlAsFormArray()); track innerFormGroup; let index = $index) {
+			<div class="fields-container">
+				@for (innerField of field.fields; track innerField) {
+					@if (innerField.type !== dataType.HIDDEN) {
+						<suricate-input [style.width.%]="getInnerFormSize()" [field]="innerField" [formGroup]="innerFormGroup">
+						</suricate-input>
+					}
+				}
+				@if (field.deleteRow) {
+					<suricate-buttons
+						class="delete-row"
+						[configurations]="deleteRowButtonConfiguration"
+						[object]="{ formGroup: innerFormGroup, index: index }"
+					>
+					</suricate-buttons>
+				}
+			</div>
+		}
+	</div>
 }
 
 @if (field.type === dataType.MOSAIC) {
-  <suricate-mosaic
-    [field]="field"
-    [formGroup]="formGroup"
-    (valueChangeEvent)="emitValueChangeEvent($event)"
-    >
-  </suricate-mosaic>
+	<suricate-mosaic [field]="field" [formGroup]="formGroup" (valueChangeEvent)="emitValueChangeEvent($event)">
+	</suricate-mosaic>
 }

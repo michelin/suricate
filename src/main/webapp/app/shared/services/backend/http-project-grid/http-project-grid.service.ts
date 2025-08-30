@@ -28,53 +28,53 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectGridService {
-  private static readonly projectGridsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projectGrids`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly projectGridsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projectGrids`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get grid by project token and grid id
-   * @param projectToken The project token
-   * @param gridId The grid id
-   */
-  public get(projectToken: string, gridId: number): Observable<ProjectGrid> {
-    const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}/${gridId}`;
+	/**
+	 * Get grid by project token and grid id
+	 * @param projectToken The project token
+	 * @param gridId The grid id
+	 */
+	public get(projectToken: string, gridId: number): Observable<ProjectGrid> {
+		const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}/${gridId}`;
 
-    return this.httpClient.get<ProjectGrid>(url);
-  }
+		return this.httpClient.get<ProjectGrid>(url);
+	}
 
-  /**
-   * Create a new project grid
-   *
-   * @param projectToken The project token
-   * @param gridRequest The grid
-   */
-  public create(projectToken: string, gridRequest: GridRequest): Observable<ProjectGrid> {
-    const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}`;
+	/**
+	 * Create a new project grid
+	 *
+	 * @param projectToken The project token
+	 * @param gridRequest The grid
+	 */
+	public create(projectToken: string, gridRequest: GridRequest): Observable<ProjectGrid> {
+		const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}`;
 
-    return this.httpClient.post<ProjectGrid>(url, gridRequest);
-  }
+		return this.httpClient.post<ProjectGrid>(url, gridRequest);
+	}
 
-  /**
-   * Update all given grids of a project
-   *
-   * @param projectToken The project token
-   * @param projectGridRequest The project grids request
-   */
-  public updateAll(projectToken: string, projectGridRequest: ProjectGridRequest): Observable<void> {
-    const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}`;
+	/**
+	 * Update all given grids of a project
+	 *
+	 * @param projectToken The project token
+	 * @param projectGridRequest The project grids request
+	 */
+	public updateAll(projectToken: string, projectGridRequest: ProjectGridRequest): Observable<void> {
+		const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}`;
 
-    return this.httpClient.put<void>(url, projectGridRequest);
-  }
+		return this.httpClient.put<void>(url, projectGridRequest);
+	}
 
-  /**
-   * Delete a given grid of a project
-   *
-   * @param projectToken The project token
-   * @param gridId The grid id
-   */
-  public delete(projectToken: string, gridId: number): Observable<void> {
-    const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}/${gridId}`;
+	/**
+	 * Delete a given grid of a project
+	 *
+	 * @param projectToken The project token
+	 * @param gridId The grid id
+	 */
+	public delete(projectToken: string, gridId: number): Observable<void> {
+		const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}/${gridId}`;
 
-    return this.httpClient.delete<void>(url);
-  }
+		return this.httpClient.delete<void>(url);
+	}
 }

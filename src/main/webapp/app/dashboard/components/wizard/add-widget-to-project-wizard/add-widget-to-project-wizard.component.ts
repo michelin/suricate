@@ -40,113 +40,113 @@ import { ProjectWidgetFormStepsService } from '../../../../shared/services/front
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 
 @Component({
-  templateUrl: '../../../../shared/components/wizard/wizard.component.html',
-  styleUrls: ['../../../../shared/components/wizard/wizard.component.scss'],
-  imports: [
-    HeaderComponent,
-    MatStepper,
-    MatStepperIcon,
-    MatIcon,
-    MatStep,
-    MatStepLabel,
-    NgOptimizedImage,
-    SlideToggleComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    InputComponent,
-    ButtonsComponent,
-    TranslatePipe
-  ]
+	templateUrl: '../../../../shared/components/wizard/wizard.component.html',
+	styleUrls: ['../../../../shared/components/wizard/wizard.component.scss'],
+	imports: [
+		HeaderComponent,
+		MatStepper,
+		MatStepperIcon,
+		MatIcon,
+		MatStep,
+		MatStepLabel,
+		NgOptimizedImage,
+		SlideToggleComponent,
+		FormsModule,
+		ReactiveFormsModule,
+		InputComponent,
+		ButtonsComponent,
+		TranslatePipe
+	]
 })
 export class AddWidgetToProjectWizardComponent extends WizardComponent implements OnInit {
-  private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
-  private readonly httpProjectWidgetsService = inject(HttpProjectWidgetService);
-  private readonly httpProjectService = inject(HttpProjectService);
-  private readonly toastService = inject(ToastService);
+	private readonly projectWidgetFormStepsService = inject(ProjectWidgetFormStepsService);
+	private readonly httpProjectWidgetsService = inject(HttpProjectWidgetService);
+	private readonly httpProjectService = inject(HttpProjectService);
+	private readonly toastService = inject(ToastService);
 
-  public override ngOnInit(): void {
-    this.initHeaderConfiguration();
-    this.projectWidgetFormStepsService.generateGlobalSteps().subscribe((formSteps: FormStep[]) => {
-      this.wizardConfiguration = { steps: formSteps };
+	public override ngOnInit(): void {
+		this.initHeaderConfiguration();
+		this.projectWidgetFormStepsService.generateGlobalSteps().subscribe((formSteps: FormStep[]) => {
+			this.wizardConfiguration = { steps: formSteps };
 
-      super.ngOnInit();
-    });
-  }
+			super.ngOnInit();
+		});
+	}
 
-  /**
-   * Function used to configure the header of this wizard component
-   */
-  private initHeaderConfiguration(): void {
-    this.headerConfiguration = {
-      title: 'widget.add'
-    };
-  }
+	/**
+	 * Function used to configure the header of this wizard component
+	 */
+	private initHeaderConfiguration(): void {
+		this.headerConfiguration = {
+			title: 'widget.add'
+		};
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  protected override closeWizard(): void {
-    this.redirectToDashboard();
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	protected override closeWizard(): void {
+		this.redirectToDashboard();
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  protected override saveWizard(formGroup: UntypedFormGroup): void {
-    this.httpProjectService.getById(this.dashboardToken).subscribe((project: Project) => {
-      this.httpProjectWidgetsService.getAllByProjectToken(this.dashboardToken).subscribe((widgets: ProjectWidget[]) => {
-        let row = 1;
-        let column = 1;
-        if (widgets != null && widgets.length > 0) {
-          const widgetsByGrid = widgets.filter((widget) => widget.gridId === this.gridId);
-          while (
-            widgetsByGrid.filter(
-              (widget) => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column
-            ).length > 0
-          ) {
-            column += widgetsByGrid.filter(
-              (widget) => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column
-            )[0].widgetPosition.width;
-            if (column > project.gridProperties.maxColumn) {
-              column = 1;
-              row++;
-            }
-          }
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	protected override saveWizard(formGroup: UntypedFormGroup): void {
+		this.httpProjectService.getById(this.dashboardToken).subscribe((project: Project) => {
+			this.httpProjectWidgetsService.getAllByProjectToken(this.dashboardToken).subscribe((widgets: ProjectWidget[]) => {
+				let row = 1;
+				let column = 1;
+				if (widgets != null && widgets.length > 0) {
+					const widgetsByGrid = widgets.filter((widget) => widget.gridId === this.gridId);
+					while (
+						widgetsByGrid.filter(
+							(widget) => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column
+						).length > 0
+					) {
+						column += widgetsByGrid.filter(
+							(widget) => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column
+						)[0].widgetPosition.width;
+						if (column > project.gridProperties.maxColumn) {
+							column = 1;
+							row++;
+						}
+					}
+				}
 
-        const projectWidgetRequest: ProjectWidgetRequest = {
-          widgetId: formGroup.get(ProjectWidgetFormStepsService.selectWidgetStepKey).value[
-            ProjectWidgetFormStepsService.widgetIdFieldKey
-          ],
-          backendConfig: Object.keys(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value)
-            .filter(
-              (key: string) =>
-                formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key] != null &&
-                String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).trim() !== ''
-            )
-            .map(
-              (key: string) =>
-                `${key}=${String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).replace(/\n/g, '\\n')}`
-            )
-            .join('\n'),
-          gridColumn: column,
-          gridRow: row
-        };
+				const projectWidgetRequest: ProjectWidgetRequest = {
+					widgetId: formGroup.get(ProjectWidgetFormStepsService.selectWidgetStepKey).value[
+						ProjectWidgetFormStepsService.widgetIdFieldKey
+					],
+					backendConfig: Object.keys(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value)
+						.filter(
+							(key: string) =>
+								formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key] != null &&
+								String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).trim() !== ''
+						)
+						.map(
+							(key: string) =>
+								`${key}=${String(formGroup.get(ProjectWidgetFormStepsService.configureWidgetStepKey).value[key]).replace(/\n/g, '\\n')}`
+						)
+						.join('\n'),
+					gridColumn: column,
+					gridRow: row
+				};
 
-        this.httpProjectWidgetsService
-          .addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest)
-          .subscribe(() => {
-            this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
-            this.redirectToDashboard();
-          });
-      });
-    });
-  }
+				this.httpProjectWidgetsService
+					.addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest)
+					.subscribe(() => {
+						this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
+						this.redirectToDashboard();
+					});
+			});
+		});
+	}
 
-  /**
-   * Function used to redirect to the dashboard
-   */
-  private redirectToDashboard(): void {
-    this.router.navigate(['/dashboards', this.dashboardToken, this.gridId]);
-  }
+	/**
+	 * Function used to redirect to the dashboard
+	 */
+	private redirectToDashboard(): void {
+		this.router.navigate(['/dashboards', this.dashboardToken, this.gridId]);
+	}
 }

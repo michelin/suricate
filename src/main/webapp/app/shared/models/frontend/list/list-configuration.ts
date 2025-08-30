@@ -23,6 +23,6 @@ import { ButtonConfiguration } from '../button/button-configuration';
  * Interface used to hold the configuration of the generic list component
  */
 export class ListConfiguration<T> {
-  enableShowBean?: boolean;
-  buttons?: ButtonConfiguration<T>[];
+	enableShowBean?: boolean;
+	buttons?: ButtonConfiguration<T>[];
 }

@@ -21,16 +21,16 @@
  * The list of the different widget states
  */
 export enum WidgetStateEnum {
-  /**
-   * Widget is running normally
-   */
-  RUNNING = 'RUNNING',
-  /**
-   * Widget is running with some anomaly
-   */
-  WARNING = 'WARNING',
-  /**
-   * The widget execution is stopped
-   */
-  STOPPED = 'STOPPED'
+	/**
+	 * Widget is running normally
+	 */
+	RUNNING = 'RUNNING',
+	/**
+	 * Widget is running with some anomaly
+	 */
+	WARNING = 'WARNING',
+	/**
+	 * The widget execution is stopped
+	 */
+	STOPPED = 'STOPPED'
 }

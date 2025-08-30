@@ -25,10 +25,10 @@ import { dashboardRoutes } from './dashboard/dashboard.route';
 import { widgetRoutes } from './widget/widget.route';
 
 export const appRoutes: Routes = [
-  ...adminRoutes,
-  ...coreRoutes,
-  ...dashboardRoutes,
-  ...widgetRoutes,
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' }
+	...adminRoutes,
+	...coreRoutes,
+	...dashboardRoutes,
+	...widgetRoutes,
+	{ path: '', redirectTo: '/home', pathMatch: 'full' },
+	{ path: '**', redirectTo: 'home', pathMatch: 'full' }
 ];

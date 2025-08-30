@@ -19,52 +19,52 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 export class CustomValidator {
-  private static readonly fileFormat = '^data:image\\/(gif|jpe?g|png);base64,.+$';
+	private static readonly fileFormat = '^data:image\\/(gif|jpe?g|png);base64,.+$';
 
-  /**
-   * Custom validator that checks if the two passwords match
-   *
-   * @param passwordControl The password that hold the validator
-   * @return True if the passwords are different
-   */
-  public static checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
-    return (confirmPasswordControl: AbstractControl): ValidationErrors => {
-      if (
-        (passwordControl.dirty || passwordControl.touched) &&
-        (confirmPasswordControl.dirty || confirmPasswordControl.touched)
-      ) {
-        return passwordControl.value !== confirmPasswordControl.value ? { passwordMismatch: true } : null;
-      }
-      return null;
-    };
-  }
+	/**
+	 * Custom validator that checks if the two passwords match
+	 *
+	 * @param passwordControl The password that hold the validator
+	 * @return True if the passwords are different
+	 */
+	public static checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
+		return (confirmPasswordControl: AbstractControl): ValidationErrors => {
+			if (
+				(passwordControl.dirty || passwordControl.touched) &&
+				(confirmPasswordControl.dirty || confirmPasswordControl.touched)
+			) {
+				return passwordControl.value !== confirmPasswordControl.value ? { passwordMismatch: true } : null;
+			}
+			return null;
+		};
+	}
 
-  /**
-   * Custom validator that checks if an input data is a digit
-   *
-   * @param control The field control
-   */
-  public static isDigits(control: AbstractControl) {
-    if (!control.value) {
-      return null;
-    }
+	/**
+	 * Custom validator that checks if an input data is a digit
+	 *
+	 * @param control The field control
+	 */
+	public static isDigits(control: AbstractControl) {
+		if (!control.value) {
+			return null;
+		}
 
-    return String(control.value).match(new RegExp('^-?[0-9]\\d*(\\.\\d+)?$')) ? null : { digits: true };
-  }
+		return String(control.value).match(new RegExp('^-?[0-9]\\d*(\\.\\d+)?$')) ? null : { digits: true };
+	}
 
-  /**
-   * Custom validator that checks if an input data is gt than 0
-   *
-   * @param control The field control
-   */
-  public static greaterThan0(control: AbstractControl) {
-    return control.value > 0 ? null : { gt0: true };
-  }
+	/**
+	 * Custom validator that checks if an input data is gt than 0
+	 *
+	 * @param control The field control
+	 */
+	public static greaterThan0(control: AbstractControl) {
+		return control.value > 0 ? null : { gt0: true };
+	}
 
-  /**
-   * Custom validator that checks if an input file has the expected format
-   */
-  public static fileHasFormat(): ValidatorFn {
-    return Validators.pattern(this.fileFormat);
-  }
+	/**
+	 * Custom validator that checks if an input file has the expected format
+	 */
+	public static fileHasFormat(): ValidatorFn {
+		return Validators.pattern(this.fileFormat);
+	}
 }

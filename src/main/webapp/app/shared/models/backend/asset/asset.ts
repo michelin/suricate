@@ -21,9 +21,9 @@
  * The asset representation
  */
 export class Asset {
-  id: string;
-  content: string;
-  contentType: string;
-  size: number;
-  lastUpdateDate: Date;
+	id: string;
+	content: string;
+	contentType: string;
+	size: number;
+	lastUpdateDate: Date;
 }

@@ -23,6 +23,6 @@ import { CssRule } from './css-rule';
  * Represent a css selector with embedded rules
  */
 export class CssSelector {
-  selector: string;
-  rules: CssRule[];
+	selector: string;
+	rules: CssRule[];
 }

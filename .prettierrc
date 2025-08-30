@@ -1,14 +1,10 @@
 {
-  "arrowParens": "always",
-  "bracketSpacing": true,
   "endOfLine": "auto",
   "printWidth": 120,
   "quoteProps": "consistent",
-  "semi": true,
   "singleQuote": true,
-  "tabWidth": 2,
   "trailingComma": "none",
-  "useTabs": false,
+  "useTabs": true,
   "overrides": [
     {
       "files": "*.html",

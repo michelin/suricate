@@ -33,56 +33,56 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpWidgetService extends AbstractHttpService<Widget, WidgetRequest> {
-  private static readonly widgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/widgets`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly widgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/widgets`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get the list of widgets
-   *
-   * @param {HttpFilter} filter Used to filter the result
-   * @returns {Observable<Widget[]>} The list of widgets as observable
-   */
-  public getAll(filter?: HttpFilter): Observable<PageModel<Widget>> {
-    const url = `${HttpWidgetService.widgetsApiEndpoint}`;
-    return this.httpClient.get<PageModel<Widget>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
+	/**
+	 * Get the list of widgets
+	 *
+	 * @param {HttpFilter} filter Used to filter the result
+	 * @returns {Observable<Widget[]>} The list of widgets as observable
+	 */
+	public getAll(filter?: HttpFilter): Observable<PageModel<Widget>> {
+		const url = `${HttpWidgetService.widgetsApiEndpoint}`;
+		return this.httpClient.get<PageModel<Widget>>(HttpFilterService.getFilteredUrl(url, filter));
+	}
 
-  /**
-   * Get a widget by the id
-   *
-   * @param widgetId
-   */
-  public getById(widgetId: number): Observable<Widget> {
-    const url = `${HttpWidgetService.widgetsApiEndpoint}/${widgetId}`;
+	/**
+	 * Get a widget by the id
+	 *
+	 * @param widgetId
+	 */
+	public getById(widgetId: number): Observable<Widget> {
+		const url = `${HttpWidgetService.widgetsApiEndpoint}/${widgetId}`;
 
-    return this.httpClient.get<Widget>(url);
-  }
+		return this.httpClient.get<Widget>(url);
+	}
 
-  /**
-   * Create a widget
-   */
-  public create(): Observable<Widget> {
-    return EMPTY;
-  }
+	/**
+	 * Create a widget
+	 */
+	public create(): Observable<Widget> {
+		return EMPTY;
+	}
 
-  /**
-   * Update the widget id
-   *
-   * @param widgetId The widget id
-   * @param widgetRequest The widget request
-   */
-  public update(widgetId: number, widgetRequest: WidgetRequest): Observable<void> {
-    const url = `${HttpWidgetService.widgetsApiEndpoint}/${widgetId}`;
+	/**
+	 * Update the widget id
+	 *
+	 * @param widgetId The widget id
+	 * @param widgetRequest The widget request
+	 */
+	public update(widgetId: number, widgetRequest: WidgetRequest): Observable<void> {
+		const url = `${HttpWidgetService.widgetsApiEndpoint}/${widgetId}`;
 
-    return this.httpClient.put<void>(url, widgetRequest);
-  }
+		return this.httpClient.put<void>(url, widgetRequest);
+	}
 
-  /**
-   * Function used to delete a widget
-   */
-  public delete(id: number): Observable<void> {
-    const url = `${HttpWidgetService.widgetsApiEndpoint}/${id}`;
+	/**
+	 * Function used to delete a widget
+	 */
+	public delete(id: number): Observable<void> {
+		const url = `${HttpWidgetService.widgetsApiEndpoint}/${id}`;
 
-    return this.httpClient.delete<void>(url);
-  }
+		return this.httpClient.delete<void>(url);
+	}
 }

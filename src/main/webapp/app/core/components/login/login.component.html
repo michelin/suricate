@@ -1,61 +1,57 @@
 <div class="container without-header">
-  <div class="wrapper mat-elevation-z12">
-    <div class="brand-image">
-      <img ngSrc="../../../../../assets/images/logo.png" width="150" height="150" priority alt="Suricate" />
-    </div>
+	<div class="wrapper mat-elevation-z12">
+		<div class="brand-image">
+			<img ngSrc="../../../../../assets/images/logo.png" width="150" height="150" priority alt="Suricate" />
+		</div>
 
-    @if (loading) {
-      <suricate-spinner></suricate-spinner>
-    }
+		@if (loading) {
+			<suricate-spinner> </suricate-spinner>
+		}
 
-    @if (!loading && (isDatabaseAuthenticationActivated() || isLdapAuthenticationActivated())) {
-      <form
-        class="login-form"
-        [formGroup]="loginForm"
-        (submit)="login()"
-        >
-        @for (field of formFields; track field) {
-          <suricate-input [formGroup]="loginForm" [field]="field"> </suricate-input>
-        }
-        <suricate-buttons [configurations]="buttonConfigurations"></suricate-buttons>
-        @if (isDatabaseAuthenticationActivated()) {
-          <p>
-            {{ 'no.account.yet' | translate }}
-            <a class="register-link" [routerLink]="['/register']">
-              <span>{{ 'no.account.yet.register.now' | translate }}</span>
-            </a>
-          </p>
-        }
-      </form>
-    }
+		@if (!loading && (isDatabaseAuthenticationActivated() || isLdapAuthenticationActivated())) {
+			<form class="login-form" [formGroup]="loginForm" (submit)="login()">
+				@for (field of formFields; track field) {
+					<suricate-input [formGroup]="loginForm" [field]="field"> </suricate-input>
+				}
+				<suricate-buttons [configurations]="buttonConfigurations"></suricate-buttons>
+				@if (isDatabaseAuthenticationActivated()) {
+					<p>
+						{{ 'no.account.yet' | translate }}
+						<a class="register-link" [routerLink]="['/register']">
+							<span>{{ 'no.account.yet.register.now' | translate }}</span>
+						</a>
+					</p>
+				}
+			</form>
+		}
 
-    @if (isSocialLoginActivated()) {
-      <div class="title-container">
-        <div class="line"><mat-divider></mat-divider></div>
-        <div class="text mat-typography">{{ 'sign.in.with' | translate }}</div>
-        <div class="line"><mat-divider></mat-divider></div>
-      </div>
-    }
+		@if (isSocialLoginActivated()) {
+			<div class="title-container">
+				<div class="line"><mat-divider></mat-divider></div>
+				<div class="text mat-typography">{{ 'sign.in.with' | translate }}</div>
+				<div class="line"><mat-divider></mat-divider></div>
+			</div>
+		}
 
-    <section class="oauth2-providers">
-      <ul>
-        @if (isGithubAuthenticationActivated()) {
-          <li style="background-color: rgb(68, 68, 68)">
-            <a class="identity-provider-link" href="{{ this.githubAuthenticationEndpoint }}">
-              <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub"/>
-              <span>{{ 'github' | translate }}</span>
-            </a>
-          </li>
-        }
-        @if (isGitlabAuthenticationActivated()) {
-          <li style="background-color: rgb(41, 41, 97)">
-            <a class="identity-provider-link" href="{{ this.gitlabAuthenticationEndpoint }}">
-              <img ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
-              <span>{{ 'gitlab' | translate }}</span>
-            </a>
-          </li>
-        }
-      </ul>
-    </section>
-  </div>
+		<section class="oauth2-providers">
+			<ul>
+				@if (isGithubAuthenticationActivated()) {
+					<li style="background-color: rgb(68, 68, 68)">
+						<a class="identity-provider-link" href="{{ this.githubAuthenticationEndpoint }}">
+							<img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub" />
+							<span>{{ 'github' | translate }}</span>
+						</a>
+					</li>
+				}
+				@if (isGitlabAuthenticationActivated()) {
+					<li style="background-color: rgb(41, 41, 97)">
+						<a class="identity-provider-link" href="{{ this.gitlabAuthenticationEndpoint }}">
+							<img ngSrc="../../../../../assets/images/gitlab.svg" width="22" height="22" alt="GitLab" />
+							<span>{{ 'gitlab' | translate }}</span>
+						</a>
+					</li>
+				}
+			</ul>
+		</section>
+	</div>
 </div>

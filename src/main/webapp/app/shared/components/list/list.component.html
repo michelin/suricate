@@ -1,61 +1,63 @@
 <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
 <section class="container">
-  <div class="search-div">
-    <suricate-input [field]="searchBarConfig"
-                    [formGroup]="formGroup"
-                    (valueChangeEvent)="researchChangedEvent($event)">
-    </suricate-input>
-  </div>
+	<div class="search-div">
+		<suricate-input [field]="searchBarConfig" [formGroup]="formGroup" (valueChangeEvent)="researchChangedEvent($event)">
+		</suricate-input>
+	</div>
 
-  <div class="list-wrapper">
-    @if (isLoading) {
-      <suricate-spinner></suricate-spinner>
-    }
+	<div class="list-wrapper">
+		@if (isLoading) {
+			<suricate-spinner></suricate-spinner>
+		}
 
-    @if (!isLoading) {
-      <div
-        cdkDropList
-        [cdkDropListDisabled]="dragAndDropDisabled"
-        class="list-container"
-        (cdkDropListDropped)="onDropEvent($event)"
-        >
-        @for (object of objectsPaged.content; track object) {
-          <div
-            (click)="redirectToBean(object)"
-            (keydown.enter)="redirectToBean(object)"
-            [ngClass]="{ 'list-item-show': listConfiguration.enableShowBean, 'drag-drop-item': !dragAndDropDisabled }"
-            class="list-item"
-            cdkDrag
-            cdkDragBoundary=".list-container"
-            [tabindex]="0"
-            >
-            @if (getObjectImageURL(object)) {
-              <div class="list-image">
-                <div class="image-container">
-                  <img [ngSrc]="getObjectImageURL(object)" fill="true" priority="true" alt="Object" />
-                </div>
-              </div>
-            }
-            <div class="list-detail">
-              <h1>{{ getFirstLabel(object) }}</h1>
-              <h2>{{ getSecondLabel(object) }}</h2>
-              <h3>{{ getThirdLabel(object) }}</h3>
-            </div>
-            @if (listConfiguration.buttons) {
-              <suricate-buttons class="list-buttons" [configurations]="listConfiguration.buttons" [object]="object"></suricate-buttons>
-            }
-          </div>
-        }
-      </div>
-      <suricate-paginator
-        (pageChange)="pageChanged($event)"
-        [currentPage]="objectsPaged.page.number"
-        [pageNbElements]="objectsPaged.page.size"
-        [totalElements]="objectsPaged.page.totalElements"
-        [hidePageSize]="false"
-        >
-      </suricate-paginator>
-    }
-  </div>
+		@if (!isLoading) {
+			<div
+				cdkDropList
+				[cdkDropListDisabled]="dragAndDropDisabled"
+				class="list-container"
+				(cdkDropListDropped)="onDropEvent($event)"
+			>
+				@for (object of objectsPaged.content; track object) {
+					<div
+						(click)="redirectToBean(object)"
+						(keydown.enter)="redirectToBean(object)"
+						[ngClass]="{ 'list-item-show': listConfiguration.enableShowBean, 'drag-drop-item': !dragAndDropDisabled }"
+						class="list-item"
+						cdkDrag
+						cdkDragBoundary=".list-container"
+						[tabindex]="0"
+					>
+						@if (getObjectImageURL(object)) {
+							<div class="list-image">
+								<div class="image-container">
+									<img [ngSrc]="getObjectImageURL(object)" fill="true" priority="true" alt="Object" />
+								</div>
+							</div>
+						}
+						<div class="list-detail">
+							<h1>{{ getFirstLabel(object) }}</h1>
+							<h2>{{ getSecondLabel(object) }}</h2>
+							<h3>{{ getThirdLabel(object) }}</h3>
+						</div>
+						@if (listConfiguration.buttons) {
+							<suricate-buttons
+								class="list-buttons"
+								[configurations]="listConfiguration.buttons"
+								[object]="object"
+							></suricate-buttons>
+						}
+					</div>
+				}
+			</div>
+			<suricate-paginator
+				(pageChange)="pageChanged($event)"
+				[currentPage]="objectsPaged.page.number"
+				[pageNbElements]="objectsPaged.page.size"
+				[totalElements]="objectsPaged.page.totalElements"
+				[hidePageSize]="false"
+			>
+			</suricate-paginator>
+		}
+	</div>
 </section>

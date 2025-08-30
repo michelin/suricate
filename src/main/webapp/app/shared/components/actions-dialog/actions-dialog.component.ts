@@ -20,11 +20,11 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, inject, OnInit } from '@angular/core';
 import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogTitle
+	MAT_DIALOG_DATA,
+	MatDialogActions,
+	MatDialogClose,
+	MatDialogContent,
+	MatDialogTitle
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -35,44 +35,44 @@ import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions
 import { ButtonsComponent } from '../buttons/buttons.component';
 
 @Component({
-  templateUrl: './actions-dialog.component.html',
-  styleUrls: ['./actions-dialog.component.scss'],
-  imports: [
-    MatDialogTitle,
-    CdkScrollable,
-    MatDialogContent,
-    MatDialogActions,
-    ButtonsComponent,
-    MatDialogClose,
-    TranslatePipe
-  ]
+	templateUrl: './actions-dialog.component.html',
+	styleUrls: ['./actions-dialog.component.scss'],
+	imports: [
+		MatDialogTitle,
+		CdkScrollable,
+		MatDialogContent,
+		MatDialogActions,
+		ButtonsComponent,
+		MatDialogClose,
+		TranslatePipe
+	]
 })
 export class ActionsDialogComponent implements OnInit {
-  private readonly data = inject<ActionsDialogConfiguration>(MAT_DIALOG_DATA);
+	private readonly data = inject<ActionsDialogConfiguration>(MAT_DIALOG_DATA);
 
-  /**
-   * The configuration of the confirmation dialog
-   */
-  public configuration: ActionsDialogConfiguration;
+	/**
+	 * The configuration of the confirmation dialog
+	 */
+	public configuration: ActionsDialogConfiguration;
 
-  /**
-   * Init method
-   */
-  ngOnInit(): void {
-    this.configuration = this.data;
-    this.initCloseButtonConfiguration();
-  }
+	/**
+	 * Init method
+	 */
+	ngOnInit(): void {
+		this.configuration = this.data;
+		this.initCloseButtonConfiguration();
+	}
 
-  /**
-   * Init the buttons configurations
-   */
-  private initCloseButtonConfiguration(): void {
-    const closeButton: ButtonConfiguration<void> = {
-      label: 'close',
-      icon: IconEnum.CLOSE,
-      color: ButtonColorEnum.WARN
-    };
+	/**
+	 * Init the buttons configurations
+	 */
+	private initCloseButtonConfiguration(): void {
+		const closeButton: ButtonConfiguration<void> = {
+			label: 'close',
+			icon: IconEnum.CLOSE,
+			color: ButtonColorEnum.WARN
+		};
 
-    this.configuration.actions = [closeButton].concat(this.configuration.actions);
-  }
+		this.configuration.actions = [closeButton].concat(this.configuration.actions);
+	}
 }

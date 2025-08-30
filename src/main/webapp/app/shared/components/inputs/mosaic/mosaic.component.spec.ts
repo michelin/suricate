@@ -24,34 +24,34 @@ import { FormField } from '../../../models/frontend/form/form-field';
 import { MosaicComponent } from './mosaic.component';
 
 describe('MosaicComponent', () => {
-  let component: MosaicComponent;
-  let fixture: ComponentFixture<MosaicComponent>;
+	let component: MosaicComponent;
+	let fixture: ComponentFixture<MosaicComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MosaicComponent]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [MosaicComponent]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(MosaicComponent);
-    component = fixture.componentInstance;
-    component.field = buildMockedFormField(DataTypeEnum.MOSAIC);
+		fixture = TestBed.createComponent(MosaicComponent);
+		component = fixture.componentInstance;
+		component.field = buildMockedFormField(DataTypeEnum.MOSAIC);
 
-    fixture.detectChanges();
-  });
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  /**
-   * Build a mocked FormField for the unit tests
-   *
-   * @param type The type of the field to create
-   */
-  function buildMockedFormField(type: DataTypeEnum): FormField {
-    return {
-      key: 'Key',
-      type: type
-    };
-  }
+	/**
+	 * Build a mocked FormField for the unit tests
+	 *
+	 * @param type The type of the field to create
+	 */
+	function buildMockedFormField(type: DataTypeEnum): FormField {
+		return {
+			key: 'Key',
+			type: type
+		};
+	}
 });

@@ -21,9 +21,9 @@
  * The project widget position
  */
 export interface ProjectWidgetPositionRequest {
-  projectWidgetId: number;
-  gridColumn: number;
-  gridRow: number;
-  width: number;
-  height: number;
+	projectWidgetId: number;
+	gridColumn: number;
+	gridRow: number;
+	width: number;
+	height: number;
 }

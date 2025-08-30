@@ -1,20 +1,20 @@
 <div class="container without-header">
-  <div class="wrapper mat-elevation-z12">
-    <div class="brand-image">
-      <img ngSrc="../../../../../assets/images/logo.png" width="150" height="150" priority alt="Suricate" />
-    </div>
+	<div class="wrapper mat-elevation-z12">
+		<div class="brand-image">
+			<img ngSrc="../../../../../assets/images/logo.png" width="150" height="150" priority alt="Suricate" />
+		</div>
 
-    @if (loading) {
-      <suricate-spinner></suricate-spinner>
-    }
+		@if (loading) {
+			<suricate-spinner></suricate-spinner>
+		}
 
-    @if (!loading) {
-      <form class="register-form" [formGroup]="registerForm" (ngSubmit)="signUp()">
-        @for (field of formFields; track field) {
-          <suricate-input [formGroup]="registerForm" [field]="field"> </suricate-input>
-        }
-        <suricate-buttons [configurations]="buttonConfigurations"></suricate-buttons>
-      </form>
-    }
-  </div>
+		@if (!loading) {
+			<form class="register-form" [formGroup]="registerForm" (ngSubmit)="signUp()">
+				@for (field of formFields; track field) {
+					<suricate-input [formGroup]="registerForm" [field]="field"> </suricate-input>
+				}
+				<suricate-buttons [configurations]="buttonConfigurations"></suricate-buttons>
+			</form>
+		}
+	</div>
 </div>

@@ -23,13 +23,13 @@ import { Page } from './page';
  * Class that represent a page from the backend
  */
 export class PageModel<T> {
-  /**
-   * The list of object in this page
-   */
-  content: T[];
+	/**
+	 * The list of object in this page
+	 */
+	content: T[];
 
-  /**
-   * The page information
-   */
-  page: Page;
+	/**
+	 * The page information
+	 */
+	page: Page;
 }
