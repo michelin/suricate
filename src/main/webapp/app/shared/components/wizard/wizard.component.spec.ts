@@ -31,48 +31,48 @@ import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configu
 import { WizardComponent } from './wizard.component';
 
 describe('WizardComponent', () => {
-  let component: WizardComponent;
-  let fixture: ComponentFixture<WizardComponent>;
+	let component: WizardComponent;
+	let fixture: ComponentFixture<WizardComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [WizardComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideRouter(appRoutes),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        })
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [WizardComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideRouter(appRoutes),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				})
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(WizardComponent);
-    component = fixture.componentInstance;
-    component.wizardConfiguration = buildWizardConfiguration();
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(WizardComponent);
+		component = fixture.componentInstance;
+		component.wizardConfiguration = buildWizardConfiguration();
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  /**
-   * Build a mocked WizardConfiguration for the unit tests
-   */
-  function buildWizardConfiguration(): WizardConfiguration {
-    const formSteps: FormStep[] = [];
+	/**
+	 * Build a mocked WizardConfiguration for the unit tests
+	 */
+	function buildWizardConfiguration(): WizardConfiguration {
+		const formSteps: FormStep[] = [];
 
-    for (let i = 0; i < 3; i++) {
-      formSteps.push({
-        key: 'Key' + i,
-        title: 'Title' + i,
-        icon: IconEnum.ADD
-      });
-    }
+		for (let i = 0; i < 3; i++) {
+			formSteps.push({
+				key: 'Key' + i,
+				title: 'Title' + i,
+				icon: IconEnum.ADD
+			});
+		}
 
-    return {
-      steps: formSteps
-    };
-  }
+		return {
+			steps: formSteps
+		};
+	}
 });

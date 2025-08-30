@@ -28,28 +28,28 @@ import { appRoutes } from '../../../app.routes';
 import { DashboardDetailComponent } from './dashboard-detail.component';
 
 describe('DashboardDetailComponent', () => {
-  let component: DashboardDetailComponent;
-  let fixture: ComponentFixture<DashboardDetailComponent>;
+	let component: DashboardDetailComponent;
+	let fixture: ComponentFixture<DashboardDetailComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DashboardDetailComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideRouter(appRoutes),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        })
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [DashboardDetailComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideRouter(appRoutes),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				})
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(DashboardDetailComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

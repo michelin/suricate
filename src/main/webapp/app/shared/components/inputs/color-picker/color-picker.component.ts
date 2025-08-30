@@ -28,25 +28,25 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
  * Component used to display the color picker
  */
 @Component({
-  selector: 'suricate-color-picker',
-  templateUrl: './color-picker.component.html',
-  styleUrls: ['./color-picker.component.scss'],
-  imports: [MatLabel, ColorPickerDirective, TranslatePipe]
+	selector: 'suricate-color-picker',
+	templateUrl: './color-picker.component.html',
+	styleUrls: ['./color-picker.component.scss'],
+	imports: [MatLabel, ColorPickerDirective, TranslatePipe]
 })
 export class ColorPickerComponent extends BaseInputComponent {
-  /**
-   * Notification change when the color as changed
-   *
-   * @param color The new color
-   */
-  public colorChanged(color: string): void {
-    this.getFormControl().setValue(color);
-  }
+	/**
+	 * Notification change when the color as changed
+	 *
+	 * @param color The new color
+	 */
+	public colorChanged(color: string): void {
+		this.getFormControl().setValue(color);
+	}
 
-  /**
-   * Get the field value
-   */
-  public getFieldValue(): string {
-    return this.field.value as string;
-  }
+	/**
+	 * Get the field value
+	 */
+	public getFieldValue(): string {
+		return this.field.value as string;
+	}
 }

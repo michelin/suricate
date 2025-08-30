@@ -18,8 +18,8 @@
  */
 
 declare module 'sockjs-client/dist/sockjs' {
-  import SockJS from '@types/sockjs-client';
+	import SockJS from '@types/sockjs-client';
 
-  export = SockJS;
-  export as namespace SockJS;
+	export = SockJS;
+	export as namespace SockJS;
 }

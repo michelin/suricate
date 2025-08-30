@@ -29,15 +29,15 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpConfigurationService {
-  private static readonly configurationsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/configurations`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly configurationsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/configurations`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get the authentication providers authorized by the Back-End
-   */
-  public getAuthenticationProviders(): Observable<AuthenticationProvider[]> {
-    const url = `${HttpConfigurationService.configurationsApiEndpoint}/authentication-providers`;
+	/**
+	 * Get the authentication providers authorized by the Back-End
+	 */
+	public getAuthenticationProviders(): Observable<AuthenticationProvider[]> {
+		const url = `${HttpConfigurationService.configurationsApiEndpoint}/authentication-providers`;
 
-    return this.httpClient.get<AuthenticationProvider[]>(url);
-  }
+		return this.httpClient.get<AuthenticationProvider[]>(url);
+	}
 }

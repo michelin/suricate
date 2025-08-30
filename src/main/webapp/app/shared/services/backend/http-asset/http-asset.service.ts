@@ -26,14 +26,14 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpAssetService {
-  private static readonly assetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/assets`;
+	private static readonly assetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/assets`;
 
-  /**
-   * Get the asset content url
-   *
-   * @param assetToken The asset token
-   */
-  public static getContentUrl(assetToken: string): string {
-    return assetToken ? `${HttpAssetService.assetsApiEndpoint}/${assetToken}/content` : ``;
-  }
+	/**
+	 * Get the asset content url
+	 *
+	 * @param assetToken The asset token
+	 */
+	public static getContentUrl(assetToken: string): string {
+		return assetToken ? `${HttpAssetService.assetsApiEndpoint}/${assetToken}/content` : ``;
+	}
 }

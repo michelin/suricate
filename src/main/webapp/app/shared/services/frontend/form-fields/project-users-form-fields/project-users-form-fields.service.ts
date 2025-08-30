@@ -36,81 +36,81 @@ import { HttpUserService } from '../../../backend/http-user/http-user.service';
  */
 @Injectable({ providedIn: 'root' })
 export class ProjectUsersFormFieldsService {
-  private readonly httpProjectService = inject(HttpProjectService);
-  private readonly httpUserService = inject(HttpUserService);
+	private readonly httpProjectService = inject(HttpProjectService);
+	private readonly httpUserService = inject(HttpUserService);
 
-  /**
-   * Generate the configuration between a dashboard and the associated users.
-   * Generate the autocomplete window information.
-   * Get the associated users and generate the fields information.
-   *
-   * @param projectToken The project token used to retrieve the users
-   */
-  public generateProjectUsersFormFields(projectToken: string): FormField[] {
-    return [
-      {
-        key: 'usernameAutocomplete',
-        label: 'username',
-        iconPrefix: IconEnum.USER_ADD,
-        type: DataTypeEnum.TEXT,
-        options: (usernameFilter: string) => this.getUsersAutocomplete(usernameFilter)
-      },
-      {
-        key: 'users',
-        label: 'user.list',
-        type: DataTypeEnum.FIELDS,
-        values: this.httpProjectService.getProjectUsers(projectToken),
-        deleteRow: {
-          attribute: 'id',
-          callback: (userId: number) => this.httpProjectService.deleteUserFromProject(projectToken, userId)
-        },
-        fields: [
-          {
-            key: 'id',
-            label: 'id',
-            type: DataTypeEnum.HIDDEN
-          },
-          {
-            key: 'username',
-            label: 'username',
-            type: DataTypeEnum.TEXT,
-            readOnly: true
-          },
-          {
-            key: 'firstname',
-            label: 'firstname',
-            type: DataTypeEnum.TEXT,
-            readOnly: true
-          },
-          {
-            key: 'lastname',
-            label: 'lastname',
-            type: DataTypeEnum.TEXT,
-            readOnly: true
-          }
-        ]
-      }
-    ];
-  }
+	/**
+	 * Generate the configuration between a dashboard and the associated users.
+	 * Generate the autocomplete window information.
+	 * Get the associated users and generate the fields information.
+	 *
+	 * @param projectToken The project token used to retrieve the users
+	 */
+	public generateProjectUsersFormFields(projectToken: string): FormField[] {
+		return [
+			{
+				key: 'usernameAutocomplete',
+				label: 'username',
+				iconPrefix: IconEnum.USER_ADD,
+				type: DataTypeEnum.TEXT,
+				options: (usernameFilter: string) => this.getUsersAutocomplete(usernameFilter)
+			},
+			{
+				key: 'users',
+				label: 'user.list',
+				type: DataTypeEnum.FIELDS,
+				values: this.httpProjectService.getProjectUsers(projectToken),
+				deleteRow: {
+					attribute: 'id',
+					callback: (userId: number) => this.httpProjectService.deleteUserFromProject(projectToken, userId)
+				},
+				fields: [
+					{
+						key: 'id',
+						label: 'id',
+						type: DataTypeEnum.HIDDEN
+					},
+					{
+						key: 'username',
+						label: 'username',
+						type: DataTypeEnum.TEXT,
+						readOnly: true
+					},
+					{
+						key: 'firstname',
+						label: 'firstname',
+						type: DataTypeEnum.TEXT,
+						readOnly: true
+					},
+					{
+						key: 'lastname',
+						label: 'lastname',
+						type: DataTypeEnum.TEXT,
+						readOnly: true
+					}
+				]
+			}
+		];
+	}
 
-  /**
-   * Generate the autocomplete window to link a user with a dashboard
-   *
-   * @param usernameFilter A filter on the username
-   */
-  private getUsersAutocomplete(usernameFilter: string): Observable<FormOption[]> {
-    return this.httpUserService.getAll(HttpFilterService.getDefaultFilter(usernameFilter)).pipe(
-      map((usersPaged: PageModel<User>) => {
-        const formOptions: FormOption[] = [];
-        usersPaged.content.forEach((user: User) => {
-          formOptions.push({
-            label: `${user.firstname} ${user.lastname} (${user.username})`,
-            value: user.username
-          });
-        });
+	/**
+	 * Generate the autocomplete window to link a user with a dashboard
+	 *
+	 * @param usernameFilter A filter on the username
+	 */
+	private getUsersAutocomplete(usernameFilter: string): Observable<FormOption[]> {
+		return this.httpUserService.getAll(HttpFilterService.getDefaultFilter(usernameFilter)).pipe(
+			map((usersPaged: PageModel<User>) => {
+				const formOptions: FormOption[] = [];
+				usersPaged.content.forEach((user: User) => {
+					formOptions.push({
+						label: `${user.firstname} ${user.lastname} (${user.username})`,
+						value: user.username
+					});
+				});
 
-        return formOptions;
-      })
-    );
-  }
+				return formOptions;
+			})
+		);
+	}
 }

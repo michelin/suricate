@@ -21,10 +21,10 @@
  * The project request
  */
 export interface ProjectRequest {
-  name: string;
-  maxColumn: number;
-  widgetHeight: number;
-  cssStyle: string;
-  image: string;
-  gridBackgroundColor: string;
+	name: string;
+	maxColumn: number;
+	widgetHeight: number;
+	cssStyle: string;
+	image: string;
+	gridBackgroundColor: string;
 }

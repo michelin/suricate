@@ -30,79 +30,79 @@ import { AuthenticationService } from '../authentication/authentication.service'
  */
 @Injectable({ providedIn: 'root' })
 export class MenuService {
-  /**
-   * Routes where the menu should be hidden
-   */
-  public static readonly routesWithoutMenu = ['login', 'register', 'tv'];
+	/**
+	 * Routes where the menu should be hidden
+	 */
+	public static readonly routesWithoutMenu = ['login', 'register', 'tv'];
 
-  /**
-   * Used to know if we should hide the menu
-   *
-   * @param activatedRoute The activated route by the displayed component
-   */
-  public static shouldHideMenu(activatedRoute: ActivatedRoute): boolean {
-    return MenuService.routesWithoutMenu.includes(activatedRoute.routeConfig.path);
-  }
+	/**
+	 * Used to know if we should hide the menu
+	 *
+	 * @param activatedRoute The activated route by the displayed component
+	 */
+	public static shouldHideMenu(activatedRoute: ActivatedRoute): boolean {
+		return MenuService.routesWithoutMenu.includes(activatedRoute.routeConfig.path);
+	}
 
-  /**
-   * Build the menu
-   */
-  public static buildMenu(): MenuConfiguration {
-    const menuConfiguration = new MenuConfiguration();
+	/**
+	 * Build the menu
+	 */
+	public static buildMenu(): MenuConfiguration {
+		const menuConfiguration = new MenuConfiguration();
 
-    if (AuthenticationService.isAdmin()) {
-      menuConfiguration.categories.push(MenuService.buildAdminMenu());
-    }
+		if (AuthenticationService.isAdmin()) {
+			menuConfiguration.categories.push(MenuService.buildAdminMenu());
+		}
 
-    menuConfiguration.categories.push(MenuService.buildWidgetMenu());
+		menuConfiguration.categories.push(MenuService.buildWidgetMenu());
 
-    return menuConfiguration;
-  }
+		return menuConfiguration;
+	}
 
-  /**
-   * Build the admin menu
-   */
-  private static buildAdminMenu(): MenuCategoryConfiguration {
-    return {
-      label: 'admin',
-      items: [
-        {
-          label: 'configuration.list',
-          linkConfiguration: { link: ['/admin', 'configurations'] },
-          icon: IconEnum.WIDGET_CONFIGURATION
-        },
-        {
-          label: 'dashboard.list',
-          linkConfiguration: { link: ['/admin', 'dashboards'] },
-          icon: IconEnum.DASHBOARD
-        },
-        {
-          label: 'repository.list',
-          linkConfiguration: { link: ['/admin', 'repositories'] },
-          icon: IconEnum.REPOSITORY
-        },
-        {
-          label: 'user.list',
-          linkConfiguration: { link: ['/admin', 'users'] },
-          icon: IconEnum.USERS
-        }
-      ]
-    };
-  }
+	/**
+	 * Build the admin menu
+	 */
+	private static buildAdminMenu(): MenuCategoryConfiguration {
+		return {
+			label: 'admin',
+			items: [
+				{
+					label: 'configuration.list',
+					linkConfiguration: { link: ['/admin', 'configurations'] },
+					icon: IconEnum.WIDGET_CONFIGURATION
+				},
+				{
+					label: 'dashboard.list',
+					linkConfiguration: { link: ['/admin', 'dashboards'] },
+					icon: IconEnum.DASHBOARD
+				},
+				{
+					label: 'repository.list',
+					linkConfiguration: { link: ['/admin', 'repositories'] },
+					icon: IconEnum.REPOSITORY
+				},
+				{
+					label: 'user.list',
+					linkConfiguration: { link: ['/admin', 'users'] },
+					icon: IconEnum.USERS
+				}
+			]
+		};
+	}
 
-  /**
-   * Build the widget menu
-   */
-  private static buildWidgetMenu(): MenuCategoryConfiguration {
-    return {
-      label: 'widget.list',
-      items: [
-        {
-          label: 'catalog',
-          linkConfiguration: { link: ['/widgets', 'catalog'] },
-          icon: IconEnum.CATALOG
-        }
-      ]
-    };
-  }
+	/**
+	 * Build the widget menu
+	 */
+	private static buildWidgetMenu(): MenuCategoryConfiguration {
+		return {
+			label: 'widget.list',
+			items: [
+				{
+					label: 'catalog',
+					linkConfiguration: { link: ['/widgets', 'catalog'] },
+					icon: IconEnum.CATALOG
+				}
+			]
+		};
+	}
 }

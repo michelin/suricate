@@ -28,13 +28,13 @@ import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
  * Model of Button
  */
 export class ButtonConfiguration<T> {
-  label?: string;
-  icon?: IconEnum;
-  color?: ButtonColorEnum;
-  callback?: (event: Event, object?: T) => void;
-  disabled?: Observable<boolean>;
-  hidden?: (object?: T) => boolean;
-  type?: ButtonTypeEnum;
-  variant?: 'flat' | 'miniFab';
-  tooltip?: TooltipConfiguration;
+	label?: string;
+	icon?: IconEnum;
+	color?: ButtonColorEnum;
+	callback?: (event: Event, object?: T) => void;
+	disabled?: Observable<boolean>;
+	hidden?: (object?: T) => boolean;
+	type?: ButtonTypeEnum;
+	variant?: 'flat' | 'miniFab';
+	tooltip?: TooltipConfiguration;
 }

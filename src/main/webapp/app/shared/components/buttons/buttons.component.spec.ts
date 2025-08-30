@@ -25,25 +25,25 @@ import { SidenavComponent } from '../../../layout/components/sidenav/sidenav.com
 import { ButtonsComponent } from './buttons.component';
 
 describe('ButtonsComponent', () => {
-  let component: ButtonsComponent<unknown>;
-  let fixture: ComponentFixture<ButtonsComponent<unknown>>;
+	let component: ButtonsComponent<unknown>;
+	let fixture: ComponentFixture<ButtonsComponent<unknown>>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SidenavComponent],
-      providers: [
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        })
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [SidenavComponent],
+			providers: [
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				})
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(ButtonsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(ButtonsComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

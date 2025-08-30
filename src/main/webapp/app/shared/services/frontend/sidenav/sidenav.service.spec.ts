@@ -22,14 +22,14 @@ import { TestBed } from '@angular/core/testing';
 import { SidenavService } from './sidenav.service';
 
 describe('SidenavService', () => {
-  let service: SidenavService;
+	let service: SidenavService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(SidenavService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(SidenavService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

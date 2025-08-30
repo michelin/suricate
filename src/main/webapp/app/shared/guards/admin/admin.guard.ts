@@ -23,11 +23,11 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/frontend/authentication/authentication.service';
 
 export const adminGuard: CanActivateFn = () => {
-  const router = inject(Router);
-  if (AuthenticationService.isAdmin()) {
-    return true;
-  }
+	const router = inject(Router);
+	if (AuthenticationService.isAdmin()) {
+		return true;
+	}
 
-  router.navigate(['/home']);
-  return false;
+	router.navigate(['/home']);
+	return false;
 };

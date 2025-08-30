@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { HttpScreenService } from './http-screen.service';
 
 describe('HttpScreenService', () => {
-  let service: HttpScreenService;
+	let service: HttpScreenService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(HttpScreenService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(HttpScreenService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

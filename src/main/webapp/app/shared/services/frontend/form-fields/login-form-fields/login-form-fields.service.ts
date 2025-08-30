@@ -29,26 +29,26 @@ import { FormField } from '../../../../models/frontend/form/form-field';
  */
 @Injectable({ providedIn: 'root' })
 export class LoginFormFieldsService {
-  /**
-   * Get the list of fields for the login page
-   */
-  public static generateFormFields(): FormField[] {
-    return [
-      {
-        key: 'username',
-        label: 'username',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required],
-        iconPrefix: IconEnum.USERNAME
-      },
-      {
-        key: 'password',
-        label: 'password',
-        type: DataTypeEnum.PASSWORD,
-        validators: [Validators.required],
-        iconPrefix: IconEnum.PASSWORD,
-        iconSuffix: IconEnum.SHOW_PASSWORD
-      }
-    ];
-  }
+	/**
+	 * Get the list of fields for the login page
+	 */
+	public static generateFormFields(): FormField[] {
+		return [
+			{
+				key: 'username',
+				label: 'username',
+				type: DataTypeEnum.TEXT,
+				validators: [Validators.required],
+				iconPrefix: IconEnum.USERNAME
+			},
+			{
+				key: 'password',
+				label: 'password',
+				type: DataTypeEnum.PASSWORD,
+				validators: [Validators.required],
+				iconPrefix: IconEnum.PASSWORD,
+				iconSuffix: IconEnum.SHOW_PASSWORD
+			}
+		];
+	}
 }

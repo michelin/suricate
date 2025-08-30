@@ -20,5 +20,5 @@
 import { WidgetAvailabilityEnum } from '../../../enums/widget-availability.enum';
 
 export interface WidgetRequest {
-  widgetAvailability: WidgetAvailabilityEnum;
+	widgetAvailability: WidgetAvailabilityEnum;
 }

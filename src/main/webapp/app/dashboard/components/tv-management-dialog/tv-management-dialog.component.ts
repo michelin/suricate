@@ -21,11 +21,11 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogTitle
+	MAT_DIALOG_DATA,
+	MatDialogActions,
+	MatDialogClose,
+	MatDialogContent,
+	MatDialogTitle
 } from '@angular/material/dialog';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
@@ -48,195 +48,195 @@ import { FormService } from '../../../shared/services/frontend/form/form.service
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 
 @Component({
-  selector: 'suricate-tv-management-dialog',
-  templateUrl: './tv-management-dialog.component.html',
-  styleUrls: ['./tv-management-dialog.component.scss'],
-  imports: [
-    MatDialogTitle,
-    CdkScrollable,
-    MatDialogContent,
-    FormsModule,
-    InputComponent,
-    ReactiveFormsModule,
-    ButtonsComponent,
-    MatDivider,
-    MatIcon,
-    MatDialogActions,
-    MatDialogClose,
-    TranslatePipe
-  ]
+	selector: 'suricate-tv-management-dialog',
+	templateUrl: './tv-management-dialog.component.html',
+	styleUrls: ['./tv-management-dialog.component.scss'],
+	imports: [
+		MatDialogTitle,
+		CdkScrollable,
+		MatDialogContent,
+		FormsModule,
+		InputComponent,
+		ReactiveFormsModule,
+		ButtonsComponent,
+		MatDivider,
+		MatIcon,
+		MatDialogActions,
+		MatDialogClose,
+		TranslatePipe
+	]
 })
 export class TvManagementDialogComponent implements OnInit {
-  private readonly data = inject<{
-    project: Project;
-  }>(MAT_DIALOG_DATA);
-  private readonly httpProjectService = inject(HttpProjectService);
-  private readonly httpScreenService = inject(HttpScreenService);
-  private readonly formService = inject(FormService);
+	private readonly data = inject<{
+		project: Project;
+	}>(MAT_DIALOG_DATA);
+	private readonly httpProjectService = inject(HttpProjectService);
+	private readonly httpScreenService = inject(HttpScreenService);
+	private readonly formService = inject(FormService);
 
-  /**
-   * The configuration of the share button
-   */
-  public shareButtonsConfiguration: ButtonConfiguration<unknown>[] = [];
+	/**
+	 * The configuration of the share button
+	 */
+	public shareButtonsConfiguration: ButtonConfiguration<unknown>[] = [];
 
-  /**
-   * The configuration of the share button
-   */
-  public connectedScreenButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
+	/**
+	 * The configuration of the share button
+	 */
+	public connectedScreenButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
 
-  /**
-   * The configuration of the generic window buttons
-   */
-  public genericButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
+	/**
+	 * The configuration of the generic window buttons
+	 */
+	public genericButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
 
-  /**
-   * The register screen form
-   */
-  public registerScreenCodeFormField: UntypedFormGroup;
+	/**
+	 * The register screen form
+	 */
+	public registerScreenCodeFormField: UntypedFormGroup;
 
-  /**
-   * The description of the form
-   */
-  public formFields: FormField[];
+	/**
+	 * The description of the form
+	 */
+	public formFields: FormField[];
 
-  /**
-   * The current project
-   */
-  public project: Project;
+	/**
+	 * The current project
+	 */
+	public project: Project;
 
-  /**
-   * The list of clients connected by websocket
-   */
-  public websocketClients: WebsocketClient[];
+	/**
+	 * The list of clients connected by websocket
+	 */
+	public websocketClients: WebsocketClient[];
 
-  /**
-   * The list of icons
-   */
-  public iconEnum = IconEnum;
+	/**
+	 * The list of icons
+	 */
+	public iconEnum = IconEnum;
 
-  /**
-   * The list of material icons
-   */
-  public materialIconRecords = MaterialIconRecords;
+	/**
+	 * The list of material icons
+	 */
+	public materialIconRecords = MaterialIconRecords;
 
-  /**
-   * When the component is initialized
-   */
-  public ngOnInit(): void {
-    this.initButtonsConfiguration();
-    this.project = this.data.project;
-    this.getConnectedWebsocketClient();
-    this.generateFormFields();
+	/**
+	 * When the component is initialized
+	 */
+	public ngOnInit(): void {
+		this.initButtonsConfiguration();
+		this.project = this.data.project;
+		this.getConnectedWebsocketClient();
+		this.generateFormFields();
 
-    this.registerScreenCodeFormField = this.formService.generateFormGroupForFields(this.formFields);
-  }
+		this.registerScreenCodeFormField = this.formService.generateFormGroupForFields(this.formFields);
+	}
 
-  /**
-   * Init the buttons configurations
-   */
-  private initButtonsConfiguration(): void {
-    this.shareButtonsConfiguration = [
-      {
-        icon: IconEnum.SHARE_SCREEN,
-        variant: 'miniFab',
-        type: ButtonTypeEnum.SUBMIT,
-        tooltip: { message: 'screen.subscribe' },
-        callback: () => this.validateFormBeforeSave()
-      }
-    ];
+	/**
+	 * Init the buttons configurations
+	 */
+	private initButtonsConfiguration(): void {
+		this.shareButtonsConfiguration = [
+			{
+				icon: IconEnum.SHARE_SCREEN,
+				variant: 'miniFab',
+				type: ButtonTypeEnum.SUBMIT,
+				tooltip: { message: 'screen.subscribe' },
+				callback: () => this.validateFormBeforeSave()
+			}
+		];
 
-    this.connectedScreenButtonsConfiguration = [
-      {
-        icon: IconEnum.STOP_SHARE_SCREEN,
-        type: ButtonTypeEnum.BUTTON,
-        variant: 'miniFab',
-        tooltip: { message: 'screen.unsubscribe' },
-        callback: (event: Event, websocketClient: WebsocketClient) => this.disconnectScreen(websocketClient)
-      }
-    ];
+		this.connectedScreenButtonsConfiguration = [
+			{
+				icon: IconEnum.STOP_SHARE_SCREEN,
+				type: ButtonTypeEnum.BUTTON,
+				variant: 'miniFab',
+				tooltip: { message: 'screen.unsubscribe' },
+				callback: (event: Event, websocketClient: WebsocketClient) => this.disconnectScreen(websocketClient)
+			}
+		];
 
-    this.genericButtonsConfiguration = [
-      {
-        label: 'screen.display.code',
-        icon: IconEnum.SHOW_PASSWORD,
-        type: ButtonTypeEnum.BUTTON,
-        callback: () => this.displayScreenCode()
-      },
-      {
-        label: 'close',
-        icon: IconEnum.CLOSE,
-        color: ButtonColorEnum.WARN
-      }
-    ];
-  }
+		this.genericButtonsConfiguration = [
+			{
+				label: 'screen.display.code',
+				icon: IconEnum.SHOW_PASSWORD,
+				type: ButtonTypeEnum.BUTTON,
+				callback: () => this.displayScreenCode()
+			},
+			{
+				label: 'close',
+				icon: IconEnum.CLOSE,
+				color: ButtonColorEnum.WARN
+			}
+		];
+	}
 
-  /**
-   * Generate the form fields form screen subscriptions
-   */
-  private generateFormFields(): void {
-    this.formFields = [
-      {
-        key: 'screenCode',
-        label: 'screen.code',
-        type: DataTypeEnum.NUMBER,
-        validators: [CustomValidator.isDigits, CustomValidator.greaterThan0]
-      }
-    ];
-  }
+	/**
+	 * Generate the form fields form screen subscriptions
+	 */
+	private generateFormFields(): void {
+		this.formFields = [
+			{
+				key: 'screenCode',
+				label: 'screen.code',
+				type: DataTypeEnum.NUMBER,
+				validators: [CustomValidator.isDigits, CustomValidator.greaterThan0]
+			}
+		];
+	}
 
-  /**
-   * Retrieve the websocket connections to a dashboard
-   */
-  public getConnectedWebsocketClient(): void {
-    this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe((websocketClients) => {
-      this.websocketClients = websocketClients;
-    });
-  }
+	/**
+	 * Retrieve the websocket connections to a dashboard
+	 */
+	public getConnectedWebsocketClient(): void {
+		this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe((websocketClients) => {
+			this.websocketClients = websocketClients;
+		});
+	}
 
-  /**
-   * Register a screen
-   */
-  public registerScreen(): void {
-    if (this.registerScreenCodeFormField.valid) {
-      const screenCode: string = this.registerScreenCodeFormField.get('screenCode').value;
+	/**
+	 * Register a screen
+	 */
+	public registerScreen(): void {
+		if (this.registerScreenCodeFormField.valid) {
+			const screenCode: string = this.registerScreenCodeFormField.get('screenCode').value;
 
-      this.httpScreenService.connectProjectToScreen(this.project.token, +screenCode).subscribe(() => {
-        this.registerScreenCodeFormField.reset();
-        setTimeout(() => this.getConnectedWebsocketClient(), 2000);
-      });
-    }
-  }
+			this.httpScreenService.connectProjectToScreen(this.project.token, +screenCode).subscribe(() => {
+				this.registerScreenCodeFormField.reset();
+				setTimeout(() => this.getConnectedWebsocketClient(), 2000);
+			});
+		}
+	}
 
-  /**
-   * Display the screen code on every connected screens
-   */
-  public displayScreenCode(): void {
-    if (this.project.token) {
-      this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(this.project.token).subscribe();
-    }
-  }
+	/**
+	 * Display the screen code on every connected screens
+	 */
+	public displayScreenCode(): void {
+		if (this.project.token) {
+			this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(this.project.token).subscribe();
+		}
+	}
 
-  /**
-   * Disconnect a screen
-   *
-   * @param websocketClient The websocket to disconnect
-   */
-  public disconnectScreen(websocketClient: WebsocketClient): void {
-    this.httpScreenService
-      .disconnectScreenFromProject(websocketClient.projectToken, +websocketClient.screenCode)
-      .subscribe(() => {
-        setTimeout(() => this.getConnectedWebsocketClient(), 2000);
-      });
-  }
+	/**
+	 * Disconnect a screen
+	 *
+	 * @param websocketClient The websocket to disconnect
+	 */
+	public disconnectScreen(websocketClient: WebsocketClient): void {
+		this.httpScreenService
+			.disconnectScreenFromProject(websocketClient.projectToken, +websocketClient.screenCode)
+			.subscribe(() => {
+				setTimeout(() => this.getConnectedWebsocketClient(), 2000);
+			});
+	}
 
-  /**
-   * Check if the stepper form is valid before saving the data
-   */
-  protected validateFormBeforeSave(): void {
-    this.formService.validate(this.registerScreenCodeFormField);
+	/**
+	 * Check if the stepper form is valid before saving the data
+	 */
+	protected validateFormBeforeSave(): void {
+		this.formService.validate(this.registerScreenCodeFormField);
 
-    if (this.registerScreenCodeFormField.valid) {
-      this.registerScreen();
-    }
-  }
+		if (this.registerScreenCodeFormField.valid) {
+			this.registerScreen();
+		}
+	}
 }

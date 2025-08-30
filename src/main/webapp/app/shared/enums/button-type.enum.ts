@@ -21,6 +21,6 @@
  * Type used for buttons
  */
 export enum ButtonTypeEnum {
-  BUTTON = 'BUTTON',
-  SUBMIT = 'SUBMIT'
+	BUTTON = 'BUTTON',
+	SUBMIT = 'SUBMIT'
 }

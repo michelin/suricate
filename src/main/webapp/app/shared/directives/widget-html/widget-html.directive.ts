@@ -25,48 +25,48 @@ import { ProjectWidget } from '../../models/backend/project-widget/project-widge
  * Directive for Widget's JS scripts
  */
 @Directive({
-  selector: '[widgetHtmlDirective]',
-  standalone: true
+	selector: '[widgetHtmlDirective]',
+	standalone: true
 })
 export class WidgetHtmlDirective implements OnChanges {
-  private readonly elementRef = inject(ElementRef);
+	private readonly elementRef = inject(ElementRef);
 
-  /**
-   * The rendered project widget
-   */
-  @Input()
-  public projectWidget: ProjectWidget;
+	/**
+	 * The rendered project widget
+	 */
+	@Input()
+	public projectWidget: ProjectWidget;
 
-  /**
-   * On changes
-   *
-   * @param changes The change event
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    // When the widget changes, reapply the JS scripts
-    if (changes['projectWidget']) {
-      this.reapplyJSScripts();
-    }
-  }
+	/**
+	 * On changes
+	 *
+	 * @param changes The change event
+	 */
+	ngOnChanges(changes: SimpleChanges): void {
+		// When the widget changes, reapply the JS scripts
+		if (changes['projectWidget']) {
+			this.reapplyJSScripts();
+		}
+	}
 
-  /**
-   * From all the JS scripts contained by the current widget HTML section, build new scripts then insert them in the DOM.
-   * It executes the scripts again and render the widget properly.
-   * This is called once the HTML of the widget is fully loaded.
-   */
-  private reapplyJSScripts() {
-    const scripts: HTMLScriptElement[] = (
-      Array.from(this.elementRef.nativeElement.getElementsByTagName('script')) as HTMLScriptElement[]
-    ).filter((currentScript) => currentScript.innerHTML);
+	/**
+	 * From all the JS scripts contained by the current widget HTML section, build new scripts then insert them in the DOM.
+	 * It executes the scripts again and render the widget properly.
+	 * This is called once the HTML of the widget is fully loaded.
+	 */
+	private reapplyJSScripts() {
+		const scripts: HTMLScriptElement[] = (
+			Array.from(this.elementRef.nativeElement.getElementsByTagName('script')) as HTMLScriptElement[]
+		).filter((currentScript) => currentScript.innerHTML);
 
-    Array.from(Array(scripts.length).keys()).forEach((index: number) => {
-      const script = scripts[index];
+		Array.from(Array(scripts.length).keys()).forEach((index: number) => {
+			const script = scripts[index];
 
-      const copyScript: HTMLScriptElement = document.createElement('script');
-      copyScript.type = script.type ? script.type : 'text/javascript';
-      copyScript.innerHTML = script.innerHTML;
-      copyScript.async = false;
-      script.parentNode.replaceChild(copyScript, script);
-    });
-  }
+			const copyScript: HTMLScriptElement = document.createElement('script');
+			copyScript.type = script.type ? script.type : 'text/javascript';
+			copyScript.innerHTML = script.innerHTML;
+			copyScript.async = false;
+			script.parentNode.replaceChild(copyScript, script);
+		});
+	}
 }

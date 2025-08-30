@@ -30,71 +30,71 @@ import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
 import { DashboardScreenComponent } from './dashboard-screen.component';
 
 describe('DashboardScreenComponent', () => {
-  let component: DashboardScreenComponent;
-  let fixture: ComponentFixture<DashboardScreenComponent>;
+	let component: DashboardScreenComponent;
+	let fixture: ComponentFixture<DashboardScreenComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DashboardScreenComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        })
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [DashboardScreenComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				})
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardScreenComponent);
-    component = fixture.componentInstance;
-    component.project = buildMockedProject();
-    component.gridOptions = buildGridOptions();
+		fixture = TestBed.createComponent(DashboardScreenComponent);
+		component = fixture.componentInstance;
+		component.project = buildMockedProject();
+		component.gridOptions = buildGridOptions();
 
-    fixture.detectChanges();
-  });
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  function buildMockedProject(): Project {
-    const gridProperties: GridProperties = {
-      maxColumn: 5,
-      widgetHeight: 300,
-      cssStyle: ''
-    };
+	function buildMockedProject(): Project {
+		const gridProperties: GridProperties = {
+			maxColumn: 5,
+			widgetHeight: 300,
+			cssStyle: ''
+		};
 
-    const grid: ProjectGrid = {
-      id: 1,
-      time: 30
-    };
+		const grid: ProjectGrid = {
+			id: 1,
+			time: 30
+		};
 
-    return {
-      gridProperties: gridProperties,
-      librariesToken: ['Token1', 'Token2'],
-      name: 'ProjectName',
-      screenshotToken: 'ScreenToken',
-      image: {
-        content: 'content',
-        contentType: 'image/png',
-        id: 'id',
-        lastUpdateDate: new Date(),
-        size: 10
-      },
-      token: 'Token',
-      displayProgressBar: false,
-      grids: [grid]
-    };
-  }
+		return {
+			gridProperties: gridProperties,
+			librariesToken: ['Token1', 'Token2'],
+			name: 'ProjectName',
+			screenshotToken: 'ScreenToken',
+			image: {
+				content: 'content',
+				contentType: 'image/png',
+				id: 'id',
+				lastUpdateDate: new Date(),
+				size: 10
+			},
+			token: 'Token',
+			displayProgressBar: false,
+			grids: [grid]
+		};
+	}
 
-  function buildGridOptions(): GridOptions {
-    return {
-      cols: 5,
-      rowHeight: 300,
-      gap: 10,
-      draggable: true,
-      resizable: true,
-      compactType: 'vertical'
-    };
-  }
+	function buildGridOptions(): GridOptions {
+		return {
+			cols: 5,
+			rowHeight: 300,
+			gap: 10,
+			draggable: true,
+			resizable: true,
+			compactType: 'vertical'
+		};
+	}
 });

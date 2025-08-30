@@ -29,55 +29,55 @@ import { ProjectWidgetPosition } from '../../../../shared/models/backend/project
 import { DashboardScreenWidgetComponent } from './dashboard-screen-widget.component';
 
 describe('DashboardScreenWidgetComponent', () => {
-  let component: DashboardScreenWidgetComponent;
-  let fixture: ComponentFixture<DashboardScreenWidgetComponent>;
+	let component: DashboardScreenWidgetComponent;
+	let fixture: ComponentFixture<DashboardScreenWidgetComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DashboardScreenWidgetComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        })
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [DashboardScreenWidgetComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				})
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardScreenWidgetComponent);
-    component = fixture.componentInstance;
-    component.projectWidget = buildMockedProjectWidget();
+		fixture = TestBed.createComponent(DashboardScreenWidgetComponent);
+		component = fixture.componentInstance;
+		component.projectWidget = buildMockedProjectWidget();
 
-    fixture.detectChanges();
-  });
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  function buildMockedProjectWidget(): ProjectWidget {
-    const widgetPosition: ProjectWidgetPosition = {
-      gridColumn: 1,
-      gridRow: 1,
-      width: 200,
-      height: 200
-    };
+	function buildMockedProjectWidget(): ProjectWidget {
+		const widgetPosition: ProjectWidgetPosition = {
+			gridColumn: 1,
+			gridRow: 1,
+			width: 200,
+			height: 200
+		};
 
-    return {
-      id: 1,
-      data: 'Data',
-      widgetPosition: widgetPosition,
-      customStyle: '',
-      instantiateHtml: '',
-      backendConfig: '',
-      log: '',
-      lastExecutionDate: '',
-      lastSuccessDate: '',
-      globalConfigOverridden: true,
-      state: WidgetStateEnum.RUNNING,
-      projectToken: 'Token',
-      widgetId: 1,
-      gridId: 1
-    };
-  }
+		return {
+			id: 1,
+			data: 'Data',
+			widgetPosition: widgetPosition,
+			customStyle: '',
+			instantiateHtml: '',
+			backendConfig: '',
+			log: '',
+			lastExecutionDate: '',
+			lastSuccessDate: '',
+			globalConfigOverridden: true,
+			state: WidgetStateEnum.RUNNING,
+			projectToken: 'Token',
+			widgetId: 1,
+			gridId: 1
+		};
+	}
 });

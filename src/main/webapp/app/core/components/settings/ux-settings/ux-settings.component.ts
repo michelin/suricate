@@ -38,110 +38,110 @@ import { SettingsFormFieldsService } from '../../../../shared/services/frontend/
 import { SettingsService } from '../../../services/settings.service';
 
 @Component({
-  selector: 'suricate-ux-settings',
-  templateUrl: './ux-settings.component.html',
-  styleUrls: ['./ux-settings.component.scss'],
-  imports: [InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent]
+	selector: 'suricate-ux-settings',
+	templateUrl: './ux-settings.component.html',
+	styleUrls: ['./ux-settings.component.scss'],
+	imports: [InputComponent, FormsModule, ReactiveFormsModule, ButtonsComponent]
 })
 export class UxSettingsComponent implements OnInit {
-  private readonly settingsService = inject(SettingsService);
-  private readonly settingsFormFieldsService = inject(SettingsFormFieldsService);
-  private readonly formService = inject(FormService);
-  private readonly httpUserService = inject(HttpUserService);
+	private readonly settingsService = inject(SettingsService);
+	private readonly settingsFormFieldsService = inject(SettingsFormFieldsService);
+	private readonly formService = inject(FormService);
+	private readonly httpUserService = inject(HttpUserService);
 
-  /**
-   * The form group for UX settings
-   */
-  public formGroup: UntypedFormGroup;
+	/**
+	 * The form group for UX settings
+	 */
+	public formGroup: UntypedFormGroup;
 
-  /**
-   * The form fields for UX settings
-   */
-  public formFields: FormField[];
+	/**
+	 * The form fields for UX settings
+	 */
+	public formFields: FormField[];
 
-  /**
-   * The buttons
-   */
-  public buttons: ButtonConfiguration<unknown>[] = [];
+	/**
+	 * The buttons
+	 */
+	public buttons: ButtonConfiguration<unknown>[] = [];
 
-  /**
-   * The user settings
-   */
-  public userSettings: UserSetting[];
+	/**
+	 * The user settings
+	 */
+	public userSettings: UserSetting[];
 
-  /**
-   * Init method
-   */
-  ngOnInit(): void {
-    this.initButtons();
+	/**
+	 * Init method
+	 */
+	ngOnInit(): void {
+		this.initButtons();
 
-    this.settingsService
-      .initUserSettings(AuthenticationService.getConnectedUser())
-      .subscribe((userSettings: UserSetting[]) => {
-        this.userSettings = userSettings;
-        this.settingsFormFieldsService.generateSettingsFormFields(userSettings).subscribe((formFields: FormField[]) => {
-          this.formFields = formFields;
-          this.formGroup = this.formService.generateFormGroupForFields(formFields);
-        });
-      });
-  }
+		this.settingsService
+			.initUserSettings(AuthenticationService.getConnectedUser())
+			.subscribe((userSettings: UserSetting[]) => {
+				this.userSettings = userSettings;
+				this.settingsFormFieldsService.generateSettingsFormFields(userSettings).subscribe((formFields: FormField[]) => {
+					this.formFields = formFields;
+					this.formGroup = this.formService.generateFormGroupForFields(formFields);
+				});
+			});
+	}
 
-  /**
-   * Init the buttons
-   */
-  private initButtons(): void {
-    this.buttons.push({
-      label: 'save',
-      icon: IconEnum.SAVE,
-      callback: () => this.save()
-    });
-  }
+	/**
+	 * Init the buttons
+	 */
+	private initButtons(): void {
+		this.buttons.push({
+			label: 'save',
+			icon: IconEnum.SAVE,
+			callback: () => this.save()
+		});
+	}
 
-  /**
-   * Execute save action on click
-   */
-  private save(): void {
-    this.formService.validate(this.formGroup);
+	/**
+	 * Execute save action on click
+	 */
+	private save(): void {
+		this.formService.validate(this.formGroup);
 
-    if (this.formGroup.valid) {
-      this.saveSettings();
-    }
-  }
+		if (this.formGroup.valid) {
+			this.saveSettings();
+		}
+	}
 
-  /**
-   * Save the selected settings
-   */
-  private saveSettings(): void {
-    from(this.userSettings.map((userSetting) => userSetting.setting))
-      .pipe(
-        mergeMap((setting: Setting) => {
-          const userSettingRequest = new UserSettingRequest();
-          if (setting.constrained && setting.allowedSettingValues) {
-            const selectedAllowedSetting = setting.allowedSettingValues.find(
-              (allowedSettingValue: AllowedSettingValue) => {
-                return allowedSettingValue.value === this.formGroup.get(setting.type).value;
-              }
-            );
+	/**
+	 * Save the selected settings
+	 */
+	private saveSettings(): void {
+		from(this.userSettings.map((userSetting) => userSetting.setting))
+			.pipe(
+				mergeMap((setting: Setting) => {
+					const userSettingRequest = new UserSettingRequest();
+					if (setting.constrained && setting.allowedSettingValues) {
+						const selectedAllowedSetting = setting.allowedSettingValues.find(
+							(allowedSettingValue: AllowedSettingValue) => {
+								return allowedSettingValue.value === this.formGroup.get(setting.type).value;
+							}
+						);
 
-            userSettingRequest.allowedSettingValueId = selectedAllowedSetting.id;
-          } else {
-            userSettingRequest.unconstrainedValue = this.formGroup.get(setting.type).value;
-          }
+						userSettingRequest.allowedSettingValueId = selectedAllowedSetting.id;
+					} else {
+						userSettingRequest.unconstrainedValue = this.formGroup.get(setting.type).value;
+					}
 
-          return this.httpUserService.updateUserSetting(
-            AuthenticationService.getConnectedUser().username,
-            setting.id,
-            userSettingRequest
-          );
-        }),
-        toArray()
-      )
-      .subscribe(() => {
-        this.settingsService
-          .initUserSettings(AuthenticationService.getConnectedUser())
-          .subscribe((userSettings: UserSetting[]) => {
-            this.userSettings = userSettings;
-          });
-      });
-  }
+					return this.httpUserService.updateUserSetting(
+						AuthenticationService.getConnectedUser().username,
+						setting.id,
+						userSettingRequest
+					);
+				}),
+				toArray()
+			)
+			.subscribe(() => {
+				this.settingsService
+					.initUserSettings(AuthenticationService.getConnectedUser())
+					.subscribe((userSettings: UserSetting[]) => {
+						this.userSettings = userSettings;
+					});
+			});
+	}
 }

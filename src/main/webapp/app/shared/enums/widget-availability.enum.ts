@@ -21,7 +21,7 @@
  * The list of widget availability types
  */
 export enum WidgetAvailabilityEnum {
-  ACTIVATED = 'ACTIVATED',
-  DISABLED = 'DISABLED',
-  VALIDATION_PENDING = 'VALIDATION_PENDING'
+	ACTIVATED = 'ACTIVATED',
+	DISABLED = 'DISABLED',
+	VALIDATION_PENDING = 'VALIDATION_PENDING'
 }

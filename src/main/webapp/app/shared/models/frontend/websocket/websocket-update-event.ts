@@ -25,7 +25,7 @@ import { ProjectWidget } from '../../backend/project-widget/project-widget';
  * The object WS Event
  */
 export class WebsocketUpdateEvent {
-  date: Date;
-  type: WebsocketUpdateTypeEnum;
-  content: Project | ProjectWidget | void;
+	date: Date;
+	type: WebsocketUpdateTypeEnum;
+	content: Project | ProjectWidget | void;
 }

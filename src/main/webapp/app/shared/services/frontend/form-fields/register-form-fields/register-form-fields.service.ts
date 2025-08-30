@@ -29,54 +29,54 @@ import { FormField } from '../../../../models/frontend/form/form-field';
  */
 @Injectable({ providedIn: 'root' })
 export class RegisterFormFieldsService {
-  /**
-   * Get the list of fields for the register page
-   */
-  public static generateFormFields(): FormField[] {
-    return [
-      {
-        key: 'username',
-        label: 'username',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required, Validators.minLength(3)],
-        iconPrefix: IconEnum.USERNAME
-      },
-      {
-        key: 'firstname',
-        label: 'firstname',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required, Validators.minLength(3)],
-        iconPrefix: IconEnum.USER
-      },
-      {
-        key: 'lastname',
-        label: 'lastname',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required, Validators.minLength(3)],
-        iconPrefix: IconEnum.USER
-      },
-      {
-        key: 'email',
-        label: 'email',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required, Validators.email],
-        iconPrefix: IconEnum.EMAIL
-      },
-      {
-        key: 'password',
-        label: 'password',
-        type: DataTypeEnum.PASSWORD,
-        validators: [Validators.required, Validators.minLength(3)],
-        iconPrefix: IconEnum.PASSWORD,
-        iconSuffix: IconEnum.SHOW_PASSWORD
-      },
-      {
-        key: 'confirmPassword',
-        label: 'password.confirm',
-        type: DataTypeEnum.PASSWORD,
-        iconPrefix: IconEnum.PASSWORD,
-        iconSuffix: IconEnum.SHOW_PASSWORD
-      }
-    ];
-  }
+	/**
+	 * Get the list of fields for the register page
+	 */
+	public static generateFormFields(): FormField[] {
+		return [
+			{
+				key: 'username',
+				label: 'username',
+				type: DataTypeEnum.TEXT,
+				validators: [Validators.required, Validators.minLength(3)],
+				iconPrefix: IconEnum.USERNAME
+			},
+			{
+				key: 'firstname',
+				label: 'firstname',
+				type: DataTypeEnum.TEXT,
+				validators: [Validators.required, Validators.minLength(3)],
+				iconPrefix: IconEnum.USER
+			},
+			{
+				key: 'lastname',
+				label: 'lastname',
+				type: DataTypeEnum.TEXT,
+				validators: [Validators.required, Validators.minLength(3)],
+				iconPrefix: IconEnum.USER
+			},
+			{
+				key: 'email',
+				label: 'email',
+				type: DataTypeEnum.TEXT,
+				validators: [Validators.required, Validators.email],
+				iconPrefix: IconEnum.EMAIL
+			},
+			{
+				key: 'password',
+				label: 'password',
+				type: DataTypeEnum.PASSWORD,
+				validators: [Validators.required, Validators.minLength(3)],
+				iconPrefix: IconEnum.PASSWORD,
+				iconSuffix: IconEnum.SHOW_PASSWORD
+			},
+			{
+				key: 'confirmPassword',
+				label: 'password.confirm',
+				type: DataTypeEnum.PASSWORD,
+				iconPrefix: IconEnum.PASSWORD,
+				iconSuffix: IconEnum.SHOW_PASSWORD
+			}
+		];
+	}
 }

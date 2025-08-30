@@ -21,5 +21,5 @@
  * Represent the authentication response
  */
 export interface AuthenticationResponse {
-  accessToken: string;
+	accessToken: string;
 }

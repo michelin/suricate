@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { DialogService } from './dialog.service';
 
 describe('DialogService', () => {
-  let service: DialogService;
+	let service: DialogService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(DialogService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(DialogService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

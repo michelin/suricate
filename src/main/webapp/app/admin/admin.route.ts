@@ -27,28 +27,28 @@ import { RepositoriesComponent } from './repositories/repositories.component';
 import { UsersComponent } from './users/users.component';
 
 export const adminRoutes: Routes = [
-  {
-    path: 'admin/dashboards',
-    component: DashboardsComponent,
-    canActivate: [authGuard, adminGuard],
-    canActivateChild: [authGuard, adminGuard]
-  },
-  {
-    path: 'admin/users',
-    component: UsersComponent,
-    canActivate: [authGuard, adminGuard],
-    canActivateChild: [authGuard, adminGuard]
-  },
-  {
-    path: 'admin/repositories',
-    component: RepositoriesComponent,
-    canActivate: [authGuard, adminGuard],
-    canActivateChild: [authGuard, adminGuard]
-  },
-  {
-    path: 'admin/configurations',
-    component: ConfigurationsComponent,
-    canActivate: [authGuard, adminGuard],
-    canActivateChild: [authGuard, adminGuard]
-  }
+	{
+		path: 'admin/dashboards',
+		component: DashboardsComponent,
+		canActivate: [authGuard, adminGuard],
+		canActivateChild: [authGuard, adminGuard]
+	},
+	{
+		path: 'admin/users',
+		component: UsersComponent,
+		canActivate: [authGuard, adminGuard],
+		canActivateChild: [authGuard, adminGuard]
+	},
+	{
+		path: 'admin/repositories',
+		component: RepositoriesComponent,
+		canActivate: [authGuard, adminGuard],
+		canActivateChild: [authGuard, adminGuard]
+	},
+	{
+		path: 'admin/configurations',
+		component: ConfigurationsComponent,
+		canActivate: [authGuard, adminGuard],
+		canActivateChild: [authGuard, adminGuard]
+	}
 ];

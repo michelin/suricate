@@ -23,8 +23,8 @@ import { DialogConfiguration } from './dialog-configuration';
  * Configuration used by the confirmation dialog
  */
 export class ConfirmationDialogConfiguration extends DialogConfiguration {
-  /**
-   * The function to call when the user has confirmed the action
-   */
-  accept: () => void;
+	/**
+	 * The function to call when the user has confirmed the action
+	 */
+	accept: () => void;
 }

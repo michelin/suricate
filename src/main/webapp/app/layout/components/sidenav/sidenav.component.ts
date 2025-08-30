@@ -32,72 +32,72 @@ import { MenuComponent } from '../menu/menu.component';
  * Hold the sidenav behavior and the main view
  */
 @Component({
-  selector: 'suricate-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  imports: [MatSidenavContainer, MatSidenav, FormSidenavComponent, MenuComponent, MatSidenavContent, RouterOutlet]
+	selector: 'suricate-sidenav',
+	templateUrl: './sidenav.component.html',
+	styleUrls: ['./sidenav.component.scss'],
+	encapsulation: ViewEncapsulation.None,
+	imports: [MatSidenavContainer, MatSidenav, FormSidenavComponent, MenuComponent, MatSidenavContent, RouterOutlet]
 })
 export class SidenavComponent implements OnInit, OnDestroy {
-  private readonly router = inject(Router);
-  private readonly activatedRoute = inject(ActivatedRoute);
+	private readonly router = inject(Router);
+	private readonly activatedRoute = inject(ActivatedRoute);
 
-  /**
-   * Reference on the form sidenav
-   */
-  @ViewChild('formSidenav')
-  public formSidenav: MatSidenav;
+	/**
+	 * Reference on the form sidenav
+	 */
+	@ViewChild('formSidenav')
+	public formSidenav: MatSidenav;
 
-  /**
-   * Subject used to unsubscribe all the subscriptions when the component is destroyed
-   */
-  private readonly unsubscribe: Subject<void> = new Subject<void>();
+	/**
+	 * Subject used to unsubscribe all the subscriptions when the component is destroyed
+	 */
+	private readonly unsubscribe: Subject<void> = new Subject<void>();
 
-  /**
-   * Used to hide or display the menu using activated routes
-   */
-  public shouldHideMenu = true;
+	/**
+	 * Used to hide or display the menu using activated routes
+	 */
+	public shouldHideMenu = true;
 
-  /**
-   * Init method
-   */
-  public ngOnInit(): void {
-    this.subscribeToRouteEvents();
-  }
+	/**
+	 * Init method
+	 */
+	public ngOnInit(): void {
+		this.subscribeToRouteEvents();
+	}
 
-  /**
-   * Called when the component is destroyed
-   * All the subscriptions are closed
-   */
-  public ngOnDestroy(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
-  }
+	/**
+	 * Called when the component is destroyed
+	 * All the subscriptions are closed
+	 */
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
+		this.unsubscribe.complete();
+	}
 
-  /**
-   * Manage route events
-   */
-  private subscribeToRouteEvents(): void {
-    this.router.events.pipe(takeUntil(this.unsubscribe)).subscribe((event: Event) => {
-      if (event instanceof NavigationEnd) {
-        const deeperActivatedRoute = RouteService.getDeeperActivatedRoute(this.activatedRoute);
+	/**
+	 * Manage route events
+	 */
+	private subscribeToRouteEvents(): void {
+		this.router.events.pipe(takeUntil(this.unsubscribe)).subscribe((event: Event) => {
+			if (event instanceof NavigationEnd) {
+				const deeperActivatedRoute = RouteService.getDeeperActivatedRoute(this.activatedRoute);
 
-        this.shouldHideMenu = MenuService.shouldHideMenu(deeperActivatedRoute);
-      }
-    });
-  }
+				this.shouldHideMenu = MenuService.shouldHideMenu(deeperActivatedRoute);
+			}
+		});
+	}
 
-  /**
-   * Used to open the form sidenav
-   */
-  public openFormSidenav(): void {
-    this.formSidenav.open();
-  }
+	/**
+	 * Used to open the form sidenav
+	 */
+	public openFormSidenav(): void {
+		this.formSidenav.open();
+	}
 
-  /**
-   * Used to close the form side nav
-   */
-  public closeFormSidenav(): void {
-    this.formSidenav.close();
-  }
+	/**
+	 * Used to close the form side nav
+	 */
+	public closeFormSidenav(): void {
+		this.formSidenav.close();
+	}
 }

@@ -23,16 +23,16 @@ import { RepositoryTypeEnum } from '../../../enums/repository-type.enum';
  * Repository class
  */
 export class Repository {
-  [key: string]: number | string | boolean | Date;
-  id: number;
-  name: string;
-  url: string;
-  branch: string;
-  login: string;
-  password: string;
-  localPath: string;
-  type: RepositoryTypeEnum;
-  enabled: boolean;
-  priority: number;
-  createdDate: Date;
+	[key: string]: number | string | boolean | Date;
+	id: number;
+	name: string;
+	url: string;
+	branch: string;
+	login: string;
+	password: string;
+	localPath: string;
+	type: RepositoryTypeEnum;
+	enabled: boolean;
+	priority: number;
+	createdDate: Date;
 }

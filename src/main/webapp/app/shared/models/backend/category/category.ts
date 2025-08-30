@@ -23,9 +23,9 @@ import { CategoryParameter } from '../category-parameters/category-parameter';
  * The category representation
  */
 export interface Category {
-  id: number;
-  name: string;
-  technicalName: string;
-  assetToken: string;
-  categoryParameters: CategoryParameter[];
+	id: number;
+	name: string;
+	technicalName: string;
+	assetToken: string;
+	categoryParameters: CategoryParameter[];
 }

@@ -37,108 +37,108 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpUserService implements AbstractHttpService<User, UserRequest> {
-  public static readonly usersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/users`;
-  private readonly httpClient = inject(HttpClient);
+	public static readonly usersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/users`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get the list of users
-   * @returns The list of users
-   */
-  public getAll(filter?: HttpFilter): Observable<PageModel<User>> {
-    const url = `${HttpUserService.usersApiEndpoint}`;
-    return this.httpClient.get<PageModel<User>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
+	/**
+	 * Get the list of users
+	 * @returns The list of users
+	 */
+	public getAll(filter?: HttpFilter): Observable<PageModel<User>> {
+		const url = `${HttpUserService.usersApiEndpoint}`;
+		return this.httpClient.get<PageModel<User>>(HttpFilterService.getFilteredUrl(url, filter));
+	}
 
-  /**
-   * Get a user by id
-   * @param userId The user id to find
-   * @returns The user found
-   */
-  public getById(userId: number): Observable<User> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
+	/**
+	 * Get a user by id
+	 * @param userId The user id to find
+	 * @returns The user found
+	 */
+	public getById(userId: number): Observable<User> {
+		const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
-    return this.httpClient.get<User>(url);
-  }
+		return this.httpClient.get<User>(url);
+	}
 
-  /**
-   * Create a user
-   */
-  public create(userRequest: UserRequest): Observable<User> {
-    const url = `${HttpUserService.usersApiEndpoint}`;
+	/**
+	 * Create a user
+	 */
+	public create(userRequest: UserRequest): Observable<User> {
+		const url = `${HttpUserService.usersApiEndpoint}`;
 
-    return this.httpClient.post<User>(url, userRequest);
-  }
+		return this.httpClient.post<User>(url, userRequest);
+	}
 
-  /**
-   * Update a user
-   * @param id The userId to update
-   * @param entity The user request
-   */
-  public update(id: number, entity: UserRequest): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/${id}`;
+	/**
+	 * Update a user
+	 * @param id The userId to update
+	 * @param entity The user request
+	 */
+	public update(id: number, entity: UserRequest): Observable<void> {
+		const url = `${HttpUserService.usersApiEndpoint}/${id}`;
 
-    return this.httpClient.put<void>(url, entity);
-  }
+		return this.httpClient.put<void>(url, entity);
+	}
 
-  /**
-   * Delete a user
-   * @param userId The user id to delete
-   */
-  public delete(userId: number): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
+	/**
+	 * Delete a user
+	 * @param userId The user id to delete
+	 */
+	public delete(userId: number): Observable<void> {
+		const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
-    return this.httpClient.delete<void>(url);
-  }
+		return this.httpClient.delete<void>(url);
+	}
 
-  /**
-   * Get the user settings
-   * @param userName The username
-   */
-  public getUserSettings(userName: string): Observable<UserSetting[]> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings`;
+	/**
+	 * Get the user settings
+	 * @param userName The username
+	 */
+	public getUserSettings(userName: string): Observable<UserSetting[]> {
+		const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings`;
 
-    return this.httpClient.get<UserSetting[]>(url);
-  }
+		return this.httpClient.get<UserSetting[]>(url);
+	}
 
-  /**
-   * Update user settings
-   * @param userName The user to update
-   * @param settingId The setting id
-   * @param userSettingRequest The user setting request
-   */
-  public updateUserSetting(
-    userName: string,
-    settingId: number,
-    userSettingRequest: UserSettingRequest
-  ): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
+	/**
+	 * Update user settings
+	 * @param userName The user to update
+	 * @param settingId The setting id
+	 * @param userSettingRequest The user setting request
+	 */
+	public updateUserSetting(
+		userName: string,
+		settingId: number,
+		userSettingRequest: UserSettingRequest
+	): Observable<void> {
+		const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
 
-    return this.httpClient.put<void>(url, userSettingRequest);
-  }
+		return this.httpClient.put<void>(url, userSettingRequest);
+	}
 
-  /**
-   * Get the current user tokens
-   */
-  public getUserTokens(): Observable<PersonalAccessToken[]> {
-    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token`;
-    return this.httpClient.get<PersonalAccessToken[]>(url);
-  }
+	/**
+	 * Get the current user tokens
+	 */
+	public getUserTokens(): Observable<PersonalAccessToken[]> {
+		const url = `${HttpUserService.usersApiEndpoint}/personal-access-token`;
+		return this.httpClient.get<PersonalAccessToken[]>(url);
+	}
 
-  /**
-   * Create a JWT token for the user
-   * @param tokenRequest The token request
-   */
-  public createToken(tokenRequest: PersonalAccessTokenRequest): Observable<PersonalAccessToken> {
-    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token`;
-    return this.httpClient.post<PersonalAccessToken>(url, tokenRequest);
-  }
+	/**
+	 * Create a JWT token for the user
+	 * @param tokenRequest The token request
+	 */
+	public createToken(tokenRequest: PersonalAccessTokenRequest): Observable<PersonalAccessToken> {
+		const url = `${HttpUserService.usersApiEndpoint}/personal-access-token`;
+		return this.httpClient.post<PersonalAccessToken>(url, tokenRequest);
+	}
 
-  /**
-   * Revoke a given token
-   * @param tokenName The token name
-   */
-  public revokeToken(tokenName: string): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token/${tokenName}`;
-    return this.httpClient.delete<void>(url);
-  }
+	/**
+	 * Revoke a given token
+	 * @param tokenName The token name
+	 */
+	public revokeToken(tokenName: string): Observable<void> {
+		const url = `${HttpUserService.usersApiEndpoint}/personal-access-token/${tokenName}`;
+		return this.httpClient.delete<void>(url);
+	}
 }

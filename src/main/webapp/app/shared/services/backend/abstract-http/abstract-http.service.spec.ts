@@ -28,117 +28,117 @@ import { PageModel } from '../../../models/backend/page-model';
 import { AbstractHttpService } from './abstract-http.service';
 
 describe('AbstractHttpService', () => {
-  class TestHttpService extends AbstractHttpService<TestData, TestRequest> {
-    private http = inject(HttpClient);
+	class TestHttpService extends AbstractHttpService<TestData, TestRequest> {
+		private http = inject(HttpClient);
 
-    getAll(filter?: HttpFilter): Observable<PageModel<TestData>> {
-      const url = `${AbstractHttpService.baseApiEndpoint}/test`;
-      return this.http.get<PageModel<TestData>>(url, { params: filter });
-    }
+		getAll(filter?: HttpFilter): Observable<PageModel<TestData>> {
+			const url = `${AbstractHttpService.baseApiEndpoint}/test`;
+			return this.http.get<PageModel<TestData>>(url, { params: filter });
+		}
 
-    create(entity: TestRequest): Observable<TestData> {
-      const url = `${AbstractHttpService.baseApiEndpoint}/test`;
-      return this.http.post<TestData>(url, entity);
-    }
+		create(entity: TestRequest): Observable<TestData> {
+			const url = `${AbstractHttpService.baseApiEndpoint}/test`;
+			return this.http.post<TestData>(url, entity);
+		}
 
-    delete(id: number | string): Observable<void> {
-      const url = `${AbstractHttpService.baseApiEndpoint}/test/${id}`;
-      return this.http.delete<void>(url);
-    }
+		delete(id: number | string): Observable<void> {
+			const url = `${AbstractHttpService.baseApiEndpoint}/test/${id}`;
+			return this.http.delete<void>(url);
+		}
 
-    getById(id: number | string): Observable<TestData> {
-      const url = `${AbstractHttpService.baseApiEndpoint}/test/${id}`;
-      return this.http.get<TestData>(url);
-    }
+		getById(id: number | string): Observable<TestData> {
+			const url = `${AbstractHttpService.baseApiEndpoint}/test/${id}`;
+			return this.http.get<TestData>(url);
+		}
 
-    update(id: number | string, entity: TestRequest): Observable<void> {
-      const url = `${AbstractHttpService.baseApiEndpoint}/test/${id}`;
-      return this.http.put<void>(url, entity);
-    }
-  }
+		update(id: number | string, entity: TestRequest): Observable<void> {
+			const url = `${AbstractHttpService.baseApiEndpoint}/test/${id}`;
+			return this.http.put<void>(url, entity);
+		}
+	}
 
-  let service: TestHttpService;
-  let httpMock: HttpTestingController;
+	let service: TestHttpService;
+	let httpMock: HttpTestingController;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [TestHttpService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [TestHttpService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
 
-    service = TestBed.inject(TestHttpService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
+		service = TestBed.inject(TestHttpService);
+		httpMock = TestBed.inject(HttpTestingController);
+	});
 
-  afterEach(() => {
-    httpMock.verify();
-  });
+	afterEach(() => {
+		httpMock.verify();
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 
-  it('should call correct endpoint', () => {
-    const mockResponse: PageModel<TestData> = {
-      content: [{ id: 1, name: 'Test' }],
-      page: {
-        number: 0,
-        size: 10,
-        totalElements: 1
-      }
-    };
+	it('should call correct endpoint', () => {
+		const mockResponse: PageModel<TestData> = {
+			content: [{ id: 1, name: 'Test' }],
+			page: {
+				number: 0,
+				size: 10,
+				totalElements: 1
+			}
+		};
 
-    service.getAll().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
-    });
+		service.getAll().subscribe((response) => {
+			expect(response).toEqual(mockResponse);
+		});
 
-    const req = httpMock.expectOne(`${AbstractHttpService.baseApiEndpoint}/test`);
-    expect(req.request.method).toBe('GET');
-    expect(req.request.params.keys().length).toBe(0);
+		const req = httpMock.expectOne(`${AbstractHttpService.baseApiEndpoint}/test`);
+		expect(req.request.method).toBe('GET');
+		expect(req.request.params.keys().length).toBe(0);
 
-    req.flush(mockResponse);
-  });
+		req.flush(mockResponse);
+	});
 
-  it('should pass filter parameters correctly', () => {
-    const filter = new HttpFilter();
-    filter.search = 'test';
-    filter.page = 1;
-    filter.size = 20;
-    filter.sort = ['name', 'asc'];
+	it('should pass filter parameters correctly', () => {
+		const filter = new HttpFilter();
+		filter.search = 'test';
+		filter.page = 1;
+		filter.size = 20;
+		filter.sort = ['name', 'asc'];
 
-    const mockResponse: PageModel<TestData> = {
-      content: [],
-      page: {
-        number: 0,
-        size: 20,
-        totalElements: 1
-      }
-    };
+		const mockResponse: PageModel<TestData> = {
+			content: [],
+			page: {
+				number: 0,
+				size: 20,
+				totalElements: 1
+			}
+		};
 
-    service.getAll(filter).subscribe((response) => {
-      expect(response).toEqual(mockResponse);
-    });
+		service.getAll(filter).subscribe((response) => {
+			expect(response).toEqual(mockResponse);
+		});
 
-    const req = httpMock.expectOne((request) => {
-      return (
-        request.url === `${AbstractHttpService.baseApiEndpoint}/test` &&
-        request.params.get('search') === 'test' &&
-        request.params.get('page') === '1' &&
-        request.params.get('size') === '20' &&
-        request.params.getAll('sort').includes('name') &&
-        request.params.getAll('sort').includes('asc')
-      );
-    });
+		const req = httpMock.expectOne((request) => {
+			return (
+				request.url === `${AbstractHttpService.baseApiEndpoint}/test` &&
+				request.params.get('search') === 'test' &&
+				request.params.get('page') === '1' &&
+				request.params.get('size') === '20' &&
+				request.params.getAll('sort').includes('name') &&
+				request.params.getAll('sort').includes('asc')
+			);
+		});
 
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
-  });
+		expect(req.request.method).toBe('GET');
+		req.flush(mockResponse);
+	});
 });
 
 interface TestData {
-  id: number;
-  name: string;
+	id: number;
+	name: string;
 }
 
 interface TestRequest {
-  search?: string;
+	search?: string;
 }

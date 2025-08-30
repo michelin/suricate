@@ -21,6 +21,6 @@
  * Represent a css rule with embedded properties
  */
 export class CssRule {
-  directive: string;
-  value: string;
+	directive: string;
+	value: string;
 }

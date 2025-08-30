@@ -31,59 +31,59 @@ import { ProjectGrid } from '../../../shared/models/backend/project-grid/project
 import { TvManagementDialogComponent } from './tv-management-dialog.component';
 
 describe('TvManagementDialogComponent', () => {
-  let component: TvManagementDialogComponent;
-  let fixture: ComponentFixture<TvManagementDialogComponent>;
+	let component: TvManagementDialogComponent;
+	let fixture: ComponentFixture<TvManagementDialogComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TvManagementDialogComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideAnimationsAsync(),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        }),
-        { provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [TvManagementDialogComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideAnimationsAsync(),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				}),
+				{ provide: MAT_DIALOG_DATA, useValue: { project: buildProject() } }
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(TvManagementDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(TvManagementDialogComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  function buildProject(): Project {
-    const gridProperties: GridProperties = {
-      maxColumn: 5,
-      widgetHeight: 300,
-      cssStyle: ''
-    };
+	function buildProject(): Project {
+		const gridProperties: GridProperties = {
+			maxColumn: 5,
+			widgetHeight: 300,
+			cssStyle: ''
+		};
 
-    const grid: ProjectGrid = {
-      id: 1,
-      time: 30
-    };
+		const grid: ProjectGrid = {
+			id: 1,
+			time: 30
+		};
 
-    return {
-      gridProperties: gridProperties,
-      librariesToken: ['Token1', 'Token2'],
-      name: 'ProjectName',
-      screenshotToken: 'ScreenToken',
-      image: {
-        content: 'content',
-        contentType: 'image/png',
-        id: 'id',
-        lastUpdateDate: new Date(),
-        size: 10
-      },
-      token: 'Token',
-      displayProgressBar: false,
-      grids: [grid]
-    };
-  }
+		return {
+			gridProperties: gridProperties,
+			librariesToken: ['Token1', 'Token2'],
+			name: 'ProjectName',
+			screenshotToken: 'ScreenToken',
+			image: {
+				content: 'content',
+				contentType: 'image/png',
+				id: 'id',
+				lastUpdateDate: new Date(),
+				size: 10
+			},
+			token: 'Token',
+			displayProgressBar: false,
+			grids: [grid]
+		};
+	}
 });

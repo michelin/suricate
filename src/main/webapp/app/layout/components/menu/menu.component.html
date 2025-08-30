@@ -1,78 +1,78 @@
 <!-- User Section -->
 <div class="suricate-menu">
-  <mat-menu #userMenu="matMenu" xPosition="before">
-    <button mat-menu-item (click)="openSettings()">
-      <mat-icon> {{ materialIconRecords[iconEnum.PREFERENCES] }} </mat-icon>
-      <span> {{ 'preferences' | translate }} </span>
-    </button>
-    <button mat-menu-item (click)="logout()">
-      <mat-icon> {{ materialIconRecords[iconEnum.LOGOUT] }} </mat-icon>
-      <span> {{ 'logout' | translate }} </span>
-    </button>
-  </mat-menu>
+	<mat-menu #userMenu="matMenu" xPosition="before">
+		<button mat-menu-item (click)="openSettings()">
+			<mat-icon> {{ materialIconRecords[iconEnum.PREFERENCES] }} </mat-icon>
+			<span> {{ 'preferences' | translate }} </span>
+		</button>
+		<button mat-menu-item (click)="logout()">
+			<mat-icon> {{ materialIconRecords[iconEnum.LOGOUT] }} </mat-icon>
+			<span> {{ 'logout' | translate }} </span>
+		</button>
+	</mat-menu>
 
-  <div class="user-section-container" [matMenuTriggerFor]="userMenu">
-    <button mat-button class="user-section">
-      <div class="avatar-container">
-        <div class="avatar avatar-color">
-          @if (connectedUser.avatarUrl) {
-            <img ngSrc="{{ connectedUser.avatarUrl }}" width="80" height="80" alt="avatar" />
-          }
-          @if (!connectedUser.avatarUrl) {
-            <div>{{ getInitials() }}</div>
-          }
-        </div>
-      </div>
-      <div class="names-container">
-        <div>{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
-        <div>{{ connectedUser.username }}</div>
-      </div>
-    </button>
-  </div>
+	<div class="user-section-container" [matMenuTriggerFor]="userMenu">
+		<button mat-button class="user-section">
+			<div class="avatar-container">
+				<div class="avatar avatar-color">
+					@if (connectedUser.avatarUrl) {
+						<img ngSrc="{{ connectedUser.avatarUrl }}" width="80" height="80" alt="avatar" />
+					}
+					@if (!connectedUser.avatarUrl) {
+						<div>{{ getInitials() }}</div>
+					}
+				</div>
+			</div>
+			<div class="names-container">
+				<div>{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
+				<div>{{ connectedUser.username }}</div>
+			</div>
+		</button>
+	</div>
 
-  @if (menu) {
-    <div class="sidenav-section-container">
-      <mat-divider></mat-divider>
-      <div class="home-tv-menu-container">
-        <mat-nav-list class="home-tv-menu">
-          <a
-            [routerLink]="['/home']"
-            routerLinkActive
-            #rla="routerLinkActive"
-            [matTooltip]="'home' | translate"
-            class="home"
-          >
-            <mat-list-item [activated]="rla.isActive">
-              <mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
-            </mat-list-item>
-          </a>
-          <a [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" class="tv" target="_blank">
-            <mat-list-item>
-              <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
-            </mat-list-item>
-          </a>
-        </mat-nav-list>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="menu-container">
-        <mat-nav-list>
-          @for (category of menu.categories; track category) {
-            <h5 matSubheader class="menu-subheader">{{ category.label | translate }}</h5>
-            @for (item of category.items; track item) {
-              <a [routerLink]="item.linkConfiguration.link" routerLinkActive #rla="routerLinkActive">
-                <mat-list-item [activated]="rla.isActive">
-                  <mat-icon matListItemIcon>{{ materialIconRecords[item.icon] }}</mat-icon>
-                  <div matListItemTitle>{{ item.label | translate }}</div>
-                </mat-list-item>
-              </a>
-            }
-          }
-        </mat-nav-list>
-      </div>
-    </div>
-  }
+	@if (menu) {
+		<div class="sidenav-section-container">
+			<mat-divider></mat-divider>
+			<div class="home-tv-menu-container">
+				<mat-nav-list class="home-tv-menu">
+					<a
+						[routerLink]="['/home']"
+						routerLinkActive
+						#rla="routerLinkActive"
+						[matTooltip]="'home' | translate"
+						class="home"
+					>
+						<mat-list-item [activated]="rla.isActive">
+							<mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
+						</mat-list-item>
+					</a>
+					<a [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" class="tv" target="_blank">
+						<mat-list-item>
+							<mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
+						</mat-list-item>
+					</a>
+				</mat-nav-list>
+			</div>
+			<mat-divider></mat-divider>
+			<div class="menu-container">
+				<mat-nav-list>
+					@for (category of menu.categories; track category) {
+						<h5 matSubheader class="menu-subheader">{{ category.label | translate }}</h5>
+						@for (item of category.items; track item) {
+							<a [routerLink]="item.linkConfiguration.link" routerLinkActive #rla="routerLinkActive">
+								<mat-list-item [activated]="rla.isActive">
+									<mat-icon matListItemIcon>{{ materialIconRecords[item.icon] }}</mat-icon>
+									<div matListItemTitle>{{ item.label | translate }}</div>
+								</mat-list-item>
+							</a>
+						}
+					}
+				</mat-nav-list>
+			</div>
+		</div>
+	}
 
-  <mat-divider></mat-divider>
+	<mat-divider></mat-divider>
 
-  <suricate-pages-footer id="footer">footer</suricate-pages-footer>
+	<suricate-pages-footer id="footer">footer</suricate-pages-footer>
 </div>

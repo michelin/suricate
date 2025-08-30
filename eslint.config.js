@@ -56,7 +56,6 @@ module.exports = tseslint.config(
       ...angular.configs.templateRecommended,
       ...angular.configs.templateAccessibility,
       eslintPluginPrettierRecommended
-    ],
-    rules: {},
+    ]
   }
 );

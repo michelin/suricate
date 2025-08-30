@@ -21,7 +21,7 @@
  * Class that represent the websocket client
  */
 export interface WebsocketClient {
-  projectToken: string;
-  sessionId: string;
-  screenCode: string;
+	projectToken: string;
+	sessionId: string;
+	screenCode: string;
 }

@@ -29,35 +29,35 @@ import { HeaderConfiguration } from '../../../shared/models/frontend/header/head
  * The page header component
  */
 @Component({
-  selector: 'suricate-pages-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  imports: [ButtonsComponent, MatDivider, TranslatePipe]
+	selector: 'suricate-pages-header',
+	templateUrl: './header.component.html',
+	styleUrls: ['./header.component.scss'],
+	imports: [ButtonsComponent, MatDivider, TranslatePipe]
 })
 export class HeaderComponent implements OnInit {
-  private readonly route = inject(Router);
+	private readonly route = inject(Router);
 
-  /**
-   * The configuration of the header
-   */
-  @Input()
-  public configuration: HeaderConfiguration;
+	/**
+	 * The configuration of the header
+	 */
+	@Input()
+	public configuration: HeaderConfiguration;
 
-  /**
-   * True if the menu should be display on the page
-   */
-  @Input()
-  public showMenu = true;
+	/**
+	 * True if the menu should be display on the page
+	 */
+	@Input()
+	public showMenu = true;
 
-  /**
-   * The page name
-   */
-  public pageName: string;
+	/**
+	 * The page name
+	 */
+	public pageName: string;
 
-  /**
-   * When the component is init
-   */
-  ngOnInit() {
-    this.pageName = this.route.url.split('/')[1];
-  }
+	/**
+	 * When the component is init
+	 */
+	ngOnInit() {
+		this.pageName = this.route.url.split('/')[1];
+	}
 }

@@ -23,5 +23,5 @@ import { MenuCategoryConfiguration } from './menu-category-configuration';
  * Represent the menu
  */
 export class MenuConfiguration {
-  categories: MenuCategoryConfiguration[] = [];
+	categories: MenuCategoryConfiguration[] = [];
 }

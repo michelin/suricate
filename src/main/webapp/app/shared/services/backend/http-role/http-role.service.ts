@@ -32,17 +32,17 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpRoleService {
-  private static readonly rolesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/roles`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly rolesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/roles`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get the list of roles
-   *
-   * @returns {Observable<Role[]>}
-   */
-  public getRoles(filter?: HttpFilter): Observable<PageModel<Role>> {
-    const url = `${HttpRoleService.rolesApiEndpoint}`;
+	/**
+	 * Get the list of roles
+	 *
+	 * @returns {Observable<Role[]>}
+	 */
+	public getRoles(filter?: HttpFilter): Observable<PageModel<Role>> {
+		const url = `${HttpRoleService.rolesApiEndpoint}`;
 
-    return this.httpClient.get<PageModel<Role>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
+		return this.httpClient.get<PageModel<Role>>(HttpFilterService.getFilteredUrl(url, filter));
+	}
 }

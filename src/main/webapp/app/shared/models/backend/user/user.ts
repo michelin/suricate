@@ -23,13 +23,13 @@ import { Role } from '../role/role';
  * The user entity
  */
 export class User {
-  [key: string]: number | string | Role[];
-  id: number;
-  username: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  avatarUrl: string;
-  mode: string;
-  roles: Role[];
+	[key: string]: number | string | Role[];
+	id: number;
+	username: string;
+	firstname: string;
+	lastname: string;
+	email: string;
+	avatarUrl: string;
+	mode: string;
+	roles: Role[];
 }

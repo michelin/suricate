@@ -27,26 +27,26 @@ import { HttpFilterService } from '../services/backend/http-filter/http-filter.s
 import { HttpRepositoryService } from '../services/backend/http-repository/http-repository.service';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class CustomAsyncValidatorService {
-  private readonly httpRepositoryService = inject(HttpRepositoryService);
+	private readonly httpRepositoryService = inject(HttpRepositoryService);
 
-  /**
-   * Check repository priority uniqueness
-   * @param currentRepository The current repository
-   */
-  public validateRepositoryUniquePriority(currentRepository: Repository): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors> => {
-      return this.httpRepositoryService.getAll(HttpFilterService.getInfiniteFilter()).pipe(
-        map((repositories) => {
-          return repositories.content
-            .filter((repository) => repository.id !== currentRepository.id)
-            .filter((repository) => repository.priority === control.value).length >= 1
-            ? { uniquePriority: true }
-            : null;
-        })
-      );
-    };
-  }
+	/**
+	 * Check repository priority uniqueness
+	 * @param currentRepository The current repository
+	 */
+	public validateRepositoryUniquePriority(currentRepository: Repository): AsyncValidatorFn {
+		return (control: AbstractControl): Observable<ValidationErrors> => {
+			return this.httpRepositoryService.getAll(HttpFilterService.getInfiniteFilter()).pipe(
+				map((repositories) => {
+					return repositories.content
+						.filter((repository) => repository.id !== currentRepository.id)
+						.filter((repository) => repository.priority === control.value).length >= 1
+						? { uniquePriority: true }
+						: null;
+				})
+			);
+		};
+	}
 }

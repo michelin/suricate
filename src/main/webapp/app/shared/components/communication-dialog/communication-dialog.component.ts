@@ -21,11 +21,11 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { NgClass } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogTitle
+	MAT_DIALOG_DATA,
+	MatDialogActions,
+	MatDialogClose,
+	MatDialogContent,
+	MatDialogTitle
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -39,49 +39,49 @@ import { ButtonsComponent } from '../buttons/buttons.component';
  * This component is used to display information (without actions to do)
  */
 @Component({
-  selector: 'suricate-communication-dialog',
-  templateUrl: './communication-dialog.component.html',
-  styleUrls: ['./communication-dialog.component.scss'],
-  imports: [
-    MatDialogTitle,
-    CdkScrollable,
-    MatDialogContent,
-    NgClass,
-    MatDialogActions,
-    ButtonsComponent,
-    MatDialogClose,
-    TranslatePipe
-  ]
+	selector: 'suricate-communication-dialog',
+	templateUrl: './communication-dialog.component.html',
+	styleUrls: ['./communication-dialog.component.scss'],
+	imports: [
+		MatDialogTitle,
+		CdkScrollable,
+		MatDialogContent,
+		NgClass,
+		MatDialogActions,
+		ButtonsComponent,
+		MatDialogClose,
+		TranslatePipe
+	]
 })
 export class CommunicationDialogComponent implements OnInit {
-  private readonly data = inject<CommunicationDialogConfiguration>(MAT_DIALOG_DATA);
+	private readonly data = inject<CommunicationDialogConfiguration>(MAT_DIALOG_DATA);
 
-  /**
-   * The configuration of the confirmation dialog
-   */
-  public configuration: CommunicationDialogConfiguration;
+	/**
+	 * The configuration of the confirmation dialog
+	 */
+	public configuration: CommunicationDialogConfiguration;
 
-  /**
-   * The buttons
-   */
-  public buttons: ButtonConfiguration<unknown>[] = [];
+	/**
+	 * The buttons
+	 */
+	public buttons: ButtonConfiguration<unknown>[] = [];
 
-  /**
-   * Called when the dialog is init
-   */
-  public ngOnInit(): void {
-    this.initButtons();
-    this.configuration = this.data;
-  }
+	/**
+	 * Called when the dialog is init
+	 */
+	public ngOnInit(): void {
+		this.initButtons();
+		this.configuration = this.data;
+	}
 
-  /**
-   * Init the buttons
-   */
-  private initButtons(): void {
-    this.buttons.push({
-      label: 'close',
-      icon: IconEnum.CLOSE,
-      color: ButtonColorEnum.WARN
-    });
-  }
+	/**
+	 * Init the buttons
+	 */
+	private initButtons(): void {
+		this.buttons.push({
+			label: 'close',
+			icon: IconEnum.CLOSE,
+			color: ButtonColorEnum.WARN
+		});
+	}
 }

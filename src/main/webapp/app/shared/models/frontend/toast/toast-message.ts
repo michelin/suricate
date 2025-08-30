@@ -23,35 +23,35 @@ import { ToastTypeEnum } from '../../../enums/toast-type.enum';
  * Class that represent a toaster notification message
  */
 export class ToastMessage {
-  /**
-   * The title notification
-   */
-  title: string;
-  /**
-   * The string content
-   */
-  content: string;
-  /**
-   * The style to apply (success, info, ...)
-   */
-  style: ToastTypeEnum;
-  /**
-   * Triggered by the user to hide the message
-   *
-   * @type {boolean}
-   */
-  dismissed = false;
+	/**
+	 * The title notification
+	 */
+	title: string;
+	/**
+	 * The string content
+	 */
+	content: string;
+	/**
+	 * The style to apply (success, info, ...)
+	 */
+	style: ToastTypeEnum;
+	/**
+	 * Triggered by the user to hide the message
+	 *
+	 * @type {boolean}
+	 */
+	dismissed = false;
 
-  /**
-   * Class constructor
-   *
-   * @param title The message title
-   * @param content The message content
-   * @param style The style
-   */
-  constructor(title: string, content?: string, style?: ToastTypeEnum) {
-    this.title = title;
-    this.content = content || '';
-    this.style = style || ToastTypeEnum.INFO;
-  }
+	/**
+	 * Class constructor
+	 *
+	 * @param title The message title
+	 * @param content The message content
+	 * @param style The style
+	 */
+	constructor(title: string, content?: string, style?: ToastTypeEnum) {
+		this.title = title;
+		this.content = content || '';
+		this.style = style || ToastTypeEnum.INFO;
+	}
 }

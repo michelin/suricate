@@ -18,5 +18,5 @@
  */
 
 export interface PersonalAccessTokenRequest {
-  name: string;
+	name: string;
 }

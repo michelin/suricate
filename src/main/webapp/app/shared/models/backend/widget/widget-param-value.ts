@@ -21,6 +21,6 @@
  * The widget param values
  */
 export interface WidgetParamValue {
-  jsKey: string;
-  value: string;
+	jsKey: string;
+	value: string;
 }

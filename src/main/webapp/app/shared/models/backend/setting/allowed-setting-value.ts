@@ -21,8 +21,8 @@
  * Represent a possible value for a setting
  */
 export interface AllowedSettingValue {
-  id: number;
-  title: string;
-  value: string;
-  default: boolean;
+	id: number;
+	title: string;
+	value: string;
+	default: boolean;
 }

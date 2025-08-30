@@ -23,19 +23,19 @@ import { TestBed } from '@angular/core/testing';
 import { WidgetHtmlDirective } from './widget-html.directive';
 
 describe('WidgetHtmlDirective', () => {
-  let directive: WidgetHtmlDirective;
+	let directive: WidgetHtmlDirective;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [WidgetHtmlDirective, { provide: ElementRef, useClass: MockElementRef }]
-    });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [WidgetHtmlDirective, { provide: ElementRef, useClass: MockElementRef }]
+		});
 
-    directive = TestBed.inject(WidgetHtmlDirective);
-  });
+		directive = TestBed.inject(WidgetHtmlDirective);
+	});
 
-  it('should create', () => {
-    expect(directive).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(directive).toBeTruthy();
+	});
 });
 
 class MockElementRef extends ElementRef {}

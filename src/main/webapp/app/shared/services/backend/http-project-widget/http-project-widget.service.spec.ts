@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { HttpProjectWidgetService } from './http-project-widget.service';
 
 describe('HttpProjectWidgetService', () => {
-  let service: HttpProjectWidgetService;
+	let service: HttpProjectWidgetService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(HttpProjectWidgetService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(HttpProjectWidgetService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

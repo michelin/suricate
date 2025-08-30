@@ -30,42 +30,42 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
  * Component used to display the mosaic input type
  */
 @Component({
-  selector: 'suricate-mosaic',
-  templateUrl: './mosaic.component.html',
-  styleUrls: ['./mosaic.component.scss'],
-  imports: [SpinnerComponent, MatGridList, MatGridTile, NgClass, NgOptimizedImage, MatIcon]
+	selector: 'suricate-mosaic',
+	templateUrl: './mosaic.component.html',
+	styleUrls: ['./mosaic.component.scss'],
+	imports: [SpinnerComponent, MatGridList, MatGridTile, NgClass, NgOptimizedImage, MatIcon]
 })
 export class MosaicComponent extends BaseInputComponent implements OnInit {
-  /**
-   * The options related to the mosaic
-   */
-  public mosaicOptions: MosaicFormOption[];
+	/**
+	 * The options related to the mosaic
+	 */
+	public mosaicOptions: MosaicFormOption[];
 
-  /**
-   * The form options that has been selected
-   */
-  public optionSelected: MosaicFormOption;
+	/**
+	 * The form options that has been selected
+	 */
+	public optionSelected: MosaicFormOption;
 
-  /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    if (this.field.mosaicOptions) {
-      this.field.mosaicOptions(this.formGroup).subscribe((mosaicOptions: MosaicFormOption[]) => {
-        this.mosaicOptions = mosaicOptions;
-      });
-    }
-  }
+	/**
+	 * Called when the component is init
+	 */
+	public ngOnInit(): void {
+		if (this.field.mosaicOptions) {
+			this.field.mosaicOptions(this.formGroup).subscribe((mosaicOptions: MosaicFormOption[]) => {
+				this.mosaicOptions = mosaicOptions;
+			});
+		}
+	}
 
-  /**
-   * Called when object has been selected on the mosaic
-   *
-   * @param mosaicOption The option selected
-   */
-  public selectOption(mosaicOption: MosaicFormOption): void {
-    this.optionSelected = mosaicOption;
-    this.formGroup.controls[this.field.key].setValue(mosaicOption.value);
+	/**
+	 * Called when object has been selected on the mosaic
+	 *
+	 * @param mosaicOption The option selected
+	 */
+	public selectOption(mosaicOption: MosaicFormOption): void {
+		this.optionSelected = mosaicOption;
+		this.formGroup.controls[this.field.key].setValue(mosaicOption.value);
 
-    this.emitValueChangeEventFromType('mosaicOptionSelected');
-  }
+		this.emitValueChangeEventFromType('mosaicOptionSelected');
+	}
 }

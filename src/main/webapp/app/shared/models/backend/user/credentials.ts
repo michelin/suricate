@@ -21,6 +21,6 @@
  * Hold the credentials at the connection
  */
 export interface Credentials {
-  username: string;
-  password: string;
+	username: string;
+	password: string;
 }

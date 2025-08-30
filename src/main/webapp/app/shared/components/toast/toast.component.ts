@@ -36,164 +36,164 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
  * Component that display toast notification messages
  */
 @Component({
-  selector: 'suricate-toast-messages',
-  templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.scss'],
-  animations: [
-    trigger('slideInOut', [
-      state(
-        'in',
-        style({
-          'max-height': '500px',
-          'opacity': '1',
-          'visibility': 'visible'
-        })
-      ),
-      state(
-        'out',
-        style({
-          'max-height': '0px',
-          'opacity': '0',
-          'visibility': 'hidden'
-        })
-      ),
-      transition('in => out', [
-        group([
-          animate(
-            '400ms ease-in-out',
-            style({
-              opacity: '0'
-            })
-          ),
-          animate(
-            '600ms ease-in-out',
-            style({
-              'max-height': '0px'
-            })
-          ),
-          animate(
-            '700ms ease-in-out',
-            style({
-              visibility: 'hidden'
-            })
-          )
-        ])
-      ]),
-      transition('out => in', [
-        group([
-          animate(
-            '1ms ease-in-out',
-            style({
-              visibility: 'visible'
-            })
-          ),
-          animate(
-            '600ms ease-in-out',
-            style({
-              'max-height': '500px'
-            })
-          ),
-          animate(
-            '800ms ease-in-out',
-            style({
-              opacity: '1'
-            })
-          )
-        ])
-      ])
-    ])
-  ],
-  imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
+	selector: 'suricate-toast-messages',
+	templateUrl: './toast.component.html',
+	styleUrls: ['./toast.component.scss'],
+	animations: [
+		trigger('slideInOut', [
+			state(
+				'in',
+				style({
+					'max-height': '500px',
+					'opacity': '1',
+					'visibility': 'visible'
+				})
+			),
+			state(
+				'out',
+				style({
+					'max-height': '0px',
+					'opacity': '0',
+					'visibility': 'hidden'
+				})
+			),
+			transition('in => out', [
+				group([
+					animate(
+						'400ms ease-in-out',
+						style({
+							opacity: '0'
+						})
+					),
+					animate(
+						'600ms ease-in-out',
+						style({
+							'max-height': '0px'
+						})
+					),
+					animate(
+						'700ms ease-in-out',
+						style({
+							visibility: 'hidden'
+						})
+					)
+				])
+			]),
+			transition('out => in', [
+				group([
+					animate(
+						'1ms ease-in-out',
+						style({
+							visibility: 'visible'
+						})
+					),
+					animate(
+						'600ms ease-in-out',
+						style({
+							'max-height': '500px'
+						})
+					),
+					animate(
+						'800ms ease-in-out',
+						style({
+							opacity: '1'
+						})
+					)
+				])
+			])
+		])
+	],
+	imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
 })
 export class ToastComponent implements OnInit, OnDestroy {
-  private readonly toastService = inject(ToastService);
+	private readonly toastService = inject(ToastService);
 
-  /**
-   * Subject used to unsubscribe all the subscriptions when the component is destroyed
-   */
-  private readonly unsubscribe: Subject<void> = new Subject<void>();
+	/**
+	 * Subject used to unsubscribe all the subscriptions when the component is destroyed
+	 */
+	private readonly unsubscribe: Subject<void> = new Subject<void>();
 
-  /**
-   * The component state
-   */
-  public animationState = 'out';
+	/**
+	 * The component state
+	 */
+	public animationState = 'out';
 
-  /**
-   * The enums of toast type
-   */
-  public toastType = ToastTypeEnum;
+	/**
+	 * The enums of toast type
+	 */
+	public toastType = ToastTypeEnum;
 
-  /**
-   * The message to display
-   */
-  public message: ToastMessage;
+	/**
+	 * The message to display
+	 */
+	public message: ToastMessage;
 
-  /**
-   * The current timer timeout
-   */
-  private timeout: NodeJS.Timeout;
+	/**
+	 * The current timer timeout
+	 */
+	private timeout: NodeJS.Timeout;
 
-  /**
-   * The list of icons
-   */
-  public iconEnum = IconEnum;
+	/**
+	 * The list of icons
+	 */
+	public iconEnum = IconEnum;
 
-  /**
-   * The list of material icon codes
-   */
-  public materialIconRecords = MaterialIconRecords;
+	/**
+	 * The list of material icon codes
+	 */
+	public materialIconRecords = MaterialIconRecords;
 
-  /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    this.toastService
-      .listenForToastMessages()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((message: ToastMessage) => {
-        this.message = message;
-        if (message) {
-          this.showToast();
-        }
-      });
-  }
+	/**
+	 * Called when the component is init
+	 */
+	public ngOnInit(): void {
+		this.toastService
+			.listenForToastMessages()
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((message: ToastMessage) => {
+				this.message = message;
+				if (message) {
+					this.showToast();
+				}
+			});
+	}
 
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
-  }
+	/**
+	 * Called when the component is destroyed
+	 */
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
+		this.unsubscribe.complete();
+	}
 
-  /**
-   * Show the toast notification
-   */
-  private showToast(): void {
-    this.clearTimeout();
-    this.animationState = 'in';
-    this.hideWithinTimeout();
-  }
+	/**
+	 * Show the toast notification
+	 */
+	private showToast(): void {
+		this.clearTimeout();
+		this.animationState = 'in';
+		this.hideWithinTimeout();
+	}
 
-  /**
-   * Hide manually the toast notification
-   */
-  public hideToast(): void {
-    this.clearTimeout();
-    this.animationState = 'out';
-  }
+	/**
+	 * Hide manually the toast notification
+	 */
+	public hideToast(): void {
+		this.clearTimeout();
+		this.animationState = 'out';
+	}
 
-  /**
-   * Hide the toast notification with timer
-   */
-  private hideWithinTimeout(): void {
-    this.timeout = setTimeout(() => this.hideToast(), 4000);
-  }
+	/**
+	 * Hide the toast notification with timer
+	 */
+	private hideWithinTimeout(): void {
+		this.timeout = setTimeout(() => this.hideToast(), 4000);
+	}
 
-  /**
-   * Clear the timer
-   */
-  private clearTimeout(): void {
-    clearTimeout(this.timeout);
-  }
+	/**
+	 * Clear the timer
+	 */
+	private clearTimeout(): void {
+		clearTimeout(this.timeout);
+	}
 }

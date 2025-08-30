@@ -33,46 +33,46 @@ import { MaterialIconRecords } from '../../records/material-icon.record';
  * Component used to generate buttons
  */
 @Component({
-  selector: 'suricate-buttons',
-  templateUrl: './buttons.component.html',
-  styleUrls: ['./buttons.component.scss'],
-  imports: [NgTemplateOutlet, MatButton, MatTooltip, MatIcon, NgClass, MatMiniFabButton, AsyncPipe, TranslatePipe]
+	selector: 'suricate-buttons',
+	templateUrl: './buttons.component.html',
+	styleUrls: ['./buttons.component.scss'],
+	imports: [NgTemplateOutlet, MatButton, MatTooltip, MatIcon, NgClass, MatMiniFabButton, AsyncPipe, TranslatePipe]
 })
 export class ButtonsComponent<T> {
-  /**
-   * The list of buttons to display
-   */
-  @Input()
-  public configurations: ButtonConfiguration<T>[];
+	/**
+	 * The list of buttons to display
+	 */
+	@Input()
+	public configurations: ButtonConfiguration<T>[];
 
-  /**
-   * Object to raised with the click event
-   */
-  @Input()
-  public object: T;
+	/**
+	 * Object to raised with the click event
+	 */
+	@Input()
+	public object: T;
 
-  /**
-   * The different type of buttons
-   */
-  public buttonTypeEnum = ButtonTypeEnum;
+	/**
+	 * The different type of buttons
+	 */
+	public buttonTypeEnum = ButtonTypeEnum;
 
-  /**
-   * The different color of buttons
-   */
-  public buttonColorEnum = ButtonColorEnum;
+	/**
+	 * The different color of buttons
+	 */
+	public buttonColorEnum = ButtonColorEnum;
 
-  /**
-   * Records that store the icons code for an enum
-   */
-  public materialIconRecords = MaterialIconRecords;
+	/**
+	 * Records that store the icons code for an enum
+	 */
+	public materialIconRecords = MaterialIconRecords;
 
-  /**
-   * Used to know if the button should be hidden
-   *
-   * @param configuration The button configuration related to this button
-   * @param object The object related to this button
-   */
-  public shouldDisplayButton(configuration: ButtonConfiguration<T>, object: T): boolean {
-    return !configuration.hidden || !configuration.hidden(object);
-  }
+	/**
+	 * Used to know if the button should be hidden
+	 *
+	 * @param configuration The button configuration related to this button
+	 * @param object The object related to this button
+	 */
+	public shouldDisplayButton(configuration: ButtonConfiguration<T>, object: T): boolean {
+		return !configuration.hidden || !configuration.hidden(object);
+	}
 }

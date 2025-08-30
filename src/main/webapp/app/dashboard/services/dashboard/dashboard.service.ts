@@ -30,37 +30,37 @@ import { NumberUtils } from '../../../shared/utils/number.utils';
  */
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  private readonly httpProjectService = inject(HttpProjectService);
+	private readonly httpProjectService = inject(HttpProjectService);
 
-  /**
-   * Define the min bound for the screen code random generation
-   */
-  private static readonly minScreenCodeBound = 100000;
+	/**
+	 * Define the min bound for the screen code random generation
+	 */
+	private static readonly minScreenCodeBound = 100000;
 
-  /**
-   * Define the max bound for the screen code random generation
-   */
-  private static readonly maxScreenCodeBound = 999999;
+	/**
+	 * Define the max bound for the screen code random generation
+	 */
+	private static readonly maxScreenCodeBound = 999999;
 
-  /**
-   * Generate a random screen code
-   */
-  public static generateScreenCode(): number {
-    return NumberUtils.getRandomIntBetween(this.minScreenCodeBound, this.maxScreenCodeBound);
-  }
+	/**
+	 * Generate a random screen code
+	 */
+	public static generateScreenCode(): number {
+		return NumberUtils.getRandomIntBetween(this.minScreenCodeBound, this.maxScreenCodeBound);
+	}
 
-  /**
-   * Check if the dashboard should be displayed without rights
-   * @param dashboardToken The dashboard token
-   */
-  public shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {
-    return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
-      map((dashboardUsers) => {
-        return (
-          !AuthenticationService.isAdmin() &&
-          !dashboardUsers.some((user) => user.username === AuthenticationService.getConnectedUser().username)
-        );
-      })
-    );
-  }
+	/**
+	 * Check if the dashboard should be displayed without rights
+	 * @param dashboardToken The dashboard token
+	 */
+	public shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {
+		return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
+			map((dashboardUsers) => {
+				return (
+					!AuthenticationService.isAdmin() &&
+					!dashboardUsers.some((user) => user.username === AuthenticationService.getConnectedUser().username)
+				);
+			})
+		);
+	}
 }

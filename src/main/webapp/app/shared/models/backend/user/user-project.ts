@@ -21,9 +21,9 @@
  * The project user entity
  */
 export class UserProject {
-  [key: string]: number | string;
-  id: number;
-  username: string;
-  firstname: string;
-  lastname: string;
+	[key: string]: number | string;
+	id: number;
+	username: string;
+	firstname: string;
+	lastname: string;
 }

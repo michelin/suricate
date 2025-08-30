@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { CssService } from './css.service';
 
 describe('CssService', () => {
-  let service: CssService;
+	let service: CssService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(CssService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(CssService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

@@ -1,53 +1,53 @@
 @if (!isDashboardLoading && project) {
-  <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
+	<suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
-  @if (project.grids.length > 1) {
-    <div class="grid-pagination">
-      <suricate-paginator
-        (pageChange)="redirectToGrid($event)"
-        [currentPage]="getGridIndex()"
-        [pageNbElements]="1"
-        [totalElements]="project.grids.length"
-        [hidePageSize]="true"
-      >
-      </suricate-paginator>
-    </div>
-  }
+	@if (project.grids.length > 1) {
+		<div class="grid-pagination">
+			<suricate-paginator
+				(pageChange)="redirectToGrid($event)"
+				[currentPage]="getGridIndex()"
+				[pageNbElements]="1"
+				[totalElements]="project.grids.length"
+				[hidePageSize]="true"
+			>
+			</suricate-paginator>
+		</div>
+	}
 
-  <!-- Dashboard screen -->
-  @if (currentWidgets?.length > 0) {
-    <suricate-dashboard-screen
-      #dashboardScreen
-      [project]="project"
-      [projectWidgets]="currentWidgets"
-      [screenCode]="screenCode"
-      [readOnly]="isReadOnly"
-      (refreshAllProjectWidgets)="refreshAllProjectWidgets()"
-      (disconnectEvent)="handlingDashboardDisconnect()"
-    ></suricate-dashboard-screen>
-  }
-  <!-- Display the add card, if no widget inside the current grid -->
-  @if (!isDashboardLoading && (!currentWidgets || currentWidgets.length === 0)) {
-    <div class="grid add-widget-grid">
-      <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
-      <mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
-        <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="displayProjectWidgetWizard()">
-          <div class="grid-tile-content-wrapper">
-            <div class="grid-tile-body">
-              <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
-            </div>
-            <div class="grid-tile-footer">
-              {{ 'widget.add' | translate }}
-            </div>
-          </div>
-        </mat-grid-tile>
-      </mat-grid-list>
-    </div>
-  }
+	<!-- Dashboard screen -->
+	@if (currentWidgets?.length > 0) {
+		<suricate-dashboard-screen
+			#dashboardScreen
+			[project]="project"
+			[projectWidgets]="currentWidgets"
+			[screenCode]="screenCode"
+			[readOnly]="isReadOnly"
+			(refreshAllProjectWidgets)="refreshAllProjectWidgets()"
+			(disconnectEvent)="handlingDashboardDisconnect()"
+		></suricate-dashboard-screen>
+	}
+	<!-- Display the add card, if no widget inside the current grid -->
+	@if (!isDashboardLoading && (!currentWidgets || currentWidgets.length === 0)) {
+		<div class="grid add-widget-grid">
+			<span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
+			<mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
+				<mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="displayProjectWidgetWizard()">
+					<div class="grid-tile-content-wrapper">
+						<div class="grid-tile-body">
+							<mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+						</div>
+						<div class="grid-tile-footer">
+							{{ 'widget.add' | translate }}
+						</div>
+					</div>
+				</mat-grid-tile>
+			</mat-grid-list>
+		</div>
+	}
 }
 
 @if (isDashboardLoading) {
-  <div class="container without-header">
-    <suricate-spinner></suricate-spinner>
-  </div>
+	<div class="container without-header">
+		<suricate-spinner></suricate-spinner>
+	</div>
 }

@@ -37,75 +37,75 @@ import { HttpRoleService } from '../../../backend/http-role/http-role.service';
  */
 @Injectable({ providedIn: 'root' })
 export class UserFormFieldsService {
-  private readonly httpRoleService = inject(HttpRoleService);
+	private readonly httpRoleService = inject(HttpRoleService);
 
-  /**
-   * Build the form fields of the user
-   *
-   * @param user The bean
-   */
-  generateFormFields(user?: User): FormField[] {
-    return [
-      {
-        key: 'username',
-        label: 'username',
-        type: DataTypeEnum.TEXT,
-        value: user.username ? user.username : null,
-        readOnly: true,
-        validators: [Validators.required, Validators.minLength(3)],
-        iconPrefix: IconEnum.USERNAME
-      },
-      {
-        key: 'firstname',
-        label: 'firstname',
-        type: DataTypeEnum.TEXT,
-        value: user.firstname ? user.firstname : null,
-        validators: [Validators.required, Validators.minLength(3)],
-        iconPrefix: IconEnum.USER
-      },
-      {
-        key: 'lastname',
-        label: 'lastname',
-        type: DataTypeEnum.TEXT,
-        value: user.lastname ? user.lastname : null,
-        validators: [Validators.required, Validators.minLength(3)],
-        iconPrefix: IconEnum.USER
-      },
-      {
-        key: 'email',
-        label: 'email',
-        type: DataTypeEnum.TEXT,
-        value: user.email ? user.email : null,
-        validators: [Validators.required, Validators.email],
-        iconPrefix: IconEnum.EMAIL
-      },
-      {
-        key: 'roles',
-        label: 'roles',
-        type: DataTypeEnum.MULTIPLE,
-        value: user.roles && user.roles.length > 0 ? user.roles.map((role) => role.name) : null,
-        options: () => this.getRoleOptions(),
-        validators: [Validators.required]
-      }
-    ];
-  }
+	/**
+	 * Build the form fields of the user
+	 *
+	 * @param user The bean
+	 */
+	generateFormFields(user?: User): FormField[] {
+		return [
+			{
+				key: 'username',
+				label: 'username',
+				type: DataTypeEnum.TEXT,
+				value: user.username ? user.username : null,
+				readOnly: true,
+				validators: [Validators.required, Validators.minLength(3)],
+				iconPrefix: IconEnum.USERNAME
+			},
+			{
+				key: 'firstname',
+				label: 'firstname',
+				type: DataTypeEnum.TEXT,
+				value: user.firstname ? user.firstname : null,
+				validators: [Validators.required, Validators.minLength(3)],
+				iconPrefix: IconEnum.USER
+			},
+			{
+				key: 'lastname',
+				label: 'lastname',
+				type: DataTypeEnum.TEXT,
+				value: user.lastname ? user.lastname : null,
+				validators: [Validators.required, Validators.minLength(3)],
+				iconPrefix: IconEnum.USER
+			},
+			{
+				key: 'email',
+				label: 'email',
+				type: DataTypeEnum.TEXT,
+				value: user.email ? user.email : null,
+				validators: [Validators.required, Validators.email],
+				iconPrefix: IconEnum.EMAIL
+			},
+			{
+				key: 'roles',
+				label: 'roles',
+				type: DataTypeEnum.MULTIPLE,
+				value: user.roles && user.roles.length > 0 ? user.roles.map((role) => role.name) : null,
+				options: () => this.getRoleOptions(),
+				validators: [Validators.required]
+			}
+		];
+	}
 
-  /**
-   * Get the role options
-   */
-  getRoleOptions(): Observable<FormOption[]> {
-    return this.httpRoleService.getRoles(HttpFilterService.getInfiniteFilter()).pipe(
-      map((rolesPaged: PageModel<Role>) => {
-        const roleOptions: FormOption[] = [];
-        rolesPaged.content.forEach((role: Role) => {
-          roleOptions.push({
-            label: role.description,
-            value: role.name
-          });
-        });
+	/**
+	 * Get the role options
+	 */
+	getRoleOptions(): Observable<FormOption[]> {
+		return this.httpRoleService.getRoles(HttpFilterService.getInfiniteFilter()).pipe(
+			map((rolesPaged: PageModel<Role>) => {
+				const roleOptions: FormOption[] = [];
+				rolesPaged.content.forEach((role: Role) => {
+					roleOptions.push({
+						label: role.description,
+						value: role.name
+					});
+				});
 
-        return roleOptions;
-      })
-    );
-  }
+				return roleOptions;
+			})
+		);
+	}
 }

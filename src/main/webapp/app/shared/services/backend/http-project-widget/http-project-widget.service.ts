@@ -30,65 +30,65 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpProjectWidgetService {
-  private static readonly projectWidgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projectWidgets`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly projectWidgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projectWidgets`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get a project widget by id
-   *
-   * @param projectWidgetId The project widget id
-   */
-  public getOneById(projectWidgetId: number): Observable<ProjectWidget> {
-    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
-    return this.httpClient.get<ProjectWidget>(url);
-  }
+	/**
+	 * Get a project widget by id
+	 *
+	 * @param projectWidgetId The project widget id
+	 */
+	public getOneById(projectWidgetId: number): Observable<ProjectWidget> {
+		const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
+		return this.httpClient.get<ProjectWidget>(url);
+	}
 
-  /**
-   * Get the list of widget instances for a project
-   *
-   * @param projectToken The project token
-   */
-  public getAllByProjectToken(projectToken: string): Observable<ProjectWidget[]> {
-    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/projectWidgets`;
+	/**
+	 * Get the list of widget instances for a project
+	 *
+	 * @param projectToken The project token
+	 */
+	public getAllByProjectToken(projectToken: string): Observable<ProjectWidget[]> {
+		const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/projectWidgets`;
 
-    return this.httpClient.get<ProjectWidget[]>(url);
-  }
+		return this.httpClient.get<ProjectWidget[]>(url);
+	}
 
-  /**
-   * Add a new widget to the project
-   *
-   * @param projectToken The project token
-   * @param gridId The grid id
-   * @param projectWidgetRequest The project widget to add
-   */
-  public addProjectWidgetToProject(
-    projectToken: string,
-    gridId: number,
-    projectWidgetRequest: ProjectWidgetRequest
-  ): Observable<ProjectWidget> {
-    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
+	/**
+	 * Add a new widget to the project
+	 *
+	 * @param projectToken The project token
+	 * @param gridId The grid id
+	 * @param projectWidgetRequest The project widget to add
+	 */
+	public addProjectWidgetToProject(
+		projectToken: string,
+		gridId: number,
+		projectWidgetRequest: ProjectWidgetRequest
+	): Observable<ProjectWidget> {
+		const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
 
-    return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
-  }
+		return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
+	}
 
-  /**
-   * Update a project widget by id
-   *
-   * @param projectWidgetId The project widget id
-   * @param projectWidgetRequest The new project widget
-   */
-  public updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
-    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
-    return this.httpClient.put<ProjectWidget>(url, projectWidgetRequest);
-  }
+	/**
+	 * Update a project widget by id
+	 *
+	 * @param projectWidgetId The project widget id
+	 * @param projectWidgetRequest The new project widget
+	 */
+	public updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
+		const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
+		return this.httpClient.put<ProjectWidget>(url, projectWidgetRequest);
+	}
 
-  /**
-   * Delete a project widget by id
-   *
-   * @param projectWidgetId The project widget id
-   */
-  public deleteOneById(projectWidgetId: number): Observable<void> {
-    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
-    return this.httpClient.delete<void>(url);
-  }
+	/**
+	 * Delete a project widget by id
+	 *
+	 * @param projectWidgetId The project widget id
+	 */
+	public deleteOneById(projectWidgetId: number): Observable<void> {
+		const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
+		return this.httpClient.delete<void>(url);
+	}
 }

@@ -43,169 +43,169 @@ import { ToastService } from '../../../shared/services/frontend/toast/toast.serv
  * Manage the login page
  */
 @Component({
-  selector: 'suricate-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  imports: [
-    NgOptimizedImage,
-    SpinnerComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    InputComponent,
-    ButtonsComponent,
-    RouterLink,
-    MatDivider,
-    TranslatePipe
-  ]
+	selector: 'suricate-login',
+	templateUrl: './login.component.html',
+	styleUrls: ['./login.component.scss'],
+	imports: [
+		NgOptimizedImage,
+		SpinnerComponent,
+		FormsModule,
+		ReactiveFormsModule,
+		InputComponent,
+		ButtonsComponent,
+		RouterLink,
+		MatDivider,
+		TranslatePipe
+	]
 })
 export class LoginComponent implements OnInit {
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
-  private readonly httpConfigurationService = inject(HttpConfigurationService);
-  private readonly authenticationService = inject(AuthenticationService);
-  private readonly formService = inject(FormService);
-  private readonly toastService = inject(ToastService);
+	private readonly router = inject(Router);
+	private readonly route = inject(ActivatedRoute);
+	private readonly httpConfigurationService = inject(HttpConfigurationService);
+	private readonly authenticationService = inject(AuthenticationService);
+	private readonly formService = inject(FormService);
+	private readonly toastService = inject(ToastService);
 
-  /**
-   * The login form
-   */
-  public loginForm: UntypedFormGroup;
+	/**
+	 * The login form
+	 */
+	public loginForm: UntypedFormGroup;
 
-  /**
-   * Fields used to describe/create the form
-   */
-  public formFields: FormField[];
+	/**
+	 * Fields used to describe/create the form
+	 */
+	public formFields: FormField[];
 
-  /**
-   * The list of buttons to display in the form login
-   */
-  public buttonConfigurations: ButtonConfiguration<unknown>[];
+	/**
+	 * The list of buttons to display in the form login
+	 */
+	public buttonConfigurations: ButtonConfiguration<unknown>[];
 
-  /**
-   * The activated authentication providers
-   */
-  public authenticationProviders: AuthenticationProvider[];
+	/**
+	 * The activated authentication providers
+	 */
+	public authenticationProviders: AuthenticationProvider[];
 
-  /**
-   * Define if the spinner should be running or not
-   */
-  public loading = true;
+	/**
+	 * Define if the spinner should be running or not
+	 */
+	public loading = true;
 
-  /**
-   * OAuth2 authentication with GitHub endpoint
-   */
-  public githubAuthenticationEndpoint = AuthenticationService.GITHUB_AUTH_URL;
+	/**
+	 * OAuth2 authentication with GitHub endpoint
+	 */
+	public githubAuthenticationEndpoint = AuthenticationService.GITHUB_AUTH_URL;
 
-  /**
-   * OAuth2 authentication with GitLab endpoint
-   */
-  public gitlabAuthenticationEndpoint = AuthenticationService.GITLAB_AUTH_URL;
+	/**
+	 * OAuth2 authentication with GitLab endpoint
+	 */
+	public gitlabAuthenticationEndpoint = AuthenticationService.GITLAB_AUTH_URL;
 
-  /**
-   * Init method
-   */
-  public ngOnInit(): void {
-    const token: string = this.route.snapshot.queryParamMap.get('token');
-    const error: string = this.route.snapshot.queryParamMap.get('error');
-    if (token) {
-      AuthenticationService.setAccessToken(token);
-    } else if (error) {
-      this.toastService.sendMessage('authentication.failed.with.providers', ToastTypeEnum.DANGER, error);
-    }
+	/**
+	 * Init method
+	 */
+	public ngOnInit(): void {
+		const token: string = this.route.snapshot.queryParamMap.get('token');
+		const error: string = this.route.snapshot.queryParamMap.get('error');
+		if (token) {
+			AuthenticationService.setAccessToken(token);
+		} else if (error) {
+			this.toastService.sendMessage('authentication.failed.with.providers', ToastTypeEnum.DANGER, error);
+		}
 
-    if (AuthenticationService.isLoggedIn()) {
-      this.navigateToHomePage();
-      return;
-    }
+		if (AuthenticationService.isLoggedIn()) {
+			this.navigateToHomePage();
+			return;
+		}
 
-    this.httpConfigurationService.getAuthenticationProviders().subscribe((authProviders: AuthenticationProvider[]) => {
-      this.authenticationProviders = authProviders;
-    });
+		this.httpConfigurationService.getAuthenticationProviders().subscribe((authProviders: AuthenticationProvider[]) => {
+			this.authenticationProviders = authProviders;
+		});
 
-    this.initButtons();
-    this.initLoginForm();
+		this.initButtons();
+		this.initLoginForm();
 
-    this.loading = false;
-  }
+		this.loading = false;
+	}
 
-  /**
-   * Execute login action
-   */
-  public login(): void {
-    this.formService.validate(this.loginForm);
+	/**
+	 * Execute login action
+	 */
+	public login(): void {
+		this.formService.validate(this.loginForm);
 
-    if (this.loginForm.valid) {
-      this.loading = true;
+		if (this.loginForm.valid) {
+			this.loading = true;
 
-      this.authenticationService.authenticate(this.loginForm.value).subscribe({
-        next: () => this.navigateToHomePage(),
-        error: (error: HttpErrorResponse) => {
-          this.loading = false;
-          this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
-        }
-      });
-    }
-  }
+			this.authenticationService.authenticate(this.loginForm.value).subscribe({
+				next: () => this.navigateToHomePage(),
+				error: (error: HttpErrorResponse) => {
+					this.loading = false;
+					this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
+				}
+			});
+		}
+	}
 
-  /**
-   * Initialize the list of buttons to use in the application
-   */
-  private initButtons(): void {
-    this.buttonConfigurations = [
-      {
-        label: 'sign.in',
-        type: ButtonTypeEnum.SUBMIT
-      }
-    ];
-  }
+	/**
+	 * Initialize the list of buttons to use in the application
+	 */
+	private initButtons(): void {
+		this.buttonConfigurations = [
+			{
+				label: 'sign.in',
+				type: ButtonTypeEnum.SUBMIT
+			}
+		];
+	}
 
-  /**
-   * Create the login form
-   */
-  private initLoginForm(): void {
-    this.formFields = LoginFormFieldsService.generateFormFields();
-    this.loginForm = this.formService.generateFormGroupForFields(this.formFields);
-  }
+	/**
+	 * Create the login form
+	 */
+	private initLoginForm(): void {
+		this.formFields = LoginFormFieldsService.generateFormFields();
+		this.loginForm = this.formService.generateFormGroupForFields(this.formFields);
+	}
 
-  /**
-   * Redirect to the home page
-   */
-  private navigateToHomePage(): void {
-    this.router.navigate(['/home']);
-  }
+	/**
+	 * Redirect to the home page
+	 */
+	private navigateToHomePage(): void {
+		this.router.navigate(['/home']);
+	}
 
-  /**
-   * Is the database authentication activated or not
-   */
-  public isDatabaseAuthenticationActivated(): boolean {
-    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.DATABASE) > -1;
-  }
+	/**
+	 * Is the database authentication activated or not
+	 */
+	public isDatabaseAuthenticationActivated(): boolean {
+		return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.DATABASE) > -1;
+	}
 
-  /**
-   * Is the LDAP authentication activated or not
-   */
-  public isLdapAuthenticationActivated(): boolean {
-    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.LDAP) > -1;
-  }
+	/**
+	 * Is the LDAP authentication activated or not
+	 */
+	public isLdapAuthenticationActivated(): boolean {
+		return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.LDAP) > -1;
+	}
 
-  /**
-   * Is any social authentication activated or not
-   */
-  public isSocialLoginActivated(): boolean {
-    return this.isGithubAuthenticationActivated() || this.isGitlabAuthenticationActivated();
-  }
+	/**
+	 * Is any social authentication activated or not
+	 */
+	public isSocialLoginActivated(): boolean {
+		return this.isGithubAuthenticationActivated() || this.isGitlabAuthenticationActivated();
+	}
 
-  /**
-   * Is the GitLab authentication activated or not
-   */
-  public isGitlabAuthenticationActivated(): boolean {
-    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.GITLAB) > -1;
-  }
+	/**
+	 * Is the GitLab authentication activated or not
+	 */
+	public isGitlabAuthenticationActivated(): boolean {
+		return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.GITLAB) > -1;
+	}
 
-  /**
-   * Is the GitHub authentication activated or not
-   */
-  public isGithubAuthenticationActivated(): boolean {
-    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.GITHUB) > -1;
-  }
+	/**
+	 * Is the GitHub authentication activated or not
+	 */
+	public isGithubAuthenticationActivated(): boolean {
+		return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.GITHUB) > -1;
+	}
 }

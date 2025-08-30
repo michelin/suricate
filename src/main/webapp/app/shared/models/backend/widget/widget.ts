@@ -25,17 +25,17 @@ import { WidgetParam } from './widget-param';
  * The widget entity
  */
 export interface Widget {
-  id: number;
-  name: string;
-  description: string;
-  technicalName: string;
-  cssContent: string;
-  info: string;
-  delay: number;
-  timeout: string;
-  imageToken: string;
-  widgetAvailability: WidgetAvailabilityEnum;
-  category: Category;
-  repositoryId: number;
-  params: WidgetParam[];
+	id: number;
+	name: string;
+	description: string;
+	technicalName: string;
+	cssContent: string;
+	info: string;
+	delay: number;
+	timeout: string;
+	imageToken: string;
+	widgetAvailability: WidgetAvailabilityEnum;
+	category: Category;
+	repositoryId: number;
+	params: WidgetParam[];
 }

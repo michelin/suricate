@@ -23,11 +23,11 @@ import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import {
-  MatListItem,
-  MatListItemIcon,
-  MatListItemTitle,
-  MatListSubheaderCssMatStyler,
-  MatNavList
+	MatListItem,
+	MatListItemIcon,
+	MatListItemTitle,
+	MatListSubheaderCssMatStyler,
+	MatNavList
 } from '@angular/material/list';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -45,81 +45,81 @@ import { FooterComponent } from '../footer/footer.component';
  * Display the menu on the sidenav
  */
 @Component({
-  selector: 'suricate-menu',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss'],
-  imports: [
-    MatMenu,
-    MatMenuItem,
-    MatIcon,
-    MatMenuTrigger,
-    MatButton,
-    NgOptimizedImage,
-    MatDivider,
-    MatNavList,
-    RouterLinkActive,
-    RouterLink,
-    MatTooltip,
-    MatListItem,
-    MatListSubheaderCssMatStyler,
-    MatListItemIcon,
-    MatListItemTitle,
-    FooterComponent,
-    TranslatePipe
-  ]
+	selector: 'suricate-menu',
+	templateUrl: './menu.component.html',
+	styleUrls: ['./menu.component.scss'],
+	imports: [
+		MatMenu,
+		MatMenuItem,
+		MatIcon,
+		MatMenuTrigger,
+		MatButton,
+		NgOptimizedImage,
+		MatDivider,
+		MatNavList,
+		RouterLinkActive,
+		RouterLink,
+		MatTooltip,
+		MatListItem,
+		MatListSubheaderCssMatStyler,
+		MatListItemIcon,
+		MatListItemTitle,
+		FooterComponent,
+		TranslatePipe
+	]
 })
 export class MenuComponent implements OnInit {
-  private readonly router = inject(Router);
-  private readonly settingsService = inject(SettingsService);
+	private readonly router = inject(Router);
+	private readonly settingsService = inject(SettingsService);
 
-  /**
-   * The user connected
-   */
-  public readonly connectedUser = AuthenticationService.getConnectedUser();
+	/**
+	 * The user connected
+	 */
+	public readonly connectedUser = AuthenticationService.getConnectedUser();
 
-  /**
-   * The menu to display
-   */
-  public readonly menu = MenuService.buildMenu();
+	/**
+	 * The menu to display
+	 */
+	public readonly menu = MenuService.buildMenu();
 
-  /**
-   * The list of icons
-   */
-  public iconEnum = IconEnum;
+	/**
+	 * The list of icons
+	 */
+	public iconEnum = IconEnum;
 
-  /**
-   * The list of material icons
-   */
-  public materialIconRecords = MaterialIconRecords;
+	/**
+	 * The list of material icons
+	 */
+	public materialIconRecords = MaterialIconRecords;
 
-  /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe();
-  }
+	/**
+	 * Called when the component is init
+	 */
+	public ngOnInit(): void {
+		this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe();
+	}
 
-  /**
-   * Get the initials of the connected user
-   */
-  public getInitials(): string {
-    return this.connectedUser.firstname && this.connectedUser.lastname
-      ? `${this.connectedUser.firstname.substring(0, 1)}${this.connectedUser.lastname.substring(0, 1)}`
-      : '';
-  }
+	/**
+	 * Get the initials of the connected user
+	 */
+	public getInitials(): string {
+		return this.connectedUser.firstname && this.connectedUser.lastname
+			? `${this.connectedUser.firstname.substring(0, 1)}${this.connectedUser.lastname.substring(0, 1)}`
+			: '';
+	}
 
-  /**
-   * Logout the user
-   */
-  public logout(): void {
-    AuthenticationService.logout();
-    this.router.navigate(['/login']);
-  }
+	/**
+	 * Logout the user
+	 */
+	public logout(): void {
+		AuthenticationService.logout();
+		this.router.navigate(['/login']);
+	}
 
-  /**
-   * Open the settings
-   */
-  public openSettings(): void {
-    this.router.navigate(['/settings']);
-  }
+	/**
+	 * Open the settings
+	 */
+	public openSettings(): void {
+		this.router.navigate(['/settings']);
+	}
 }

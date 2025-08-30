@@ -18,6 +18,6 @@
  */
 
 export class ProjectGrid {
-  id: number;
-  time: number;
+	id: number;
+	time: number;
 }

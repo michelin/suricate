@@ -29,44 +29,44 @@ import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions
 import { ActionsDialogComponent } from './actions-dialog.component';
 
 describe('ActionsDialogComponent', () => {
-  let component: ActionsDialogComponent;
-  let fixture: ComponentFixture<ActionsDialogComponent>;
+	let component: ActionsDialogComponent;
+	let fixture: ComponentFixture<ActionsDialogComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ActionsDialogComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        }),
-        { provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [ActionsDialogComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				}),
+				{ provide: MAT_DIALOG_DATA, useValue: buildActionsDialogConfiguration() }
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(ActionsDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(ActionsDialogComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  /**
-   * Build a mocked ActionsDialogConfiguration for the unit tests
-   */
-  function buildActionsDialogConfiguration(): ActionsDialogConfiguration {
-    return {
-      title: 'Title',
-      message: 'Message',
-      actions: [
-        {
-          icon: IconEnum.ADD,
-          variant: 'miniFab'
-        }
-      ]
-    };
-  }
+	/**
+	 * Build a mocked ActionsDialogConfiguration for the unit tests
+	 */
+	function buildActionsDialogConfiguration(): ActionsDialogConfiguration {
+		return {
+			title: 'Title',
+			message: 'Message',
+			actions: [
+				{
+					icon: IconEnum.ADD,
+					variant: 'miniFab'
+				}
+			]
+		};
+	}
 });

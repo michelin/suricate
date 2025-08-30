@@ -33,62 +33,62 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpCategoryParametersService extends AbstractHttpService<CategoryParameter, WidgetConfigurationRequest> {
-  private static readonly configurationsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/category-parameters`;
-  private readonly httpClient = inject(HttpClient);
+	private static readonly configurationsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/category-parameters`;
+	private readonly httpClient = inject(HttpClient);
 
-  /**
-   * Get all parameters of all categories
-   *
-   * @param filter The filter
-   */
-  public getAll(filter?: HttpFilter): Observable<PageModel<CategoryParameter>> {
-    const url = `${HttpCategoryParametersService.configurationsApiEndpoint}`;
+	/**
+	 * Get all parameters of all categories
+	 *
+	 * @param filter The filter
+	 */
+	public getAll(filter?: HttpFilter): Observable<PageModel<CategoryParameter>> {
+		const url = `${HttpCategoryParametersService.configurationsApiEndpoint}`;
 
-    return this.httpClient.get<PageModel<CategoryParameter>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
+		return this.httpClient.get<PageModel<CategoryParameter>>(HttpFilterService.getFilteredUrl(url, filter));
+	}
 
-  /**
-   * Get a category parameter by key
-   *
-   * @param categoryParameterKey The category parameter key
-   */
-  public getById(categoryParameterKey: string): Observable<CategoryParameter> {
-    const url = `${HttpCategoryParametersService.configurationsApiEndpoint}/${categoryParameterKey}`;
+	/**
+	 * Get a category parameter by key
+	 *
+	 * @param categoryParameterKey The category parameter key
+	 */
+	public getById(categoryParameterKey: string): Observable<CategoryParameter> {
+		const url = `${HttpCategoryParametersService.configurationsApiEndpoint}/${categoryParameterKey}`;
 
-    return this.httpClient.get<CategoryParameter>(url);
-  }
+		return this.httpClient.get<CategoryParameter>(url);
+	}
 
-  /**
-   * Function used to create a configuration
-   */
-  public create(widgetConfigurationRequest: WidgetConfigurationRequest): Observable<CategoryParameter> {
-    const url = `${HttpCategoryParametersService.configurationsApiEndpoint}`;
+	/**
+	 * Function used to create a configuration
+	 */
+	public create(widgetConfigurationRequest: WidgetConfigurationRequest): Observable<CategoryParameter> {
+		const url = `${HttpCategoryParametersService.configurationsApiEndpoint}`;
 
-    return this.httpClient.post<CategoryParameter>(url, widgetConfigurationRequest);
-  }
+		return this.httpClient.post<CategoryParameter>(url, widgetConfigurationRequest);
+	}
 
-  /**
-   * Update a configuration
-   *
-   * @param configurationKey The configuration key to update
-   * @param configurationRequest The value updated
-   * @returns The config updated
-   */
-  public update(configurationKey: string, configurationRequest: WidgetConfigurationRequest): Observable<void> {
-    const url = `${HttpCategoryParametersService.configurationsApiEndpoint}/${configurationKey}`;
+	/**
+	 * Update a configuration
+	 *
+	 * @param configurationKey The configuration key to update
+	 * @param configurationRequest The value updated
+	 * @returns The config updated
+	 */
+	public update(configurationKey: string, configurationRequest: WidgetConfigurationRequest): Observable<void> {
+		const url = `${HttpCategoryParametersService.configurationsApiEndpoint}/${configurationKey}`;
 
-    return this.httpClient.put<void>(url, configurationRequest);
-  }
+		return this.httpClient.put<void>(url, configurationRequest);
+	}
 
-  /**
-   * Delete the configuration
-   *
-   * @param configurationKey The configuration to delete
-   * @returns The configuration delete as observable
-   */
-  public delete(configurationKey: string): Observable<void> {
-    const url = `${HttpCategoryParametersService.configurationsApiEndpoint}/${configurationKey}`;
+	/**
+	 * Delete the configuration
+	 *
+	 * @param configurationKey The configuration to delete
+	 * @returns The configuration delete as observable
+	 */
+	public delete(configurationKey: string): Observable<void> {
+		const url = `${HttpCategoryParametersService.configurationsApiEndpoint}/${configurationKey}`;
 
-    return this.httpClient.delete<void>(url);
-  }
+		return this.httpClient.delete<void>(url);
+	}
 }

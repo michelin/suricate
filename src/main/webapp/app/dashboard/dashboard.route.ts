@@ -25,20 +25,20 @@ import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.com
 import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
 
 export const dashboardRoutes: Routes = [
-  {
-    path: 'tv',
-    component: DashboardTvComponent
-  },
-  {
-    path: 'dashboards/:dashboardToken/:gridId',
-    component: DashboardDetailComponent,
-    canActivate: [authGuard],
-    canActivateChild: [authGuard]
-  },
-  {
-    path: 'dashboards/:dashboardToken/:gridId/widgets/create',
-    component: AddWidgetToProjectWizardComponent,
-    canActivate: [authGuard],
-    canActivateChild: [authGuard]
-  }
+	{
+		path: 'tv',
+		component: DashboardTvComponent
+	},
+	{
+		path: 'dashboards/:dashboardToken/:gridId',
+		component: DashboardDetailComponent,
+		canActivate: [authGuard],
+		canActivateChild: [authGuard]
+	},
+	{
+		path: 'dashboards/:dashboardToken/:gridId/widgets/create',
+		component: AddWidgetToProjectWizardComponent,
+		canActivate: [authGuard],
+		canActivateChild: [authGuard]
+	}
 ];

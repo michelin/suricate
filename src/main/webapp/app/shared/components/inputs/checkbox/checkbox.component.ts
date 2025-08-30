@@ -28,16 +28,16 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
  * Manage the instantiation of the checkbox
  */
 @Component({
-  selector: 'suricate-checkbox',
-  templateUrl: './checkbox.component.html',
-  styleUrls: ['./checkbox.component.scss'],
-  imports: [MatCheckbox, FormsModule, ReactiveFormsModule, TranslatePipe]
+	selector: 'suricate-checkbox',
+	templateUrl: './checkbox.component.html',
+	styleUrls: ['./checkbox.component.scss'],
+	imports: [MatCheckbox, FormsModule, ReactiveFormsModule, TranslatePipe]
 })
 export class CheckboxComponent extends BaseInputComponent {
-  /**
-   * Manage the changes on checkbox
-   */
-  public checkboxChange(): void {
-    this.emitValueChangeEventFromType('checkbox');
-  }
+	/**
+	 * Manage the changes on checkbox
+	 */
+	public checkboxChange(): void {
+		this.emitValueChangeEventFromType('checkbox');
+	}
 }

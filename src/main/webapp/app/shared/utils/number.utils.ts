@@ -22,14 +22,14 @@
  *
  */
 export class NumberUtils {
-  /**
-   * Get a random int between min and max
-   *
-   * @param {number} min The min interval
-   * @param {number} max Max interval
-   * @return {number} A random int between min and max interval
-   */
-  public static getRandomIntBetween(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+	/**
+	 * Get a random int between min and max
+	 *
+	 * @param {number} min The min interval
+	 * @param {number} max Max interval
+	 * @return {number} A random int between min and max interval
+	 */
+	public static getRandomIntBetween(min: number, max: number): number {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
 }

@@ -30,110 +30,110 @@ import { MosaicFormOption } from './mosaic-form-option';
  * Describe a field used to manage the form
  */
 export class FormField {
-  /* ***************************************************************************************************************** */
-  /*                        Generic Field                                                                              */
-  /* ***************************************************************************************************************** */
-  /**
-   * The key of the field
-   */
-  key: string;
+	/* ***************************************************************************************************************** */
+	/*                        Generic Field                                                                              */
+	/* ***************************************************************************************************************** */
+	/**
+	 * The key of the field
+	 */
+	key: string;
 
-  /**
-   * The value displayed by the form
-   */
-  label?: string;
+	/**
+	 * The value displayed by the form
+	 */
+	label?: string;
 
-  /**
-   * The type of the data to insert
-   */
-  type: DataTypeEnum;
+	/**
+	 * The type of the data to insert
+	 */
+	type: DataTypeEnum;
 
-  /* ***************************************************************************************************************** */
-  /*                        Simple Field                                                                               */
-  /* ***************************************************************************************************************** */
-  /**
-   * The placeholder to display if needed
-   */
-  placeholder?: string;
+	/* ***************************************************************************************************************** */
+	/*                        Simple Field                                                                               */
+	/* ***************************************************************************************************************** */
+	/**
+	 * The placeholder to display if needed
+	 */
+	placeholder?: string;
 
-  /**
-   * The value to display
-   */
-  value?: string | string[] | number | boolean;
+	/**
+	 * The value to display
+	 */
+	value?: string | string[] | number | boolean;
 
-  /**
-   * If the type contains a list of values to display insert them in this attribute
-   */
-  options?: (filter?: string) => Observable<FormOption[]>;
+	/**
+	 * If the type contains a list of values to display insert them in this attribute
+	 */
+	options?: (filter?: string) => Observable<FormOption[]>;
 
-  /**
-   * The mat-icon name that should be used as prefix
-   */
-  iconPrefix?: IconEnum;
+	/**
+	 * The mat-icon name that should be used as prefix
+	 */
+	iconPrefix?: IconEnum;
 
-  /**
-   * The tooltip to display above the icon suffix
-   */
-  iconPrefixTooltip?: string;
+	/**
+	 * The tooltip to display above the icon suffix
+	 */
+	iconPrefixTooltip?: string;
 
-  /**
-   * The mat-icon name that should be used as suffix
-   */
-  iconSuffix?: IconEnum;
+	/**
+	 * The mat-icon name that should be used as suffix
+	 */
+	iconSuffix?: IconEnum;
 
-  /**
-   * Hint to display to the user
-   */
-  hint?: string;
+	/**
+	 * Hint to display to the user
+	 */
+	hint?: string;
 
-  /**
-   * True if the field should be disabled
-   */
-  disabled?: boolean;
+	/**
+	 * True if the field should be disabled
+	 */
+	disabled?: boolean;
 
-  /**
-   * True if the field should be readonly
-   */
-  readOnly?: boolean;
+	/**
+	 * True if the field should be readonly
+	 */
+	readOnly?: boolean;
 
-  /**
-   * The list of validators for this field
-   */
-  validators?: ValidatorFn | ValidatorFn[] | null;
+	/**
+	 * The list of validators for this field
+	 */
+	validators?: ValidatorFn | ValidatorFn[] | null;
 
-  /**
-   * Async validators (require an http call)
-   */
-  asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[] | null;
+	/**
+	 * Async validators (require an http call)
+	 */
+	asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[] | null;
 
-  /* ***************************************************************************************************************** */
-  /*                        Inner Field                                                                                */
-  /* ***************************************************************************************************************** */
-  /**
-   * The list of fields in case of a (FIELDS data type)
-   */
-  fields?: FormField[];
+	/* ***************************************************************************************************************** */
+	/*                        Inner Field                                                                                */
+	/* ***************************************************************************************************************** */
+	/**
+	 * The list of fields in case of a (FIELDS data type)
+	 */
+	fields?: FormField[];
 
-  /**
-   * The list of values to used in the array
-   */
-  values?: Observable<UserProject[]>;
+	/**
+	 * The list of values to used in the array
+	 */
+	values?: Observable<UserProject[]>;
 
-  /**
-   * Function used to delete a row
-   */
-  deleteRow?: { attribute: string; callback: (object: number) => Observable<void> };
+	/**
+	 * Function used to delete a row
+	 */
+	deleteRow?: { attribute: string; callback: (object: number) => Observable<void> };
 
-  /* ***************************************************************************************************************** */
-  /*                        Mosaic Field                                                                                */
-  /* ***************************************************************************************************************** */
-  /**
-   * The number of columns to display in the mosaic
-   */
-  columnNumber?: number;
+	/* ***************************************************************************************************************** */
+	/*                        Mosaic Field                                                                                */
+	/* ***************************************************************************************************************** */
+	/**
+	 * The number of columns to display in the mosaic
+	 */
+	columnNumber?: number;
 
-  /**
-   * The mosaic options
-   */
-  mosaicOptions?: (formGroup?: UntypedFormGroup) => Observable<MosaicFormOption[]>;
+	/**
+	 * The mosaic options
+	 */
+	mosaicOptions?: (formGroup?: UntypedFormGroup) => Observable<MosaicFormOption[]>;
 }

@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { HttpSettingService } from './http-setting.service';
 
 describe('HttpSettingService', () => {
-  let service: HttpSettingService;
+	let service: HttpSettingService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(HttpSettingService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(HttpSettingService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

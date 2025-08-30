@@ -23,8 +23,8 @@ import { DialogConfiguration } from './dialog-configuration';
  * Configuration used by the communication dialog
  */
 export class CommunicationDialogConfiguration extends DialogConfiguration {
-  /**
-   * True if the message to display is an error
-   */
-  isErrorMessage?: boolean;
+	/**
+	 * True if the message to display is an error
+	 */
+	isErrorMessage?: boolean;
 }

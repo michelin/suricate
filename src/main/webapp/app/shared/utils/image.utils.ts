@@ -21,21 +21,21 @@
  * Utils class for images
  */
 export class ImageUtils {
-  /**
-   * Get the content type of a base 64 URL
-   *
-   * @param base64URL The base 64 URL
-   */
-  public static getContentTypeFromBase64URL(base64URL: string): string {
-    return base64URL ? base64URL.split(';base64,')[0].split(':')[1] : null;
-  }
+	/**
+	 * Get the content type of a base 64 URL
+	 *
+	 * @param base64URL The base 64 URL
+	 */
+	public static getContentTypeFromBase64URL(base64URL: string): string {
+		return base64URL ? base64URL.split(';base64,')[0].split(':')[1] : null;
+	}
 
-  /**
-   * Get the data of a base 64 URL
-   *
-   * @param base64URL The base 64 URL
-   */
-  public static getDataFromBase64URL(base64URL: string): string {
-    return base64URL ? base64URL.split(';base64,')[1] : null;
-  }
+	/**
+	 * Get the data of a base 64 URL
+	 *
+	 * @param base64URL The base 64 URL
+	 */
+	public static getDataFromBase64URL(base64URL: string): string {
+		return base64URL ? base64URL.split(';base64,')[1] : null;
+	}
 }

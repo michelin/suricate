@@ -27,30 +27,30 @@ import { SecuritySettingsComponent } from './security-settings/security-settings
 import { UxSettingsComponent } from './ux-settings/ux-settings.component';
 
 @Component({
-  selector: 'suricate-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
-  imports: [HeaderComponent, MatTabGroup, MatTab, UxSettingsComponent, SecuritySettingsComponent, TranslatePipe]
+	selector: 'suricate-settings',
+	templateUrl: './settings.component.html',
+	styleUrls: ['./settings.component.scss'],
+	imports: [HeaderComponent, MatTabGroup, MatTab, UxSettingsComponent, SecuritySettingsComponent, TranslatePipe]
 })
 export class SettingsComponent implements OnInit {
-  /**
-   * Configuration of the header
-   */
-  public headerConfiguration: HeaderConfiguration;
+	/**
+	 * Configuration of the header
+	 */
+	public headerConfiguration: HeaderConfiguration;
 
-  /**
-   * Init method
-   */
-  ngOnInit(): void {
-    this.initHeaderConfiguration();
-  }
+	/**
+	 * Init method
+	 */
+	ngOnInit(): void {
+		this.initHeaderConfiguration();
+	}
 
-  /**
-   * Used to init the header component
-   */
-  private initHeaderConfiguration(): void {
-    this.headerConfiguration = {
-      title: 'settings.my'
-    };
-  }
+	/**
+	 * Used to init the header component
+	 */
+	private initHeaderConfiguration(): void {
+		this.headerConfiguration = {
+			title: 'settings.my'
+		};
+	}
 }

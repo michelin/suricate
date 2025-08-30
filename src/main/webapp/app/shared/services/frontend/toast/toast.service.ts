@@ -28,26 +28,26 @@ import { ToastMessage } from '../../../models/frontend/toast/toast-message';
  */
 @Injectable({ providedIn: 'root' })
 export class ToastService {
-  /**
-   * The toast message subject
-   */
-  private toastMessageSubject = new BehaviorSubject<ToastMessage>(null);
+	/**
+	 * The toast message subject
+	 */
+	private toastMessageSubject = new BehaviorSubject<ToastMessage>(null);
 
-  /**
-   * Get the toast message events
-   * @returns {Observable<ToastMessage>}
-   */
-  public listenForToastMessages(): Observable<ToastMessage> {
-    return this.toastMessageSubject.asObservable();
-  }
+	/**
+	 * Get the toast message events
+	 * @returns {Observable<ToastMessage>}
+	 */
+	public listenForToastMessages(): Observable<ToastMessage> {
+		return this.toastMessageSubject.asObservable();
+	}
 
-  /**
-   * A new message to toast component
-   * @param title The title of the message
-   * @param style The message style
-   * @param content The content of the message
-   */
-  public sendMessage(title: string, style?: ToastTypeEnum, content?: string): void {
-    this.toastMessageSubject.next(new ToastMessage(title, content, style));
-  }
+	/**
+	 * A new message to toast component
+	 * @param title The title of the message
+	 * @param style The message style
+	 * @param content The content of the message
+	 */
+	public sendMessage(title: string, style?: ToastTypeEnum, content?: string): void {
+		this.toastMessageSubject.next(new ToastMessage(title, content, style));
+	}
 }

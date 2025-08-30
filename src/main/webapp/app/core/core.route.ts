@@ -26,24 +26,24 @@ import { RegisterComponent } from './components/register/register.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
 export const coreRoutes: Routes = [
-  {
-    path: 'home',
-    canActivate: [authGuard],
-    canActivateChild: [authGuard],
-    component: HomeComponent
-  },
-  {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'register',
-    component: RegisterComponent
-  },
-  {
-    path: 'settings',
-    canActivate: [authGuard],
-    canActivateChild: [authGuard],
-    component: SettingsComponent
-  }
+	{
+		path: 'home',
+		canActivate: [authGuard],
+		canActivateChild: [authGuard],
+		component: HomeComponent
+	},
+	{
+		path: 'login',
+		component: LoginComponent
+	},
+	{
+		path: 'register',
+		component: RegisterComponent
+	},
+	{
+		path: 'settings',
+		canActivate: [authGuard],
+		canActivateChild: [authGuard],
+		component: SettingsComponent
+	}
 ];

@@ -34,67 +34,67 @@ import { HttpUserService } from '../../shared/services/backend/http-user/http-us
  */
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
-  private readonly translateService = inject(TranslateService);
-  private readonly httpSettingService = inject(HttpSettingService);
-  private readonly httpUserService = inject(HttpUserService);
+	private readonly translateService = inject(TranslateService);
+	private readonly httpSettingService = inject(HttpSettingService);
+	private readonly httpUserService = inject(HttpUserService);
 
-  /**
-   * Theme of the user
-   */
-  private readonly currentThemeValueSubject = new Subject<string>();
+	/**
+	 * Theme of the user
+	 */
+	private readonly currentThemeValueSubject = new Subject<string>();
 
-  /**
-   * Init default settings when any user is connected
-   */
-  initDefaultSettings() {
-    this.httpSettingService.getAll().subscribe((settings: Setting[]) => {
-      this.currentThemeValue = settings
-        .find((setting) => setting.type === SettingsTypeEnum.THEME)
-        .allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
+	/**
+	 * Init default settings when any user is connected
+	 */
+	initDefaultSettings() {
+		this.httpSettingService.getAll().subscribe((settings: Setting[]) => {
+			this.currentThemeValue = settings
+				.find((setting) => setting.type === SettingsTypeEnum.THEME)
+				.allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
 
-      const defaultLanguageCode = settings
-        .find((setting) => setting.type === SettingsTypeEnum.LANGUAGE)
-        .allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
+			const defaultLanguageCode = settings
+				.find((setting) => setting.type === SettingsTypeEnum.LANGUAGE)
+				.allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
 
-      // This language will be used as a fallback when a translation is not found in the current language
-      this.translateService.setFallbackLang(defaultLanguageCode);
+			// This language will be used as a fallback when a translation is not found in the current language
+			this.translateService.setFallbackLang(defaultLanguageCode);
 
-      this.translateService.use(defaultLanguageCode);
-    });
-  }
+			this.translateService.use(defaultLanguageCode);
+		});
+	}
 
-  /**
-   * Init the user settings
-   *
-   * @param user The user
-   */
-  initUserSettings(user: User): Observable<UserSetting[]> {
-    return this.httpUserService.getUserSettings(user.username).pipe(
-      tap((userSettings: UserSetting[]) => {
-        this.currentThemeValue = userSettings.find(
-          (userSetting) => userSetting.setting.type === SettingsTypeEnum.THEME
-        ).settingValue.value;
+	/**
+	 * Init the user settings
+	 *
+	 * @param user The user
+	 */
+	initUserSettings(user: User): Observable<UserSetting[]> {
+		return this.httpUserService.getUserSettings(user.username).pipe(
+			tap((userSettings: UserSetting[]) => {
+				this.currentThemeValue = userSettings.find(
+					(userSetting) => userSetting.setting.type === SettingsTypeEnum.THEME
+				).settingValue.value;
 
-        this.translateService.use(
-          userSettings.find((userSetting) => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value
-        );
-      })
-    );
-  }
+				this.translateService.use(
+					userSettings.find((userSetting) => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value
+				);
+			})
+		);
+	}
 
-  /**
-   * Save the current theme value
-   *
-   * @param theme The theme value
-   */
-  set currentThemeValue(theme: string) {
-    this.currentThemeValueSubject.next(theme);
-  }
+	/**
+	 * Save the current theme value
+	 *
+	 * @param theme The theme value
+	 */
+	set currentThemeValue(theme: string) {
+		this.currentThemeValueSubject.next(theme);
+	}
 
-  /**
-   * Current theme value as observable
-   */
-  getCurrentThemeValue(): Observable<string> {
-    return this.currentThemeValueSubject.asObservable();
-  }
+	/**
+	 * Current theme value as observable
+	 */
+	getCurrentThemeValue(): Observable<string> {
+		return this.currentThemeValueSubject.asObservable();
+	}
 }

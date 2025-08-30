@@ -23,12 +23,12 @@ import { ButtonConfiguration } from '../button/button-configuration';
  * Interface used to hold the configuration of the generic the header component
  */
 export class HeaderConfiguration {
-  /**
-   * The title of the page
-   */
-  title: string;
-  /**
-   * Used to add actions to the header
-   */
-  actions?: ButtonConfiguration<unknown>[];
+	/**
+	 * The title of the page
+	 */
+	title: string;
+	/**
+	 * Used to add actions to the header
+	 */
+	actions?: ButtonConfiguration<unknown>[];
 }

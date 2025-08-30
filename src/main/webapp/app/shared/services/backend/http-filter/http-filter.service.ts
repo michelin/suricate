@@ -25,78 +25,78 @@ import { HttpFilter } from '../../../models/backend/http-filter';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpFilterService {
-  /**
-   * Ask for the first page
-   */
-  public static readonly DEFAULT_PAGE = 0;
+	/**
+	 * Ask for the first page
+	 */
+	public static readonly DEFAULT_PAGE = 0;
 
-  /**
-   * Used to ask for every element in one request
-   */
-  public static readonly INFINITE_PAGE_SIZE = 2000;
+	/**
+	 * Used to ask for every element in one request
+	 */
+	public static readonly INFINITE_PAGE_SIZE = 2000;
 
-  /**
-   * Default page size options
-   */
-  public static readonly DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+	/**
+	 * Default page size options
+	 */
+	public static readonly DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
 
-  /**
-   * Get the default filter
-   *
-   * @param search A string defining a filter on a field to apply on the research
-   */
-  public static getDefaultFilter(search?: string): HttpFilter {
-    const httpFilter = new HttpFilter();
-    httpFilter.size = HttpFilterService.DEFAULT_PAGE_SIZE_OPTIONS[1];
-    httpFilter.page = HttpFilterService.DEFAULT_PAGE;
+	/**
+	 * Get the default filter
+	 *
+	 * @param search A string defining a filter on a field to apply on the research
+	 */
+	public static getDefaultFilter(search?: string): HttpFilter {
+		const httpFilter = new HttpFilter();
+		httpFilter.size = HttpFilterService.DEFAULT_PAGE_SIZE_OPTIONS[1];
+		httpFilter.page = HttpFilterService.DEFAULT_PAGE;
 
-    if (search) {
-      httpFilter.search = search;
-    }
+		if (search) {
+			httpFilter.search = search;
+		}
 
-    return httpFilter;
-  }
+		return httpFilter;
+	}
 
-  /**
-   * Get infinite page filter
-   *
-   * @param sort A string defining the order to apply
-   */
-  public static getInfiniteFilter(sort?: string[]): HttpFilter {
-    const httpFilter = new HttpFilter();
-    httpFilter.size = HttpFilterService.INFINITE_PAGE_SIZE;
-    httpFilter.page = HttpFilterService.DEFAULT_PAGE;
+	/**
+	 * Get infinite page filter
+	 *
+	 * @param sort A string defining the order to apply
+	 */
+	public static getInfiniteFilter(sort?: string[]): HttpFilter {
+		const httpFilter = new HttpFilter();
+		httpFilter.size = HttpFilterService.INFINITE_PAGE_SIZE;
+		httpFilter.page = HttpFilterService.DEFAULT_PAGE;
 
-    if (sort) {
-      httpFilter.sort = sort;
-    }
+		if (sort) {
+			httpFilter.sort = sort;
+		}
 
-    return httpFilter;
-  }
+		return httpFilter;
+	}
 
-  /**
-   * Build query param using filters
-   *
-   * @param url The url
-   * @param httpFilter The filter used to build the url
-   */
-  static getFilteredUrl(url: string, httpFilter: HttpFilter = HttpFilterService.getDefaultFilter()): string {
-    Object.keys(httpFilter).forEach((filterKey) => {
-      if (httpFilter[filterKey]) {
-        if (httpFilter[filterKey] instanceof Array) {
-          httpFilter[filterKey].forEach((filterKeyValue: string) => {
-            url += `&${filterKey}=${encodeURIComponent(filterKeyValue)}`;
-          });
-        } else {
-          url += `&${filterKey}=${encodeURIComponent(httpFilter[filterKey])}`;
-        }
-      }
-    });
+	/**
+	 * Build query param using filters
+	 *
+	 * @param url The url
+	 * @param httpFilter The filter used to build the url
+	 */
+	static getFilteredUrl(url: string, httpFilter: HttpFilter = HttpFilterService.getDefaultFilter()): string {
+		Object.keys(httpFilter).forEach((filterKey) => {
+			if (httpFilter[filterKey]) {
+				if (httpFilter[filterKey] instanceof Array) {
+					httpFilter[filterKey].forEach((filterKeyValue: string) => {
+						url += `&${filterKey}=${encodeURIComponent(filterKeyValue)}`;
+					});
+				} else {
+					url += `&${filterKey}=${encodeURIComponent(httpFilter[filterKey])}`;
+				}
+			}
+		});
 
-    if (url.includes('&')) {
-      url = url.replace('&', '?');
-    }
+		if (url.includes('&')) {
+			url = url.replace('&', '?');
+		}
 
-    return url;
-  }
+		return url;
+	}
 }

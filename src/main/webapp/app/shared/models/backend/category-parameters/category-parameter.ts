@@ -24,11 +24,11 @@ import { Category } from '../category/category';
  * The category parameter entity
  */
 export class CategoryParameter {
-  key: string;
-  value: string;
-  description: string;
-  export: boolean;
-  dataType: DataTypeEnum;
-  category: Category;
-  showValue: boolean;
+	key: string;
+	value: string;
+	description: string;
+	export: boolean;
+	dataType: DataTypeEnum;
+	category: Category;
+	showValue: boolean;
 }

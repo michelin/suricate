@@ -23,6 +23,6 @@ import { TooltipPosition } from '@angular/material/tooltip';
  * Model of Tooltip
  */
 export class TooltipConfiguration {
-  message: string;
-  position?: TooltipPosition;
+	message: string;
+	position?: TooltipPosition;
 }

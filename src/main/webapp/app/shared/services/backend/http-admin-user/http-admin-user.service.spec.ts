@@ -24,16 +24,16 @@ import { TestBed } from '@angular/core/testing';
 import { HttpAdminUserService } from './http-admin-user.service';
 
 describe('HttpAdminUserService', () => {
-  let service: HttpAdminUserService;
+	let service: HttpAdminUserService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(HttpAdminUserService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(HttpAdminUserService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
 });

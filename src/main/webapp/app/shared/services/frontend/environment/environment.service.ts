@@ -27,43 +27,43 @@ import { environment } from '../../../../../environments/environment';
  */
 @Injectable({ providedIn: 'root' })
 export class EnvironmentService {
-  /**
-   * Backend URL
-   */
-  public static readonly backendUrl = `${environment.backend_url}`;
+	/**
+	 * Backend URL
+	 */
+	public static readonly backendUrl = `${environment.backend_url}`;
 
-  /**
-   * When authenticating with OAuth2, frontend URL the backend has to redirect to
-   */
-  public static readonly OAUTH2_FRONTEND_REDIRECT_URL = `${environment.oauth2_frontend_redirect_url}`;
+	/**
+	 * When authenticating with OAuth2, frontend URL the backend has to redirect to
+	 */
+	public static readonly OAUTH2_FRONTEND_REDIRECT_URL = `${environment.oauth2_frontend_redirect_url}`;
 
-  /**
-   * The global app version
-   */
-  public static readonly appVersion = packageJson.version;
+	/**
+	 * The global app version
+	 */
+	public static readonly appVersion = packageJson.version;
 
-  /**
-   * The global app environment
-   */
-  public static readonly appEnv = `${environment.environment}`;
+	/**
+	 * The global app environment
+	 */
+	public static readonly appEnv = `${environment.environment}`;
 
-  /**
-   * Incoming heartbeat for how often to heartbeat the websocket
-   */
-  public static readonly wsHeartbeatIncoming = environment.wsHeartbeatIncoming;
+	/**
+	 * Incoming heartbeat for how often to heartbeat the websocket
+	 */
+	public static readonly wsHeartbeatIncoming = environment.wsHeartbeatIncoming;
 
-  /**
-   * Outgoing heartbeat for how often to heartbeat the websocket
-   */
-  public static readonly wsHeartbeatOutgoing = environment.wsHeartbeatOutgoing;
+	/**
+	 * Outgoing heartbeat for how often to heartbeat the websocket
+	 */
+	public static readonly wsHeartbeatOutgoing = environment.wsHeartbeatOutgoing;
 
-  /**
-   * Delay to wait before attempting to reconnect the websocket
-   */
-  public static readonly wsReconnectDelay = environment.wsReconnectDelay;
+	/**
+	 * Delay to wait before attempting to reconnect the websocket
+	 */
+	public static readonly wsReconnectDelay = environment.wsReconnectDelay;
 
-  /**
-   * Enable the debug logs for the websockets
-   */
-  public static readonly wsDebug = environment.wsDebug;
+	/**
+	 * Enable the debug logs for the websockets
+	 */
+	public static readonly wsDebug = environment.wsDebug;
 }

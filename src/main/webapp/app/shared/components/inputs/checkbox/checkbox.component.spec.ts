@@ -32,61 +32,61 @@ import { FormField } from '../../../models/frontend/form/form-field';
 import { CheckboxComponent } from './checkbox.component';
 
 describe('CheckboxComponent', () => {
-  let component: CheckboxComponent;
-  let fixture: ComponentFixture<CheckboxComponent>;
+	let component: CheckboxComponent;
+	let fixture: ComponentFixture<CheckboxComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CheckboxComponent],
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideAnimationsAsync(),
-        provideRouter(appRoutes),
-        provideTranslateService({
-          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-        })
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [CheckboxComponent],
+			providers: [
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+				provideAnimationsAsync(),
+				provideRouter(appRoutes),
+				provideTranslateService({
+					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+				})
+			]
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(CheckboxComponent);
-    const formBuilder = TestBed.inject(UntypedFormBuilder);
+		fixture = TestBed.createComponent(CheckboxComponent);
+		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
-    component = fixture.componentInstance;
-    component.field = buildMockedFormField(DataTypeEnum.BOOLEAN);
-    component.formGroup = buildMockedFormGroup(DataTypeEnum.BOOLEAN, formBuilder);
+		component = fixture.componentInstance;
+		component.field = buildMockedFormField(DataTypeEnum.BOOLEAN);
+		component.formGroup = buildMockedFormGroup(DataTypeEnum.BOOLEAN, formBuilder);
 
-    fixture.detectChanges();
-  });
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  /**
-   * Build a mocked FormField for the unit tests
-   *
-   * @param type The type of the field to create
-   */
-  function buildMockedFormField(type: DataTypeEnum): FormField {
-    return {
-      key: 'Key',
-      type: type
-    };
-  }
+	/**
+	 * Build a mocked FormField for the unit tests
+	 *
+	 * @param type The type of the field to create
+	 */
+	function buildMockedFormField(type: DataTypeEnum): FormField {
+		return {
+			key: 'Key',
+			type: type
+		};
+	}
 
-  /**
-   * Build a mocked FormGroup for the unit tests
-   *
-   * @param type The type of the field to create
-   * @param formBuilder The form builder to use to create the form group
-   */
-  function buildMockedFormGroup(type: DataTypeEnum, formBuilder: UntypedFormBuilder): UntypedFormGroup {
-    const customField = buildMockedFormField(type);
+	/**
+	 * Build a mocked FormGroup for the unit tests
+	 *
+	 * @param type The type of the field to create
+	 * @param formBuilder The form builder to use to create the form group
+	 */
+	function buildMockedFormGroup(type: DataTypeEnum, formBuilder: UntypedFormBuilder): UntypedFormGroup {
+		const customField = buildMockedFormField(type);
 
-    const formGroup: UntypedFormGroup = formBuilder.group({});
-    formGroup.addControl(customField.key, new UntypedFormControl(customField.value));
+		const formGroup: UntypedFormGroup = formBuilder.group({});
+		formGroup.addControl(customField.key, new UntypedFormControl(customField.value));
 
-    return formGroup;
-  }
+		return formGroup;
+	}
 });
