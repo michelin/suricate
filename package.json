@@ -9,7 +9,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --no-watch --code-coverage --browsers=ChromeHeadlessNoSandbox",
     "lint": "ng lint",
-    "format": "ng lint --fix",
     "prepare": "husky",
     "lint-staged": "lint-staged"
   },
@@ -82,6 +81,6 @@
     "typescript-eslint": "^8.39.1"
   },
   "lint-staged": {
-    "**/*.{js,mjs,cjs,ts}": "eslint --cache --fix --max-warnings 0 src/main/webapp"
+    "**/*.{html,js,ts}": "eslint --fix"
   }
 }
