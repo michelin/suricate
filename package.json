@@ -81,6 +81,6 @@
     "typescript-eslint": "^8.39.1"
   },
   "lint-staged": {
-    "**/*.{html,js,ts}": "eslint --fix"
+    "**/*.{html,ts}": "eslint --fix"
   }
 }
