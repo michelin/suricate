@@ -9,7 +9,7 @@
         color="primary"
         [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
         (click)="file.click()"
-        >
+      >
         <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
         <span> {{ field.label | translate }} </span>
       </button>
@@ -22,7 +22,7 @@
           color="primary"
           [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
           (click)="screenshot()"
-          >
+        >
           <mat-icon> {{ materialIconRecords[iconEnum.SCREENSHOT] }} </mat-icon>
           <span> {{ 'dashboard.take.screenshot' | translate }} </span>
         </button>

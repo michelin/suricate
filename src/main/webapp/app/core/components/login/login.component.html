@@ -9,11 +9,7 @@
     }
 
     @if (!loading && (isDatabaseAuthenticationActivated() || isLdapAuthenticationActivated())) {
-      <form
-        class="login-form"
-        [formGroup]="loginForm"
-        (submit)="login()"
-        >
+      <form class="login-form" [formGroup]="loginForm" (submit)="login()">
         @for (field of formFields; track field) {
           <suricate-input [formGroup]="loginForm" [field]="field"> </suricate-input>
         }
@@ -42,7 +38,7 @@
         @if (isGithubAuthenticationActivated()) {
           <li style="background-color: rgb(68, 68, 68)">
             <a class="identity-provider-link" href="{{ this.githubAuthenticationEndpoint }}">
-              <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub"/>
+              <img ngSrc="../../../../../assets/images/github-white.svg" width="22" height="22" alt="GitHub" />
               <span>{{ 'github' | translate }}</span>
             </a>
           </li>

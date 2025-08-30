@@ -25,9 +25,14 @@
           <a [routerLink]="['/dashboards', project.token, project.grids[0].id]">
             <div class="grid-tile-body">
               @if (project.screenshotToken) {
-              <div class="grid-tile-body-image">
-                <img [ngSrc]="getContentUrl(project.screenshotToken)" fill="true" priority="true" alt="Dashboard screenshot" />
-              </div>
+                <div class="grid-tile-body-image">
+                  <img
+                    [ngSrc]="getContentUrl(project.screenshotToken)"
+                    fill="true"
+                    priority="true"
+                    alt="Dashboard screenshot"
+                  />
+                </div>
               }
               @if (!project.screenshotToken) {
                 <mat-icon color="primary">

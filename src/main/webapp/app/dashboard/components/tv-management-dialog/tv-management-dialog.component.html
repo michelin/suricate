@@ -23,7 +23,9 @@
   <!-- Registered screen part -->
   <div>
     <div>
-      <h2 class="little title">{{ 'screen.linked' | translate }} - {{ websocketClients?.length }} {{ 'client' | translate }}</h2>
+      <h2 class="little title">
+        {{ 'screen.linked' | translate }} - {{ websocketClients?.length }} {{ 'client' | translate }}
+      </h2>
       <mat-divider></mat-divider>
     </div>
 
@@ -35,7 +37,10 @@
             {{ materialIconRecords[iconEnum.TV] }}
           </mat-icon>
           <span class="screen-code"> {{ 'screen.code' | translate }}: {{ websocketClient.screenCode }} </span>
-          <suricate-buttons [configurations]="connectedScreenButtonsConfiguration" [object]="websocketClient"></suricate-buttons>
+          <suricate-buttons
+            [configurations]="connectedScreenButtonsConfiguration"
+            [object]="websocketClient"
+          ></suricate-buttons>
         </div>
       }
     </div>

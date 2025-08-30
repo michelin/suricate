@@ -3,7 +3,8 @@
   [ngClass]="widget?.technicalName + ' widget-' + projectWidget.id"
   [class.widget-disable-move-cursor]="readOnly"
   (mouseenter)="displayButtons = true"
-  (mouseleave)="displayButtons = false">
+  (mouseleave)="displayButtons = false"
+>
   @if (loading) {
     <suricate-spinner color="accent"></suricate-spinner>
   }
@@ -20,7 +21,12 @@
     <!--                 WIDGET HTML                   -->
     <!--------------------------------------------------->
     <div class="grid-stack-item-content">
-      <div class="widget-html-content" widgetHtmlDirective [projectWidget]="projectWidget" [innerHTML]="projectWidget.instantiateHtml | safeHtml"></div>
+      <div
+        class="widget-html-content"
+        widgetHtmlDirective
+        [projectWidget]="projectWidget"
+        [innerHTML]="projectWidget.instantiateHtml | safeHtml"
+      ></div>
     </div>
     <!--------------------------------------------------->
     <!--             WIDGET ISSUE INFO                 -->
@@ -60,7 +66,7 @@
           aria-disabled="false"
           matTooltip="{{ 'widget.delete' | translate }}"
           (click)="displayDeleteProjectWidgetDialog()"
-          >
+        >
           <mat-icon class="material-icons">
             {{ materialIconRecords[iconEnum.DELETE] }}
           </mat-icon>
@@ -71,7 +77,7 @@
           aria-disabled="false"
           matTooltip="{{ 'widget.edit' | translate }}"
           (click)="displayEditFormSidenav()"
-          >
+        >
           <mat-icon class="material-icons">
             {{ materialIconRecords[iconEnum.EDIT] }}
           </mat-icon>
@@ -82,7 +88,7 @@
           aria-disabled="false"
           matTooltip="{{ 'widget.log' | translate }}"
           (click)="displayLogProjectWidgetDialog()"
-          >
+        >
           <mat-icon class="material-icons">
             {{ materialIconRecords[iconEnum.TEXT] }}
           </mat-icon>
@@ -91,4 +97,3 @@
     }
   }
 </div>
-

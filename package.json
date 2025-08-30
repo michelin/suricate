@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --no-watch --code-coverage --browsers=ChromeHeadlessNoSandbox",
     "lint": "ng lint",
-    "format": "eslint --fix src/main/webapp && prettier --write src/main/webapp",
+    "format": "ng lint --fix",
     "prepare": "husky",
     "lint-staged": "lint-staged"
   },

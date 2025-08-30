@@ -1,16 +1,17 @@
 <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
 <section class="container stepper-container">
-  <mat-horizontal-stepper #wizardStepper [linear]="true" labelPosition="bottom" (selectionChange)="onStepChanged($event)">
+  <mat-horizontal-stepper
+    #wizardStepper
+    [linear]="true"
+    labelPosition="bottom"
+    (selectionChange)="onStepChanged($event)"
+  >
     @for (step of wizardConfiguration?.steps; track step; let index = $index) {
       <ng-template [matStepperIcon]="step.icon">
         <mat-icon> {{ materialIconRecords[step.icon] }} </mat-icon>
       </ng-template>
-      <mat-step
-        [stepControl]="$any(getFormGroupOfStep(step))"
-        [optional]="step.optional"
-        [state]="step.icon"
-        >
+      <mat-step [stepControl]="$any(getFormGroupOfStep(step))" [optional]="step.optional" [state]="step.icon">
         <ng-template matStepLabel>
           <div>{{ step.title | translate }}</div>
           <hr />
@@ -18,9 +19,7 @@
         @if (this.currentStep.key === step.key) {
           <div class="widget-config-step">
             @if (step.imageLink || step.description || step.information || step.category) {
-              <div
-                class="step-detail"
-                >
+              <div class="step-detail">
                 <div class="step-image-link">
                   @if (step.imageLink) {
                     <img [ngSrc]="step.imageLink.link" fill="true" priority="true" alt="Widget" />

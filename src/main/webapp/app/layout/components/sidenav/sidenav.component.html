@@ -8,19 +8,14 @@
     opened="false"
     [fixedInViewport]="true"
     [autoFocus]="false"
-    >
-    <suricate-form-sidenav (openFormSidenav)="openFormSidenav()" (closeFormSidenav)="closeFormSidenav()"> </suricate-form-sidenav>
+  >
+    <suricate-form-sidenav (openFormSidenav)="openFormSidenav()" (closeFormSidenav)="closeFormSidenav()">
+    </suricate-form-sidenav>
   </mat-sidenav>
 
   <!-- Sidenav used to display the menu -->
   @if (!shouldHideMenu) {
-    <mat-sidenav
-      mode="side"
-      position="start"
-      opened="true"
-      class="menu-sidenav"
-      [fixedInViewport]="true"
-      >
+    <mat-sidenav mode="side" position="start" opened="true" class="menu-sidenav" [fixedInViewport]="true">
       <suricate-menu> </suricate-menu>
     </mat-sidenav>
   }
