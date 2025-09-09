@@ -100,9 +100,9 @@ public class WebConfig implements WebMvcConfigurer {
                         .accessDeniedHandler(authFailureEntryPoint))
                 .headers(headersConfigurer ->
                         headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .addFilterAfter(new ClientRoutingFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new ClientRoutingFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(authorizeRequestsConfigurer -> {
                     authorizeRequestsConfigurer
                             .requestMatchers(CorsUtils::isPreFlightRequest)
