@@ -11,9 +11,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": {
-              "base": "target/dist/public"
-            },
+            "outputPath": "target/dist/public",
             "index": "src/main/webapp/index.html",
             "tsConfig": "src/main/webapp/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -43,10 +41,6 @@
               "url"
             ],
             "optimization": false,
-            "sourceMap": true,
-            "namedChunks": false,
-            "aot": true,
-            "extractLicenses": false,
             "browser": "src/main/webapp/main.ts"
           },
           "configurations": {
@@ -70,11 +64,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": ""
