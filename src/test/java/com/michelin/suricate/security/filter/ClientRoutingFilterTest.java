@@ -67,6 +67,7 @@ class ClientRoutingFilterTest {
     @ParameterizedTest
     @ValueSource(
             strings = {
+                "test",
                 "/index.html",
                 "/main.js",
                 "/styles.css",
