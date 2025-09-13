@@ -224,7 +224,7 @@ export class DashboardScreen implements AfterViewInit, OnDestroy {
 	 * and a callback which notify subscribers when the library is loaded.
 	 */
 	public addExternalJSLibrariesToTheDOM() {
-		if (this.project) {
+		if (this.project()) {
 			this.libraryService.init(this.project().librariesToken.length);
 
 			if (this.project().librariesToken.length > 0) {

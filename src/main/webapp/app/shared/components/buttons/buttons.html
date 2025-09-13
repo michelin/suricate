@@ -26,7 +26,7 @@
 			[type]="configuration.type ? configuration.type : buttonType.BUTTON"
 			[class.button-warn-color]="configuration.color === buttonColor.WARN"
 			[disabled]="configuration.disabled | async"
-			(click)="configuration.callback ? configuration.callback($event, object) : null"
+			(click)="configuration.callback ? configuration.callback($event, object()) : null"
 		>
 			@if (configuration.icon) {
 				<mat-icon [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
