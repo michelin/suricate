@@ -232,15 +232,15 @@ export class DashboardScreen implements AfterViewInit, OnDestroy {
 					const script: HTMLScriptElement = document.createElement('script');
 					script.type = 'text/javascript';
 					script.src = HttpAssetService.getContentUrl(token);
-					script.onload = () => this.libraryService.markScriptAsLoaded(token);
+					script.onload = () =>
+						setTimeout(() => {
+							this.libraryService.markScriptAsLoaded(token);
+						}, 100); // Small delay to ensure the script is fully executed before rendering the widgets
 					script.async = false;
 
 					this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
 				});
-			}
-
-			// No library to load
-			else {
+			} else {
 				this.libraryService.emitAreJSScriptsLoaded(true);
 			}
 		}
