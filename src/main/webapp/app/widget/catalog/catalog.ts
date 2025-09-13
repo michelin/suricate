@@ -55,7 +55,7 @@ import { HttpWidgetService } from '../../shared/services/backend/http-widget/htt
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpWidgetService }]
 })
-export class CatalogComponent extends List<Widget, WidgetRequest> {
+export class Catalog extends List<Widget, WidgetRequest> {
 	/**
 	 * Constructor
 	 */
