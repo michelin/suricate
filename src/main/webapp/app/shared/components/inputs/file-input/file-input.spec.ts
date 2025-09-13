@@ -24,7 +24,7 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angul
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { DataType } from '../../../enums/data-type';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { FileInput } from './file-input';
 
@@ -48,8 +48,8 @@ describe('FileInput', () => {
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataTypeEnum.FILE);
-		component.formGroup = buildMockedFormGroup(DataTypeEnum.FILE, formBuilder);
+		component.field = buildMockedFormField(DataType.FILE);
+		component.formGroup = buildMockedFormGroup(DataType.FILE, formBuilder);
 
 		fixture.detectChanges();
 	});
@@ -63,7 +63,7 @@ describe('FileInput', () => {
 	 *
 	 * @param type The type of the field to create
 	 */
-	function buildMockedFormField(type: DataTypeEnum): FormField {
+	function buildMockedFormField(type: DataType): FormField {
 		return {
 			key: 'Key',
 			type: type
@@ -76,7 +76,7 @@ describe('FileInput', () => {
 	 * @param type The type of the field to create
 	 * @param formBuilder The form builder to use to create the form group
 	 */
-	function buildMockedFormGroup(type: DataTypeEnum, formBuilder: UntypedFormBuilder): UntypedFormGroup {
+	function buildMockedFormGroup(type: DataType, formBuilder: UntypedFormBuilder): UntypedFormGroup {
 		const customField = buildMockedFormField(type);
 
 		const formGroup: UntypedFormGroup = formBuilder.group({});

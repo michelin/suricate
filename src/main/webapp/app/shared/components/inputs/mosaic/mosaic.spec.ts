@@ -19,7 +19,7 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { DataType } from '../../../enums/data-type';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { Mosaic } from './mosaic';
 
@@ -34,7 +34,7 @@ describe('Mosaic', () => {
 
 		fixture = TestBed.createComponent(Mosaic);
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataTypeEnum.MOSAIC);
+		component.field = buildMockedFormField(DataType.MOSAIC);
 
 		fixture.detectChanges();
 	});
@@ -48,7 +48,7 @@ describe('Mosaic', () => {
 	 *
 	 * @param type The type of the field to create
 	 */
-	function buildMockedFormField(type: DataTypeEnum): FormField {
+	function buildMockedFormField(type: DataType): FormField {
 		return {
 			key: 'Key',
 			type: type

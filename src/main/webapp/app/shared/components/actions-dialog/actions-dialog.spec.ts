@@ -24,7 +24,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { IconEnum } from '../../enums/icon.enum';
+import { Icon } from '../../enums/icon';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
 import { ActionsDialog } from './actions-dialog';
 
@@ -63,7 +63,7 @@ describe('ActionsDialog', () => {
 			message: 'Message',
 			actions: [
 				{
-					icon: IconEnum.ADD,
+					icon: Icon.ADD,
 					variant: 'miniFab'
 				}
 			]

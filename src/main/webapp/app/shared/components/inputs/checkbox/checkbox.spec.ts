@@ -27,7 +27,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { appRoutes } from '../../../../app.routes';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { DataType } from '../../../enums/data-type';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { Checkbox } from './checkbox';
 
@@ -53,8 +53,8 @@ describe('Checkbox', () => {
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataTypeEnum.BOOLEAN);
-		component.formGroup = buildMockedFormGroup(DataTypeEnum.BOOLEAN, formBuilder);
+		component.field = buildMockedFormField(DataType.BOOLEAN);
+		component.formGroup = buildMockedFormGroup(DataType.BOOLEAN, formBuilder);
 
 		fixture.detectChanges();
 	});
@@ -68,7 +68,7 @@ describe('Checkbox', () => {
 	 *
 	 * @param type The type of the field to create
 	 */
-	function buildMockedFormField(type: DataTypeEnum): FormField {
+	function buildMockedFormField(type: DataType): FormField {
 		return {
 			key: 'Key',
 			type: type
@@ -81,7 +81,7 @@ describe('Checkbox', () => {
 	 * @param type The type of the field to create
 	 * @param formBuilder The form builder to use to create the form group
 	 */
-	function buildMockedFormGroup(type: DataTypeEnum, formBuilder: UntypedFormBuilder): UntypedFormGroup {
+	function buildMockedFormGroup(type: DataType, formBuilder: UntypedFormBuilder): UntypedFormGroup {
 		const customField = buildMockedFormField(type);
 
 		const formGroup: UntypedFormGroup = formBuilder.group({});

@@ -25,7 +25,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { DataType } from '../../../enums/data-type';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { Input } from './input';
 
@@ -50,8 +50,8 @@ describe('Input', () => {
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataTypeEnum.TEXT);
-		component.formGroup = buildMockedFormGroup(DataTypeEnum.TEXT, formBuilder);
+		component.field = buildMockedFormField(DataType.TEXT);
+		component.formGroup = buildMockedFormGroup(DataType.TEXT, formBuilder);
 
 		fixture.detectChanges();
 	});
@@ -65,7 +65,7 @@ describe('Input', () => {
 	 *
 	 * @param type The type of the field to create
 	 */
-	function buildMockedFormField(type: DataTypeEnum): FormField {
+	function buildMockedFormField(type: DataType): FormField {
 		return {
 			key: 'Key',
 			type: type
@@ -78,7 +78,7 @@ describe('Input', () => {
 	 * @param type The type of the field to create
 	 * @param formBuilder The form builder to use to create the form group
 	 */
-	function buildMockedFormGroup(type: DataTypeEnum, formBuilder: UntypedFormBuilder): UntypedFormGroup {
+	function buildMockedFormGroup(type: DataType, formBuilder: UntypedFormBuilder): UntypedFormGroup {
 		const customField = buildMockedFormField(type);
 
 		const formGroup: UntypedFormGroup = formBuilder.group({});
