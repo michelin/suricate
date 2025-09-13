@@ -20,15 +20,13 @@
 import {
 	AfterViewInit,
 	Component,
+	effect,
 	ElementRef,
-	EventEmitter,
 	inject,
-	Input,
-	OnChanges,
+	input,
 	OnDestroy,
-	Output,
+	output,
 	Renderer2,
-	SimpleChanges,
 	ViewChild
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
@@ -76,7 +74,7 @@ declare global {
 		SafeHtmlPipe
 	]
 })
-export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
+export class DashboardScreen implements AfterViewInit, OnDestroy {
 	private readonly renderer = inject(Renderer2);
 	private readonly httpProjectService = inject(HttpProjectService);
 	private readonly websocketService = inject(WebsocketService);
@@ -91,45 +89,38 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	/**
 	 * The project to display
 	 */
-	@Input()
-	public project: Project;
+	public project = input<Project>();
 
 	/**
 	 * The project widget list
 	 */
-	@Input()
-	public projectWidgets: ProjectWidget[];
+	public projectWidgets = input<ProjectWidget[]>();
 
 	/**
 	 * Tell if the dashboard should be on readOnly or not
 	 */
-	@Input()
-	public readOnly = true;
+	public readOnly = input<boolean>(true);
 
 	/**
 	 * The screen code
 	 */
-	@Input()
-	public screenCode: number;
+	public screenCode = input<number>();
 
 	/**
 	 * Tell if the websockets need to be opened.
 	 * E.g.: In case of grids rotation, do not open websockets for each grid
 	 */
-	@Input()
-	public openWebsockets = true;
+	public openWebsockets = input<boolean>(true);
 
 	/**
 	 * Event for handling the disconnection
 	 */
-	@Output()
-	public disconnectEvent = new EventEmitter<void>();
+	public disconnectEvent = output<void>();
 
 	/**
 	 * Use to tell to the parent component that it should refresh the project widgets
 	 */
-	@Output()
-	public refreshAllProjectWidgets = new EventEmitter<void>();
+	public refreshAllProjectWidgets = output<void>();
 
 	/**
 	 * Subject used to unsubscribe all the subscriptions to project web sockets
@@ -162,47 +153,62 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	public materialIconRecords = MaterialIconRecords;
 
 	/**
-	 * On changes method
-	 *
-	 * @param changes The change event
+	 * The current project used to compare if the project has changed
 	 */
-	public ngOnChanges(changes: SimpleChanges): void {
-		if (changes['project']) {
-			if (!changes['project'].previousValue) {
-				// Inject this variable in the window scope because some widgets use it to init the js
-				window.page_loaded = true;
-			}
+	previousProject: Project | undefined;
 
-			if (changes['project'].currentValue) {
-				this.initGridStackOptions();
+	/**
+	 * Tell if the component has already been initialized
+	 */
+	hasInitialized = false;
 
-				// Do not add libs in the DOM at first view init
-				// Let the after view init method handle the first initialization
-				if (!changes['project'].firstChange) {
-					this.addExternalJSLibrariesToTheDOM();
+	/**
+	 * Constructor.
+	 */
+	constructor() {
+		effect(() => {
+			if (this.project() !== this.previousProject) {
+				if (!this.previousProject) {
+					// Inject this variable in the window scope because some widgets use it to init the js
+					window.page_loaded = true;
 				}
 
-				if (!changes['project'].previousValue) {
-					this.initProjectWebsockets();
-				} else if (changes['project'].previousValue.token !== changes['project'].currentValue.token) {
-					this.resetProjectWebsockets();
-				}
-			}
-		}
+				if (this.project()) {
+					this.initGridStackOptions();
 
-		if (changes['readOnly']) {
+					// Do not add libs in the DOM at first view init
+					// Let the after view init method handle the first initialization
+					if (this.hasInitialized) {
+						this.addExternalJSLibrariesToTheDOM();
+					}
+
+					if (!this.previousProject) {
+						this.initProjectWebsockets();
+					} else if (this.previousProject.token !== this.project().token) {
+						this.resetProjectWebsockets();
+					}
+				}
+
+				this.previousProject = this.project();
+			}
+		});
+
+		effect(() => {
+			this.readOnly();
 			this.initGridStackOptions();
-		}
+		});
 
-		if (changes['projectWidgets']) {
+		effect(() => {
+			this.projectWidgets();
 			this.initGrid();
-		}
+		});
 	}
 
 	/**
 	 * After view init method
 	 */
 	public ngAfterViewInit(): void {
+		this.hasInitialized = true;
 		this.addExternalJSLibrariesToTheDOM();
 	}
 
@@ -219,10 +225,10 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	 */
 	public addExternalJSLibrariesToTheDOM() {
 		if (this.project) {
-			this.libraryService.init(this.project.librariesToken.length);
+			this.libraryService.init(this.project().librariesToken.length);
 
-			if (this.project.librariesToken.length > 0) {
-				this.project.librariesToken.forEach((token) => {
+			if (this.project().librariesToken.length > 0) {
+				this.project().librariesToken.forEach((token) => {
 					const script: HTMLScriptElement = document.createElement('script');
 					script.type = 'text/javascript';
 					script.src = HttpAssetService.getContentUrl(token);
@@ -256,17 +262,17 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	 * Init the options for Grid Stack plugin
 	 */
 	private initGridStackOptions(): void {
-		if (this.project) {
+		if (this.project()) {
 			this.gridOptions = {
-				cols: this.project.gridProperties.maxColumn,
-				rowHeight: this.project.gridProperties.widgetHeight,
+				cols: this.project().gridProperties.maxColumn,
+				rowHeight: this.project().gridProperties.widgetHeight,
 				gap: 5,
 				draggable: false,
 				resizable: false,
 				compactType: undefined
 			};
 
-			if (!this.readOnly) {
+			if (!this.readOnly()) {
 				this.gridOptions = {
 					...this.gridOptions,
 					draggable: true,
@@ -291,7 +297,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	private getGridLayoutFromProjectWidgets(): KtdGridLayout {
 		const layout: KtdGridLayout = [];
 
-		this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
+		this.projectWidgets().forEach((projectWidget: ProjectWidget) => {
 			layout.push({
 				id: String(projectWidget.id),
 				x: projectWidget.widgetPosition.gridColumn - 1,
@@ -312,7 +318,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	 * Init web sockets for project events
 	 */
 	private initProjectWebsockets(): void {
-		if (this.openWebsockets) {
+		if (this.openWebsockets()) {
 			this.unsubscribeProjectWebSocket = new Subject<void>();
 			this.websocketProjectEventSubscription();
 			this.websocketProjectScreenEventSubscription();
@@ -323,7 +329,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	 * Reset the project web sockets subscriptions
 	 */
 	private resetProjectWebsockets(): void {
-		if (this.openWebsockets) {
+		if (this.openWebsockets()) {
 			this.unsubscribeProjectWebsockets();
 			this.initProjectWebsockets();
 		}
@@ -348,7 +354,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	 * Create a websocket subscription for the current project
 	 */
 	private websocketProjectEventSubscription(): void {
-		const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
+		const projectSubscriptionUrl = `/user/${this.project().token}/queue/live`;
 
 		this.websocketService
 			.watch(projectSubscriptionUrl)
@@ -380,7 +386,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	 * Create a websocket subscription for the current screen
 	 */
 	private websocketProjectScreenEventSubscription(): void {
-		const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
+		const screenSubscriptionUrl = `/user/${this.project().token}-${this.screenCode()}/queue/unique`;
 
 		this.websocketService
 			.watch(screenSubscriptionUrl)
@@ -415,7 +421,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 			});
 
 			this.httpProjectService
-				.updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests)
+				.updateProjectWidgetPositions(this.project().token, projectWidgetPositionRequests)
 				.subscribe();
 		}
 	}
@@ -446,6 +452,6 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	 * @param id The id of the project widget
 	 */
 	public getProjectWidgetById(id: string): ProjectWidget {
-		return this.projectWidgets.find((projectWidget) => projectWidget.id === Number(id));
+		return this.projectWidgets().find((projectWidget) => projectWidget.id === Number(id));
 	}
 }

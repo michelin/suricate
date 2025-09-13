@@ -11,10 +11,10 @@
 				(click)="file.click()"
 			>
 				<mat-icon> {{ materialIconRecords[icon.UPLOAD] }} </mat-icon>
-				<span> {{ field.label | translate }} </span>
+				<span> {{ field().label | translate }} </span>
 			</button>
 
-			@if (componentRef) {
+			@if (componentRef()) {
 				<button
 					mat-flat-button
 					type="button"

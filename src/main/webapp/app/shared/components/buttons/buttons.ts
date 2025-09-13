@@ -18,7 +18,7 @@
  */
 
 import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -42,24 +42,22 @@ export class Buttons<T> {
 	/**
 	 * The list of buttons to display
 	 */
-	@Input()
-	public configurations: ButtonConfiguration<T>[];
+	public configurations = input<ButtonConfiguration<T>[]>();
 
 	/**
 	 * Object to raised with the click event
 	 */
-	@Input()
-	public object: T;
+	public object = input<T>();
 
 	/**
 	 * The different type of buttons
 	 */
-	public buttonTypeEnum = ButtonType;
+	public buttonType = ButtonType;
 
 	/**
 	 * The different color of buttons
 	 */
-	public buttonColorEnum = ButtonColor;
+	public buttonColor = ButtonColor;
 
 	/**
 	 * Records that store the icons code for an enum

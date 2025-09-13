@@ -50,10 +50,12 @@ export class Mosaic extends BaseInput implements OnInit {
 	 * Called when the component is init
 	 */
 	public ngOnInit(): void {
-		if (this.field.mosaicOptions) {
-			this.field.mosaicOptions(this.formGroup).subscribe((mosaicOptions: MosaicFormOption[]) => {
-				this.mosaicOptions = mosaicOptions;
-			});
+		if (this.field().mosaicOptions) {
+			this.field()
+				.mosaicOptions(this.formGroup())
+				.subscribe((mosaicOptions: MosaicFormOption[]) => {
+					this.mosaicOptions = mosaicOptions;
+				});
 		}
 	}
 
@@ -64,7 +66,7 @@ export class Mosaic extends BaseInput implements OnInit {
 	 */
 	public selectOption(mosaicOption: MosaicFormOption): void {
 		this.optionSelected = mosaicOption;
-		this.formGroup.controls[this.field.key].setValue(mosaicOption.value);
+		this.formGroup().controls[this.field().key].setValue(mosaicOption.value);
 
 		this.emitValueChangeEventFromType('mosaicOptionSelected');
 	}

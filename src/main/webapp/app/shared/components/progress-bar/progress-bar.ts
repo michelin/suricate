@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 
@@ -31,12 +31,10 @@ export class ProgressBar {
 	/**
 	 * The color to use with the spinner
 	 */
-	@Input()
-	public color: ThemePalette;
+	public color = input<ThemePalette>();
 
 	/**
 	 * The value of the progress bar
 	 */
-	@Input()
-	public value: number;
+	public value = input<number>();
 }

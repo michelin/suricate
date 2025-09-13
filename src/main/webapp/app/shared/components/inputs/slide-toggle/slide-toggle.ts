@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -32,20 +32,17 @@ export class SlideToggle {
 	/**
 	 * The label of the slide toggle
 	 */
-	@Input()
-	public label: string;
+	public label = input<string>();
 
 	/**
 	 * Is the toggle button checked or not
 	 */
-	@Input()
-	public toggleChecked: boolean;
+	public toggleChecked = model<boolean>();
 
 	/**
 	 * The event emitter
 	 */
-	@Output()
-	slideToggleButtonPressed = new EventEmitter<MatSlideToggleChange>();
+	public slideToggleButtonPressed = output<MatSlideToggleChange>();
 
 	/**
 	 * Trigger the event emitter when the slide toggle button is pressed

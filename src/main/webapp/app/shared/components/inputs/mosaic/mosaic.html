@@ -3,7 +3,7 @@
 }
 
 @if (mosaicOptions?.length > 0) {
-	<mat-grid-list [cols]="field.columnNumber ? field.columnNumber : 4" rowHeight="250px" gutterSize="17px">
+	<mat-grid-list [cols]="field().columnNumber ? field().columnNumber : 4" rowHeight="250px" gutterSize="17px">
 		@for (mosaicOption of mosaicOptions; track mosaicOption) {
 			<mat-grid-tile
 				class="mat-elevation-z3"

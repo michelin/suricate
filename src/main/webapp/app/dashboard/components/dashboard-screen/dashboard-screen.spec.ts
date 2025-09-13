@@ -47,7 +47,7 @@ describe('DashboardScreen', () => {
 
 		fixture = TestBed.createComponent(DashboardScreen);
 		component = fixture.componentInstance;
-		component.project = buildMockedProject();
+		fixture.componentRef.setInput('project', buildMockedProject());
 		component.gridOptions = buildGridOptions();
 
 		fixture.detectChanges();

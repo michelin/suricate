@@ -14,7 +14,7 @@
 		}
 		<div class="settings-main-container">
 			<div>
-				@for (field of configuration.formFields; track field) {
+				@for (field of configuration.formFields; track field.key) {
 					<suricate-input
 						[formGroup]="formGroup"
 						[componentRef]="configuration.componentRef"

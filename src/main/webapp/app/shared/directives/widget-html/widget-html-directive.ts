@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Directive, ElementRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, effect, ElementRef, inject, input } from '@angular/core';
 
 import { ProjectWidget } from '../../models/backend/project-widget/project-widget';
 
@@ -28,25 +28,22 @@ import { ProjectWidget } from '../../models/backend/project-widget/project-widge
 	selector: '[widgetHtmlDirective]',
 	standalone: true
 })
-export class WidgetHtmlDirective implements OnChanges {
+export class WidgetHtmlDirective {
 	private readonly elementRef = inject(ElementRef);
 
 	/**
 	 * The rendered project widget
 	 */
-	@Input()
-	public projectWidget: ProjectWidget;
+	public projectWidget = input<ProjectWidget>();
 
 	/**
-	 * On changes
-	 *
-	 * @param changes The change event
+	 * Constructor.
 	 */
-	ngOnChanges(changes: SimpleChanges): void {
-		// When the widget changes, reapply the JS scripts
-		if (changes['projectWidget']) {
+	constructor() {
+		effect(() => {
+			this.projectWidget();
 			this.reapplyJSScripts();
-		}
+		});
 	}
 
 	/**

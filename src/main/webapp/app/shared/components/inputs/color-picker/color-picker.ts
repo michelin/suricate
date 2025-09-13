@@ -47,6 +47,6 @@ export class ColorPicker extends BaseInput {
 	 * Get the field value
 	 */
 	public getFieldValue(): string {
-		return this.field.value as string;
+		return this.field().value as string;
 	}
 }

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
@@ -34,6 +34,5 @@ export class Spinner {
 	/**
 	 * The color to use with the spinner
 	 */
-	@Input()
-	public color: ThemePalette;
+	public color = input<ThemePalette>();
 }

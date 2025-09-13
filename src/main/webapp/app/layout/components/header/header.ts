@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -40,14 +40,7 @@ export class Header implements OnInit {
 	/**
 	 * The configuration of the header
 	 */
-	@Input()
-	public configuration: HeaderConfiguration;
-
-	/**
-	 * True if the menu should be display on the page
-	 */
-	@Input()
-	public showMenu = true;
+	public configuration = input<HeaderConfiguration>();
 
 	/**
 	 * The page name

@@ -2,7 +2,7 @@
 @if (shouldDisplayScreenCode) {
 	<div id="screen-code-div">
 		<mat-icon> {{ materialIconRecords[icon.TV] }} </mat-icon>
-		<span>{{ screenCode }}</span>
+		<span>{{ screenCode() }}</span>
 	</div>
 }
 
@@ -16,9 +16,9 @@
 		[layout]="currentGrid"
 		(layoutUpdated)="onLayoutUpdated($event)"
 	>
-		<span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
+		<span [innerHTML]="'<style>' + project()?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
 		<span #externalJsLibraries></span>
-		@for (gridItem of currentGrid; track gridItem) {
+		@for (gridItem of currentGrid; track gridItem.id) {
 			<ktd-grid-item
 				class="mat-elevation-z4"
 				[id]="gridItem.id"
@@ -27,8 +27,8 @@
 			>
 				<suricate-dashboard-screen-widget
 					[projectWidget]="getProjectWidgetById(gridItem.id)"
-					[projectToken]="project.token"
-					[readOnly]="readOnly"
+					[projectToken]="project().token"
+					[readOnly]="readOnly()"
 				>
 				</suricate-dashboard-screen-widget>
 				<!-- Background when moving the widget -->
@@ -36,8 +36,8 @@
 					<suricate-dashboard-screen-widget
 						class="grid-placeholder"
 						[projectWidget]="getProjectWidgetById(gridItem.id)"
-						[projectToken]="project.token"
-						[readOnly]="readOnly"
+						[projectToken]="project().token"
+						[readOnly]="readOnly()"
 					>
 					</suricate-dashboard-screen-widget>
 				</ng-template>

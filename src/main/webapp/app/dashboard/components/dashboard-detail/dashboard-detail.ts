@@ -203,9 +203,11 @@ export class DashboardDetail implements OnInit, OnDestroy {
 	 * Check if the dashboard should be displayed as readonly
 	 */
 	private isReadOnlyDashboard(): Observable<boolean> {
-		return this.dashboardService
-			.shouldDisplayedReadOnly(this.dashboardToken)
-			.pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
+		return this.dashboardService.shouldDisplayedReadOnly(this.dashboardToken).pipe(
+			tap((isReadonly: boolean) => {
+				this.isReadOnly = isReadonly;
+			})
+		);
 	}
 
 	/**

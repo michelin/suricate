@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 import { HttpFilterService } from '../../services/backend/http-filter/http-filter-service';
@@ -35,32 +35,27 @@ export class Paginator {
 	/**
 	 * Hide the page size
 	 */
-	@Input()
-	hidePageSize: boolean;
+	hidePageSize = input<boolean>();
 
 	/**
 	 * The current page to display
 	 */
-	@Input()
-	currentPage: number;
+	currentPage = input<number>();
 
 	/**
 	 * Number of elements per paged
 	 */
-	@Input()
-	pageNbElements: number;
+	pageNbElements = input<number>();
 
 	/**
 	 * Total of fetch elements
 	 */
-	@Input()
-	totalElements: number;
+	totalElements = input<number>();
 
 	/**
 	 * Event emit when the page has changed
 	 */
-	@Output()
-	pageChange = new EventEmitter<PageEvent>();
+	pageChange = output<PageEvent>();
 
 	/**
 	 * Used to emit an event when the page has changed

@@ -17,20 +17,37 @@
  * under the License.
  */
 
-import { AfterViewInit, Directive, ElementRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Directive, effect, ElementRef, inject, input } from '@angular/core';
 
 @Directive({
 	selector: '[hideAfterInit]',
 	standalone: true
 })
-export class HideAfterInitDirective implements OnChanges, AfterViewInit {
+export class HideAfterInitDirective implements AfterViewInit {
 	private readonly elementRef = inject(ElementRef);
 
 	/**
 	 * True if the element should be hidden
 	 */
-	@Input()
-	public hide: boolean;
+	public hide = input<boolean>();
+
+	/**
+	 * True if the directive has been initialized
+	 */
+	private hasInitialized = false;
+
+	/**
+	 * Constructor.
+	 */
+	constructor() {
+		effect(() => {
+			const hideValue = this.hide();
+
+			if (this.hasInitialized) {
+				this.elementRef.nativeElement.style.display = hideValue ? 'none' : 'block';
+			}
+		});
+	}
 
 	/**
 	 * After view init
@@ -38,19 +55,8 @@ export class HideAfterInitDirective implements OnChanges, AfterViewInit {
 	ngAfterViewInit(): void {
 		// Let the time to Js to render the element before hiding it
 		setTimeout(() => {
-			this.elementRef.nativeElement.style.display = this.hide ? 'none' : 'block';
+			this.elementRef.nativeElement.style.display = this.hide() ? 'none' : 'block';
+			this.hasInitialized = true;
 		}, 100);
-	}
-
-	/**
-	 * On changes
-	 * Hide or show the element depending on the hide input
-	 * Not performed on the first change
-	 * @param changes
-	 */
-	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['hide'].firstChange && changes['hide']) {
-			this.elementRef.nativeElement.style.display = this.hide ? 'none' : 'block';
-		}
 	}
 }

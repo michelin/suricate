@@ -18,7 +18,7 @@
  */
 
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, input, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -41,8 +41,7 @@ export class FileInput extends BaseInput implements OnInit {
 	/**
 	 * A reference to a component. Used to take screenshot
 	 */
-	@Input()
-	public componentRef: ElementRef;
+	public componentRef = input<ElementRef>();
 
 	/**
 	 * The image as base 64
@@ -58,7 +57,7 @@ export class FileInput extends BaseInput implements OnInit {
 	 * When the component is init
 	 */
 	public ngOnInit(): void {
-		this.setBase64File(this.field.value as string);
+		this.setBase64File(this.field().value as string);
 	}
 
 	/**
@@ -115,7 +114,7 @@ export class FileInput extends BaseInput implements OnInit {
 	 * Take a screenshot of the dashboard
 	 */
 	public screenshot(): void {
-		html2canvas(this.componentRef.nativeElement, {
+		html2canvas(this.componentRef().nativeElement, {
 			backgroundColor: 'transparent',
 			foreignObjectRendering: true,
 			scrollX: -190,

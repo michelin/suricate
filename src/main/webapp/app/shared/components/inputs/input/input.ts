@@ -25,6 +25,7 @@ import {
 	FormsModule,
 	ReactiveFormsModule,
 	UntypedFormGroup,
+	ValidatorFn,
 	Validators
 } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
@@ -115,11 +116,11 @@ export class Input extends BaseInput implements OnInit {
 	 * Called when the component is init
 	 */
 	public ngOnInit(): void {
-		this.originalTypeIsPassword = this.field.type === DataType.PASSWORD;
+		this.originalTypeIsPassword = this.field().type === DataType.PASSWORD;
 
 		this.initOptionsField();
 
-		if (this.field.deleteRow) {
+		if (this.field().deleteRow) {
 			this.initDeleteRowConfiguration();
 		}
 	}
@@ -128,10 +129,12 @@ export class Input extends BaseInput implements OnInit {
 	 * Init the field options
 	 */
 	private initOptionsField(): void {
-		if (this.field.options) {
-			this.field.options().subscribe((options: FormOption[]) => {
-				this.options = options;
-			});
+		if (this.field().options) {
+			this.field()
+				.options()
+				.subscribe((options: FormOption[]) => {
+					this.options = options;
+				});
 		}
 	}
 
@@ -139,7 +142,7 @@ export class Input extends BaseInput implements OnInit {
 	 * Retrieve the form control from the form as a form array
 	 */
 	public getFormControlAsFormArray(): AbstractControl[] {
-		return (this.formGroup.controls[this.field.key] as FormArray).controls;
+		return (this.formGroup().controls[this.field().key] as FormArray).controls;
 	}
 
 	/**
@@ -162,12 +165,14 @@ export class Input extends BaseInput implements OnInit {
 	 * Refresh the list to display in auto complete
 	 */
 	private manageAutoCompleteChanges(): void {
-		if (this.field.options && this.field.type === DataType.TEXT) {
-			const inputValue = this.formGroup.value[this.field.key];
+		if (this.field().options && this.field().type === DataType.TEXT) {
+			const inputValue = this.formGroup().value[this.field().key];
 
-			this.field.options(inputValue).subscribe((options) => {
-				this.options = options;
-			});
+			this.field()
+				.options(inputValue)
+				.subscribe((options) => {
+					this.options = options;
+				});
 		}
 	}
 
@@ -177,10 +182,10 @@ export class Input extends BaseInput implements OnInit {
 	public isRequired(): boolean {
 		let isRequired = false;
 
-		if (this.field && this.field.validators && this.field.validators && !this.field.readOnly) {
-			isRequired = Array.isArray(this.field.validators)
-				? this.field.validators.includes(Validators.required)
-				: this.field.validators === Validators.required;
+		if (this.field() && this.field().validators && !this.field().readOnly) {
+			isRequired = Array.isArray(this.field().validators)
+				? (this.field().validators as ValidatorFn[]).includes(Validators.required)
+				: this.field().validators === Validators.required;
 		}
 
 		return isRequired;
@@ -192,12 +197,12 @@ export class Input extends BaseInput implements OnInit {
 	 */
 	public suffixActions(): void {
 		if (this.originalTypeIsPassword) {
-			if (this.field.type === DataType.PASSWORD) {
-				this.field.type = DataType.TEXT;
-				this.field.iconSuffix = Icon.HIDE_PASSWORD;
+			if (this.field().type === DataType.PASSWORD) {
+				this.field().type = DataType.TEXT;
+				this.field().iconSuffix = Icon.HIDE_PASSWORD;
 			} else {
-				this.field.type = DataType.PASSWORD;
-				this.field.iconSuffix = Icon.SHOW_PASSWORD;
+				this.field().type = DataType.PASSWORD;
+				this.field().iconSuffix = Icon.SHOW_PASSWORD;
 			}
 		}
 	}
@@ -208,8 +213,8 @@ export class Input extends BaseInput implements OnInit {
 	public getInnerFormSize(): number {
 		let cellSize = 87;
 
-		if (this.field.fields && this.field.fields.length > 0) {
-			const numberOfFieldDisplayed = this.field.fields.filter((field: FormField) => field.type !== DataType.HIDDEN);
+		if (this.field().fields && this.field().fields.length > 0) {
+			const numberOfFieldDisplayed = this.field().fields.filter((field: FormField) => field.type !== DataType.HIDDEN);
 			cellSize = 87 / numberOfFieldDisplayed.length;
 		}
 
@@ -223,9 +228,11 @@ export class Input extends BaseInput implements OnInit {
 	 * @param index The index of the row in the parent form
 	 */
 	public deleteRow(innerFormGroup: UntypedFormGroup, index: number): void {
-		this.field.deleteRow.callback(innerFormGroup.value[this.field.deleteRow.attribute]).subscribe(() => {
-			(this.formGroup.controls[this.field.key] as FormArray).removeAt(index);
-		});
+		this.field()
+			.deleteRow.callback(innerFormGroup.value[this.field().deleteRow.attribute])
+			.subscribe(() => {
+				(this.formGroup().controls[this.field().key] as FormArray).removeAt(index);
+			});
 	}
 
 	/**
@@ -249,12 +256,12 @@ export class Input extends BaseInput implements OnInit {
 	 */
 	public isHtmlInput(): boolean {
 		return (
-			this.field.type === DataType.NUMBER ||
-			this.field.type === DataType.TEXT ||
-			this.field.type === DataType.TEXTAREA ||
-			this.field.type === DataType.PASSWORD ||
-			this.field.type === DataType.COMBO ||
-			this.field.type === DataType.MULTIPLE
+			this.field().type === DataType.NUMBER ||
+			this.field().type === DataType.TEXT ||
+			this.field().type === DataType.TEXTAREA ||
+			this.field().type === DataType.PASSWORD ||
+			this.field().type === DataType.COMBO ||
+			this.field().type === DataType.MULTIPLE
 		);
 	}
 
@@ -263,7 +270,9 @@ export class Input extends BaseInput implements OnInit {
 	 */
 	public isSimpleInput(): boolean {
 		return (
-			this.field.type === DataType.NUMBER || this.field.type === DataType.TEXT || this.field.type === DataType.PASSWORD
+			this.field().type === DataType.NUMBER ||
+			this.field().type === DataType.TEXT ||
+			this.field().type === DataType.PASSWORD
 		);
 	}
 
@@ -271,6 +280,6 @@ export class Input extends BaseInput implements OnInit {
 	 * Is the current field a select input
 	 */
 	public isSelectInput(): boolean {
-		return this.field.type === DataType.COMBO || this.field.type === DataType.MULTIPLE;
+		return this.field().type === DataType.COMBO || this.field().type === DataType.MULTIPLE;
 	}
 }

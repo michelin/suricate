@@ -1,9 +1,9 @@
 <mat-checkbox
 	color="primary"
-	[name]="field.key"
-	[checked]="field.value === undefined ? false : field.value"
+	[name]="field().key"
+	[checked]="field().value === undefined ? false : field().value"
 	[formControl]="$any(getFormControl())"
 	(change)="checkboxChange()"
 >
-	{{ field.label | translate }}
+	{{ field().label | translate }}
 </mat-checkbox>

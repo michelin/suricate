@@ -18,7 +18,7 @@
  */
 
 import { UpperCasePipe } from '@angular/common';
-import { Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -53,14 +53,12 @@ export class FormSidenav implements OnInit, OnDestroy {
 	/**
 	 * Send an event to the parent component used to open the sidebar
 	 */
-	@Output()
-	public openFormSidenav: EventEmitter<void> = new EventEmitter<void>();
+	public openFormSidenav = output<void>();
 
 	/**
 	 * Send an event to the parent component used to close the sidebar
 	 */
-	@Output()
-	public closeFormSidenav: EventEmitter<void> = new EventEmitter<void>();
+	public closeFormSidenav = output<void>();
 
 	/**
 	 * The configuration of the sidenav

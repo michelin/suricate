@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 
 import { Icon } from '../../../../enums/icon';
@@ -15,20 +15,17 @@ export class BaseInput {
 	/**
 	 * The form field
 	 */
-	@Input()
-	public field: FormField;
+	public field = input<FormField>();
 
 	/**
 	 * The form group
 	 */
-	@Input()
-	public formGroup: UntypedFormGroup;
+	public formGroup = input<UntypedFormGroup>();
 
 	/**
 	 * Event sent when the value of the input has changed
 	 */
-	@Output()
-	public valueChangeEvent = new EventEmitter<ValueChangedEvent>();
+	public valueChangeEvent = output<ValueChangedEvent>();
 
 	/**
 	 * The list of icons
@@ -45,8 +42,8 @@ export class BaseInput {
 	 */
 	public emitValueChangeEventFromType(type: ValueChangedType): void {
 		this.valueChangeEvent.emit({
-			fieldKey: this.field.key,
-			value: this.formGroup.value[this.field.key],
+			fieldKey: this.field().key,
+			value: this.formGroup().value[this.field().key],
 			type: type
 		});
 	}
@@ -102,6 +99,6 @@ export class BaseInput {
 	 * Retrieve the form control from the form
 	 */
 	public getFormControl(): AbstractControl | null {
-		return this.formGroup.controls[this.field.key];
+		return this.formGroup().controls[this.field().key];
 	}
 }

@@ -1,11 +1,11 @@
 <mat-paginator
 	(page)="onPageChanged($event)"
-	[length]="totalElements"
-	[pageIndex]="currentPage"
-	[pageSize]="pageNbElements"
+	[length]="totalElements()"
+	[pageIndex]="currentPage()"
+	[pageSize]="pageNbElements()"
 	[pageSizeOptions]="getDefaultSizeOptions()"
 	[showFirstLastButtons]="true"
-	[hidePageSize]="hidePageSize"
+	[hidePageSize]="hidePageSize()"
 	color="primary"
 >
 </mat-paginator>

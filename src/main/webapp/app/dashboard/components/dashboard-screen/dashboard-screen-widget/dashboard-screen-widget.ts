@@ -18,7 +18,7 @@
  */
 
 import { NgClass, TitleCasePipe } from '@angular/common';
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, input, model, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -77,20 +77,17 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	/**
 	 * The projectWidget to display
 	 */
-	@Input()
-	public projectWidget: ProjectWidget;
+	public projectWidget = model<ProjectWidget>();
 
 	/**
 	 * Tell if the screen is in read only mode
 	 */
-	@Input()
-	public readOnly: boolean;
+	public readOnly = input<boolean>();
 
 	/**
 	 * The project token
 	 */
-	@Input()
-	public projectToken: string;
+	public projectToken = input<string>();
 
 	/**
 	 * Subject used to unsubscribe all the subscriptions when the component is destroyed
@@ -105,7 +102,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	/**
 	 * The enumeration that hold the state of a widget (used in HTML)
 	 */
-	public widgetStateEnum = WidgetState;
+	public widgetState = WidgetState;
 
 	/**
 	 * Is the widget loading or not
@@ -133,7 +130,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 		this.initWebsocketConnectionForProjectWidget();
 
-		this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
+		this.httpWidgetService.getById(this.projectWidget().widgetId).subscribe((widget: Widget) => {
 			this.widget = widget;
 
 			this.libraryService.allExternalLibrariesLoaded.subscribe((areExternalLibrariesLoaded: boolean) => {
@@ -154,7 +151,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	 * Subscribe to widget events
 	 */
 	private initWebsocketConnectionForProjectWidget(): void {
-		const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
+		const projectWidgetSubscriptionUrl = `/user/${this.projectToken()}-projectWidget-${this.projectWidget().id}/queue/live`;
 
 		this.websocketService
 			.watch(projectWidgetSubscriptionUrl)
@@ -172,8 +169,8 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	 * Refresh this project widget
 	 */
 	private refreshProjectWidget(): void {
-		this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe((projectWidget) => {
-			this.projectWidget = projectWidget;
+		this.httpProjectWidgetService.getOneById(this.projectWidget().id).subscribe((projectWidget) => {
+			this.projectWidget.set(projectWidget);
 		});
 	}
 
@@ -186,7 +183,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 		this.dialogService.confirm({
 			title: 'widget.delete',
 			message: `${this.translateService.instant('widget.delete.confirm')} ${titleCasePipe.transform(this.widget.name)} widget ?`,
-			accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe()
+			accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget().id).subscribe()
 		});
 	}
 
@@ -198,7 +195,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 			title: 'widget.edit',
 			formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(
 				this.widget.params,
-				this.projectWidget.backendConfig
+				this.projectWidget().backendConfig
 			),
 			save: (formGroup: UntypedFormGroup) => this.saveWidget(formGroup),
 			slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
@@ -214,8 +211,8 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 		this.loading = true;
 
 		const projectWidgetRequest: ProjectWidgetRequest = {
-			widgetId: this.projectWidget.widgetId,
-			customStyle: this.projectWidget.customStyle,
+			widgetId: this.projectWidget().widgetId,
+			customStyle: this.projectWidget().customStyle,
 			backendConfig: Object.keys(formGroup.value)
 				.filter((key: string) => formGroup.get(key).value != null && String(formGroup.get(key).value).trim() !== '')
 				.map((key: string) => `${key}=${String(formGroup.get(key).value).replace(/\n/g, '\\n')}`)
@@ -223,10 +220,10 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 		};
 
 		this.httpProjectWidgetService
-			.updateOneById(this.projectWidget.id, projectWidgetRequest)
+			.updateOneById(this.projectWidget().id, projectWidgetRequest)
 			.subscribe((updatedProjectWidget: ProjectWidget) => {
 				this.loading = false;
-				this.projectWidget = updatedProjectWidget;
+				this.projectWidget.set(updatedProjectWidget);
 				this.toastService.sendMessage('widget.edit.success', ToastType.SUCCESS);
 			});
 	}
@@ -243,7 +240,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 				categoryParameters.filter((categorySetting) =>
 					this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(
 						categorySetting.key,
-						this.projectWidget.backendConfig
+						this.projectWidget().backendConfig
 					)
 				).length > 0,
 			slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: UntypedFormGroup, formFields: FormField[]) =>
@@ -252,7 +249,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 					event.checked,
 					formGroup,
 					formFields,
-					this.projectWidget.backendConfig
+					this.projectWidget().backendConfig
 				)
 		};
 	}
@@ -263,8 +260,8 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	public displayLogProjectWidgetDialog(): void {
 		this.dialogService.info({
 			title: 'widget.log',
-			message: this.projectWidget.log ? this.projectWidget.log : '',
-			isErrorMessage: !!this.projectWidget.log
+			message: this.projectWidget().log ? this.projectWidget().log : '',
+			isErrorMessage: !!this.projectWidget().log
 		});
 	}
 }
