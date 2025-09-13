@@ -4,8 +4,9 @@ const angular = require("angular-eslint");
 const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
 const simpleImportSort = require('eslint-plugin-simple-import-sort');
 const unusedImports = require('eslint-plugin-unused-imports');
+const { defineConfig } = require("eslint/config");
 
-module.exports = tseslint.config(
+module.exports = defineConfig([
   {
     files: ["**/*.ts"],
     plugins: {
@@ -58,4 +59,4 @@ module.exports = tseslint.config(
       eslintPluginPrettierRecommended
     ]
   }
-);
+]);

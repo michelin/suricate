@@ -21,37 +21,29 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { AppComponent } from './app.component';
-import { appRoutes } from './app.routes';
-import { AuthenticationService } from './shared/services/frontend/authentication/authentication.service';
+import { Dashboards } from './dashboards';
 
-describe('AppComponent', () => {
-	let component: AppComponent;
-	let fixture: ComponentFixture<AppComponent>;
+describe('Dashboards', () => {
+	let component: Dashboards;
+	let fixture: ComponentFixture<Dashboards>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [AppComponent],
+			imports: [Dashboards],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
 				provideAnimationsAsync(),
-				provideRouter(appRoutes),
 				provideTranslateService({
 					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
 				})
 			]
 		}).compileComponents();
 
-		AuthenticationService.setAccessToken(
-			'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNzAxNzAyMTg1LCJpYXQiOjE3MDE2MTU3ODUsIm1vZGUiOiJEQVRBQkFTRSIsImZpcnN0bmFtZSI6InRlc3QiLCJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sImVtYWlsIjoidGVzdEB0ZXN0IiwibGFzdG5hbWUiOiJ0ZXN0In0.AXesv1_XVn_mCdSKmK9PEVJC9bE4op6e9oGQN5KVyyY'
-		);
-
-		fixture = TestBed.createComponent(AppComponent);
+		fixture = TestBed.createComponent(Dashboards);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

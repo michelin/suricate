@@ -61,7 +61,7 @@ import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/fo
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpProjectService }]
 })
-export class DashboardsComponent extends ListComponent<Project, ProjectRequest> {
+export class Dashboards extends ListComponent<Project, ProjectRequest> {
 	private readonly httpProjectService = inject(HttpProjectService);
 	private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
 	private readonly projectUsersFormFieldsService = inject(ProjectUsersFormFieldsService);
@@ -163,7 +163,7 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
 	 * @param project The project clicked on the list
 	 */
 	private openFormSidenav(event: Event, project: Project): void {
-		DashboardsComponent.stopEventPropagation(event);
+		Dashboards.stopEventPropagation(event);
 		this.projectSelected = project;
 
 		this.sidenavService.openFormSidenav({
@@ -197,7 +197,7 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
 	 * @param project The project to delete
 	 */
 	private deleteProject(event: Event, project: Project): void {
-		DashboardsComponent.stopEventPropagation(event);
+		Dashboards.stopEventPropagation(event);
 
 		this.dialogService.confirm({
 			title: 'dashboard.delete',
@@ -218,7 +218,7 @@ export class DashboardsComponent extends ListComponent<Project, ProjectRequest> 
 	 * @param project The project clicked on the list
 	 */
 	private openUserFormSidenav(event: Event, project: Project): void {
-		DashboardsComponent.stopEventPropagation(event);
+		Dashboards.stopEventPropagation(event);
 		this.projectSelected = project;
 
 		this.sidenavService.openFormSidenav({

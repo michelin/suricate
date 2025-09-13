@@ -21,33 +21,33 @@ import { Routes } from '@angular/router';
 
 import { adminGuard } from '../shared/guards/admin/admin.guard';
 import { authGuard } from '../shared/guards/auth/auth.guard';
-import { ConfigurationsComponent } from './configurations/configurations.component';
-import { DashboardsComponent } from './dashboards/dashboards.component';
-import { RepositoriesComponent } from './repositories/repositories.component';
-import { UsersComponent } from './users/users.component';
+import { Configurations } from './configurations/configurations';
+import { Dashboards } from './dashboards/dashboards';
+import { Repositories } from './repositories/repositories';
+import { Users } from './users/users';
 
 export const adminRoutes: Routes = [
 	{
 		path: 'admin/dashboards',
-		component: DashboardsComponent,
+		component: Dashboards,
 		canActivate: [authGuard, adminGuard],
 		canActivateChild: [authGuard, adminGuard]
 	},
 	{
 		path: 'admin/users',
-		component: UsersComponent,
+		component: Users,
 		canActivate: [authGuard, adminGuard],
 		canActivateChild: [authGuard, adminGuard]
 	},
 	{
 		path: 'admin/repositories',
-		component: RepositoriesComponent,
+		component: Repositories,
 		canActivate: [authGuard, adminGuard],
 		canActivateChild: [authGuard, adminGuard]
 	},
 	{
 		path: 'admin/configurations',
-		component: ConfigurationsComponent,
+		component: Configurations,
 		canActivate: [authGuard, adminGuard],
 		canActivateChild: [authGuard, adminGuard]
 	}

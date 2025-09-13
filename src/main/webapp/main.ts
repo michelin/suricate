@@ -26,7 +26,7 @@ import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { AppComponent } from './app/app.component';
+import { App } from './app/app';
 import { appRoutes } from './app/app.routes';
 import { ErrorInterceptor } from './app/shared/interceptors/error.interceptor';
 import { TokenInterceptor } from './app/shared/interceptors/token.interceptor';
@@ -36,7 +36,7 @@ if (environment.production) {
 	enableProdMode();
 }
 
-bootstrapApplication(AppComponent, {
+bootstrapApplication(App, {
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

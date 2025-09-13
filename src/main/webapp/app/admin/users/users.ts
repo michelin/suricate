@@ -59,7 +59,7 @@ import { UserFormFieldsService } from '../../shared/services/frontend/form-field
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpAdminUserService }]
 })
-export class UsersComponent extends ListComponent<User, UserRequest> implements OnInit {
+export class Users extends ListComponent<User, UserRequest> implements OnInit {
 	private readonly httpAdminUserService = inject(HttpAdminUserService);
 	private readonly userFormFieldsService = inject(UserFormFieldsService);
 

@@ -24,15 +24,15 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { ConfigurationsComponent } from './configurations.component';
+import { Users } from './users';
 
-describe('ConfigurationsComponent', () => {
-	let component: ConfigurationsComponent;
-	let fixture: ComponentFixture<ConfigurationsComponent>;
+describe('Users', () => {
+	let component: Users;
+	let fixture: ComponentFixture<Users>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [ConfigurationsComponent],
+			imports: [Users],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -43,7 +43,7 @@ describe('ConfigurationsComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(ConfigurationsComponent);
+		fixture = TestBed.createComponent(Users);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

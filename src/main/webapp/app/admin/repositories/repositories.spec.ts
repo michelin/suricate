@@ -17,6 +17,7 @@
  * under the License.
  */
 
+import { DatePipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -24,26 +25,27 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { DashboardsComponent } from './dashboards.component';
+import { Repositories } from './repositories';
 
-describe('DashboardsComponent', () => {
-	let component: DashboardsComponent;
-	let fixture: ComponentFixture<DashboardsComponent>;
+describe('Repositories', () => {
+	let component: Repositories;
+	let fixture: ComponentFixture<Repositories>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [DashboardsComponent],
+			imports: [Repositories],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
 				provideAnimationsAsync(),
 				provideTranslateService({
 					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-				})
+				}),
+				DatePipe
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(DashboardsComponent);
+		fixture = TestBed.createComponent(Repositories);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

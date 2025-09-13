@@ -36,11 +36,11 @@ import { DialogService } from './shared/services/frontend/dialog/dialog.service'
 
 @Component({
 	selector: 'suricate-root',
-	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.scss'],
+	templateUrl: './app.html',
+	styleUrls: ['./app.scss'],
 	imports: [SidenavComponent, ToastComponent]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class App implements OnInit, OnDestroy {
 	private readonly matDialog = inject(MatDialog);
 	private readonly overlayContainer = inject(OverlayContainer);
 	private readonly settingsService = inject(SettingsService);

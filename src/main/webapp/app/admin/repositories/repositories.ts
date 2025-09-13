@@ -62,7 +62,7 @@ import { RepositoryFormFieldsService } from '../../shared/services/frontend/form
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpRepositoryService }]
 })
-export class RepositoriesComponent extends ListComponent<Repository, RepositoryRequest> {
+export class Repositories extends ListComponent<Repository, RepositoryRequest> {
 	private readonly httpRepositoryService = inject(HttpRepositoryService);
 	private readonly repositoryFormFieldsService = inject(RepositoryFormFieldsService);
 	private readonly datePipe = inject(DatePipe);

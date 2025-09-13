@@ -59,7 +59,7 @@ import { WidgetConfigurationFormFieldsService } from '../../shared/services/fron
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpCategoryParametersService }]
 })
-export class ConfigurationsComponent extends ListComponent<CategoryParameter, WidgetConfigurationRequest> {
+export class Configurations extends ListComponent<CategoryParameter, WidgetConfigurationRequest> {
 	private readonly httpCategoryParametersService = inject(HttpCategoryParametersService);
 	private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
 
