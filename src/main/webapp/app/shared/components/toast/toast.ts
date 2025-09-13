@@ -49,11 +49,6 @@ export class Toast implements OnInit, OnDestroy {
 	private readonly unsubscribe: Subject<void> = new Subject<void>();
 
 	/**
-	 * The component state
-	 */
-	public animationState = 'out';
-
-	/**
 	 * The enums of toast type
 	 */
 	public toastType = ToastType;
@@ -87,6 +82,7 @@ export class Toast implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe((message: ToastMessage) => {
 				this.message = message;
+
 				if (message) {
 					this.showToast();
 				}
@@ -106,7 +102,6 @@ export class Toast implements OnInit, OnDestroy {
 	 */
 	private showToast(): void {
 		this.clearTimeout();
-		this.animationState = 'in';
 		this.hideWithinTimeout();
 	}
 
@@ -114,15 +109,14 @@ export class Toast implements OnInit, OnDestroy {
 	 * Hide manually the toast notification
 	 */
 	public hideToast(): void {
-		this.clearTimeout();
-		this.animationState = 'out';
+		this.message = null;
 	}
 
 	/**
 	 * Hide the toast notification with timer
 	 */
 	private hideWithinTimeout(): void {
-		this.timeout = setTimeout(() => this.hideToast(), 4000);
+		this.timeout = setTimeout(() => this.hideToast(), 5000);
 	}
 
 	/**

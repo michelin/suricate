@@ -27,20 +27,16 @@ export class ToastMessage {
 	 * The title notification
 	 */
 	title: string;
+
 	/**
 	 * The string content
 	 */
 	content: string;
+
 	/**
 	 * The style to apply (success, info, ...)
 	 */
 	style: ToastType;
-	/**
-	 * Triggered by the user to hide the message
-	 *
-	 * @type {boolean}
-	 */
-	dismissed = false;
 
 	/**
 	 * Class constructor

@@ -98,3 +98,31 @@ body {
     transform: translateY(2px);
   }
 }
+
+.animation-enter-toast {
+  animation: fade-in 500ms;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animation-leave-toast {
+  animation: fade-out 500ms;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
