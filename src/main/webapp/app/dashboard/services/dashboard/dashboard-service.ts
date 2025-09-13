@@ -21,8 +21,8 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project-service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication-service';
 import { NumberUtils } from '../../../shared/utils/number.utils';
 
 /**

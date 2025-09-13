@@ -37,8 +37,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { SettingsService } from '../../../core/services/settings-service';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
-import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication-service';
+import { MenuService } from '../../../shared/services/frontend/menu/menu-service';
 import { Footer } from '../footer/footer';
 
 /**

@@ -24,7 +24,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication-service';
 import { Settings } from './settings';
 
 describe('Settings', () => {

@@ -35,11 +35,11 @@ import { Credentials } from '../../../shared/models/backend/user/credentials';
 import { UserRequest } from '../../../shared/models/backend/user/user-request';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
-import { FormService } from '../../../shared/services/frontend/form/form.service';
-import { RegisterFormFieldsService } from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
-import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
+import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration-service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication-service';
+import { FormService } from '../../../shared/services/frontend/form/form-service';
+import { RegisterFormFieldsService } from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields-service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast-service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 
 /**

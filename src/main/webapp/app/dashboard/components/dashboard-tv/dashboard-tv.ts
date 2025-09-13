@@ -31,9 +31,9 @@ import { WebsocketUpdateType } from '../../../shared/enums/websocket-update-type
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
-import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project-service';
+import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget-service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket-service';
 import { DashboardService } from '../../services/dashboard/dashboard-service';
 import { DashboardScreen } from '../dashboard-screen/dashboard-screen';
 

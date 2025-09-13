@@ -23,7 +23,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication.service';
+import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication-service';
 import { UxSettings } from './ux-settings';
 
 describe('UxSettings', () => {

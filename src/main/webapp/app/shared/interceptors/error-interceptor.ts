@@ -24,8 +24,8 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ToastType } from '../enums/toast-type';
-import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
-import { ToastService } from '../services/frontend/toast/toast.service';
+import { AuthenticationService } from '../services/frontend/authentication/authentication-service';
+import { ToastService } from '../services/frontend/toast/toast-service';
 
 /**
  * Interceptor that manage http errors

@@ -50,10 +50,10 @@ import { PersonalAccessTokenRequest } from '../../../../shared/models/backend/pe
 import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { MaterialIconRecords } from '../../../../shared/models/frontend/icon/material-icon';
-import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user.service';
-import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
-import { FormService } from '../../../../shared/services/frontend/form/form.service';
-import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
+import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user-service';
+import { DialogService } from '../../../../shared/services/frontend/dialog/dialog-service';
+import { FormService } from '../../../../shared/services/frontend/form/form-service';
+import { ToastService } from '../../../../shared/services/frontend/toast/toast-service';
 
 @Component({
 	selector: 'suricate-security-settings',

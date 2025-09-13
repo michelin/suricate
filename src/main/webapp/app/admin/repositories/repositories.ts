@@ -37,9 +37,9 @@ import { Repository } from '../../shared/models/backend/repository/repository';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
-import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
-import { HttpRepositoryService } from '../../shared/services/backend/http-repository/http-repository.service';
-import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http-service';
+import { HttpRepositoryService } from '../../shared/services/backend/http-repository/http-repository-service';
+import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields-service';
 
 /**
  * Component used to display the list of git repositories

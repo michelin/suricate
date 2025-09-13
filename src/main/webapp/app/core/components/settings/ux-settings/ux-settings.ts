@@ -31,10 +31,10 @@ import { UserSetting } from '../../../../shared/models/backend/setting/user-sett
 import { UserSettingRequest } from '../../../../shared/models/backend/setting/user-setting-request';
 import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
-import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user.service';
-import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication.service';
-import { FormService } from '../../../../shared/services/frontend/form/form.service';
-import { SettingsFormFieldsService } from '../../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields.service';
+import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user-service';
+import { AuthenticationService } from '../../../../shared/services/frontend/authentication/authentication-service';
+import { FormService } from '../../../../shared/services/frontend/form/form-service';
+import { SettingsFormFieldsService } from '../../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields-service';
 import { SettingsService } from '../../../services/settings-service';
 
 @Component({

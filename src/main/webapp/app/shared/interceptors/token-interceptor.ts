@@ -22,8 +22,8 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { AbstractHttpService } from '../services/backend/abstract-http/abstract-http.service';
-import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
+import { AbstractHttpService } from '../services/backend/abstract-http/abstract-http-service';
+import { AuthenticationService } from '../services/frontend/authentication/authentication-service';
 
 /**
  * Used to put the token in the request

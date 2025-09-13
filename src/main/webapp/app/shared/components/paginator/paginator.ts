@@ -20,7 +20,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
-import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
+import { HttpFilterService } from '../../services/backend/http-filter/http-filter-service';
 
 /**
  * Component used to display the paginator

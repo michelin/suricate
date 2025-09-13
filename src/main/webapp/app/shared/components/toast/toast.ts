@@ -30,7 +30,7 @@ import { Icon } from '../../enums/icon';
 import { ToastType } from '../../enums/toast-type';
 import { MaterialIconRecords } from '../../models/frontend/icon/material-icon';
 import { ToastMessage } from '../../models/frontend/toast/toast-message';
-import { ToastService } from '../../services/frontend/toast/toast.service';
+import { ToastService } from '../../services/frontend/toast/toast-service';
 
 /**
  * Component that display toast notification messages

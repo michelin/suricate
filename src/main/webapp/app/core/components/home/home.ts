@@ -34,12 +34,12 @@ import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { CssService } from '../../../shared/services/frontend/css/css.service';
-import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
-import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset-service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project-service';
+import { CssService } from '../../../shared/services/frontend/css/css-service';
+import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields-service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav-service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast-service';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 

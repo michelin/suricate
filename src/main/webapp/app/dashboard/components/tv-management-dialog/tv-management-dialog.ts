@@ -42,9 +42,9 @@ import { WebsocketClient } from '../../../shared/models/backend/websocket-client
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
-import { FormService } from '../../../shared/services/frontend/form/form.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project-service';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen-service';
+import { FormService } from '../../../shared/services/frontend/form/form-service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 
 @Component({

@@ -37,11 +37,11 @@ import { Project } from '../../shared/models/backend/project/project';
 import { ProjectRequest } from '../../shared/models/backend/project/project-request';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
-import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
-import { HttpProjectService } from '../../shared/services/backend/http-project/http-project.service';
-import { CssService } from '../../shared/services/frontend/css/css.service';
-import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http-service';
+import { HttpProjectService } from '../../shared/services/backend/http-project/http-project-service';
+import { CssService } from '../../shared/services/frontend/css/css-service';
+import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields-service';
+import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields-service';
 
 @Component({
 	templateUrl: '../../shared/components/list/list.html',

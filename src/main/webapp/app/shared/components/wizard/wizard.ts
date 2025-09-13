@@ -32,9 +32,9 @@ import { ValueChangedEvent } from '../../models/frontend/form/value-changed-even
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { MaterialIconRecords } from '../../models/frontend/icon/material-icon';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
-import { FormService } from '../../services/frontend/form/form.service';
-import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import { FormService } from '../../services/frontend/form/form-service';
+import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields-service';
+import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps-service';
 
 /**
  * Generic component used to display wizards

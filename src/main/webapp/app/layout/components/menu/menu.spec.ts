@@ -25,7 +25,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { appRoutes } from '../../../app.routes';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication-service';
 import { Menu } from './menu';
 
 describe('Menu', () => {

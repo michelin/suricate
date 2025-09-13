@@ -26,8 +26,8 @@ import { SettingsType } from '../../shared/enums/settings-type';
 import { Setting } from '../../shared/models/backend/setting/setting';
 import { UserSetting } from '../../shared/models/backend/setting/user-setting';
 import { User } from '../../shared/models/backend/user/user';
-import { HttpSettingService } from '../../shared/services/backend/http-setting/http-setting.service';
-import { HttpUserService } from '../../shared/services/backend/http-user/http-user.service';
+import { HttpSettingService } from '../../shared/services/backend/http-setting/http-setting-service';
+import { HttpUserService } from '../../shared/services/backend/http-user/http-user-service';
 
 /**
  * Manage the app theme

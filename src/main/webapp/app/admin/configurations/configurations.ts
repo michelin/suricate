@@ -34,9 +34,9 @@ import { Icon } from '../../shared/enums/icon';
 import { ToastType } from '../../shared/enums/toast-type';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
 import { WidgetConfigurationRequest } from '../../shared/models/backend/widget-configuration/widget-configuration-request';
-import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
-import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
-import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http-service';
+import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters-service';
+import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields-service';
 
 /**
  * Component used to display the list of widgets

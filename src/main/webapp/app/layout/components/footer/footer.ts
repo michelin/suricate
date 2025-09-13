@@ -20,7 +20,7 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 
-import { EnvironmentService } from '../../../shared/services/frontend/environment/environment.service';
+import { EnvironmentService } from '../../../shared/services/frontend/environment/environment-service';
 
 /**
  * The footer of the application

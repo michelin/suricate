@@ -27,7 +27,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { App } from './app';
 import { appRoutes } from './app.routes';
-import { AuthenticationService } from './shared/services/frontend/authentication/authentication.service';
+import { AuthenticationService } from './shared/services/frontend/authentication/authentication-service';
 
 describe('App', () => {
 	let component: App;

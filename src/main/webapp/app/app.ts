@@ -32,7 +32,7 @@ import { Toast } from './shared/components/toast/toast';
 import { ActionsDialogConfiguration } from './shared/models/frontend/dialog/actions-dialog-configuration';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
-import { DialogService } from './shared/services/frontend/dialog/dialog.service';
+import { DialogService } from './shared/services/frontend/dialog/dialog-service';
 
 @Component({
 	selector: 'suricate-root',

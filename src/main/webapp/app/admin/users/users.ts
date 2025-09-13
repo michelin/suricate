@@ -34,9 +34,9 @@ import { ToastType } from '../../shared/enums/toast-type';
 import { Role } from '../../shared/models/backend/role/role';
 import { User } from '../../shared/models/backend/user/user';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
-import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
-import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
-import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http-service';
+import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user-service';
+import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields-service';
 
 /**
  * Component used to display the list of users

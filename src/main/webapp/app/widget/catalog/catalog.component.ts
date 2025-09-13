@@ -30,9 +30,9 @@ import { Paginator } from '../../shared/components/paginator/paginator';
 import { Spinner } from '../../shared/components/spinner/spinner';
 import { Widget } from '../../shared/models/backend/widget/widget';
 import { WidgetRequest } from '../../shared/models/backend/widget/widget-request';
-import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
-import { HttpAssetService } from '../../shared/services/backend/http-asset/http-asset.service';
-import { HttpWidgetService } from '../../shared/services/backend/http-widget/http-widget.service';
+import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http-service';
+import { HttpAssetService } from '../../shared/services/backend/http-asset/http-asset-service';
+import { HttpWidgetService } from '../../shared/services/backend/http-widget/http-widget-service';
 
 /**
  * Component used to display the list of widgets

@@ -34,10 +34,10 @@ import { Project } from '../../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
 import { FormStep } from '../../../../shared/models/frontend/form/form-step';
-import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
-import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
-import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project-service';
+import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget-service';
+import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps-service';
+import { ToastService } from '../../../../shared/services/frontend/toast/toast-service';
 
 @Component({
 	templateUrl: '../../../../shared/components/wizard/wizard.html',

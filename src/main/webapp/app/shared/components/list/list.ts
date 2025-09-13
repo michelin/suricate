@@ -34,12 +34,12 @@ import { ValueChangedEvent } from '../../models/frontend/form/value-changed-even
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { MaterialIconRecords } from '../../models/frontend/icon/material-icon';
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
-import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
-import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
-import { DialogService } from '../../services/frontend/dialog/dialog.service';
-import { FormService } from '../../services/frontend/form/form.service';
-import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
-import { ToastService } from '../../services/frontend/toast/toast.service';
+import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http-service';
+import { HttpFilterService } from '../../services/backend/http-filter/http-filter-service';
+import { DialogService } from '../../services/frontend/dialog/dialog-service';
+import { FormService } from '../../services/frontend/form/form-service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav-service';
+import { ToastService } from '../../services/frontend/toast/toast-service';
 
 /**
  * Generic component used to display and manage lists

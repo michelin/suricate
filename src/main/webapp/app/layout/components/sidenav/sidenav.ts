@@ -24,8 +24,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { FormSidenav } from '../../../shared/components/form-sidenav/form-sidenav';
-import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
-import { RouteService } from '../../../shared/services/frontend/route/route.service';
+import { MenuService } from '../../../shared/services/frontend/menu/menu-service';
+import { RouteService } from '../../../shared/services/frontend/route/route-service';
 import { Menu } from '../menu/menu';
 
 /**
