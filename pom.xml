@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.4</version>
+        <version>3.5.5</version>
     </parent>
 
     <groupId>com.michelin.suricate</groupId>
@@ -448,7 +448,7 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <nodeVersion>v24.7.0</nodeVersion>
+                                    <nodeVersion>v24.8.0</nodeVersion>
                                 </configuration>
                             </execution>
 
