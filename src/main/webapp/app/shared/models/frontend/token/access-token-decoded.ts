@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { RoleEnum } from '../../../enums/role.enum';
+import { RoleName } from '../../../enums/role-name';
 
 /**
  * Represent the access token decoded
@@ -56,7 +56,7 @@ export interface AccessTokenDecoded {
 	/**
 	 * The list of roles of the user
 	 */
-	roles: RoleEnum[];
+	roles: RoleName[];
 
 	/**
 	 * The expiration date as long

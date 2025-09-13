@@ -19,31 +19,31 @@
 
 import { Routes } from '@angular/router';
 
-import { authGuard } from '../shared/guards/auth/auth.guard';
-import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { SettingsComponent } from './components/settings/settings.component';
+import { authGuard } from '../shared/guards/auth/auth-guard';
+import { Home } from './components/home/home';
+import { Login } from './components/login/login';
+import { Register } from './components/register/register';
+import { Settings } from './components/settings/settings';
 
 export const coreRoutes: Routes = [
 	{
 		path: 'home',
 		canActivate: [authGuard],
 		canActivateChild: [authGuard],
-		component: HomeComponent
+		component: Home
 	},
 	{
 		path: 'login',
-		component: LoginComponent
+		component: Login
 	},
 	{
 		path: 'register',
-		component: RegisterComponent
+		component: Register
 	},
 	{
 		path: 'settings',
 		canActivate: [authGuard],
 		canActivateChild: [authGuard],
-		component: SettingsComponent
+		component: Settings
 	}
 ];

@@ -24,6 +24,7 @@
 @use '../components/mat-menu-theme' as menu-theme;
 @use '../components/mat-sidenav-theme' as sidenav-theme;
 @use '../components/mat-stepper-theme' as stepper-theme;
+@use '../components/mat-table-theme' as table-theme;
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
@@ -36,4 +37,5 @@
   @include sidenav-theme.custom-sidenav-theme($theme);
   @include menu-theme.custom-mat-menu-theme($theme);
   @include stepper-theme.custom-mat-stepper-theme($theme);
+  @include table-theme.custom-mat-table-theme($theme);
 }

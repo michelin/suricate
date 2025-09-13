@@ -19,7 +19,7 @@
 
 import { ValidatorFn } from '@angular/forms';
 
-import { IconEnum } from '../../../enums/icon.enum';
+import { Icon } from '../../../enums/icon';
 
 /**
  * Describe a the options used by the mosaic input component
@@ -38,7 +38,7 @@ export interface MosaicFormOption {
 	/**
 	 * Icon to display instead of an image
 	 */
-	icon?: IconEnum;
+	icon?: Icon;
 
 	/**
 	 * The displayed displayed to the user

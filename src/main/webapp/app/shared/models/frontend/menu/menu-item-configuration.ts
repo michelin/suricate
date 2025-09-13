@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { IconEnum } from '../../../enums/icon.enum';
+import { Icon } from '../../../enums/icon';
 import { LinkConfiguration } from '../link/link-configuration';
 
 /**
@@ -26,5 +26,5 @@ import { LinkConfiguration } from '../link/link-configuration';
 export class MenuItemConfiguration {
 	label: string;
 	linkConfiguration: LinkConfiguration;
-	icon: IconEnum;
+	icon: Icon;
 }

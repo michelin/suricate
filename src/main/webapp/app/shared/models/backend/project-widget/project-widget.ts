@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { WidgetStateEnum } from '../../../enums/widget-sate.enum';
+import { WidgetState } from '../../../enums/widget-sate';
 import { ProjectWidgetPosition } from './project-widget-position';
 
 /**
@@ -34,7 +34,7 @@ export interface ProjectWidget {
 	lastExecutionDate: string;
 	lastSuccessDate: string;
 	globalConfigOverridden: boolean;
-	state: WidgetStateEnum;
+	state: WidgetState;
 	projectToken: string;
 	widgetId: number;
 	gridId: number;

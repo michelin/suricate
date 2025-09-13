@@ -19,9 +19,9 @@
 
 import { Observable } from 'rxjs';
 
-import { ButtonColorEnum } from '../../../enums/button-color.enum';
-import { ButtonTypeEnum } from '../../../enums/button-type.enum';
-import { IconEnum } from '../../../enums/icon.enum';
+import { ButtonColor } from '../../../enums/button-color';
+import { ButtonType } from '../../../enums/button-type';
+import { Icon } from '../../../enums/icon';
 import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
 
 /**
@@ -29,12 +29,12 @@ import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
  */
 export class ButtonConfiguration<T> {
 	label?: string;
-	icon?: IconEnum;
-	color?: ButtonColorEnum;
+	icon?: Icon;
+	color?: ButtonColor;
 	callback?: (event: Event, object?: T) => void;
 	disabled?: Observable<boolean>;
 	hidden?: (object?: T) => boolean;
-	type?: ButtonTypeEnum;
+	type?: ButtonType;
 	variant?: 'flat' | 'miniFab';
 	tooltip?: TooltipConfiguration;
 }

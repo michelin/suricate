@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { SettingsTypeEnum } from '../../../enums/settings-type.enum';
+import { DataType } from '../../../enums/data-type';
+import { SettingsType } from '../../../enums/settings-type';
 import { AllowedSettingValue } from './allowed-setting-value';
 
 /**
@@ -28,7 +28,7 @@ export interface Setting {
 	id: number;
 	description: string;
 	constrained: boolean;
-	dataType: DataTypeEnum;
-	type: SettingsTypeEnum;
+	dataType: DataType;
+	type: SettingsType;
 	allowedSettingValues?: AllowedSettingValue[];
 }

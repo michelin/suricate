@@ -1,0 +1,457 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import {
+	AfterViewInit,
+	Component,
+	effect,
+	ElementRef,
+	inject,
+	input,
+	OnDestroy,
+	output,
+	Renderer2,
+	ViewChild
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { KtdGridComponent, KtdGridItemComponent, KtdGridItemPlaceholder } from '@katoid/angular-grid-layout';
+import { KtdGridLayout } from '@katoid/angular-grid-layout';
+import { IMessage } from '@stomp/rx-stomp';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { Icon } from '../../../shared/enums/icon';
+import { WebsocketUpdateType } from '../../../shared/enums/websocket-update-type';
+import { Project } from '../../../shared/models/backend/project/project';
+import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
+import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
+import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
+import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
+import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html-pipe';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset-service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project-service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket-service';
+import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
+import { LibraryService } from '../../services/library/library-service';
+import { DashboardScreenWidget } from './dashboard-screen-widget/dashboard-screen-widget';
+
+declare global {
+	interface Window {
+		page_loaded: boolean;
+	}
+}
+
+/**
+ * Display the grid stack widgets
+ */
+@Component({
+	selector: 'suricate-dashboard-screen',
+	templateUrl: './dashboard-screen.html',
+	styleUrls: ['./dashboard-screen.scss'],
+	imports: [
+		MatIcon,
+		KtdGridComponent,
+		KtdGridItemComponent,
+		DashboardScreenWidget,
+		KtdGridItemPlaceholder,
+		SafeHtmlPipe
+	]
+})
+export class DashboardScreen implements AfterViewInit, OnDestroy {
+	private readonly renderer = inject(Renderer2);
+	private readonly httpProjectService = inject(HttpProjectService);
+	private readonly websocketService = inject(WebsocketService);
+	private readonly libraryService = inject(LibraryService);
+
+	/**
+	 * Reference on the span containing all the required JS libraries
+	 */
+	@ViewChild('externalJsLibraries')
+	public externalJsLibrariesSpan: ElementRef<HTMLSpanElement>;
+
+	/**
+	 * The project to display
+	 */
+	public project = input<Project>();
+
+	/**
+	 * The project widget list
+	 */
+	public projectWidgets = input<ProjectWidget[]>();
+
+	/**
+	 * Tell if the dashboard should be on readOnly or not
+	 */
+	public readOnly = input<boolean>(true);
+
+	/**
+	 * The screen code
+	 */
+	public screenCode = input<number>();
+
+	/**
+	 * Tell if the websockets need to be opened.
+	 * E.g.: In case of grids rotation, do not open websockets for each grid
+	 */
+	public openWebsockets = input<boolean>(true);
+
+	/**
+	 * Event for handling the disconnection
+	 */
+	public disconnectEvent = output<void>();
+
+	/**
+	 * Use to tell to the parent component that it should refresh the project widgets
+	 */
+	public refreshAllProjectWidgets = output<void>();
+
+	/**
+	 * Subject used to unsubscribe all the subscriptions to project web sockets
+	 */
+	private unsubscribeProjectWebSocket: Subject<void> = new Subject<void>();
+
+	/**
+	 * The grid options
+	 */
+	public gridOptions: GridOptions;
+
+	/**
+	 * All the grids of the dashboard
+	 */
+	public currentGrid: KtdGridLayout = [];
+
+	/**
+	 * Tell if we should display the screen code
+	 */
+	public shouldDisplayScreenCode = false;
+
+	/**
+	 * The list of icons
+	 */
+	public icon = Icon;
+
+	/**
+	 * The list of material icons
+	 */
+	public materialIconRecords = MaterialIconRecords;
+
+	/**
+	 * The current project used to compare if the project has changed
+	 */
+	previousProject: Project | undefined;
+
+	/**
+	 * Tell if the component has already been initialized
+	 */
+	hasInitialized = false;
+
+	/**
+	 * Constructor.
+	 */
+	constructor() {
+		effect(() => {
+			if (this.project() !== this.previousProject) {
+				if (!this.previousProject) {
+					// Inject this variable in the window scope because some widgets use it to init the js
+					window.page_loaded = true;
+				}
+
+				if (this.project()) {
+					this.initGridStackOptions();
+
+					// Do not add libs in the DOM at first view init
+					// Let the after view init method handle the first initialization
+					if (this.hasInitialized) {
+						this.addExternalJSLibrariesToTheDOM();
+					}
+
+					if (!this.previousProject) {
+						this.initProjectWebsockets();
+					} else if (this.previousProject.token !== this.project().token) {
+						this.resetProjectWebsockets();
+					}
+				}
+
+				this.previousProject = this.project();
+			}
+		});
+
+		effect(() => {
+			this.readOnly();
+			this.initGridStackOptions();
+		});
+
+		effect(() => {
+			this.projectWidgets();
+			this.initGrid();
+		});
+	}
+
+	/**
+	 * After view init method
+	 */
+	public ngAfterViewInit(): void {
+		this.hasInitialized = true;
+		this.addExternalJSLibrariesToTheDOM();
+	}
+
+	/**
+	 * When the component is destroyed (new page)
+	 */
+	public ngOnDestroy(): void {
+		this.disconnectFromWebsockets();
+	}
+
+	/**
+	 * For each JS libraries linked with the project, create a script element with the URL of the library
+	 * and a callback which notify subscribers when the library is loaded.
+	 */
+	public addExternalJSLibrariesToTheDOM() {
+		if (this.project()) {
+			this.libraryService.init(this.project().librariesToken.length);
+
+			if (this.project().librariesToken.length > 0) {
+				this.project().librariesToken.forEach((token) => {
+					const script: HTMLScriptElement = document.createElement('script');
+					script.type = 'text/javascript';
+					script.src = HttpAssetService.getContentUrl(token);
+					script.onload = () =>
+						setTimeout(() => {
+							this.libraryService.markScriptAsLoaded(token);
+						}, 100); // Small delay to ensure the script is fully executed before rendering the widgets
+					script.async = false;
+
+					this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
+				});
+			} else {
+				this.libraryService.emitAreJSScriptsLoaded(true);
+			}
+		}
+	}
+
+	/**
+	 * Display the screen code
+	 */
+	private displayScreenCode(): void {
+		this.shouldDisplayScreenCode = true;
+		setTimeout(() => (this.shouldDisplayScreenCode = false), 10000);
+	}
+
+	/**********************************************************************************************************/
+	/*                                         GRID MANAGEMENT                                                */
+	/**********************************************************************************************************/
+
+	/**
+	 * Init the options for Grid Stack plugin
+	 */
+	private initGridStackOptions(): void {
+		if (this.project()) {
+			this.gridOptions = {
+				cols: this.project().gridProperties.maxColumn,
+				rowHeight: this.project().gridProperties.widgetHeight,
+				gap: 5,
+				draggable: false,
+				resizable: false,
+				compactType: undefined
+			};
+
+			if (!this.readOnly()) {
+				this.gridOptions = {
+					...this.gridOptions,
+					draggable: true,
+					resizable: true
+				};
+			}
+		}
+	}
+
+	/**
+	 * Create the list of grid items used to display widgets on the grids
+	 */
+	private initGrid(): void {
+		if (this.projectWidgets()) {
+			this.currentGrid = this.getGridLayoutFromProjectWidgets();
+		}
+	}
+
+	/**
+	 * Get the list of GridItemConfigs from project widget
+	 */
+	private getGridLayoutFromProjectWidgets(): KtdGridLayout {
+		const layout: KtdGridLayout = [];
+
+		this.projectWidgets().forEach((projectWidget: ProjectWidget) => {
+			layout.push({
+				id: String(projectWidget.id),
+				x: projectWidget.widgetPosition.gridColumn - 1,
+				y: projectWidget.widgetPosition.gridRow - 1,
+				w: projectWidget.widgetPosition.width,
+				h: projectWidget.widgetPosition.height
+			});
+		});
+
+		return layout;
+	}
+
+	/**********************************************************************************************************/
+	/*                                      WEBSOCKET MANAGEMENT                                              */
+	/**********************************************************************************************************/
+
+	/**
+	 * Init web sockets for project events
+	 */
+	private initProjectWebsockets(): void {
+		if (this.openWebsockets()) {
+			this.unsubscribeProjectWebSocket = new Subject<void>();
+			this.websocketProjectEventSubscription();
+			this.websocketProjectScreenEventSubscription();
+		}
+	}
+
+	/**
+	 * Reset the project web sockets subscriptions
+	 */
+	private resetProjectWebsockets(): void {
+		if (this.openWebsockets()) {
+			this.unsubscribeProjectWebsockets();
+			this.initProjectWebsockets();
+		}
+	}
+
+	/**
+	 * Disconnect from web sockets
+	 */
+	private disconnectFromWebsockets(): void {
+		this.unsubscribeProjectWebsockets();
+	}
+
+	/**
+	 * Unsubscribe to every current project websockets connections
+	 */
+	private unsubscribeProjectWebsockets(): void {
+		this.unsubscribeProjectWebSocket.next();
+		this.unsubscribeProjectWebSocket.complete();
+	}
+
+	/**
+	 * Create a websocket subscription for the current project
+	 */
+	private websocketProjectEventSubscription(): void {
+		const projectSubscriptionUrl = `/user/${this.project().token}/queue/live`;
+
+		this.websocketService
+			.watch(projectSubscriptionUrl)
+			.pipe(takeUntil(this.unsubscribeProjectWebSocket))
+			.subscribe((stompMessage: IMessage) => {
+				const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+				switch (updateEvent.type) {
+					case WebsocketUpdateType.DISCONNECT:
+						this.disconnectFromWebsockets();
+						this.disconnectEvent.emit();
+						break;
+					case WebsocketUpdateType.DISPLAY_NUMBER:
+						this.displayScreenCode();
+						break;
+					case WebsocketUpdateType.REFRESH_DASHBOARD:
+						this.refreshAllProjectWidgets.emit();
+						break;
+					case WebsocketUpdateType.RELOAD:
+						location.reload();
+						break;
+					default:
+						this.refreshAllProjectWidgets.emit();
+				}
+			});
+	}
+
+	/**
+	 * Create a websocket subscription for the current screen
+	 */
+	private websocketProjectScreenEventSubscription(): void {
+		const screenSubscriptionUrl = `/user/${this.project().token}-${this.screenCode()}/queue/unique`;
+
+		this.websocketService
+			.watch(screenSubscriptionUrl)
+			.pipe(takeUntil(this.unsubscribeProjectWebSocket))
+			.subscribe((stompMessage: IMessage) => {
+				const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+				if (updateEvent.type === WebsocketUpdateType.DISCONNECT) {
+					this.disconnectFromWebsockets();
+					this.disconnectEvent.emit();
+				}
+			});
+	}
+
+	/**
+	 * When the layout is updated
+	 * @param layout The new layout
+	 */
+	public onLayoutUpdated(layout: KtdGridLayout) {
+		if (this.isGridItemsHasMoved(layout)) {
+			this.currentGrid = layout;
+
+			const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
+			this.currentGrid.forEach((gridItem) => {
+				projectWidgetPositionRequests.push({
+					projectWidgetId: Number(gridItem.id),
+					gridColumn: gridItem.x + 1,
+					gridRow: gridItem.y + 1,
+					height: gridItem.h,
+					width: gridItem.w
+				});
+			});
+
+			this.httpProjectService
+				.updateProjectWidgetPositions(this.project().token, projectWidgetPositionRequests)
+				.subscribe();
+		}
+	}
+
+	/**
+	 * Tell if the grid items have moved
+	 * @param layout The new layout
+	 * @private
+	 */
+	private isGridItemsHasMoved(layout: KtdGridLayout): boolean {
+		let itemHaveBeenMoved = false;
+
+		this.currentGrid.forEach((currentGridItem) => {
+			const gridItemFound = layout.find((newGridItem) => {
+				return currentGridItem.id === newGridItem.id;
+			});
+
+			if (gridItemFound && GridItemUtils.isItemHaveBeenMoved(currentGridItem, gridItemFound)) {
+				itemHaveBeenMoved = true;
+			}
+		});
+
+		return itemHaveBeenMoved;
+	}
+
+	/**
+	 * Get the project widget by its id
+	 * @param id The id of the project widget
+	 */
+	public getProjectWidgetById(id: string): ProjectWidget {
+		return this.projectWidgets().find((projectWidget) => projectWidget.id === Number(id));
+	}
+}

@@ -17,13 +17,13 @@
  * under the License.
  */
 
-import { RoleEnum } from '../../../enums/role.enum';
+import { RoleName } from '../../../enums/role-name';
 
 /**
  * The Role entity
  */
 export class Role {
 	id: number;
-	name: RoleEnum;
+	name: RoleName;
 	description: string;
 }

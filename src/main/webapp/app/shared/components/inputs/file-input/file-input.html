@@ -1,0 +1,53 @@
+<div class="file-upload-wrapper">
+	<!-- Button visible -->
+	<div>
+		<div class="upload-button-wrapper">
+			<button
+				mat-flat-button
+				type="button"
+				class="upload-button"
+				color="primary"
+				[ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
+				(click)="file.click()"
+			>
+				<mat-icon> {{ materialIconRecords[icon.UPLOAD] }} </mat-icon>
+				<span> {{ field().label | translate }} </span>
+			</button>
+
+			@if (componentRef()) {
+				<button
+					mat-flat-button
+					type="button"
+					class="upload-button"
+					color="primary"
+					[ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
+					(click)="screenshot()"
+				>
+					<mat-icon> {{ materialIconRecords[icon.SCREENSHOT] }} </mat-icon>
+					<span> {{ 'dashboard.take.screenshot' | translate }} </span>
+				</button>
+			}
+		</div>
+
+		<!-- Error Message for file input -->
+		@if (isInputFieldOnError()) {
+			<mat-error animate.enter="animation-enter-error" animate.leave="animation-leave-error">
+				{{ getInputErrors() | translate }}
+			</mat-error>
+		}
+	</div>
+
+	<!-- Image uploaded -->
+	@if (imgBase64) {
+		<img [src]="imgBase64" class="uploaded-file" alt="Uploaded file" />
+	}
+
+	@if (filename) {
+		<div>
+			{{ filename }}
+		</div>
+	}
+
+	<!-- Used to retrieve the file (hidden) -->
+	<input #file type="file" (change)="onFileChange($event)" />
+</div>

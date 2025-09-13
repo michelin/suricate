@@ -17,31 +17,32 @@
  * under the License.
  */
 
-import { DatePipe } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import localeFr from '@angular/common/locales/fr';
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { AppComponent } from './app/app.component';
+import { App } from './app/app';
 import { appRoutes } from './app/app.routes';
-import { ErrorInterceptor } from './app/shared/interceptors/error.interceptor';
-import { TokenInterceptor } from './app/shared/interceptors/token.interceptor';
+import { ErrorInterceptor } from './app/shared/interceptors/error-interceptor';
+import { TokenInterceptor } from './app/shared/interceptors/token-interceptor';
 import { environment } from './environments/environment';
 
 if (environment.production) {
 	enableProdMode();
 }
 
-bootstrapApplication(AppComponent, {
+registerLocaleData(localeFr);
+
+bootstrapApplication(App, {
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 		provideHttpClient(withInterceptorsFromDi()),
-		provideAnimationsAsync(),
 		provideRouter(appRoutes),
 		provideTranslateService({
 			loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })

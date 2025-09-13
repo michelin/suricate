@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { RepositoryTypeEnum } from '../../../enums/repository-type.enum';
+import { RepositoryType } from '../../../enums/repository-type';
 
 export interface RepositoryRequest {
 	/**
@@ -53,7 +53,7 @@ export interface RepositoryRequest {
 	/**
 	 * The type of repository
 	 */
-	type: RepositoryTypeEnum;
+	type: RepositoryType;
 
 	/**
 	 * If the repository is enabled or not

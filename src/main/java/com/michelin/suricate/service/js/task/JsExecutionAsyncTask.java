@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
@@ -215,7 +215,7 @@ public class JsExecutionAsyncTask implements Callable<JsResultDto> {
      */
     protected boolean isFatalError(Exception e, Throwable rootCause) {
         return !(rootCause instanceof RemoteException
-                || StringUtils.containsIgnoreCase(ExceptionUtils.getMessage(e), "timeout")
+                || Strings.CI.contains(ExceptionUtils.getMessage(e), "timeout")
                 || rootCause instanceof UnknownHostException
                 || jsExecutionDto.isAlreadySuccess());
     }

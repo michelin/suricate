@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { WidgetAvailabilityEnum } from '../../../enums/widget-availability.enum';
+import { WidgetAvailability } from '../../../enums/widget-availability';
 
 export interface WidgetRequest {
-	widgetAvailability: WidgetAvailabilityEnum;
+	widgetAvailability: WidgetAvailability;
 }

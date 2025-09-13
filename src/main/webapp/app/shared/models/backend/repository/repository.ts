@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { RepositoryTypeEnum } from '../../../enums/repository-type.enum';
+import { RepositoryType } from '../../../enums/repository-type';
 
 /**
  * Repository class
@@ -31,7 +31,7 @@ export class Repository {
 	login: string;
 	password: string;
 	localPath: string;
-	type: RepositoryTypeEnum;
+	type: RepositoryType;
 	enabled: boolean;
 	priority: number;
 	createdDate: Date;

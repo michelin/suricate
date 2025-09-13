@@ -8,7 +8,7 @@
     function updateDate() {
       $('.clock.widget-{{SURI_INSTANCE_ID}} .date').html(
         moment()
-          .locale(navigator.language || navigator.userLanguage)
+          .locale(navigator.language)
           .format('DD MMMM YYYY')
       );
       $('.clock.widget-{{SURI_INSTANCE_ID}} .time').html(moment().format('HH:mm:ss'));

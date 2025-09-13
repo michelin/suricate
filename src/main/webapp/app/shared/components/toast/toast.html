@@ -1,0 +1,45 @@
+@if (message) {
+	<div class="wrapper" animate.enter="animation-enter-toast" animate.leave="animation-leave-toast">
+		<aside>
+			<div class="notification mat-elevation-z12" [ngClass]="message.style">
+				<div class="notification-body">
+					<div class="icon-wrapper">
+						@switch (message.style) {
+							@case (toastType.INFO) {
+								<mat-icon class="material-icons">
+									{{ materialIconRecords[icon.INFO] }}
+								</mat-icon>
+							}
+							@case (toastType.WARNING) {
+								<mat-icon class="material-icons">
+									{{ materialIconRecords[icon.WARNING] }}
+								</mat-icon>
+							}
+							@case (toastType.DANGER) {
+								<mat-icon class="material-icons">
+									{{ materialIconRecords[icon.ERROR] }}
+								</mat-icon>
+							}
+							@case (toastType.SUCCESS) {
+								<mat-icon class="material-icons">
+									{{ materialIconRecords[icon.SUCCESS] }}
+								</mat-icon>
+							}
+						}
+					</div>
+					<div class="notification-content">
+						<div class="notification-title">
+							{{ message.title | translate }}
+						</div>
+						<div class="notification-body">
+							{{ message.content | translate }}
+						</div>
+					</div>
+					<button mat-icon-button (click)="hideToast()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</div>
+			</div>
+		</aside>
+	</div>
+}

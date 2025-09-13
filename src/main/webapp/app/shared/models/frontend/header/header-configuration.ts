@@ -27,6 +27,7 @@ export class HeaderConfiguration {
 	 * The title of the page
 	 */
 	title: string;
+
 	/**
 	 * Used to add actions to the header
 	 */
