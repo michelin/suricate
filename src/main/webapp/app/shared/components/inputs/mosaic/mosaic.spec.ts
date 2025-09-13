@@ -34,7 +34,7 @@ describe('Mosaic', () => {
 
 		fixture = TestBed.createComponent(Mosaic);
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataType.MOSAIC);
+		fixture.componentRef.setInput('field', buildMockedFormField(DataType.MOSAIC));
 
 		fixture.detectChanges();
 	});

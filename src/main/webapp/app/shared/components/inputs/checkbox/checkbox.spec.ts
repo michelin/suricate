@@ -51,8 +51,8 @@ describe('Checkbox', () => {
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataType.BOOLEAN);
-		component.formGroup = buildMockedFormGroup(DataType.BOOLEAN, formBuilder);
+		fixture.componentRef.setInput('field', buildMockedFormField(DataType.BOOLEAN));
+		fixture.componentRef.setInput('formGroup', buildMockedFormGroup(DataType.BOOLEAN, formBuilder));
 
 		fixture.detectChanges();
 	});

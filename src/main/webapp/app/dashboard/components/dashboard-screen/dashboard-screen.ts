@@ -286,7 +286,7 @@ export class DashboardScreen implements AfterViewInit, OnDestroy {
 	 * Create the list of grid items used to display widgets on the grids
 	 */
 	private initGrid(): void {
-		if (this.projectWidgets) {
+		if (this.projectWidgets()) {
 			this.currentGrid = this.getGridLayoutFromProjectWidgets();
 		}
 	}

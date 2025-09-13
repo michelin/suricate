@@ -48,8 +48,8 @@ describe('FileInput', () => {
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataType.FILE);
-		component.formGroup = buildMockedFormGroup(DataType.FILE, formBuilder);
+		fixture.componentRef.setInput('field', buildMockedFormField(DataType.FILE));
+		fixture.componentRef.setInput('formGroup', buildMockedFormGroup(DataType.FILE, formBuilder));
 
 		fixture.detectChanges();
 	});

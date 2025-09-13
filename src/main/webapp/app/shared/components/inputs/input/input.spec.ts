@@ -48,8 +48,8 @@ describe('Input', () => {
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataType.TEXT);
-		component.formGroup = buildMockedFormGroup(DataType.TEXT, formBuilder);
+		fixture.componentRef.setInput('field', buildMockedFormField(DataType.TEXT));
+		fixture.componentRef.setInput('formGroup', buildMockedFormGroup(DataType.TEXT, formBuilder));
 
 		fixture.detectChanges();
 	});

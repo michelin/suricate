@@ -17,6 +17,7 @@
  * under the License.
  */
 
+import { DatePipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -38,7 +39,8 @@ describe('SecuritySettings', () => {
 				provideHttpClientTesting(),
 				provideTranslateService({
 					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-				})
+				}),
+				DatePipe
 			]
 		}).compileComponents();
 

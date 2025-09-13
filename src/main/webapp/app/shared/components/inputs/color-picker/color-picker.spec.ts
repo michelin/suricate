@@ -48,8 +48,8 @@ describe('ColorPicker', () => {
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;
-		component.field = buildMockedFormField(DataType.COLOR_PICKER);
-		component.formGroup = buildMockedFormGroup(DataType.COLOR_PICKER, formBuilder);
+		fixture.componentRef.setInput('field', buildMockedFormField(DataType.COLOR_PICKER));
+		fixture.componentRef.setInput('formGroup', buildMockedFormGroup(DataType.COLOR_PICKER, formBuilder));
 
 		fixture.detectChanges();
 	});
