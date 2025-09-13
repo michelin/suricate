@@ -26,7 +26,7 @@ import { mergeMap, takeUntil, tap } from 'rxjs/operators';
 
 import { ProgressBar } from '../../../shared/components/progress-bar/progress-bar';
 import { Spinner } from '../../../shared/components/spinner/spinner';
-import { HideAfterInitDirective } from '../../../shared/directives/hide-after-init/hide-after-init.directive';
+import { HideAfterInitDirective } from '../../../shared/directives/hide-after-init/hide-after-init-directive';
 import { WebsocketUpdateType } from '../../../shared/enums/websocket-update-type';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';

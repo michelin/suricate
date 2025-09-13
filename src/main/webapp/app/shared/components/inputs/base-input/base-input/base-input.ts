@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 
-import { IconEnum } from '../../../../enums/icon.enum';
+import { Icon } from '../../../../enums/icon';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { ValueChangedEvent, ValueChangedType } from '../../../../models/frontend/form/value-changed-event';
 import { MaterialIconRecords } from '../../../../models/frontend/icon/material-icon';
@@ -33,7 +33,7 @@ export class BaseInput {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of material icon codes

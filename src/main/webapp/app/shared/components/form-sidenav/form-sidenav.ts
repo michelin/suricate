@@ -25,14 +25,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ButtonColorEnum } from '../../enums/button-color.enum';
-import { IconEnum } from '../../enums/icon.enum';
+import { ButtonColor } from '../../enums/button-color';
+import { Icon } from '../../enums/icon';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { FormField } from '../../models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
-import { FormService } from '../../services/frontend/form/form.service';
-import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
+import { FormService } from '../../services/frontend/form/form-service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav-service';
 import { Buttons } from '../buttons/buttons';
 import { Input } from '../inputs/input/input';
 import { SlideToggle } from '../inputs/slide-toggle/slide-toggle';
@@ -121,13 +121,13 @@ export class FormSidenav implements OnInit, OnDestroy {
 		this.buttons.push(
 			{
 				label: 'close',
-				icon: IconEnum.CLOSE,
-				color: ButtonColorEnum.WARN,
+				icon: Icon.CLOSE,
+				color: ButtonColor.WARN,
 				callback: () => this.closeSidenav()
 			},
 			{
 				label: 'save',
-				icon: IconEnum.SAVE,
+				icon: Icon.SAVE,
 				hidden: () => this.configuration.hideSaveAction,
 				callback: () => this.save()
 			}

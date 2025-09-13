@@ -35,7 +35,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { SettingsService } from '../../../core/services/settings-service';
-import { IconEnum } from '../../../shared/enums/icon.enum';
+import { Icon } from '../../../shared/enums/icon';
 import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication-service';
 import { MenuService } from '../../../shared/services/frontend/menu/menu-service';
@@ -85,7 +85,7 @@ export class Menu implements OnInit {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of material icons

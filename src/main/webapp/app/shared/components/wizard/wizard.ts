@@ -24,7 +24,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ButtonColorEnum } from '../../enums/button-color.enum';
+import { ButtonColor } from '../../enums/button-color';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormStep } from '../../models/frontend/form/form-step';
@@ -115,7 +115,7 @@ export class Wizard implements OnInit {
 		this.wizardButtons = [
 			{
 				label: 'close',
-				color: ButtonColorEnum.WARN,
+				color: ButtonColor.WARN,
 				callback: () => this.closeWizard()
 			},
 			{

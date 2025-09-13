@@ -24,8 +24,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ButtonColorEnum } from '../../enums/button-color.enum';
-import { ButtonTypeEnum } from '../../enums/button-type.enum';
+import { ButtonColor } from '../../enums/button-color';
+import { ButtonType } from '../../enums/button-type';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { MaterialIconRecords } from '../../models/frontend/icon/material-icon';
 
@@ -54,12 +54,12 @@ export class Buttons<T> {
 	/**
 	 * The different type of buttons
 	 */
-	public buttonTypeEnum = ButtonTypeEnum;
+	public buttonTypeEnum = ButtonType;
 
 	/**
 	 * The different color of buttons
 	 */
-	public buttonColorEnum = ButtonColorEnum;
+	public buttonColorEnum = ButtonColor;
 
 	/**
 	 * Records that store the icons code for an enum

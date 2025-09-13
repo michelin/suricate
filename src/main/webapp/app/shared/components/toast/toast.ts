@@ -37,8 +37,8 @@ import { ToastService } from '../../services/frontend/toast/toast-service';
  */
 @Component({
 	selector: 'suricate-toast-messages',
-	templateUrl: './toast.component.html',
-	styleUrls: ['./toast.component.scss'],
+	templateUrl: './toast.html',
+	styleUrls: ['./toast.scss'],
 	animations: [
 		trigger('slideInOut', [
 			state(
@@ -105,7 +105,7 @@ import { ToastService } from '../../services/frontend/toast/toast-service';
 	],
 	imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
 })
-export class ToastComponent implements OnInit, OnDestroy {
+export class Toast implements OnInit, OnDestroy {
 	private readonly toastService = inject(ToastService);
 
 	/**

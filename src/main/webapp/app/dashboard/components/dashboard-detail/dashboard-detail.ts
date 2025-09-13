@@ -31,8 +31,8 @@ import { mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Header } from '../../../layout/components/header/header';
 import { Paginator } from '../../../shared/components/paginator/paginator';
 import { Spinner } from '../../../shared/components/spinner/spinner';
-import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
-import { IconEnum } from '../../../shared/enums/icon.enum';
+import { ButtonColor } from '../../../shared/enums/button-color';
+import { Icon } from '../../../shared/enums/icon';
 import { ToastType } from '../../../shared/enums/toast-type';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
@@ -45,16 +45,16 @@ import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-ch
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
 import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html-pipe';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid.service';
-import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
-import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
-import { DialogService } from '../../../shared/services/frontend/dialog/dialog.service';
-import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
-import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
-import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project-service';
+import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid-service';
+import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget-service';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen-service';
+import { DialogService } from '../../../shared/services/frontend/dialog/dialog-service';
+import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields-service';
+import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields-service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav-service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast-service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket-service';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { DashboardService } from '../../services/dashboard/dashboard-service';
@@ -146,7 +146,7 @@ export class DashboardDetail implements OnInit, OnDestroy {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of material icons
@@ -249,64 +249,64 @@ export class DashboardDetail implements OnInit, OnDestroy {
 			title: this.project.name,
 			actions: [
 				{
-					icon: IconEnum.ADD,
+					icon: Icon.ADD,
 					variant: 'miniFab',
 					tooltip: { message: 'widget.add' },
 					hidden: () => this.isReadOnly,
 					callback: () => this.displayProjectWidgetWizard()
 				},
 				{
-					icon: IconEnum.ADD_GRID,
+					icon: Icon.ADD_GRID,
 					variant: 'miniFab',
 					tooltip: { message: 'grid.add' },
 					hidden: () => this.isReadOnly,
 					callback: () => this.openAddGridFormSidenav()
 				},
 				{
-					icon: IconEnum.EDIT,
+					icon: Icon.EDIT,
 					variant: 'miniFab',
 					tooltip: { message: 'dashboard.edit' },
 					hidden: () => this.isReadOnly,
 					callback: () => this.openDashboardFormSidenav()
 				},
 				{
-					icon: IconEnum.GRID,
+					icon: Icon.GRID,
 					variant: 'miniFab',
 					tooltip: { message: 'dashboard.grid.management' },
 					hidden: () => this.isReadOnly || this.project.grids.length === 1,
 					callback: () => this.openGridsManagementSidenav()
 				},
 				{
-					icon: IconEnum.USERS,
+					icon: Icon.USERS,
 					variant: 'miniFab',
 					tooltip: { message: 'user.edit' },
 					hidden: () => this.isReadOnly,
 					callback: () => this.openUserFormSidenav()
 				},
 				{
-					icon: IconEnum.REFRESH,
+					icon: Icon.REFRESH,
 					variant: 'miniFab',
 					tooltip: { message: 'screen.refresh' },
 					hidden: () => this.isReadOnly || !this.allWidgets || this.allWidgets.length === 0,
 					callback: () => this.refreshConnectedScreens()
 				},
 				{
-					icon: IconEnum.TV,
+					icon: Icon.TV,
 					variant: 'miniFab',
 					tooltip: { message: 'tv.view' },
 					hidden: () => !this.allWidgets || this.allWidgets.length === 0,
 					callback: () => this.redirectToTvView()
 				},
 				{
-					icon: IconEnum.TV_LIVE,
+					icon: Icon.TV_LIVE,
 					variant: 'miniFab',
 					tooltip: { message: 'screen.management' },
 					hidden: () => this.isReadOnly || !this.allWidgets || this.allWidgets.length === 0,
 					callback: () => this.openScreenManagementDialog()
 				},
 				{
-					icon: IconEnum.DELETE_FOREVER,
-					color: ButtonColorEnum.WARN,
+					icon: Icon.DELETE_FOREVER,
+					color: ButtonColor.WARN,
 					variant: 'miniFab',
 					tooltip: { message: this.project.grids.length === 1 ? 'dashboard.delete' : 'dashboard.grid.delete' },
 					hidden: () => this.isReadOnly,
@@ -507,8 +507,8 @@ export class DashboardDetail implements OnInit, OnDestroy {
 			actions: [
 				{
 					label: 'dashboard.grid.delete.dialog.select.grid',
-					icon: IconEnum.GRID,
-					color: ButtonColorEnum.WARN,
+					icon: Icon.GRID,
+					color: ButtonColor.WARN,
 					callback: () => {
 						this.httpProjectGridsService.delete(this.project.token, this.gridId).subscribe(() => {
 							this.refreshProject().subscribe(() => {
@@ -520,8 +520,8 @@ export class DashboardDetail implements OnInit, OnDestroy {
 				},
 				{
 					label: 'dashboard.grid.delete.dialog.select.dashboard',
-					icon: IconEnum.DASHBOARD,
-					color: ButtonColorEnum.WARN,
+					icon: Icon.DASHBOARD,
+					color: ButtonColor.WARN,
 					callback: () => {
 						this.httpProjectService.delete(this.project.token).subscribe(() => {
 							this.toastService.sendMessage('dashboard.delete.success', ToastType.SUCCESS);

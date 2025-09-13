@@ -43,14 +43,14 @@ import { FormField } from '../../../../shared/models/frontend/form/form-field';
 import { MaterialIconRecords } from '../../../../shared/models/frontend/icon/material-icon';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { SafeHtmlPipe } from '../../../../shared/pipes/safe-html/safe-html-pipe';
-import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
-import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget.service';
-import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
-import { WidgetConfigurationFormFieldsService } from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav.service';
-import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
-import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket.service';
+import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget-service';
+import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget-service';
+import { DialogService } from '../../../../shared/services/frontend/dialog/dialog-service';
+import { WidgetConfigurationFormFieldsService } from '../../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields-service';
+import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps-service';
+import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav-service';
+import { ToastService } from '../../../../shared/services/frontend/toast/toast-service';
+import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket-service';
 import { LibraryService } from '../../../services/library/library-service';
 
 /**

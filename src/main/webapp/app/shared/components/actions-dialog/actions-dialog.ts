@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, inject, OnInit } from '@angular/core';
 import {
 	MAT_DIALOG_DATA,
@@ -28,8 +27,8 @@ import {
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ButtonColorEnum } from '../../enums/button-color.enum';
-import { IconEnum } from '../../enums/icon.enum';
+import { ButtonColor } from '../../enums/button-color';
+import { Icon } from '../../enums/icon';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
 import { Buttons } from '../buttons/buttons';
@@ -37,7 +36,7 @@ import { Buttons } from '../buttons/buttons';
 @Component({
 	templateUrl: './actions-dialog.html',
 	styleUrls: ['./actions-dialog.scss'],
-	imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, Buttons, MatDialogClose, TranslatePipe]
+	imports: [MatDialogTitle, MatDialogContent, MatDialogActions, Buttons, MatDialogClose, TranslatePipe]
 })
 export class ActionsDialog implements OnInit {
 	private readonly data = inject<ActionsDialogConfiguration>(MAT_DIALOG_DATA);
@@ -61,8 +60,8 @@ export class ActionsDialog implements OnInit {
 	private initCloseButtonConfiguration(): void {
 		const closeButton: ButtonConfiguration<void> = {
 			label: 'close',
-			icon: IconEnum.CLOSE,
-			color: ButtonColorEnum.WARN
+			icon: Icon.CLOSE,
+			color: ButtonColor.WARN
 		};
 
 		this.configuration.actions = [closeButton].concat(this.configuration.actions);

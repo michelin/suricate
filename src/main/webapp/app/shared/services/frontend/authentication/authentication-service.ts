@@ -23,7 +23,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { Role } from '../../../enums/role';
+import { RoleName } from '../../../enums/role-name';
 import { AuthenticationResponse } from '../../../models/backend/authentication/authentication-response';
 import { Role } from '../../../models/backend/role/role';
 import { Credentials } from '../../../models/backend/user/credentials';
@@ -119,7 +119,7 @@ export class AuthenticationService {
 	 */
 	public static isAdmin(): boolean {
 		const token = AuthenticationService.decodeAccessToken();
-		return token.roles && token.roles.includes(Role.ROLE_ADMIN);
+		return token.roles && token.roles.includes(RoleName.ROLE_ADMIN);
 	}
 
 	/**
@@ -144,7 +144,7 @@ export class AuthenticationService {
 		user.mode = decodedToken.mode;
 
 		if (decodedToken.roles) {
-			user.roles = decodedToken.roles.map((roleEnum: Role) => {
+			user.roles = decodedToken.roles.map((roleEnum: RoleName) => {
 				const role = new Role();
 				role.name = roleEnum;
 				return role;

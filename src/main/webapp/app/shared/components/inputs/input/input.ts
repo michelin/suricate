@@ -19,7 +19,7 @@
 
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, inject, input, OnInit, ViewEncapsulation } from '@angular/core';
 import {
 	AbstractControl,
 	FormArray,
@@ -37,9 +37,9 @@ import { MatSelect } from '@angular/material/select';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { ButtonColorEnum } from '../../../enums/button-color.enum';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { IconEnum } from '../../../enums/icon.enum';
+import { ButtonColor } from '../../../enums/button-color';
+import { DataType } from '../../../enums/data-type';
+import { Icon } from '../../../enums/icon';
 import { ButtonConfiguration } from '../../../models/frontend/button/button-configuration';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { FormOption } from '../../../models/frontend/form/form-option';
@@ -98,13 +98,12 @@ export class Input extends BaseInput implements OnInit {
 	/**
 	 * A reference to a component. Used to take screenshot
 	 */
-	@Input()
-	public componentRef: ElementRef;
+	public componentRef = input<ElementRef>();
 
 	/**
 	 * The data type enum
 	 */
-	public dataType = DataTypeEnum;
+	public dataType = DataType;
 
 	/**
 	 * The list of options to display
@@ -125,7 +124,7 @@ export class Input extends BaseInput implements OnInit {
 	 * Called when the component is init
 	 */
 	public ngOnInit(): void {
-		this.originalTypeIsPassword = this.field.type === DataTypeEnum.PASSWORD;
+		this.originalTypeIsPassword = this.field.type === DataType.PASSWORD;
 
 		this.initOptionsField();
 
@@ -172,7 +171,7 @@ export class Input extends BaseInput implements OnInit {
 	 * Refresh the list to display in auto complete
 	 */
 	private manageAutoCompleteChanges(): void {
-		if (this.field.options && this.field.type === DataTypeEnum.TEXT) {
+		if (this.field.options && this.field.type === DataType.TEXT) {
 			const inputValue = this.formGroup.value[this.field.key];
 
 			this.field.options(inputValue).subscribe((options) => {
@@ -202,12 +201,12 @@ export class Input extends BaseInput implements OnInit {
 	 */
 	public suffixActions(): void {
 		if (this.originalTypeIsPassword) {
-			if (this.field.type === DataTypeEnum.PASSWORD) {
-				this.field.type = DataTypeEnum.TEXT;
-				this.field.iconSuffix = IconEnum.HIDE_PASSWORD;
+			if (this.field.type === DataType.PASSWORD) {
+				this.field.type = DataType.TEXT;
+				this.field.iconSuffix = Icon.HIDE_PASSWORD;
 			} else {
-				this.field.type = DataTypeEnum.PASSWORD;
-				this.field.iconSuffix = IconEnum.SHOW_PASSWORD;
+				this.field.type = DataType.PASSWORD;
+				this.field.iconSuffix = Icon.SHOW_PASSWORD;
 			}
 		}
 	}
@@ -219,7 +218,7 @@ export class Input extends BaseInput implements OnInit {
 		let cellSize = 87;
 
 		if (this.field.fields && this.field.fields.length > 0) {
-			const numberOfFieldDisplayed = this.field.fields.filter((field: FormField) => field.type !== DataTypeEnum.HIDDEN);
+			const numberOfFieldDisplayed = this.field.fields.filter((field: FormField) => field.type !== DataType.HIDDEN);
 			cellSize = 87 / numberOfFieldDisplayed.length;
 		}
 
@@ -244,8 +243,8 @@ export class Input extends BaseInput implements OnInit {
 	private initDeleteRowConfiguration(): void {
 		this.deleteRowButtonConfiguration = [
 			{
-				icon: IconEnum.DELETE,
-				color: ButtonColorEnum.WARN,
+				icon: Icon.DELETE,
+				color: ButtonColor.WARN,
 				variant: 'miniFab',
 				callback: (event: Event, object: { formGroup: UntypedFormGroup; index: number }) => {
 					this.deleteRow(object.formGroup, object.index);
@@ -259,12 +258,12 @@ export class Input extends BaseInput implements OnInit {
 	 */
 	public isHtmlInput(): boolean {
 		return (
-			this.field.type === DataTypeEnum.NUMBER ||
-			this.field.type === DataTypeEnum.TEXT ||
-			this.field.type === DataTypeEnum.TEXTAREA ||
-			this.field.type === DataTypeEnum.PASSWORD ||
-			this.field.type === DataTypeEnum.COMBO ||
-			this.field.type === DataTypeEnum.MULTIPLE
+			this.field.type === DataType.NUMBER ||
+			this.field.type === DataType.TEXT ||
+			this.field.type === DataType.TEXTAREA ||
+			this.field.type === DataType.PASSWORD ||
+			this.field.type === DataType.COMBO ||
+			this.field.type === DataType.MULTIPLE
 		);
 	}
 
@@ -273,9 +272,7 @@ export class Input extends BaseInput implements OnInit {
 	 */
 	public isSimpleInput(): boolean {
 		return (
-			this.field.type === DataTypeEnum.NUMBER ||
-			this.field.type === DataTypeEnum.TEXT ||
-			this.field.type === DataTypeEnum.PASSWORD
+			this.field.type === DataType.NUMBER || this.field.type === DataType.TEXT || this.field.type === DataType.PASSWORD
 		);
 	}
 
@@ -283,6 +280,6 @@ export class Input extends BaseInput implements OnInit {
 	 * Is the current field a select input
 	 */
 	public isSelectInput(): boolean {
-		return this.field.type === DataTypeEnum.COMBO || this.field.type === DataTypeEnum.MULTIPLE;
+		return this.field.type === DataType.COMBO || this.field.type === DataType.MULTIPLE;
 	}
 }

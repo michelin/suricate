@@ -26,8 +26,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
-import { DataTypeEnum } from '../../enums/data-type.enum';
-import { IconEnum } from '../../enums/icon.enum';
+import { DataType } from '../../enums/data-type';
+import { Icon } from '../../enums/icon';
 import { PageModel } from '../../models/backend/page-model';
 import { FormField } from '../../models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
@@ -106,7 +106,7 @@ export abstract class List<TRet, TReq> implements OnInit, OnDestroy {
 	/**
 	 * List of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * List of material icon
@@ -146,8 +146,8 @@ export abstract class List<TRet, TReq> implements OnInit, OnDestroy {
 		this.searchBarConfig = {
 			key: List.researchFormFieldKey,
 			label: this.translateService.instant('search.bar'),
-			iconPrefix: IconEnum.SEARCH,
-			type: DataTypeEnum.TEXT
+			iconPrefix: Icon.SEARCH,
+			type: DataType.TEXT
 		};
 
 		this.formGroup = this.formService.generateFormGroupForFields([this.searchBarConfig]);
