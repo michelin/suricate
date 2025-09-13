@@ -33,15 +33,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Buttons } from '../../../shared/components/buttons/buttons';
 import { Input } from '../../../shared/components/inputs/input/input';
-import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
-import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
-import { IconEnum } from '../../../shared/enums/icon.enum';
+import { ButtonColor } from '../../../shared/enums/button-color';
+import { ButtonType } from '../../../shared/enums/button-type';
+import { DataType } from '../../../shared/enums/data-type';
+import { Icon } from '../../../shared/enums/icon';
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketClient } from '../../../shared/models/backend/websocket-client';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
 import { FormService } from '../../../shared/services/frontend/form/form.service';
@@ -112,7 +112,7 @@ export class TvManagementDialog implements OnInit {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of material icons
@@ -137,9 +137,9 @@ export class TvManagementDialog implements OnInit {
 	private initButtonsConfiguration(): void {
 		this.shareButtonsConfiguration = [
 			{
-				icon: IconEnum.SHARE_SCREEN,
+				icon: Icon.SHARE_SCREEN,
 				variant: 'miniFab',
-				type: ButtonTypeEnum.SUBMIT,
+				type: ButtonType.SUBMIT,
 				tooltip: { message: 'screen.subscribe' },
 				callback: () => this.validateFormBeforeSave()
 			}
@@ -147,8 +147,8 @@ export class TvManagementDialog implements OnInit {
 
 		this.connectedScreenButtonsConfiguration = [
 			{
-				icon: IconEnum.STOP_SHARE_SCREEN,
-				type: ButtonTypeEnum.BUTTON,
+				icon: Icon.STOP_SHARE_SCREEN,
+				type: ButtonType.BUTTON,
 				variant: 'miniFab',
 				tooltip: { message: 'screen.unsubscribe' },
 				callback: (event: Event, websocketClient: WebsocketClient) => this.disconnectScreen(websocketClient)
@@ -158,14 +158,14 @@ export class TvManagementDialog implements OnInit {
 		this.genericButtonsConfiguration = [
 			{
 				label: 'screen.display.code',
-				icon: IconEnum.SHOW_PASSWORD,
-				type: ButtonTypeEnum.BUTTON,
+				icon: Icon.SHOW_PASSWORD,
+				type: ButtonType.BUTTON,
 				callback: () => this.displayScreenCode()
 			},
 			{
 				label: 'close',
-				icon: IconEnum.CLOSE,
-				color: ButtonColorEnum.WARN
+				icon: Icon.CLOSE,
+				color: ButtonColor.WARN
 			}
 		];
 	}
@@ -178,7 +178,7 @@ export class TvManagementDialog implements OnInit {
 			{
 				key: 'screenCode',
 				label: 'screen.code',
-				type: DataTypeEnum.NUMBER,
+				type: DataType.NUMBER,
 				validators: [CustomValidator.isDigits, CustomValidator.greaterThan0]
 			}
 		];

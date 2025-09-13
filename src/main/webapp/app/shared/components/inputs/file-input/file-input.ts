@@ -27,15 +27,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import html2canvas from 'html2canvas';
 
 import { FileUtils } from '../../../utils/file.utils';
-import { BaseInputComponent } from '../base-input/base-input/base-input.component';
+import { BaseInput } from '../base-input/base-input/base-input';
 
 /**
  * Component that manage the file input
  */
 @Component({
 	selector: 'suricate-file-input',
-	templateUrl: './file-input.component.html',
-	styleUrls: ['./file-input.component.scss'],
+	templateUrl: './file-input.html',
+	styleUrls: ['./file-input.scss'],
 	animations: [
 		trigger('animationError', [
 			transition(':enter', [
@@ -46,7 +46,7 @@ import { BaseInputComponent } from '../base-input/base-input/base-input.componen
 	],
 	imports: [MatButton, NgClass, MatIcon, MatError, TranslatePipe]
 })
-export class FileInputComponent extends BaseInputComponent implements OnInit {
+export class FileInput extends BaseInput implements OnInit {
 	/**
 	 * A reference to a component. Used to take screenshot
 	 */

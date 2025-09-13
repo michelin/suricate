@@ -27,7 +27,7 @@ import { mergeMap, takeUntil, tap } from 'rxjs/operators';
 import { ProgressBar } from '../../../shared/components/progress-bar/progress-bar';
 import { Spinner } from '../../../shared/components/spinner/spinner';
 import { HideAfterInitDirective } from '../../../shared/directives/hide-after-init/hide-after-init.directive';
-import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
+import { WebsocketUpdateType } from '../../../shared/enums/websocket-update-type';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
@@ -134,7 +134,7 @@ export class DashboardTv implements OnInit, OnDestroy {
 				const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
 				// Received when synchronizing to a single dashboard
-				if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_DASHBOARD) {
+				if (updateEvent.type === WebsocketUpdateType.CONNECT_DASHBOARD) {
 					const project: Project = updateEvent.content as Project;
 					if (project) {
 						this.router.navigate(['/tv'], { queryParams: { token: project.token } });

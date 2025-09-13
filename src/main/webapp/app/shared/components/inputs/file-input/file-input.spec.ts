@@ -26,15 +26,15 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { FormField } from '../../../models/frontend/form/form-field';
-import { FileInputComponent } from './file-input.component';
+import { FileInput } from './file-input';
 
-describe('FileInputComponent', () => {
-	let component: FileInputComponent;
-	let fixture: ComponentFixture<FileInputComponent>;
+describe('FileInput', () => {
+	let component: FileInput;
+	let fixture: ComponentFixture<FileInput>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [FileInputComponent],
+			imports: [FileInput],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -44,7 +44,7 @@ describe('FileInputComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(FileInputComponent);
+		fixture = TestBed.createComponent(FileInput);
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;

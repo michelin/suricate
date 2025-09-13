@@ -21,8 +21,8 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { IconEnum } from '../../../../enums/icon.enum';
+import { DataType } from '../../../../enums/data-type';
+import { Icon } from '../../../../enums/icon';
 import { PageModel } from '../../../../models/backend/page-model';
 import { User } from '../../../../models/backend/user/user';
 import { FormField } from '../../../../models/frontend/form/form-field';
@@ -51,14 +51,14 @@ export class ProjectUsersFormFieldsService {
 			{
 				key: 'usernameAutocomplete',
 				label: 'username',
-				iconPrefix: IconEnum.USER_ADD,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.USER_ADD,
+				type: DataType.TEXT,
 				options: (usernameFilter: string) => this.getUsersAutocomplete(usernameFilter)
 			},
 			{
 				key: 'users',
 				label: 'user.list',
-				type: DataTypeEnum.FIELDS,
+				type: DataType.FIELDS,
 				values: this.httpProjectService.getProjectUsers(projectToken),
 				deleteRow: {
 					attribute: 'id',
@@ -68,24 +68,24 @@ export class ProjectUsersFormFieldsService {
 					{
 						key: 'id',
 						label: 'id',
-						type: DataTypeEnum.HIDDEN
+						type: DataType.HIDDEN
 					},
 					{
 						key: 'username',
 						label: 'username',
-						type: DataTypeEnum.TEXT,
+						type: DataType.TEXT,
 						readOnly: true
 					},
 					{
 						key: 'firstname',
 						label: 'firstname',
-						type: DataTypeEnum.TEXT,
+						type: DataType.TEXT,
 						readOnly: true
 					},
 					{
 						key: 'lastname',
 						label: 'lastname',
-						type: DataTypeEnum.TEXT,
+						type: DataType.TEXT,
 						readOnly: true
 					}
 				]

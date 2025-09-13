@@ -18,13 +18,9 @@
  */
 
 /**
- * The list of possible update events
+ * The list of settings type
  */
-export enum WebsocketUpdateTypeEnum {
-	REFRESH_DASHBOARD = 'REFRESH_DASHBOARD',
-	REFRESH_WIDGET = 'REFRESH_WIDGET',
-	CONNECT_DASHBOARD = 'CONNECT_DASHBOARD',
-	DISPLAY_NUMBER = 'DISPLAY_NUMBER',
-	RELOAD = 'RELOAD',
-	DISCONNECT = 'DISCONNECT'
+export enum SettingsType {
+	THEME = 'THEME',
+	LANGUAGE = 'LANGUAGE'
 }

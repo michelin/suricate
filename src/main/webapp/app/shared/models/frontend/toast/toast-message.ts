@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { ToastTypeEnum } from '../../../enums/toast-type.enum';
+import { ToastType } from '../../../enums/toast-type';
 
 /**
  * Class that represent a toaster notification message
@@ -34,7 +34,7 @@ export class ToastMessage {
 	/**
 	 * The style to apply (success, info, ...)
 	 */
-	style: ToastTypeEnum;
+	style: ToastType;
 	/**
 	 * Triggered by the user to hide the message
 	 *
@@ -49,9 +49,9 @@ export class ToastMessage {
 	 * @param content The message content
 	 * @param style The style
 	 */
-	constructor(title: string, content?: string, style?: ToastTypeEnum) {
+	constructor(title: string, content?: string, style?: ToastType) {
 		this.title = title;
 		this.content = content || '';
-		this.style = style || ToastTypeEnum.INFO;
+		this.style = style || ToastType.INFO;
 	}
 }

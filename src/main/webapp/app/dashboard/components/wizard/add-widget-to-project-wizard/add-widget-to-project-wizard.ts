@@ -29,7 +29,7 @@ import { Buttons } from '../../../../shared/components/buttons/buttons';
 import { Input } from '../../../../shared/components/inputs/input/input';
 import { SlideToggle } from '../../../../shared/components/inputs/slide-toggle/slide-toggle';
 import { Wizard } from '../../../../shared/components/wizard/wizard';
-import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { ToastType } from '../../../../shared/enums/toast-type';
 import { Project } from '../../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
@@ -136,7 +136,7 @@ export class AddWidgetToProjectWizard extends Wizard implements OnInit {
 				this.httpProjectWidgetsService
 					.addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest)
 					.subscribe(() => {
-						this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
+						this.toastService.sendMessage('widget.add.success', ToastType.SUCCESS);
 						this.redirectToDashboard();
 					});
 			});

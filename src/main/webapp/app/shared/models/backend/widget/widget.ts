@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { WidgetAvailabilityEnum } from '../../../enums/widget-availability.enum';
+import { WidgetAvailability } from '../../../enums/widget-availability';
 import { Category } from '../category/category';
 import { WidgetParam } from './widget-param';
 
@@ -34,7 +34,7 @@ export interface Widget {
 	delay: number;
 	timeout: string;
 	imageToken: string;
-	widgetAvailability: WidgetAvailabilityEnum;
+	widgetAvailability: WidgetAvailability;
 	category: Category;
 	repositoryId: number;
 	params: WidgetParam[];

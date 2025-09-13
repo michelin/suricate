@@ -22,12 +22,12 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { HeaderComponent } from '../../layout/components/header/header.component';
-import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
-import { InputComponent } from '../../shared/components/inputs/input/input.component';
-import { ListComponent } from '../../shared/components/list/list.component';
-import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { Header } from '../../layout/components/header/header';
+import { Buttons } from '../../shared/components/buttons/buttons';
+import { Input } from '../../shared/components/inputs/input/input';
+import { List } from '../../shared/components/list/list';
+import { Paginator } from '../../shared/components/paginator/paginator';
+import { Spinner } from '../../shared/components/spinner/spinner';
 import { Widget } from '../../shared/models/backend/widget/widget';
 import { WidgetRequest } from '../../shared/models/backend/widget/widget-request';
 import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
@@ -38,24 +38,24 @@ import { HttpWidgetService } from '../../shared/services/backend/http-widget/htt
  * Component used to display the list of widgets
  */
 @Component({
-	templateUrl: '../../shared/components/list/list.component.html',
-	styleUrls: ['../../shared/components/list/list.component.scss'],
+	templateUrl: '../../shared/components/list/list.html',
+	styleUrls: ['../../shared/components/list/list.scss'],
 	imports: [
-		HeaderComponent,
-		InputComponent,
+		Header,
+		Input,
 		FormsModule,
 		ReactiveFormsModule,
-		SpinnerComponent,
+		Spinner,
 		CdkDropList,
 		CdkDrag,
 		NgClass,
 		NgOptimizedImage,
-		ButtonsComponent,
-		PaginatorComponent
+		Buttons,
+		Paginator
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpWidgetService }]
 })
-export class CatalogComponent extends ListComponent<Widget, WidgetRequest> {
+export class CatalogComponent extends List<Widget, WidgetRequest> {
 	/**
 	 * Constructor
 	 */

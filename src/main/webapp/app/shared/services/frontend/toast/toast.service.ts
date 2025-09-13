@@ -20,7 +20,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ToastTypeEnum } from '../../../enums/toast-type.enum';
+import { ToastType } from '../../../enums/toast-type';
 import { ToastMessage } from '../../../models/frontend/toast/toast-message';
 
 /**
@@ -47,7 +47,7 @@ export class ToastService {
 	 * @param style The message style
 	 * @param content The content of the message
 	 */
-	public sendMessage(title: string, style?: ToastTypeEnum, content?: string): void {
+	public sendMessage(title: string, style?: ToastType, content?: string): void {
 		this.toastMessageSubject.next(new ToastMessage(title, content, style));
 	}
 }

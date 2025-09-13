@@ -24,15 +24,15 @@ import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/for
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { HeaderComponent } from '../../layout/components/header/header.component';
-import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
-import { InputComponent } from '../../shared/components/inputs/input/input.component';
-import { ListComponent } from '../../shared/components/list/list.component';
-import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
-import { IconEnum } from '../../shared/enums/icon.enum';
-import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
+import { Header } from '../../layout/components/header/header';
+import { Buttons } from '../../shared/components/buttons/buttons';
+import { Input } from '../../shared/components/inputs/input/input';
+import { List } from '../../shared/components/list/list';
+import { Paginator } from '../../shared/components/paginator/paginator';
+import { Spinner } from '../../shared/components/spinner/spinner';
+import { ButtonColor } from '../../shared/enums/button-color';
+import { Icon } from '../../shared/enums/icon';
+import { ToastType } from '../../shared/enums/toast-type';
 import { Project } from '../../shared/models/backend/project/project';
 import { ProjectRequest } from '../../shared/models/backend/project/project-request';
 import { FormField } from '../../shared/models/frontend/form/form-field';
@@ -44,24 +44,24 @@ import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fi
 import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 
 @Component({
-	templateUrl: '../../shared/components/list/list.component.html',
-	styleUrls: ['../../shared/components/list/list.component.scss'],
+	templateUrl: '../../shared/components/list/list.html',
+	styleUrls: ['../../shared/components/list/list.scss'],
 	imports: [
-		HeaderComponent,
-		InputComponent,
+		Header,
+		Input,
 		FormsModule,
 		ReactiveFormsModule,
-		SpinnerComponent,
+		Spinner,
 		CdkDropList,
 		CdkDrag,
 		NgClass,
 		NgOptimizedImage,
-		ButtonsComponent,
-		PaginatorComponent
+		Buttons,
+		Paginator
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpProjectService }]
 })
-export class Dashboards extends ListComponent<Project, ProjectRequest> {
+export class Dashboards extends List<Project, ProjectRequest> {
 	private readonly httpProjectService = inject(HttpProjectService);
 	private readonly projectFormFieldsService = inject(ProjectFormFieldsService);
 	private readonly projectUsersFormFieldsService = inject(ProjectUsersFormFieldsService);
@@ -127,21 +127,21 @@ export class Dashboards extends ListComponent<Project, ProjectRequest> {
 			enableShowBean: true,
 			buttons: [
 				{
-					icon: IconEnum.USERS,
+					icon: Icon.USERS,
 					tooltip: { message: 'user.edit' },
 					variant: 'miniFab',
 					callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project)
 				},
 				{
-					icon: IconEnum.EDIT,
+					icon: Icon.EDIT,
 					tooltip: { message: 'dashboard.edit' },
 					variant: 'miniFab',
 					callback: (event: Event, project: Project) => this.openFormSidenav(event, project)
 				},
 				{
-					icon: IconEnum.DELETE,
+					icon: Icon.DELETE,
 					tooltip: { message: 'dashboard.delete' },
-					color: ButtonColorEnum.WARN,
+					color: ButtonColor.WARN,
 					variant: 'miniFab',
 					callback: (event: Event, project: Project) => this.deleteProject(event, project)
 				}
@@ -185,7 +185,7 @@ export class Dashboards extends ListComponent<Project, ProjectRequest> {
 		]);
 
 		this.httpProjectService.update(this.projectSelected.token, projectRequest).subscribe(() => {
-			this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
+			this.toastService.sendMessage('dashboard.update.success', ToastType.SUCCESS);
 			this.refreshList();
 		});
 	}
@@ -204,7 +204,7 @@ export class Dashboards extends ListComponent<Project, ProjectRequest> {
 			message: `${this.translateService.instant('dashboard.delete.confirm')} ${project.name.toUpperCase()} ?`,
 			accept: () => {
 				this.httpProjectService.delete(project.token).subscribe(() => {
-					this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
+					this.toastService.sendMessage('dashboard.delete.success', ToastType.SUCCESS);
 					this.refreshList();
 				});
 			}

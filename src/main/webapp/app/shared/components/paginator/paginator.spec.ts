@@ -20,19 +20,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-import { PaginatorComponent } from './paginator.component';
+import { Paginator } from './paginator';
 
-describe('PaginatorComponent', () => {
-	let component: PaginatorComponent;
-	let fixture: ComponentFixture<PaginatorComponent>;
+describe('Paginator', () => {
+	let component: Paginator;
+	let fixture: ComponentFixture<Paginator>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [PaginatorComponent],
+			imports: [Paginator],
 			providers: [provideAnimationsAsync()]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(PaginatorComponent);
+		fixture = TestBed.createComponent(Paginator);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { DataType } from '../../../enums/data-type';
 import { Category } from '../category/category';
 
 /**
@@ -28,7 +28,7 @@ export class CategoryParameter {
 	value: string;
 	description: string;
 	export: boolean;
-	dataType: DataTypeEnum;
+	dataType: DataType;
 	category: Category;
 	showValue: boolean;
 }

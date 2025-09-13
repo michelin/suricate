@@ -23,22 +23,22 @@ import { ActivatedRoute, Event, NavigationEnd, Router, RouterOutlet } from '@ang
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { FormSidenavComponent } from '../../../shared/components/form-sidenav/form-sidenav.component';
+import { FormSidenav } from '../../../shared/components/form-sidenav/form-sidenav';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 import { RouteService } from '../../../shared/services/frontend/route/route.service';
-import { MenuComponent } from '../menu/menu.component';
+import { Menu } from '../menu/menu';
 
 /**
  * Hold the sidenav behavior and the main view
  */
 @Component({
 	selector: 'suricate-sidenav',
-	templateUrl: './sidenav.component.html',
-	styleUrls: ['./sidenav.component.scss'],
+	templateUrl: './sidenav.html',
+	styleUrls: ['./sidenav.scss'],
 	encapsulation: ViewEncapsulation.None,
-	imports: [MatSidenavContainer, MatSidenav, FormSidenavComponent, MenuComponent, MatSidenavContent, RouterOutlet]
+	imports: [MatSidenavContainer, MatSidenav, FormSidenav, Menu, MatSidenavContent, RouterOutlet]
 })
-export class SidenavComponent implements OnInit, OnDestroy {
+export class Sidenav implements OnInit, OnDestroy {
 	private readonly router = inject(Router);
 	private readonly activatedRoute = inject(ActivatedRoute);
 

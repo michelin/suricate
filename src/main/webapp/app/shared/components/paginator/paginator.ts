@@ -27,11 +27,11 @@ import { HttpFilterService } from '../../services/backend/http-filter/http-filte
  */
 @Component({
 	selector: 'suricate-paginator',
-	templateUrl: './paginator.component.html',
-	styleUrls: ['./paginator.component.scss'],
+	templateUrl: './paginator.html',
+	styleUrls: ['./paginator.scss'],
 	imports: [MatPaginator]
 })
-export class PaginatorComponent {
+export class Paginator {
 	/**
 	 * Hide the page size
 	 */

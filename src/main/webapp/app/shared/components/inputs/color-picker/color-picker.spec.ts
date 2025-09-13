@@ -26,15 +26,15 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { FormField } from '../../../models/frontend/form/form-field';
-import { ColorPickerComponent } from './color-picker.component';
+import { ColorPicker } from './color-picker';
 
-describe('ColorPickerComponent', () => {
-	let component: ColorPickerComponent;
-	let fixture: ComponentFixture<ColorPickerComponent>;
+describe('ColorPicker', () => {
+	let component: ColorPicker;
+	let fixture: ComponentFixture<ColorPicker>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [ColorPickerComponent],
+			imports: [ColorPicker],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -44,7 +44,7 @@ describe('ColorPickerComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(ColorPickerComponent);
+		fixture = TestBed.createComponent(ColorPicker);
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;

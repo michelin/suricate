@@ -36,18 +36,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { SettingsService } from '../../../core/services/settings-service';
 import { IconEnum } from '../../../shared/enums/icon.enum';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
-import { FooterComponent } from '../footer/footer.component';
+import { Footer } from '../footer/footer';
 
 /**
  * Display the menu on the sidenav
  */
 @Component({
 	selector: 'suricate-menu',
-	templateUrl: './menu.component.html',
-	styleUrls: ['./menu.component.scss'],
+	templateUrl: './menu.html',
+	styleUrls: ['./menu.scss'],
 	imports: [
 		MatMenu,
 		MatMenuItem,
@@ -64,11 +64,11 @@ import { FooterComponent } from '../footer/footer.component';
 		MatListSubheaderCssMatStyler,
 		MatListItemIcon,
 		MatListItemTitle,
-		FooterComponent,
+		Footer,
 		TranslatePipe
 	]
 })
-export class MenuComponent implements OnInit {
+export class Menu implements OnInit {
 	private readonly router = inject(Router);
 	private readonly settingsService = inject(SettingsService);
 

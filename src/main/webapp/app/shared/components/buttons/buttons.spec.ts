@@ -21,16 +21,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { SidenavComponent } from '../../../layout/components/sidenav/sidenav.component';
-import { ButtonsComponent } from './buttons.component';
+import { Sidenav } from '../../../layout/components/sidenav/sidenav';
+import { Buttons } from './buttons';
 
-describe('ButtonsComponent', () => {
-	let component: ButtonsComponent<unknown>;
-	let fixture: ComponentFixture<ButtonsComponent<unknown>>;
+describe('Buttons', () => {
+	let component: Buttons<unknown>;
+	let fixture: ComponentFixture<Buttons<unknown>>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [SidenavComponent],
+			imports: [Sidenav],
 			providers: [
 				provideTranslateService({
 					loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
@@ -38,7 +38,7 @@ describe('ButtonsComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(ButtonsComponent);
+		fixture = TestBed.createComponent(Buttons);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

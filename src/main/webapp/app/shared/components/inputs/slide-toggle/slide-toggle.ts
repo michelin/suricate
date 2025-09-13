@@ -24,11 +24,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
 	selector: 'suricate-slide-toggle',
-	templateUrl: './slide-toggle.component.html',
-	styleUrls: ['./slide-toggle.component.scss'],
+	templateUrl: './slide-toggle.html',
+	styleUrls: ['./slide-toggle.scss'],
 	imports: [MatSlideToggle, FormsModule, TranslatePipe]
 })
-export class SlideToggleComponent {
+export class SlideToggle {
 	/**
 	 * The label of the slide toggle
 	 */

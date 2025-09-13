@@ -33,7 +33,7 @@ import { Paginator } from '../../../shared/components/paginator/paginator';
 import { Spinner } from '../../../shared/components/spinner/spinner';
 import { ButtonColorEnum } from '../../../shared/enums/button-color.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { ToastType } from '../../../shared/enums/toast-type';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
@@ -43,8 +43,8 @@ import { ProjectWidget } from '../../../shared/models/backend/project-widget/pro
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html-pipe';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid.service';
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
@@ -407,7 +407,7 @@ export class DashboardDetail implements OnInit, OnDestroy {
 				this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
 			}
 
-			this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
+			this.toastService.sendMessage('dashboard.update.success', ToastType.SUCCESS);
 			this.refreshConnectedScreens();
 
 			if (!this.currentWidgets || this.currentWidgets.length === 0) {
@@ -448,7 +448,7 @@ export class DashboardDetail implements OnInit, OnDestroy {
 		});
 
 		this.httpProjectGridsService.updateAll(this.project.token, formData).subscribe(() => {
-			this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
+			this.toastService.sendMessage('dashboard.update.success', ToastType.SUCCESS);
 			this.refreshConnectedScreens();
 		});
 	}
@@ -490,7 +490,7 @@ export class DashboardDetail implements OnInit, OnDestroy {
 			message: `${this.translateService.instant('dashboard.delete.confirm')} ${this.project.name.toUpperCase()} ?`,
 			accept: () => {
 				this.httpProjectService.delete(this.project.token).subscribe(() => {
-					this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
+					this.toastService.sendMessage('dashboard.delete.success', ToastType.SUCCESS);
 					this.router.navigate(['/home']);
 				});
 			}
@@ -512,7 +512,7 @@ export class DashboardDetail implements OnInit, OnDestroy {
 					callback: () => {
 						this.httpProjectGridsService.delete(this.project.token, this.gridId).subscribe(() => {
 							this.refreshProject().subscribe(() => {
-								this.toastService.sendMessage('dashboard.grid.delete.success', ToastTypeEnum.SUCCESS);
+								this.toastService.sendMessage('dashboard.grid.delete.success', ToastType.SUCCESS);
 								this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id]);
 							});
 						});
@@ -524,7 +524,7 @@ export class DashboardDetail implements OnInit, OnDestroy {
 					color: ButtonColorEnum.WARN,
 					callback: () => {
 						this.httpProjectService.delete(this.project.token).subscribe(() => {
-							this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
+							this.toastService.sendMessage('dashboard.delete.success', ToastType.SUCCESS);
 							this.router.navigate(['/home']);
 						});
 					}

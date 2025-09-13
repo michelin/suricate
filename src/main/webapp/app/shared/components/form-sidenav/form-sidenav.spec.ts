@@ -26,15 +26,15 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { appRoutes } from '../../../app.routes';
-import { FormSidenavComponent } from './form-sidenav.component';
+import { FormSidenav } from './form-sidenav';
 
-describe('FormSidenavComponent', () => {
-	let component: FormSidenavComponent;
-	let fixture: ComponentFixture<FormSidenavComponent>;
+describe('FormSidenav', () => {
+	let component: FormSidenav;
+	let fixture: ComponentFixture<FormSidenav>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [FormSidenavComponent],
+			imports: [FormSidenav],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -46,7 +46,7 @@ describe('FormSidenavComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(FormSidenavComponent);
+		fixture = TestBed.createComponent(FormSidenav);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

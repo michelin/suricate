@@ -21,18 +21,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { FormField } from '../../../models/frontend/form/form-field';
-import { MosaicComponent } from './mosaic.component';
+import { Mosaic } from './mosaic';
 
-describe('MosaicComponent', () => {
-	let component: MosaicComponent;
-	let fixture: ComponentFixture<MosaicComponent>;
+describe('Mosaic', () => {
+	let component: Mosaic;
+	let fixture: ComponentFixture<Mosaic>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [MosaicComponent]
+			imports: [Mosaic]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(MosaicComponent);
+		fixture = TestBed.createComponent(Mosaic);
 		component = fixture.componentInstance;
 		component.field = buildMockedFormField(DataTypeEnum.MOSAIC);
 

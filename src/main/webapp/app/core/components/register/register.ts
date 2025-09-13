@@ -28,9 +28,9 @@ import { catchError, mergeMap } from 'rxjs/operators';
 import { Buttons } from '../../../shared/components/buttons/buttons';
 import { Input } from '../../../shared/components/inputs/input/input';
 import { Spinner } from '../../../shared/components/spinner/spinner';
-import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
-import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { AuthenticationProvider } from '../../../shared/enums/authentication-provider';
+import { ButtonType } from '../../../shared/enums/button-type';
+import { ToastType } from '../../../shared/enums/toast-type';
 import { Credentials } from '../../../shared/models/backend/user/credentials';
 import { UserRequest } from '../../../shared/models/backend/user/user-request';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
@@ -126,11 +126,11 @@ export class Register implements OnInit {
 					next: () => this.navigateToHomePage(),
 					error: (error: HttpErrorResponse) => {
 						this.loading = false;
-						this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
+						this.toastService.sendMessage(error.error.key, ToastType.DANGER);
 					}
 				});
 		} else {
-			this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);
+			this.toastService.sendMessage('form.error.fields', ToastType.DANGER);
 		}
 	}
 
@@ -141,7 +141,7 @@ export class Register implements OnInit {
 		this.buttonConfigurations = [
 			{
 				label: 'sign.up',
-				type: ButtonTypeEnum.SUBMIT
+				type: ButtonType.SUBMIT
 			}
 		];
 	}

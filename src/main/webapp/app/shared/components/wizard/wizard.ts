@@ -30,8 +30,8 @@ import { FormField } from '../../models/frontend/form/form-field';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
+import { MaterialIconRecords } from '../../models/frontend/icon/material-icon';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
-import { MaterialIconRecords } from '../../records/material-icon.record';
 import { FormService } from '../../services/frontend/form/form.service';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
@@ -41,10 +41,10 @@ import { ProjectWidgetFormStepsService } from '../../services/frontend/form-step
  */
 @Component({
 	template: '',
-	styleUrls: ['./wizard.component.scss'],
+	styleUrls: ['./wizard.scss'],
 	standalone: true
 })
-export class WizardComponent implements OnInit {
+export class Wizard implements OnInit {
 	private readonly formService = inject(FormService);
 	private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
 	protected readonly activatedRoute = inject(ActivatedRoute);

@@ -18,9 +18,11 @@
  */
 
 /**
- * The list of settings type
+ * The toast type enum managed by the Toast
  */
-export enum SettingsTypeEnum {
-	THEME = 'THEME',
-	LANGUAGE = 'LANGUAGE'
+export enum ToastType {
+	SUCCESS = 'success',
+	INFO = 'info',
+	WARNING = 'warning',
+	DANGER = 'danger'
 }

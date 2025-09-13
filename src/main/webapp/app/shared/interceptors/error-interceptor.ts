@@ -23,7 +23,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { ToastTypeEnum } from '../enums/toast-type.enum';
+import { ToastType } from '../enums/toast-type';
 import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
 import { ToastService } from '../services/frontend/toast/toast.service';
 
@@ -65,6 +65,6 @@ export class ErrorInterceptor implements HttpInterceptor {
 	 * Display the message when an unknown error occurred
 	 */
 	private displayUnknownErrorMessage(): void {
-		this.toastService.sendMessage('server.unavailable', ToastTypeEnum.DANGER, 'server.unavailable.explanation');
+		this.toastService.sendMessage('server.unavailable', ToastType.DANGER, 'server.unavailable.explanation');
 	}
 }

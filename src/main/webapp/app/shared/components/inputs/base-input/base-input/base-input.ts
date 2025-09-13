@@ -4,14 +4,14 @@ import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { ValueChangedEvent, ValueChangedType } from '../../../../models/frontend/form/value-changed-event';
-import { MaterialIconRecords } from '../../../../records/material-icon.record';
+import { MaterialIconRecords } from '../../../../models/frontend/icon/material-icon';
 
 @Component({
 	selector: 'suricate-base-input',
 	imports: [],
 	template: ''
 })
-export class BaseInputComponent {
+export class BaseInput {
 	/**
 	 * The form field
 	 */

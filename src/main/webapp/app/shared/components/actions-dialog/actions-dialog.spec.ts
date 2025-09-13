@@ -26,15 +26,15 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { IconEnum } from '../../enums/icon.enum';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
-import { ActionsDialogComponent } from './actions-dialog.component';
+import { ActionsDialog } from './actions-dialog';
 
-describe('ActionsDialogComponent', () => {
-	let component: ActionsDialogComponent;
-	let fixture: ComponentFixture<ActionsDialogComponent>;
+describe('ActionsDialog', () => {
+	let component: ActionsDialog;
+	let fixture: ComponentFixture<ActionsDialog>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [ActionsDialogComponent],
+			imports: [ActionsDialog],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -45,7 +45,7 @@ describe('ActionsDialogComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(ActionsDialogComponent);
+		fixture = TestBed.createComponent(ActionsDialog);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

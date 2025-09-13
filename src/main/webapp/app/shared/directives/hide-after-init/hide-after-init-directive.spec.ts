@@ -20,7 +20,7 @@
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { HideAfterInitDirective } from './hide-after-init.directive';
+import { HideAfterInitDirective } from './hide-after-init-directive';
 
 describe('HideAfterInit', () => {
 	let directive: HideAfterInitDirective;

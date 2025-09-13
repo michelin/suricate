@@ -20,8 +20,8 @@
 import { Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { IconEnum } from '../../../../enums/icon.enum';
+import { DataType } from '../../../../enums/data-type';
+import { Icon } from '../../../../enums/icon';
 import { FormField } from '../../../../models/frontend/form/form-field';
 
 /**
@@ -37,17 +37,17 @@ export class LoginFormFieldsService {
 			{
 				key: 'username',
 				label: 'username',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				validators: [Validators.required],
-				iconPrefix: IconEnum.USERNAME
+				iconPrefix: Icon.USERNAME
 			},
 			{
 				key: 'password',
 				label: 'password',
-				type: DataTypeEnum.PASSWORD,
+				type: DataType.PASSWORD,
 				validators: [Validators.required],
-				iconPrefix: IconEnum.PASSWORD,
-				iconSuffix: IconEnum.SHOW_PASSWORD
+				iconPrefix: Icon.PASSWORD,
+				iconSuffix: Icon.SHOW_PASSWORD
 			}
 		];
 	}

@@ -32,22 +32,14 @@ import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { IconEnum } from '../../enums/icon.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
-import { ButtonsComponent } from '../buttons/buttons.component';
+import { Buttons } from '../buttons/buttons';
 
 @Component({
-	templateUrl: './actions-dialog.component.html',
-	styleUrls: ['./actions-dialog.component.scss'],
-	imports: [
-		MatDialogTitle,
-		CdkScrollable,
-		MatDialogContent,
-		MatDialogActions,
-		ButtonsComponent,
-		MatDialogClose,
-		TranslatePipe
-	]
+	templateUrl: './actions-dialog.html',
+	styleUrls: ['./actions-dialog.scss'],
+	imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, Buttons, MatDialogClose, TranslatePipe]
 })
-export class ActionsDialogComponent implements OnInit {
+export class ActionsDialog implements OnInit {
 	private readonly data = inject<ActionsDialogConfiguration>(MAT_DIALOG_DATA);
 
 	/**

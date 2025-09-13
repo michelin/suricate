@@ -21,8 +21,8 @@ import { inject, Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { IconEnum } from '../../../../enums/icon.enum';
+import { DataType } from '../../../../enums/data-type';
+import { Icon } from '../../../../enums/icon';
 import { Project } from '../../../../models/backend/project/project';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { CustomValidator } from '../../../../validators/custom-validator';
@@ -84,8 +84,8 @@ export class ProjectFormFieldsService {
 			{
 				key: ProjectFormFieldsService.projectNameFormFieldKey,
 				label: 'dashboard.title.form.field',
-				iconPrefix: IconEnum.NAME,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.NAME,
+				type: DataType.TEXT,
 				value: project?.name ? project.name : null,
 				placeholder: this.translateService.instant('dashboard.title.form.field.placeholder'),
 				validators: [Validators.required]
@@ -93,30 +93,30 @@ export class ProjectFormFieldsService {
 			{
 				key: ProjectFormFieldsService.projectWidgetHeightFormFieldKey,
 				label: 'row.height.px',
-				iconPrefix: IconEnum.HEIGHT,
-				type: DataTypeEnum.NUMBER,
+				iconPrefix: Icon.HEIGHT,
+				type: DataType.NUMBER,
 				value: project?.gridProperties.widgetHeight ? project.gridProperties.widgetHeight : 360,
 				validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
 			},
 			{
 				key: ProjectFormFieldsService.projectMaxColumnFormFieldKey,
 				label: 'column.number',
-				iconPrefix: IconEnum.COLUMN,
-				type: DataTypeEnum.NUMBER,
+				iconPrefix: Icon.COLUMN,
+				type: DataType.NUMBER,
 				value: project?.gridProperties.maxColumn ? project.gridProperties.maxColumn : 5,
 				validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
 			},
 			{
 				key: ProjectFormFieldsService.projectImageFormFieldKey,
 				label: 'dashboard.upload.logo',
-				type: DataTypeEnum.FILE,
+				type: DataType.FILE,
 				value: project?.image ? `data:${project.image.contentType};base64,${project.image.content}` : undefined,
 				validators: [CustomValidator.fileHasFormat()]
 			},
 			{
 				key: ProjectFormFieldsService.projectGridBackgroundColorFormFieldKey,
 				label: 'background.color',
-				type: DataTypeEnum.COLOR_PICKER,
+				type: DataType.COLOR_PICKER,
 				value: backgroundColor
 			}
 		];
@@ -130,8 +130,8 @@ export class ProjectFormFieldsService {
 			{
 				key: `${ProjectFormFieldsService.timeFormFieldKey}`,
 				label: `${this.translateService.instant('dashboard.grid.addition.rotation.speed.form.field')}`,
-				iconPrefix: IconEnum.SPEED,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.SPEED,
+				type: DataType.TEXT,
 				placeholder: this.translateService.instant('dashboard.grid.management.rotation.speed.form.field.placeholder'),
 				validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
 			}
@@ -149,8 +149,8 @@ export class ProjectFormFieldsService {
 		formFields.push({
 			key: ProjectFormFieldsService.progressBarFormFieldKey,
 			label: 'dashboard.grid.management.progress.bar.form.field',
-			iconPrefix: IconEnum.PROGRESS_BAR,
-			type: DataTypeEnum.BOOLEAN,
+			iconPrefix: Icon.PROGRESS_BAR,
+			type: DataType.BOOLEAN,
 			value: project.displayProgressBar
 		});
 
@@ -158,8 +158,8 @@ export class ProjectFormFieldsService {
 			formFields.push({
 				key: `${ProjectFormFieldsService.timeFormFieldKey}-${index}`,
 				label: `${this.translateService.instant('dashboard.grid.management.rotation.speed.form.field')} ${index}`,
-				iconPrefix: IconEnum.SPEED,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.SPEED,
+				type: DataType.TEXT,
 				value: grid.time,
 				placeholder: this.translateService.instant('dashboard.grid.management.rotation.speed.form.field.placeholder'),
 				validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]

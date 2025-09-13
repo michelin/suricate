@@ -20,8 +20,8 @@
 import { Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { IconEnum } from '../../../../enums/icon.enum';
+import { DataType } from '../../../../enums/data-type';
+import { Icon } from '../../../../enums/icon';
 import { FormField } from '../../../../models/frontend/form/form-field';
 
 /**
@@ -37,45 +37,45 @@ export class RegisterFormFieldsService {
 			{
 				key: 'username',
 				label: 'username',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				validators: [Validators.required, Validators.minLength(3)],
-				iconPrefix: IconEnum.USERNAME
+				iconPrefix: Icon.USERNAME
 			},
 			{
 				key: 'firstname',
 				label: 'firstname',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				validators: [Validators.required, Validators.minLength(3)],
-				iconPrefix: IconEnum.USER
+				iconPrefix: Icon.USER
 			},
 			{
 				key: 'lastname',
 				label: 'lastname',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				validators: [Validators.required, Validators.minLength(3)],
-				iconPrefix: IconEnum.USER
+				iconPrefix: Icon.USER
 			},
 			{
 				key: 'email',
 				label: 'email',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				validators: [Validators.required, Validators.email],
-				iconPrefix: IconEnum.EMAIL
+				iconPrefix: Icon.EMAIL
 			},
 			{
 				key: 'password',
 				label: 'password',
-				type: DataTypeEnum.PASSWORD,
+				type: DataType.PASSWORD,
 				validators: [Validators.required, Validators.minLength(3)],
-				iconPrefix: IconEnum.PASSWORD,
-				iconSuffix: IconEnum.SHOW_PASSWORD
+				iconPrefix: Icon.PASSWORD,
+				iconSuffix: Icon.SHOW_PASSWORD
 			},
 			{
 				key: 'confirmPassword',
 				label: 'password.confirm',
-				type: DataTypeEnum.PASSWORD,
-				iconPrefix: IconEnum.PASSWORD,
-				iconSuffix: IconEnum.SHOW_PASSWORD
+				type: DataType.PASSWORD,
+				iconPrefix: Icon.PASSWORD,
+				iconSuffix: Icon.SHOW_PASSWORD
 			}
 		];
 	}

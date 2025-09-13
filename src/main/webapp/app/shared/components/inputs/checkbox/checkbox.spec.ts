@@ -29,15 +29,15 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { appRoutes } from '../../../../app.routes';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { FormField } from '../../../models/frontend/form/form-field';
-import { CheckboxComponent } from './checkbox.component';
+import { Checkbox } from './checkbox';
 
-describe('CheckboxComponent', () => {
-	let component: CheckboxComponent;
-	let fixture: ComponentFixture<CheckboxComponent>;
+describe('Checkbox', () => {
+	let component: Checkbox;
+	let fixture: ComponentFixture<Checkbox>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [CheckboxComponent],
+			imports: [Checkbox],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -49,7 +49,7 @@ describe('CheckboxComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(CheckboxComponent);
+		fixture = TestBed.createComponent(Checkbox);
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;

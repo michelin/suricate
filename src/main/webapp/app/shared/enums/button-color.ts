@@ -18,9 +18,8 @@
  */
 
 /**
- * Hold the repository types
+ * Color used for buttons
  */
-export enum RepositoryTypeEnum {
-	REMOTE = 'REMOTE',
-	LOCAL = 'LOCAL'
+export enum ButtonColor {
+	WARN = 'WARN'
 }

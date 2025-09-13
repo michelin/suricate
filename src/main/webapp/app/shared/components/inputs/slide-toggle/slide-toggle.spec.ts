@@ -23,15 +23,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { SlideToggleComponent } from './slide-toggle.component';
+import { SlideToggle } from './slide-toggle';
 
-describe('SlideToggleComponent', () => {
-	let component: SlideToggleComponent;
-	let fixture: ComponentFixture<SlideToggleComponent>;
+describe('SlideToggle', () => {
+	let component: SlideToggle;
+	let fixture: ComponentFixture<SlideToggle>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [SlideToggleComponent],
+			imports: [SlideToggle],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -41,7 +41,7 @@ describe('SlideToggleComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(SlideToggleComponent);
+		fixture = TestBed.createComponent(SlideToggle);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

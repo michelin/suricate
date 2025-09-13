@@ -17,21 +17,21 @@
  * under the License.
  */
 
-/**
- * Hold the data type for a configuration
- */
-export enum DataTypeEnum {
-	NUMBER = 'NUMBER',
-	TEXT = 'TEXT',
-	TEXTAREA = 'TEXTAREA',
-	PASSWORD = 'PASSWORD',
-	HIDDEN = 'HIDDEN',
+import { TestBed } from '@angular/core/testing';
 
-	BOOLEAN = 'BOOLEAN',
-	COMBO = 'COMBO',
-	MULTIPLE = 'MULTIPLE',
-	FILE = 'FILE',
-	COLOR_PICKER = 'COLOR_PICKER',
-	FIELDS = 'FIELDS',
-	MOSAIC = 'MOSAIC'
-}
+import { SafeHtmlPipe } from './safe-html-pipe';
+
+describe('SafeHtmlPipe', () => {
+	let pipe: SafeHtmlPipe;
+
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [SafeHtmlPipe]
+		});
+		pipe = TestBed.inject(SafeHtmlPipe);
+	});
+
+	it('should create', () => {
+		expect(pipe).toBeTruthy();
+	});
+});

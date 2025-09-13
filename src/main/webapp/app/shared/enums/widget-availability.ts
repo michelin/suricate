@@ -18,11 +18,10 @@
  */
 
 /**
- * The toast type enum managed by the ToastComponent
+ * The list of widget availability types
  */
-export enum ToastTypeEnum {
-	SUCCESS = 'success',
-	INFO = 'info',
-	WARNING = 'warning',
-	DANGER = 'danger'
+export enum WidgetAvailability {
+	ACTIVATED = 'ACTIVATED',
+	DISABLED = 'DISABLED',
+	VALIDATION_PENDING = 'VALIDATION_PENDING'
 }

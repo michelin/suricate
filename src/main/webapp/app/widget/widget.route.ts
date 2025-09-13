@@ -19,7 +19,7 @@
 
 import { Routes } from '@angular/router';
 
-import { authGuard } from '../shared/guards/auth/auth.guard';
+import { authGuard } from '../shared/guards/auth/auth-guard';
 import { CatalogComponent } from './catalog/catalog.component';
 
 export const widgetRoutes: Routes = [

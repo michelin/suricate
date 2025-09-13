@@ -29,20 +29,20 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Spinner } from '../../../../shared/components/spinner/spinner';
-import { WidgetHtmlDirective } from '../../../../shared/directives/widget-html/widget-html.directive';
-import { IconEnum } from '../../../../shared/enums/icon.enum';
-import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
-import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
-import { WidgetStateEnum } from '../../../../shared/enums/widget-sate.enum';
+import { WidgetHtmlDirective } from '../../../../shared/directives/widget-html/widget-html-directive';
+import { Icon } from '../../../../shared/enums/icon';
+import { ToastType } from '../../../../shared/enums/toast-type';
+import { WebsocketUpdateType } from '../../../../shared/enums/websocket-update-type';
+import { WidgetStateEnum } from '../../../../shared/enums/widget-sate';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
 import { Widget } from '../../../../shared/models/backend/widget/widget';
 import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { MaterialIconRecords } from '../../../../shared/models/frontend/icon/material-icon';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
-import { SafeHtmlPipe } from '../../../../shared/pipes/safe-html/safe-html.pipe';
-import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
+import { SafeHtmlPipe } from '../../../../shared/pipes/safe-html/safe-html-pipe';
 import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget.service';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
@@ -120,7 +120,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of material icons
@@ -162,7 +162,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 			.subscribe((stompMessage: IMessage) => {
 				const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-				if (updateEvent.type === WebsocketUpdateTypeEnum.REFRESH_WIDGET) {
+				if (updateEvent.type === WebsocketUpdateType.REFRESH_WIDGET) {
 					this.refreshProjectWidget();
 				}
 			});
@@ -227,7 +227,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 			.subscribe((updatedProjectWidget: ProjectWidget) => {
 				this.loading = false;
 				this.projectWidget = updatedProjectWidget;
-				this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
+				this.toastService.sendMessage('widget.edit.success', ToastType.SUCCESS);
 			});
 	}
 

@@ -23,9 +23,9 @@ import { Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { IconEnum } from '../../../../enums/icon.enum';
-import { RepositoryTypeEnum } from '../../../../enums/repository-type.enum';
+import { DataType } from '../../../../enums/data-type';
+import { Icon } from '../../../../enums/icon';
+import { RepositoryType } from '../../../../enums/repository-type';
 import { Repository } from '../../../../models/backend/repository/repository';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { FormOption } from '../../../../models/frontend/form/form-option';
@@ -44,11 +44,11 @@ export class RepositoryFormFieldsService {
 	 * Records used to manage the creation of the form fields related to the repository type
 	 */
 	private static readonly repositoryTypeFormFieldsRecords: Record<
-		RepositoryTypeEnum,
+		RepositoryType,
 		(repository: Repository) => FormField[]
 	> = {
-		[RepositoryTypeEnum.LOCAL]: (repository: Repository) => RepositoryFormFieldsService.getLocalFormFields(repository),
-		[RepositoryTypeEnum.REMOTE]: (repository: Repository) => RepositoryFormFieldsService.getRemoteFormFields(repository)
+		[RepositoryType.LOCAL]: (repository: Repository) => RepositoryFormFieldsService.getLocalFormFields(repository),
+		[RepositoryType.REMOTE]: (repository: Repository) => RepositoryFormFieldsService.getRemoteFormFields(repository)
 	};
 
 	/**
@@ -61,8 +61,8 @@ export class RepositoryFormFieldsService {
 			{
 				key: 'localPath',
 				label: 'path.local',
-				iconPrefix: IconEnum.URL,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.URL,
+				type: DataType.TEXT,
 				value: repository ? repository.localPath : null,
 				validators: [Validators.required]
 			}
@@ -79,32 +79,32 @@ export class RepositoryFormFieldsService {
 			{
 				key: 'url',
 				label: 'url',
-				iconPrefix: IconEnum.URL,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.URL,
+				type: DataType.TEXT,
 				value: repository ? repository.url : null,
 				validators: [Validators.required]
 			},
 			{
 				key: 'branch',
 				label: 'branch',
-				iconPrefix: IconEnum.BRANCH,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.BRANCH,
+				type: DataType.TEXT,
 				value: repository ? repository.branch : null,
 				validators: [Validators.required]
 			},
 			{
 				key: 'login',
 				label: 'login',
-				iconPrefix: IconEnum.USERNAME,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.USERNAME,
+				type: DataType.TEXT,
 				value: repository ? repository.login : null
 			},
 			{
 				key: 'password',
 				label: 'password',
-				iconPrefix: IconEnum.PASSWORD,
-				iconSuffix: IconEnum.SHOW_PASSWORD,
-				type: DataTypeEnum.PASSWORD,
+				iconPrefix: Icon.PASSWORD,
+				iconSuffix: Icon.SHOW_PASSWORD,
+				type: DataType.PASSWORD,
 				value: repository ? repository.password : null
 			}
 		];
@@ -117,7 +117,7 @@ export class RepositoryFormFieldsService {
 		const titleCasePipe = new TitleCasePipe();
 		const typeOptions: FormOption[] = [];
 
-		Object.keys(RepositoryTypeEnum).forEach((repositoryType) => {
+		Object.keys(RepositoryType).forEach((repositoryType) => {
 			typeOptions.push({
 				label: titleCasePipe.transform(repositoryType),
 				value: repositoryType
@@ -155,22 +155,22 @@ export class RepositoryFormFieldsService {
 			{
 				key: 'enabled',
 				label: 'repository.enable',
-				type: DataTypeEnum.BOOLEAN,
+				type: DataType.BOOLEAN,
 				value: repository ? repository.enabled : false
 			},
 			{
 				key: 'name',
 				label: this.translateService.instant('repository.name.form.field'),
-				iconPrefix: IconEnum.NAME,
-				type: DataTypeEnum.TEXT,
+				iconPrefix: Icon.NAME,
+				type: DataType.TEXT,
 				value: repository ? repository.name : null,
 				validators: [Validators.required]
 			},
 			{
 				key: 'type',
 				label: this.translateService.instant('repository.type.form.field'),
-				iconPrefix: IconEnum.REPOSITORY_TYPE,
-				type: DataTypeEnum.COMBO,
+				iconPrefix: Icon.REPOSITORY_TYPE,
+				type: DataType.COMBO,
 				options: () => RepositoryFormFieldsService.getRepositoryTypeOptions(),
 				value: repository ? repository?.type : null,
 				validators: [Validators.required]
@@ -178,8 +178,8 @@ export class RepositoryFormFieldsService {
 			{
 				key: 'priority',
 				label: this.translateService.instant('repository.priority.form.field'),
-				iconPrefix: IconEnum.REPOSITORY_PRIORITY,
-				type: DataTypeEnum.NUMBER,
+				iconPrefix: Icon.REPOSITORY_PRIORITY,
+				type: DataType.NUMBER,
 				value: repository ? repository?.priority : null,
 				validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0],
 				asyncValidators: [this.customAsyncValidatorService.validateRepositoryUniquePriority(repository)]

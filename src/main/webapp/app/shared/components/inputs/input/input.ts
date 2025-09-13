@@ -44,20 +44,20 @@ import { ButtonConfiguration } from '../../../models/frontend/button/button-conf
 import { FormField } from '../../../models/frontend/form/form-field';
 import { FormOption } from '../../../models/frontend/form/form-option';
 import { ValueChangedEvent, ValueChangedType } from '../../../models/frontend/form/value-changed-event';
-import { ButtonsComponent } from '../../buttons/buttons.component';
-import { BaseInputComponent } from '../base-input/base-input/base-input.component';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { ColorPickerComponent } from '../color-picker/color-picker.component';
-import { FileInputComponent } from '../file-input/file-input.component';
-import { MosaicComponent } from '../mosaic/mosaic.component';
+import { Buttons } from '../../buttons/buttons';
+import { BaseInput } from '../base-input/base-input/base-input';
+import { Checkbox } from '../checkbox/checkbox';
+import { ColorPicker } from '../color-picker/color-picker';
+import { FileInput } from '../file-input/file-input';
+import { Mosaic } from '../mosaic/mosaic';
 
 /**
  * Manage the instantiation of different form inputs
  */
 @Component({
 	selector: 'suricate-input',
-	templateUrl: './input.component.html',
-	styleUrls: ['./input.component.scss'],
+	templateUrl: './input.html',
+	styleUrls: ['./input.scss'],
 	encapsulation: ViewEncapsulation.None,
 	animations: [
 		trigger('animationError', [
@@ -84,15 +84,15 @@ import { MosaicComponent } from '../mosaic/mosaic.component';
 		MatSuffix,
 		MatHint,
 		MatError,
-		CheckboxComponent,
-		FileInputComponent,
-		ColorPickerComponent,
-		MosaicComponent,
+		Checkbox,
+		FileInput,
+		ColorPicker,
+		Mosaic,
 		TranslatePipe,
-		ButtonsComponent
+		Buttons
 	]
 })
-export class InputComponent extends BaseInputComponent implements OnInit {
+export class Input extends BaseInput implements OnInit {
 	protected translateService = inject(TranslateService);
 
 	/**

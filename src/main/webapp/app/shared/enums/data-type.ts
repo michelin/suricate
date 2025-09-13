@@ -18,8 +18,20 @@
  */
 
 /**
- * Color used for buttons
+ * Hold the data type for a configuration
  */
-export enum ButtonColorEnum {
-	WARN = 'WARN'
+export enum DataType {
+	NUMBER = 'NUMBER',
+	TEXT = 'TEXT',
+	TEXTAREA = 'TEXTAREA',
+	PASSWORD = 'PASSWORD',
+	HIDDEN = 'HIDDEN',
+
+	BOOLEAN = 'BOOLEAN',
+	COMBO = 'COMBO',
+	MULTIPLE = 'MULTIPLE',
+	FILE = 'FILE',
+	COLOR_PICKER = 'COLOR_PICKER',
+	FIELDS = 'FIELDS',
+	MOSAIC = 'MOSAIC'
 }

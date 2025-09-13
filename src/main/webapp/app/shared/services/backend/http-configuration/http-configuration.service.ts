@@ -21,7 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AuthenticationProvider } from '../../../enums/authentication-provider.enum';
+import { AuthenticationProvider } from '../../../enums/authentication-provider';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 
 /**

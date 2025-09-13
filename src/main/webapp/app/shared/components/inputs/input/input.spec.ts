@@ -27,15 +27,15 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { FormField } from '../../../models/frontend/form/form-field';
-import { InputComponent } from './input.component';
+import { Input } from './input';
 
-describe('InputComponent', () => {
-	let component: InputComponent;
-	let fixture: ComponentFixture<InputComponent>;
+describe('Input', () => {
+	let component: Input;
+	let fixture: ComponentFixture<Input>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [InputComponent],
+			imports: [Input],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -46,7 +46,7 @@ describe('InputComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(InputComponent);
+		fixture = TestBed.createComponent(Input);
 		const formBuilder = TestBed.inject(UntypedFormBuilder);
 
 		component = fixture.componentInstance;

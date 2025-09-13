@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { WebsocketUpdateTypeEnum } from '../../../enums/websocket-update-type.enum';
+import { WebsocketUpdateType } from '../../../enums/websocket-update-type';
 import { Project } from '../../backend/project/project';
 import { ProjectWidget } from '../../backend/project-widget/project-widget';
 
@@ -26,6 +26,6 @@ import { ProjectWidget } from '../../backend/project-widget/project-widget';
  */
 export class WebsocketUpdateEvent {
 	date: Date;
-	type: WebsocketUpdateTypeEnum;
+	type: WebsocketUpdateType;
 	content: Project | ProjectWidget | void;
 }

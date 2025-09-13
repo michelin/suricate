@@ -24,7 +24,7 @@ import { toArray } from 'rxjs/operators';
 
 import { Buttons } from '../../../../shared/components/buttons/buttons';
 import { Input } from '../../../../shared/components/inputs/input/input';
-import { IconEnum } from '../../../../shared/enums/icon.enum';
+import { Icon } from '../../../../shared/enums/icon';
 import { AllowedSettingValue } from '../../../../shared/models/backend/setting/allowed-setting-value';
 import { Setting } from '../../../../shared/models/backend/setting/setting';
 import { UserSetting } from '../../../../shared/models/backend/setting/user-setting';
@@ -92,7 +92,7 @@ export class UxSettings implements OnInit {
 	private initButtons(): void {
 		this.buttons.push({
 			label: 'save',
-			icon: IconEnum.SAVE,
+			icon: Icon.SAVE,
 			callback: () => this.save()
 		});
 	}

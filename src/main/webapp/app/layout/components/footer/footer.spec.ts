@@ -26,11 +26,11 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { appRoutes } from '../../../app.routes';
 import { DashboardDetail } from '../../../dashboard/components/dashboard-detail/dashboard-detail';
-import { FooterComponent } from './footer.component';
+import { Footer } from './footer';
 
-describe('FooterComponent', () => {
-	let component: FooterComponent;
-	let fixture: ComponentFixture<FooterComponent>;
+describe('Footer', () => {
+	let component: Footer;
+	let fixture: ComponentFixture<Footer>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
@@ -45,7 +45,7 @@ describe('FooterComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(FooterComponent);
+		fixture = TestBed.createComponent(Footer);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

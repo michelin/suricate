@@ -17,21 +17,10 @@
  * under the License.
  */
 
-import { TestBed } from '@angular/core/testing';
-
-import { SafeHtmlPipe } from './safe-html.pipe';
-
-describe('SafeHtmlPipe', () => {
-	let pipe: SafeHtmlPipe;
-
-	beforeEach(() => {
-		TestBed.configureTestingModule({
-			providers: [SafeHtmlPipe]
-		});
-		pipe = TestBed.inject(SafeHtmlPipe);
-	});
-
-	it('should create', () => {
-		expect(pipe).toBeTruthy();
-	});
-});
+/**
+ * The list of roles
+ */
+export enum Role {
+	ROLE_ADMIN = 'ROLE_ADMIN',
+	ROLE_USER = 'ROLE_USER'
+}

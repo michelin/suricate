@@ -26,11 +26,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
  */
 @Component({
 	selector: 'suricate-spinner',
-	templateUrl: './spinner.component.html',
-	styleUrls: ['./spinner.component.scss'],
+	templateUrl: './spinner.html',
+	styleUrls: ['./spinner.scss'],
 	imports: [MatProgressSpinner]
 })
-export class SpinnerComponent {
+export class Spinner {
 	/**
 	 * The color to use with the spinner
 	 */

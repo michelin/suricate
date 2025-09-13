@@ -27,11 +27,11 @@ import { EnvironmentService } from '../../../shared/services/frontend/environmen
  */
 @Component({
 	selector: 'suricate-pages-footer',
-	templateUrl: './footer.component.html',
-	styleUrls: ['./footer.component.scss'],
+	templateUrl: './footer.html',
+	styleUrls: ['./footer.scss'],
 	imports: [NgOptimizedImage]
 })
-export class FooterComponent {
+export class Footer {
 	/**
 	 * The app version
 	 */

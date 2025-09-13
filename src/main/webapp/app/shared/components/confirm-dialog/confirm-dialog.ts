@@ -27,8 +27,8 @@ import {
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ButtonColorEnum } from '../../enums/button-color.enum';
-import { IconEnum } from '../../enums/icon.enum';
+import { ButtonColor } from '../../enums/button-color';
+import { Icon } from '../../enums/icon';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/confirmation-dialog-configuration';
 import { Buttons } from '../buttons/buttons';
@@ -69,12 +69,12 @@ export class ConfirmDialog {
 		this.yesNoButtonsConfiguration = [
 			{
 				label: 'no',
-				icon: IconEnum.CLOSE
+				icon: Icon.CLOSE
 			},
 			{
 				label: 'yes',
-				icon: IconEnum.SAVE,
-				color: ButtonColorEnum.WARN,
+				icon: Icon.SAVE,
+				color: ButtonColor.WARN,
 				callback: () => this.configuration.accept()
 			}
 		];

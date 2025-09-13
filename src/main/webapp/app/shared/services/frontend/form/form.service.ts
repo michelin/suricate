@@ -27,7 +27,7 @@ import {
 	ValidatorFn
 } from '@angular/forms';
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { DataType } from '../../../enums/data-type';
 import { UserProject } from '../../../models/backend/user/user-project';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { FormStep } from '../../../models/frontend/form/form-step';
@@ -83,7 +83,7 @@ export class FormService {
 
 		if (fields) {
 			fields.forEach((field) => {
-				if (field.type === DataTypeEnum.FIELDS) {
+				if (field.type === DataType.FIELDS) {
 					// TODO: Delete this. FIELDS does not exist anymore I think
 					formGroup.addControl(field.key, this.generateFormArrayForField(field));
 				} else {
@@ -104,7 +104,7 @@ export class FormService {
 	public addControlsToFormGroupForFields(form: UntypedFormGroup, fields: FormField[]): void {
 		if (fields) {
 			fields.forEach((field) => {
-				if (field.type === DataTypeEnum.FIELDS) {
+				if (field.type === DataType.FIELDS) {
 					form.addControl(field.key, this.generateFormArrayForField(field));
 				} else {
 					form.addControl(field.key, this.generateFormControl(field));

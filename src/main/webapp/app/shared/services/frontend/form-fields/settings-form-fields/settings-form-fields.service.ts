@@ -22,7 +22,7 @@ import { Validators } from '@angular/forms';
 import { EMPTY, from, Observable } from 'rxjs';
 import { map, toArray } from 'rxjs/operators';
 
-import { IconEnum } from '../../../../enums/icon.enum';
+import { Icon } from '../../../../enums/icon';
 import { AllowedSettingValue } from '../../../../models/backend/setting/allowed-setting-value';
 import { Setting } from '../../../../models/backend/setting/setting';
 import { UserSetting } from '../../../../models/backend/setting/user-setting';
@@ -43,7 +43,7 @@ export class SettingsFormFieldsService {
 				return {
 					key: userSetting.setting.type,
 					label: userSetting.setting.description,
-					iconPrefix: IconEnum[userSetting.setting.type],
+					iconPrefix: Icon[userSetting.setting.type],
 					type: userSetting.setting.dataType,
 					value: userSetting.settingValue.value,
 					validators: [Validators.required],

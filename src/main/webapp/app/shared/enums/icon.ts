@@ -20,7 +20,7 @@
 /**
  * Hold the different icons of the application
  */
-export enum IconEnum {
+export enum Icon {
 	ADD = 'ADD',
 	ADD_GRID = 'ADD_GRID',
 	BRANCH = 'BRANCH',

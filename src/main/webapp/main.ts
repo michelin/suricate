@@ -28,8 +28,8 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { App } from './app/app';
 import { appRoutes } from './app/app.routes';
-import { ErrorInterceptor } from './app/shared/interceptors/error.interceptor';
-import { TokenInterceptor } from './app/shared/interceptors/token.interceptor';
+import { ErrorInterceptor } from './app/shared/interceptors/error-interceptor';
+import { TokenInterceptor } from './app/shared/interceptors/token-interceptor';
 import { environment } from './environments/environment';
 
 if (environment.production) {

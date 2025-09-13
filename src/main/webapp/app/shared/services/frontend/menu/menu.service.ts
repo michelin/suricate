@@ -20,7 +20,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { IconEnum } from '../../../enums/icon.enum';
+import { Icon } from '../../../enums/icon';
 import { MenuCategoryConfiguration } from '../../../models/frontend/menu/menu-category-configuration';
 import { MenuConfiguration } from '../../../models/frontend/menu/menu-configuration';
 import { AuthenticationService } from '../authentication/authentication.service';
@@ -69,22 +69,22 @@ export class MenuService {
 				{
 					label: 'configuration.list',
 					linkConfiguration: { link: ['/admin', 'configurations'] },
-					icon: IconEnum.WIDGET_CONFIGURATION
+					icon: Icon.WIDGET_CONFIGURATION
 				},
 				{
 					label: 'dashboard.list',
 					linkConfiguration: { link: ['/admin', 'dashboards'] },
-					icon: IconEnum.DASHBOARD
+					icon: Icon.DASHBOARD
 				},
 				{
 					label: 'repository.list',
 					linkConfiguration: { link: ['/admin', 'repositories'] },
-					icon: IconEnum.REPOSITORY
+					icon: Icon.REPOSITORY
 				},
 				{
 					label: 'user.list',
 					linkConfiguration: { link: ['/admin', 'users'] },
-					icon: IconEnum.USERS
+					icon: Icon.USERS
 				}
 			]
 		};
@@ -100,7 +100,7 @@ export class MenuService {
 				{
 					label: 'catalog',
 					linkConfiguration: { link: ['/widgets', 'catalog'] },
-					icon: IconEnum.CATALOG
+					icon: Icon.CATALOG
 				}
 			]
 		};

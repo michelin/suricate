@@ -30,9 +30,9 @@ import { Input } from '../../shared/components/inputs/input/input';
 import { List } from '../../shared/components/list/list';
 import { Paginator } from '../../shared/components/paginator/paginator';
 import { Spinner } from '../../shared/components/spinner/spinner';
-import { IconEnum } from '../../shared/enums/icon.enum';
-import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
-import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
+import { Icon } from '../../shared/enums/icon';
+import { RepositoryType } from '../../shared/enums/repository-type';
+import { ToastType } from '../../shared/enums/toast-type';
 import { Repository } from '../../shared/models/backend/repository/repository';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { FormField } from '../../shared/models/frontend/form/form-field';
@@ -97,7 +97,7 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 	 * {@inheritDoc}
 	 */
 	protected override getSecondLabel(repository: Repository): string {
-		return repository.type === RepositoryTypeEnum.REMOTE ? repository.url : repository.localPath;
+		return repository.type === RepositoryType.REMOTE ? repository.url : repository.localPath;
 	}
 
 	/**
@@ -124,7 +124,7 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 			title: 'repository.list',
 			actions: [
 				{
-					icon: IconEnum.SYNCHRONIZE,
+					icon: Icon.SYNCHRONIZE,
 					variant: 'miniFab',
 					callback: () => this.reloadAllRepositories(),
 					tooltip: { message: 'repositories.synchronize.all' },
@@ -132,7 +132,7 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 					disabled: this.disableAllReposSync.asObservable()
 				},
 				{
-					icon: IconEnum.ADD,
+					icon: Icon.ADD,
 					variant: 'miniFab',
 					callback: (event: Event) => this.openFormSidenav(event, null, this.addRepository.bind(this)),
 					tooltip: { message: 'repository.add' },
@@ -150,7 +150,7 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 		this.listConfiguration = {
 			buttons: [
 				{
-					icon: IconEnum.EDIT,
+					icon: Icon.EDIT,
 					tooltip: { message: 'repository.edit' },
 					variant: 'miniFab',
 					callback: (event: Event, repository: Repository) =>
@@ -219,18 +219,18 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 	private reloadAllRepositories(): void {
 		this.disableAllReposSync.next(true);
 		this.dragAndDropDisabled = true;
-		this.toastService.sendMessage('repositories.synchronize.running', ToastTypeEnum.INFO);
+		this.toastService.sendMessage('repositories.synchronize.running', ToastType.INFO);
 
 		this.httpRepositoryService.synchronize().subscribe({
 			next: () => {
 				this.disableAllReposSync.next(false);
 				this.dragAndDropDisabled = false;
-				this.toastService.sendMessage('repositories.synchronize.success', ToastTypeEnum.SUCCESS);
+				this.toastService.sendMessage('repositories.synchronize.success', ToastType.SUCCESS);
 			},
 			error: () => {
 				this.disableAllReposSync.next(false);
 				this.dragAndDropDisabled = false;
-				this.toastService.sendMessage('repositories.synchronize.failure', ToastTypeEnum.DANGER);
+				this.toastService.sendMessage('repositories.synchronize.failure', ToastType.DANGER);
 			}
 		});
 	}
@@ -252,9 +252,9 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 
 		this.dragAndDropDisabled = true;
 		if (repositoryRequest.enabled) {
-			this.toastService.sendMessage('repository.update.and.synchronize.running', ToastTypeEnum.INFO);
+			this.toastService.sendMessage('repository.update.and.synchronize.running', ToastType.INFO);
 		} else {
-			this.toastService.sendMessage('repository.update.running', ToastTypeEnum.INFO);
+			this.toastService.sendMessage('repository.update.running', ToastType.INFO);
 		}
 
 		this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe({
@@ -273,9 +273,9 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 		this.disableAllReposSync.next(true);
 		this.dragAndDropDisabled = true;
 		if (repositoryRequest.enabled) {
-			this.toastService.sendMessage('repository.update.and.synchronize.running', ToastTypeEnum.INFO);
+			this.toastService.sendMessage('repository.update.and.synchronize.running', ToastType.INFO);
 		} else {
-			this.toastService.sendMessage('repository.update.running', ToastTypeEnum.INFO);
+			this.toastService.sendMessage('repository.update.running', ToastType.INFO);
 		}
 
 		this.httpRepositoryService.create(repositoryRequest).subscribe({
@@ -292,9 +292,9 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 		this.disableAllReposSync.next(false);
 		this.dragAndDropDisabled = false;
 		if (repositoryRequest.enabled) {
-			this.toastService.sendMessage('repository.update.and.synchronize.success', ToastTypeEnum.SUCCESS);
+			this.toastService.sendMessage('repository.update.and.synchronize.success', ToastType.SUCCESS);
 		} else {
-			this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
+			this.toastService.sendMessage('repository.update.success', ToastType.SUCCESS);
 		}
 		super.refreshList();
 	}
@@ -307,9 +307,9 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 		this.disableAllReposSync.next(false);
 		this.dragAndDropDisabled = false;
 		if (repositoryRequest.enabled) {
-			this.toastService.sendMessage('repository.update.and.synchronize.failure', ToastTypeEnum.DANGER);
+			this.toastService.sendMessage('repository.update.and.synchronize.failure', ToastType.DANGER);
 		} else {
-			this.toastService.sendMessage('repository.update.failure', ToastTypeEnum.DANGER);
+			this.toastService.sendMessage('repository.update.failure', ToastType.DANGER);
 		}
 		super.refreshList();
 	}
@@ -324,7 +324,7 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 
 		this.disableAllReposSync.next(true);
 		this.dragAndDropDisabled = true;
-		this.toastService.sendMessage('repository.priority.running', ToastTypeEnum.INFO);
+		this.toastService.sendMessage('repository.priority.running', ToastType.INFO);
 
 		const repositoryUpdates: ObservableInput<void>[] = this.objectsPaged.content.map((repository) =>
 			this.httpRepositoryService.update(repository.id, { ...repository }, true)
@@ -334,12 +334,12 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 			next: () => {
 				this.disableAllReposSync.next(false);
 				this.dragAndDropDisabled = false;
-				this.toastService.sendMessage('repository.priority.success', ToastTypeEnum.SUCCESS);
+				this.toastService.sendMessage('repository.priority.success', ToastType.SUCCESS);
 			},
 			error: () => {
 				this.disableAllReposSync.next(false);
 				this.dragAndDropDisabled = false;
-				this.toastService.sendMessage('repository.priority.failure', ToastTypeEnum.DANGER);
+				this.toastService.sendMessage('repository.priority.failure', ToastType.DANGER);
 			}
 		});
 	}

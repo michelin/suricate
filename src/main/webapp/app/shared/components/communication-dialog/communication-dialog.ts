@@ -29,8 +29,8 @@ import {
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ButtonColorEnum } from '../../enums/button-color.enum';
-import { IconEnum } from '../../enums/icon.enum';
+import { ButtonColor } from '../../enums/button-color';
+import { Icon } from '../../enums/icon';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
 import { Buttons } from '../buttons/buttons';
@@ -80,8 +80,8 @@ export class CommunicationDialog implements OnInit {
 	private initButtons(): void {
 		this.buttons.push({
 			label: 'close',
-			icon: IconEnum.CLOSE,
-			color: ButtonColorEnum.WARN
+			icon: Icon.CLOSE,
+			color: ButtonColor.WARN
 		});
 	}
 }

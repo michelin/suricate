@@ -17,20 +17,14 @@
  * under the License.
  */
 
-import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
-
-import { adminGuard } from './admin.guard';
-
-describe('AdminGuard', () => {
-	const executeGuard: CanActivateFn = (...guardParameters) =>
-		TestBed.runInInjectionContext(() => adminGuard(...guardParameters));
-
-	beforeEach(() => {
-		TestBed.configureTestingModule({});
-	});
-
-	it('should be created', () => {
-		expect(executeGuard).toBeTruthy();
-	});
-});
+/**
+ * The list of possible update events
+ */
+export enum WebsocketUpdateType {
+	REFRESH_DASHBOARD = 'REFRESH_DASHBOARD',
+	REFRESH_WIDGET = 'REFRESH_WIDGET',
+	CONNECT_DASHBOARD = 'CONNECT_DASHBOARD',
+	DISPLAY_NUMBER = 'DISPLAY_NUMBER',
+	RELOAD = 'RELOAD',
+	DISCONNECT = 'DISCONNECT'
+}

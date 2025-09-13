@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { DataType } from '../../../enums/data-type';
 import { WidgetParamValue } from './widget-param-value';
 
 /**
@@ -27,7 +27,7 @@ export interface WidgetParam {
 	name: string;
 	description: string;
 	defaultValue: string;
-	type: DataTypeEnum;
+	type: DataType;
 	acceptFileRegex?: string;
 	usageExample?: string;
 	usageTooltip?: string;

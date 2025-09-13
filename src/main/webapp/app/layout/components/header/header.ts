@@ -22,7 +22,7 @@ import { MatDivider } from '@angular/material/divider';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ButtonsComponent } from '../../../shared/components/buttons/buttons.component';
+import { Buttons } from '../../../shared/components/buttons/buttons';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 /**
@@ -30,11 +30,11 @@ import { HeaderConfiguration } from '../../../shared/models/frontend/header/head
  */
 @Component({
 	selector: 'suricate-pages-header',
-	templateUrl: './header.component.html',
-	styleUrls: ['./header.component.scss'],
-	imports: [ButtonsComponent, MatDivider, TranslatePipe]
+	templateUrl: './header.html',
+	styleUrls: ['./header.scss'],
+	imports: [Buttons, MatDivider, TranslatePipe]
 })
-export class HeaderComponent implements OnInit {
+export class Header implements OnInit {
 	private readonly route = inject(Router);
 
 	/**

@@ -23,19 +23,19 @@ import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { MatIcon } from '@angular/material/icon';
 
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
-import { SpinnerComponent } from '../../spinner/spinner.component';
-import { BaseInputComponent } from '../base-input/base-input/base-input.component';
+import { Spinner } from '../../spinner/spinner';
+import { BaseInput } from '../base-input/base-input/base-input';
 
 /**
  * Component used to display the mosaic input type
  */
 @Component({
 	selector: 'suricate-mosaic',
-	templateUrl: './mosaic.component.html',
-	styleUrls: ['./mosaic.component.scss'],
-	imports: [SpinnerComponent, MatGridList, MatGridTile, NgClass, NgOptimizedImage, MatIcon]
+	templateUrl: './mosaic.html',
+	styleUrls: ['./mosaic.scss'],
+	imports: [Spinner, MatGridList, MatGridTile, NgClass, NgOptimizedImage, MatIcon]
 })
-export class MosaicComponent extends BaseInputComponent implements OnInit {
+export class Mosaic extends BaseInput implements OnInit {
 	/**
 	 * The options related to the mosaic
 	 */

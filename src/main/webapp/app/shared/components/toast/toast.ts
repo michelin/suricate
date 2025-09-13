@@ -26,10 +26,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { IconEnum } from '../../enums/icon.enum';
-import { ToastTypeEnum } from '../../enums/toast-type.enum';
+import { Icon } from '../../enums/icon';
+import { ToastType } from '../../enums/toast-type';
+import { MaterialIconRecords } from '../../models/frontend/icon/material-icon';
 import { ToastMessage } from '../../models/frontend/toast/toast-message';
-import { MaterialIconRecords } from '../../records/material-icon.record';
 import { ToastService } from '../../services/frontend/toast/toast.service';
 
 /**
@@ -121,7 +121,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 	/**
 	 * The enums of toast type
 	 */
-	public toastType = ToastTypeEnum;
+	public toastType = ToastType;
 
 	/**
 	 * The message to display
@@ -136,7 +136,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of material icon codes

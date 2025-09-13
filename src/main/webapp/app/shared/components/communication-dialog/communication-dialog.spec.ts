@@ -25,15 +25,15 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
-import { CommunicationDialogComponent } from './communication-dialog.component';
+import { CommunicationDialog } from './communication-dialog';
 
-describe('CommunicationDialogComponent', () => {
-	let component: CommunicationDialogComponent;
-	let fixture: ComponentFixture<CommunicationDialogComponent>;
+describe('CommunicationDialog', () => {
+	let component: CommunicationDialog;
+	let fixture: ComponentFixture<CommunicationDialog>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [CommunicationDialogComponent],
+			imports: [CommunicationDialog],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -44,7 +44,7 @@ describe('CommunicationDialogComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(CommunicationDialogComponent);
+		fixture = TestBed.createComponent(CommunicationDialog);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

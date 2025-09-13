@@ -32,8 +32,8 @@ import { PageModel } from '../../models/backend/page-model';
 import { FormField } from '../../models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
+import { MaterialIconRecords } from '../../models/frontend/icon/material-icon';
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
-import { MaterialIconRecords } from '../../records/material-icon.record';
 import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
 import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
 import { DialogService } from '../../services/frontend/dialog/dialog.service';
@@ -46,10 +46,10 @@ import { ToastService } from '../../services/frontend/toast/toast.service';
  */
 @Component({
 	template: '',
-	styleUrls: ['./list.component.scss'],
+	styleUrls: ['./list.scss'],
 	standalone: true
 })
-export abstract class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
+export abstract class List<TRet, TReq> implements OnInit, OnDestroy {
 	private readonly childService = inject<AbstractHttpService<TRet, TReq>>(AbstractHttpService);
 	protected dialogService = inject(DialogService);
 	protected sidenavService = inject(SidenavService);
@@ -144,7 +144,7 @@ export abstract class ListComponent<TRet, TReq> implements OnInit, OnDestroy {
 	 */
 	private initSearchBarConfig(): void {
 		this.searchBarConfig = {
-			key: ListComponent.researchFormFieldKey,
+			key: List.researchFormFieldKey,
 			label: this.translateService.instant('search.bar'),
 			iconPrefix: IconEnum.SEARCH,
 			type: DataTypeEnum.TEXT

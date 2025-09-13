@@ -22,16 +22,16 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 
-import { HeaderComponent } from '../../layout/components/header/header.component';
-import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
-import { InputComponent } from '../../shared/components/inputs/input/input.component';
-import { ListComponent } from '../../shared/components/list/list.component';
-import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
-import { DataTypeEnum } from '../../shared/enums/data-type.enum';
-import { IconEnum } from '../../shared/enums/icon.enum';
-import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
+import { Header } from '../../layout/components/header/header';
+import { Buttons } from '../../shared/components/buttons/buttons';
+import { Input } from '../../shared/components/inputs/input/input';
+import { List } from '../../shared/components/list/list';
+import { Paginator } from '../../shared/components/paginator/paginator';
+import { Spinner } from '../../shared/components/spinner/spinner';
+import { ButtonColor } from '../../shared/enums/button-color';
+import { DataType } from '../../shared/enums/data-type';
+import { Icon } from '../../shared/enums/icon';
+import { ToastType } from '../../shared/enums/toast-type';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
 import { WidgetConfigurationRequest } from '../../shared/models/backend/widget-configuration/widget-configuration-request';
 import { AbstractHttpService } from '../../shared/services/backend/abstract-http/abstract-http.service';
@@ -42,24 +42,24 @@ import { WidgetConfigurationFormFieldsService } from '../../shared/services/fron
  * Component used to display the list of widgets
  */
 @Component({
-	templateUrl: '../../shared/components/list/list.component.html',
-	styleUrls: ['../../shared/components/list/list.component.scss'],
+	templateUrl: '../../shared/components/list/list.html',
+	styleUrls: ['../../shared/components/list/list.scss'],
 	imports: [
-		HeaderComponent,
-		InputComponent,
+		Header,
+		Input,
 		FormsModule,
 		ReactiveFormsModule,
-		SpinnerComponent,
+		Spinner,
 		CdkDropList,
 		CdkDrag,
 		NgClass,
 		NgOptimizedImage,
-		ButtonsComponent,
-		PaginatorComponent
+		Buttons,
+		Paginator
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpCategoryParametersService }]
 })
-export class Configurations extends ListComponent<CategoryParameter, WidgetConfigurationRequest> {
+export class Configurations extends List<CategoryParameter, WidgetConfigurationRequest> {
 	private readonly httpCategoryParametersService = inject(HttpCategoryParametersService);
 	private readonly widgetConfigurationFormFieldsService = inject(WidgetConfigurationFormFieldsService);
 
@@ -84,7 +84,7 @@ export class Configurations extends ListComponent<CategoryParameter, WidgetConfi
 	 * {@inheritDoc}
 	 */
 	protected override getSecondLabel(configuration: CategoryParameter): string {
-		return configuration.value && configuration.dataType === DataTypeEnum.PASSWORD && !configuration.showValue
+		return configuration.value && configuration.dataType === DataType.PASSWORD && !configuration.showValue
 			? '•'.repeat(configuration.value.length)
 			: configuration.value;
 	}
@@ -112,32 +112,32 @@ export class Configurations extends ListComponent<CategoryParameter, WidgetConfi
 		this.listConfiguration = {
 			buttons: [
 				{
-					icon: IconEnum.SHOW_PASSWORD,
+					icon: Icon.SHOW_PASSWORD,
 					tooltip: { message: 'configuration.show.password' },
 					variant: 'miniFab',
 					hidden: (configuration: CategoryParameter) =>
-						!configuration.value || configuration.dataType !== DataTypeEnum.PASSWORD || configuration.showValue,
+						!configuration.value || configuration.dataType !== DataType.PASSWORD || configuration.showValue,
 					callback: (event: Event, configuration: CategoryParameter) => (configuration.showValue = true)
 				},
 				{
-					icon: IconEnum.HIDE_PASSWORD,
+					icon: Icon.HIDE_PASSWORD,
 					tooltip: { message: 'configuration.hide.password' },
 					variant: 'miniFab',
 					hidden: (configuration: CategoryParameter) =>
-						!configuration.value || configuration.dataType !== DataTypeEnum.PASSWORD || !configuration.showValue,
+						!configuration.value || configuration.dataType !== DataType.PASSWORD || !configuration.showValue,
 					callback: (event: Event, configuration: CategoryParameter) => (configuration.showValue = false)
 				},
 				{
-					icon: IconEnum.EDIT,
+					icon: Icon.EDIT,
 					tooltip: { message: 'configuration.edit' },
 					variant: 'miniFab',
 					callback: (event: Event, configuration: CategoryParameter) =>
 						this.openFormSidenav(event, configuration, this.updateConfiguration.bind(this))
 				},
 				{
-					icon: IconEnum.DELETE,
+					icon: Icon.DELETE,
 					tooltip: { message: 'configuration.delete' },
-					color: ButtonColorEnum.WARN,
+					color: ButtonColor.WARN,
 					variant: 'miniFab',
 					callback: (event: Event, configuration: CategoryParameter) => this.deleteConfiguration(event, configuration)
 				}
@@ -183,7 +183,7 @@ export class Configurations extends ListComponent<CategoryParameter, WidgetConfi
 			message: `${this.translateService.instant('configuration.delete.confirm')} ${configuration.key.toUpperCase()} ?`,
 			accept: () => {
 				this.httpCategoryParametersService.delete(configuration.key).subscribe(() => {
-					this.toastService.sendMessage('configuration.delete.success', ToastTypeEnum.SUCCESS);
+					this.toastService.sendMessage('configuration.delete.success', ToastType.SUCCESS);
 					this.refreshList();
 				});
 			}
@@ -198,7 +198,7 @@ export class Configurations extends ListComponent<CategoryParameter, WidgetConfi
 	private updateConfiguration(formGroup: UntypedFormGroup): void {
 		this.httpCategoryParametersService.update(formGroup.value.key, formGroup.value).subscribe(() => {
 			this.refreshList();
-			this.toastService.sendMessage('configuration.update.success', ToastTypeEnum.SUCCESS);
+			this.toastService.sendMessage('configuration.update.success', ToastType.SUCCESS);
 		});
 	}
 }

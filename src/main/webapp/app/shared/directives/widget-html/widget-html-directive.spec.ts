@@ -17,10 +17,25 @@
  * under the License.
  */
 
-/**
- * The list of roles
- */
-export enum RoleEnum {
-	ROLE_ADMIN = 'ROLE_ADMIN',
-	ROLE_USER = 'ROLE_USER'
-}
+import { ElementRef } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+
+import { WidgetHtmlDirective } from './widget-html-directive';
+
+describe('WidgetHtmlDirective', () => {
+	let directive: WidgetHtmlDirective;
+
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [WidgetHtmlDirective, { provide: ElementRef, useClass: MockElementRef }]
+		});
+
+		directive = TestBed.inject(WidgetHtmlDirective);
+	});
+
+	it('should create', () => {
+		expect(directive).toBeTruthy();
+	});
+});
+
+class MockElementRef extends ElementRef {}

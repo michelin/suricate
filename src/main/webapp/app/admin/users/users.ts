@@ -22,15 +22,15 @@ import { NgClass, NgOptimizedImage, TitleCasePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 
-import { HeaderComponent } from '../../layout/components/header/header.component';
-import { ButtonsComponent } from '../../shared/components/buttons/buttons.component';
-import { InputComponent } from '../../shared/components/inputs/input/input.component';
-import { ListComponent } from '../../shared/components/list/list.component';
-import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { ButtonColorEnum } from '../../shared/enums/button-color.enum';
-import { IconEnum } from '../../shared/enums/icon.enum';
-import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
+import { Header } from '../../layout/components/header/header';
+import { Buttons } from '../../shared/components/buttons/buttons';
+import { Input } from '../../shared/components/inputs/input/input';
+import { List } from '../../shared/components/list/list';
+import { Paginator } from '../../shared/components/paginator/paginator';
+import { Spinner } from '../../shared/components/spinner/spinner';
+import { ButtonColor } from '../../shared/enums/button-color';
+import { Icon } from '../../shared/enums/icon';
+import { ToastType } from '../../shared/enums/toast-type';
 import { Role } from '../../shared/models/backend/role/role';
 import { User } from '../../shared/models/backend/user/user';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
@@ -42,24 +42,24 @@ import { UserFormFieldsService } from '../../shared/services/frontend/form-field
  * Component used to display the list of users
  */
 @Component({
-	templateUrl: '../../shared/components/list/list.component.html',
-	styleUrls: ['../../shared/components/list/list.component.scss'],
+	templateUrl: '../../shared/components/list/list.html',
+	styleUrls: ['../../shared/components/list/list.scss'],
 	imports: [
-		HeaderComponent,
-		InputComponent,
+		Header,
+		Input,
 		FormsModule,
 		ReactiveFormsModule,
-		SpinnerComponent,
+		Spinner,
 		CdkDropList,
 		CdkDrag,
 		NgClass,
 		NgOptimizedImage,
-		ButtonsComponent,
-		PaginatorComponent
+		Buttons,
+		Paginator
 	],
 	providers: [{ provide: AbstractHttpService, useClass: HttpAdminUserService }]
 })
-export class Users extends ListComponent<User, UserRequest> implements OnInit {
+export class Users extends List<User, UserRequest> implements OnInit {
 	private readonly httpAdminUserService = inject(HttpAdminUserService);
 	private readonly userFormFieldsService = inject(UserFormFieldsService);
 
@@ -96,15 +96,15 @@ export class Users extends ListComponent<User, UserRequest> implements OnInit {
 		this.listConfiguration = {
 			buttons: [
 				{
-					icon: IconEnum.EDIT,
+					icon: Icon.EDIT,
 					tooltip: { message: 'user.edit' },
 					variant: 'miniFab',
 					callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser.bind(this))
 				},
 				{
-					icon: IconEnum.DELETE,
+					icon: Icon.DELETE,
 					tooltip: { message: 'user.delete' },
-					color: ButtonColorEnum.WARN,
+					color: ButtonColor.WARN,
 					variant: 'miniFab',
 					callback: (event: Event, user: User) => this.deleteUser(event, user)
 				}
@@ -181,7 +181,7 @@ export class Users extends ListComponent<User, UserRequest> implements OnInit {
 			message: `${this.translateService.instant('user.delete.confirm')} ${titleCasePipe.transform(user.username)} ?`,
 			accept: () => {
 				this.httpAdminUserService.delete(user.id).subscribe(() => {
-					this.toastService.sendMessage('user.delete.success', ToastTypeEnum.SUCCESS);
+					this.toastService.sendMessage('user.delete.success', ToastType.SUCCESS);
 					this.refreshList();
 				});
 			}

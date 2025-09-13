@@ -22,8 +22,8 @@ import { Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { IconEnum } from '../../../../enums/icon.enum';
+import { DataType } from '../../../../enums/data-type';
+import { Icon } from '../../../../enums/icon';
 import { PageModel } from '../../../../models/backend/page-model';
 import { Role } from '../../../../models/backend/role/role';
 import { User } from '../../../../models/backend/user/user';
@@ -49,40 +49,40 @@ export class UserFormFieldsService {
 			{
 				key: 'username',
 				label: 'username',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				value: user.username ? user.username : null,
 				readOnly: true,
 				validators: [Validators.required, Validators.minLength(3)],
-				iconPrefix: IconEnum.USERNAME
+				iconPrefix: Icon.USERNAME
 			},
 			{
 				key: 'firstname',
 				label: 'firstname',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				value: user.firstname ? user.firstname : null,
 				validators: [Validators.required, Validators.minLength(3)],
-				iconPrefix: IconEnum.USER
+				iconPrefix: Icon.USER
 			},
 			{
 				key: 'lastname',
 				label: 'lastname',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				value: user.lastname ? user.lastname : null,
 				validators: [Validators.required, Validators.minLength(3)],
-				iconPrefix: IconEnum.USER
+				iconPrefix: Icon.USER
 			},
 			{
 				key: 'email',
 				label: 'email',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				value: user.email ? user.email : null,
 				validators: [Validators.required, Validators.email],
-				iconPrefix: IconEnum.EMAIL
+				iconPrefix: Icon.EMAIL
 			},
 			{
 				key: 'roles',
 				label: 'roles',
-				type: DataTypeEnum.MULTIPLE,
+				type: DataType.MULTIPLE,
 				value: user.roles && user.roles.length > 0 ? user.roles.map((role) => role.name) : null,
 				options: () => this.getRoleOptions(),
 				validators: [Validators.required]

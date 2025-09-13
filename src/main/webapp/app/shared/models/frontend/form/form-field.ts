@@ -20,8 +20,8 @@
 import { AsyncValidatorFn, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { IconEnum } from '../../../enums/icon.enum';
+import { DataType } from '../../../enums/data-type';
+import { Icon } from '../../../enums/icon';
 import { UserProject } from '../../backend/user/user-project';
 import { FormOption } from './form-option';
 import { MosaicFormOption } from './mosaic-form-option';
@@ -46,7 +46,7 @@ export class FormField {
 	/**
 	 * The type of the data to insert
 	 */
-	type: DataTypeEnum;
+	type: DataType;
 
 	/* ***************************************************************************************************************** */
 	/*                        Simple Field                                                                               */
@@ -69,7 +69,7 @@ export class FormField {
 	/**
 	 * The mat-icon name that should be used as prefix
 	 */
-	iconPrefix?: IconEnum;
+	iconPrefix?: Icon;
 
 	/**
 	 * The tooltip to display above the icon suffix
@@ -79,7 +79,7 @@ export class FormField {
 	/**
 	 * The mat-icon name that should be used as suffix
 	 */
-	iconSuffix?: IconEnum;
+	iconSuffix?: Icon;
 
 	/**
 	 * Hint to display to the user

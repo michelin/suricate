@@ -20,7 +20,7 @@
 import { UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { IconEnum } from '../../../enums/icon.enum';
+import { Icon } from '../../../enums/icon';
 import { Category } from '../../backend/category/category';
 import { LinkConfiguration } from '../link/link-configuration';
 import { FormField } from './form-field';
@@ -42,7 +42,7 @@ export class FormStep {
 	/**
 	 * The icon that should displayed in the step
 	 */
-	icon: IconEnum;
+	icon: Icon;
 
 	/**
 	 * If we want to display an image on the step

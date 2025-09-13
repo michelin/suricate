@@ -19,7 +19,7 @@
 
 import { Routes } from '@angular/router';
 
-import { authGuard } from '../shared/guards/auth/auth.guard';
+import { authGuard } from '../shared/guards/auth/auth-guard';
 import { DashboardDetail } from './components/dashboard-detail/dashboard-detail';
 import { DashboardTv } from './components/dashboard-tv/dashboard-tv';
 import { AddWidgetToProjectWizard } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard';

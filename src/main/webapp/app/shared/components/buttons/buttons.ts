@@ -27,18 +27,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonColorEnum } from '../../enums/button-color.enum';
 import { ButtonTypeEnum } from '../../enums/button-type.enum';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
-import { MaterialIconRecords } from '../../records/material-icon.record';
+import { MaterialIconRecords } from '../../models/frontend/icon/material-icon';
 
 /**
  * Component used to generate buttons
  */
 @Component({
 	selector: 'suricate-buttons',
-	templateUrl: './buttons.component.html',
-	styleUrls: ['./buttons.component.scss'],
+	templateUrl: './buttons.html',
+	styleUrls: ['./buttons.scss'],
 	imports: [NgTemplateOutlet, MatButton, MatTooltip, MatIcon, NgClass, MatMiniFabButton, AsyncPipe, TranslatePipe]
 })
-export class ButtonsComponent<T> {
+export class Buttons<T> {
 	/**
 	 * The list of buttons to display
 	 */

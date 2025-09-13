@@ -41,15 +41,15 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Buttons } from '../../../../shared/components/buttons/buttons';
 import { Input } from '../../../../shared/components/inputs/input/input';
-import { ButtonColorEnum } from '../../../../shared/enums/button-color.enum';
-import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
-import { IconEnum } from '../../../../shared/enums/icon.enum';
-import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { ButtonColor } from '../../../../shared/enums/button-color';
+import { DataType } from '../../../../shared/enums/data-type';
+import { Icon } from '../../../../shared/enums/icon';
+import { ToastType } from '../../../../shared/enums/toast-type';
 import { PersonalAccessToken } from '../../../../shared/models/backend/personal-access-token/personal-access-token';
 import { PersonalAccessTokenRequest } from '../../../../shared/models/backend/personal-access-token/personal-access-token-request';
 import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../../shared/models/frontend/form/form-field';
-import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
+import { MaterialIconRecords } from '../../../../shared/models/frontend/icon/material-icon';
 import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user.service';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
 import { FormService } from '../../../../shared/services/frontend/form/form.service';
@@ -100,7 +100,7 @@ export class SecuritySettings implements OnInit {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of material icons
@@ -152,15 +152,15 @@ export class SecuritySettings implements OnInit {
 	private initButtons(): void {
 		this.generateTokenButton = {
 			label: 'settings.security.generate.tokens.button.label',
-			icon: IconEnum.SAVE,
+			icon: Icon.SAVE,
 			callback: () => this.save()
 		};
 
 		this.revokeButton = {
-			color: ButtonColorEnum.WARN,
+			color: ButtonColor.WARN,
 			tooltip: { message: 'revoke' },
 			variant: 'miniFab',
-			icon: IconEnum.DELETE,
+			icon: Icon.DELETE,
 			callback: (event: Event, token: PersonalAccessToken) => this.revokeToken(token)
 		};
 	}
@@ -172,7 +172,7 @@ export class SecuritySettings implements OnInit {
 		this.formFields.push({
 			key: 'name',
 			label: 'settings.security.token.name.field',
-			type: DataTypeEnum.TEXT,
+			type: DataType.TEXT,
 			validators: [Validators.required]
 		});
 
@@ -207,7 +207,7 @@ export class SecuritySettings implements OnInit {
 							this.translateService.instant('settings.security.token.created.duplicated.name', {
 								tokenName: tokenRequest.name
 							}),
-							ToastTypeEnum.DANGER
+							ToastType.DANGER
 						);
 					}
 				}
@@ -222,7 +222,7 @@ export class SecuritySettings implements OnInit {
 		const copied = this.clipboard.copy(this.createdToken.value);
 
 		if (copied) {
-			this.toastService.sendMessage('copy.success', ToastTypeEnum.SUCCESS);
+			this.toastService.sendMessage('copy.success', ToastType.SUCCESS);
 		}
 	}
 
@@ -235,7 +235,7 @@ export class SecuritySettings implements OnInit {
 			message: this.translateService.instant('token.delete.confirm', { tokenName: token.name }),
 			accept: () => {
 				this.httpUserService.revokeToken(token.name).subscribe(() => {
-					this.toastService.sendMessage('token.delete.success', ToastTypeEnum.SUCCESS);
+					this.toastService.sendMessage('token.delete.success', ToastType.SUCCESS);
 					this.reloadTokens();
 				});
 			}

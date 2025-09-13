@@ -25,7 +25,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { appRoutes } from '../../../app.routes';
-import { IconEnum } from '../../enums/icon.enum';
+import { Icon } from '../../enums/icon';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
 import { Wizard } from './wizard';
@@ -67,7 +67,7 @@ describe('Wizard', () => {
 			formSteps.push({
 				key: 'Key' + i,
 				title: 'Title' + i,
-				icon: IconEnum.ADD
+				icon: Icon.ADD
 			});
 		}
 

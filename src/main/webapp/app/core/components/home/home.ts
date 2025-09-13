@@ -27,13 +27,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Header } from '../../../layout/components/header/header';
 import { Spinner } from '../../../shared/components/spinner/spinner';
-import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { ButtonType } from '../../../shared/enums/button-type';
+import { Icon } from '../../../shared/enums/icon';
+import { ToastType } from '../../../shared/enums/toast-type';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { CssService } from '../../../shared/services/frontend/css/css.service';
@@ -74,7 +74,7 @@ export class Home implements OnInit {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of dashboards
@@ -101,9 +101,9 @@ export class Home implements OnInit {
 			title: 'dashboard.list.my',
 			actions: [
 				{
-					icon: IconEnum.ADD,
+					icon: Icon.ADD,
 					variant: 'miniFab',
-					type: ButtonTypeEnum.BUTTON,
+					type: ButtonType.BUTTON,
 					tooltip: { message: 'dashboard.create' },
 					callback: () => this.openCreateDashboardFormSidenav()
 				}
@@ -144,7 +144,7 @@ export class Home implements OnInit {
 				this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();
 			}
 
-			this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
+			this.toastService.sendMessage('dashboard.add.success', ToastType.SUCCESS);
 			this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
 		});
 	}

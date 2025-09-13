@@ -23,11 +23,11 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
 	selector: 'suricate-progress-bar',
-	templateUrl: './progress-bar.component.html',
-	styleUrls: ['./progress-bar.component.scss'],
+	templateUrl: './progress-bar.html',
+	styleUrls: ['./progress-bar.scss'],
 	imports: [MatProgressBar]
 })
-export class ProgressBarComponent {
+export class ProgressBar {
 	/**
 	 * The color to use with the spinner
 	 */

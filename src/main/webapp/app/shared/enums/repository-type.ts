@@ -18,10 +18,9 @@
  */
 
 /**
- * The list of widget availability types
+ * Hold the repository types
  */
-export enum WidgetAvailabilityEnum {
-	ACTIVATED = 'ACTIVATED',
-	DISABLED = 'DISABLED',
-	VALIDATION_PENDING = 'VALIDATION_PENDING'
+export enum RepositoryType {
+	REMOTE = 'REMOTE',
+	LOCAL = 'LOCAL'
 }

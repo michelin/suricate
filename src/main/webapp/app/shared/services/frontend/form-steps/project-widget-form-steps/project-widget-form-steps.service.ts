@@ -22,8 +22,8 @@ import { UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { EMPTY, from, Observable, of } from 'rxjs';
 import { map, switchMap, tap, toArray } from 'rxjs/operators';
 
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { IconEnum } from '../../../../enums/icon.enum';
+import { DataType } from '../../../../enums/data-type';
+import { Icon } from '../../../../enums/icon';
 import { Category } from '../../../../models/backend/category/category';
 import { PageModel } from '../../../../models/backend/page-model';
 import { Widget } from '../../../../models/backend/widget/widget';
@@ -95,11 +95,11 @@ export class ProjectWidgetFormStepsService {
 			{
 				key: ProjectWidgetFormStepsService.selectCategoryStepKey,
 				title: 'category.select',
-				icon: IconEnum.CATEGORY,
+				icon: Icon.CATEGORY,
 				fields: [
 					{
 						key: 'categoryId',
-						type: DataTypeEnum.MOSAIC,
+						type: DataType.MOSAIC,
 						columnNumber: 4,
 						mosaicOptions: () => this.getAvailableCategories(),
 						validators: [Validators.required]
@@ -109,11 +109,11 @@ export class ProjectWidgetFormStepsService {
 			{
 				key: ProjectWidgetFormStepsService.selectWidgetStepKey,
 				title: 'widget.select',
-				icon: IconEnum.WIDGET,
+				icon: Icon.WIDGET,
 				fields: [
 					{
 						key: ProjectWidgetFormStepsService.widgetIdFieldKey,
-						type: DataTypeEnum.MOSAIC,
+						type: DataType.MOSAIC,
 						columnNumber: 4,
 						mosaicOptions: (formGroup: UntypedFormGroup) => this.getAvailableWidgetsByCategory(formGroup),
 						validators: [Validators.required]
@@ -123,7 +123,7 @@ export class ProjectWidgetFormStepsService {
 			{
 				key: ProjectWidgetFormStepsService.configureWidgetStepKey,
 				title: 'widget.configuration',
-				icon: IconEnum.WIDGET_CONFIGURATION,
+				icon: Icon.WIDGET_CONFIGURATION,
 				asyncFields: (formGroup: UntypedFormGroup, step: FormStep) => this.getWidgetConfigurationFields(formGroup, step)
 			}
 		]);
@@ -150,18 +150,18 @@ export class ProjectWidgetFormStepsService {
 				label: widgetParam.description,
 				placeholder: widgetParam.usageExample,
 				value: configValue || widgetParam.defaultValue,
-				iconPrefix: widgetParam.usageTooltip ? IconEnum.HELP : undefined,
+				iconPrefix: widgetParam.usageTooltip ? Icon.HELP : undefined,
 				iconPrefixTooltip: widgetParam.usageTooltip ? widgetParam.usageTooltip : undefined,
-				iconSuffix: widgetParam.type === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
+				iconSuffix: widgetParam.type === DataType.PASSWORD ? Icon.SHOW_PASSWORD : undefined,
 				options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
 				validators: this.getValidatorsForWidgetParam(widgetParam)
 			};
 
-			if (widgetParam.type === DataTypeEnum.MULTIPLE) {
+			if (widgetParam.type === DataType.MULTIPLE) {
 				formField.value = formField.value ? (formField.value as string).split(',') : undefined;
 			}
 
-			if (widgetParam.type === DataTypeEnum.BOOLEAN) {
+			if (widgetParam.type === DataType.BOOLEAN) {
 				formField.value = JSON.parse(String(formField.value ? formField.value : false));
 			}
 
@@ -259,7 +259,7 @@ export class ProjectWidgetFormStepsService {
 			formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
 		}
 
-		if (widgetParam.type === DataTypeEnum.NUMBER) {
+		if (widgetParam.type === DataType.NUMBER) {
 			formValidators.push(CustomValidator.isDigits);
 		}
 

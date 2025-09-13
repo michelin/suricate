@@ -19,8 +19,8 @@
 
 import { Routes } from '@angular/router';
 
-import { adminGuard } from '../shared/guards/admin/admin.guard';
-import { authGuard } from '../shared/guards/auth/auth.guard';
+import { adminGuard } from '../shared/guards/admin/admin-guard';
+import { authGuard } from '../shared/guards/auth/auth-guard';
 import { Configurations } from './configurations/configurations';
 import { Dashboards } from './dashboards/dashboards';
 import { Repositories } from './repositories/repositories';

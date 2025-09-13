@@ -20,8 +20,8 @@
 import { inject, Injectable } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 
-import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { IconEnum } from '../../../../enums/icon.enum';
+import { DataType } from '../../../../enums/data-type';
+import { Icon } from '../../../../enums/icon';
 import { CategoryParameter } from '../../../../models/backend/category-parameters/category-parameter';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { FormService } from '../../form/form.service';
@@ -45,26 +45,26 @@ export class WidgetConfigurationFormFieldsService {
 			{
 				key: 'key',
 				label: 'key',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				value: configuration ? configuration.key : null,
 				readOnly: true,
-				iconPrefix: IconEnum.KEY
+				iconPrefix: Icon.KEY
 			},
 			{
 				key: 'category',
 				label: 'category',
-				type: DataTypeEnum.TEXT,
+				type: DataType.TEXT,
 				value: configuration.category ? configuration.category.name : null,
 				readOnly: true,
-				iconPrefix: IconEnum.WIDGET
+				iconPrefix: Icon.WIDGET
 			},
 			{
 				key: 'value',
 				label: 'value',
 				type: configuration.dataType,
 				value: configuration ? configuration.value : null,
-				iconPrefix: IconEnum.VALUE,
-				iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
+				iconPrefix: Icon.VALUE,
+				iconSuffix: configuration.dataType === DataType.PASSWORD ? Icon.SHOW_PASSWORD : undefined,
 				validators: [Validators.required]
 			}
 		];
@@ -97,8 +97,8 @@ export class WidgetConfigurationFormFieldsService {
 				label: configuration.description,
 				type: configuration.dataType,
 				value: backendConfigValue || configuration.value,
-				iconPrefix: IconEnum.VALUE,
-				iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
+				iconPrefix: Icon.VALUE,
+				iconSuffix: configuration.dataType === DataType.PASSWORD ? Icon.SHOW_PASSWORD : undefined,
 				validators: [Validators.required]
 			});
 		});

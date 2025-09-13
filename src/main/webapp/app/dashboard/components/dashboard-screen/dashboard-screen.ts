@@ -38,15 +38,15 @@ import { IMessage } from '@stomp/rx-stomp';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
+import { Icon } from '../../../shared/enums/icon';
+import { WebsocketUpdateType } from '../../../shared/enums/websocket-update-type';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
 import { GridOptions } from '../../../shared/models/frontend/grid/grid-options';
+import { MaterialIconRecords } from '../../../shared/models/frontend/icon/material-icon';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
-import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html-pipe';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
@@ -154,7 +154,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = IconEnum;
+	public iconEnum = Icon;
 
 	/**
 	 * The list of material icons
@@ -357,17 +357,17 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 				const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
 				switch (updateEvent.type) {
-					case WebsocketUpdateTypeEnum.DISCONNECT:
+					case WebsocketUpdateType.DISCONNECT:
 						this.disconnectFromWebsockets();
 						this.disconnectEvent.emit();
 						break;
-					case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
+					case WebsocketUpdateType.DISPLAY_NUMBER:
 						this.displayScreenCode();
 						break;
-					case WebsocketUpdateTypeEnum.REFRESH_DASHBOARD:
+					case WebsocketUpdateType.REFRESH_DASHBOARD:
 						this.refreshAllProjectWidgets.emit();
 						break;
-					case WebsocketUpdateTypeEnum.RELOAD:
+					case WebsocketUpdateType.RELOAD:
 						location.reload();
 						break;
 					default:
@@ -388,7 +388,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 			.subscribe((stompMessage: IMessage) => {
 				const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-				if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
+				if (updateEvent.type === WebsocketUpdateType.DISCONNECT) {
 					this.disconnectFromWebsockets();
 					this.disconnectEvent.emit();
 				}

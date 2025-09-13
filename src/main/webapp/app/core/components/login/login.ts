@@ -28,9 +28,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Buttons } from '../../../shared/components/buttons/buttons';
 import { Input } from '../../../shared/components/inputs/input/input';
 import { Spinner } from '../../../shared/components/spinner/spinner';
-import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
-import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { AuthenticationProvider } from '../../../shared/enums/authentication-provider';
+import { ButtonType } from '../../../shared/enums/button-type';
+import { ToastType } from '../../../shared/enums/toast-type';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
@@ -110,7 +110,7 @@ export class Login implements OnInit {
 		if (token) {
 			AuthenticationService.setAccessToken(token);
 		} else if (error) {
-			this.toastService.sendMessage('authentication.failed.with.providers', ToastTypeEnum.DANGER, error);
+			this.toastService.sendMessage('authentication.failed.with.providers', ToastType.DANGER, error);
 		}
 
 		if (AuthenticationService.isLoggedIn()) {
@@ -141,7 +141,7 @@ export class Login implements OnInit {
 				next: () => this.navigateToHomePage(),
 				error: (error: HttpErrorResponse) => {
 					this.loading = false;
-					this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
+					this.toastService.sendMessage(error.error.key, ToastType.DANGER);
 				}
 			});
 		}
@@ -154,7 +154,7 @@ export class Login implements OnInit {
 		this.buttonConfigurations = [
 			{
 				label: 'sign.in',
-				type: ButtonTypeEnum.SUBMIT
+				type: ButtonType.SUBMIT
 			}
 		];
 	}

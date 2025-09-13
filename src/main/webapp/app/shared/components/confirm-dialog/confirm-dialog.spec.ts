@@ -25,15 +25,15 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
-import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { ConfirmDialog } from './confirm-dialog';
 
-describe('ConfirmDialogComponent', () => {
-	let component: ConfirmDialogComponent;
-	let fixture: ComponentFixture<ConfirmDialogComponent>;
+describe('ConfirmDialog', () => {
+	let component: ConfirmDialog;
+	let fixture: ComponentFixture<ConfirmDialog>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [ConfirmDialogComponent],
+			imports: [ConfirmDialog],
 			providers: [
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
@@ -45,7 +45,7 @@ describe('ConfirmDialogComponent', () => {
 			]
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(ConfirmDialogComponent);
+		fixture = TestBed.createComponent(ConfirmDialog);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

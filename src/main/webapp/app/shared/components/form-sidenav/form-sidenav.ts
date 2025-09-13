@@ -33,28 +33,20 @@ import { ValueChangedEvent } from '../../models/frontend/form/value-changed-even
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
-import { ButtonsComponent } from '../buttons/buttons.component';
-import { InputComponent } from '../inputs/input/input.component';
-import { SlideToggleComponent } from '../inputs/slide-toggle/slide-toggle.component';
+import { Buttons } from '../buttons/buttons';
+import { Input } from '../inputs/input/input';
+import { SlideToggle } from '../inputs/slide-toggle/slide-toggle';
 
 /**
  * Component used to display the form sidenav
  */
 @Component({
 	selector: 'suricate-form-sidenav',
-	templateUrl: './form-sidenav.component.html',
-	styleUrls: ['./form-sidenav.component.scss'],
-	imports: [
-		SlideToggleComponent,
-		InputComponent,
-		FormsModule,
-		ReactiveFormsModule,
-		ButtonsComponent,
-		UpperCasePipe,
-		TranslatePipe
-	]
+	templateUrl: './form-sidenav.html',
+	styleUrls: ['./form-sidenav.scss'],
+	imports: [SlideToggle, Input, FormsModule, ReactiveFormsModule, Buttons, UpperCasePipe, TranslatePipe]
 })
-export class FormSidenavComponent implements OnInit, OnDestroy {
+export class FormSidenav implements OnInit, OnDestroy {
 	private readonly formService = inject(FormService);
 	private readonly sidenavService = inject(SidenavService);
 
