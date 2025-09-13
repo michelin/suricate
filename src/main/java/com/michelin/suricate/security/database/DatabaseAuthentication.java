@@ -38,8 +38,7 @@ public class DatabaseAuthentication {
     @Bean
     public DaoAuthenticationProvider authenticationProvider(
             UserDetailsDatabaseService userDetailsDatabaseService, PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsDatabaseService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsDatabaseService);
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }

@@ -93,7 +93,7 @@
 				}
 
 				@if (dataType.FILE !== field.type && isInputFieldOnError()) {
-					<mat-error>
+					<mat-error animate.enter="animation-enter-error" animate.leave="animation-leave-error">
 						{{ getInputErrors() | translate }}
 					</mat-error>
 				}

@@ -31,7 +31,7 @@
 
 		<!-- Error Message for file input -->
 		@if (isInputFieldOnError()) {
-			<mat-error>
+			<mat-error animate.enter="animation-enter-error" animate.leave="animation-leave-error">
 				{{ getInputErrors() | translate }}
 			</mat-error>
 		}

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /** Widget proxy selector. */
 @Slf4j
@@ -53,7 +54,7 @@ public class WidgetProxySelector extends ProxySelector {
                     Arrays.stream(proxyProperties.getNonProxyHosts().split("\\|"))) {
                 // Check if the URI is defined in the "no proxy domains" config before setting the proxy
                 if (domains.noneMatch(domain ->
-                        StringUtils.containsIgnoreCase(uri.getHost(), domain.replace("*", StringUtils.EMPTY)))) {
+                    Strings.CI.contains(uri.getHost(), domain.replace("*", StringUtils.EMPTY)))) {
                     proxy = new Proxy(
                             Proxy.Type.HTTP,
                             new InetSocketAddress(
