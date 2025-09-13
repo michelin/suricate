@@ -21,7 +21,6 @@ import { DatePipe } from '@angular/common';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -41,7 +40,6 @@ bootstrapApplication(App, {
 		{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 		provideHttpClient(withInterceptorsFromDi()),
-		provideAnimationsAsync(),
 		provideRouter(appRoutes),
 		provideTranslateService({
 			loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })

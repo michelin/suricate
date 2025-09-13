@@ -18,7 +18,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { Toast } from './toast';
 
@@ -28,8 +27,7 @@ describe('Toast', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [Toast],
-			providers: [provideAnimationsAsync()]
+			imports: [Toast]
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(Toast);

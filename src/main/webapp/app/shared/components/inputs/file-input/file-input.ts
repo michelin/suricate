@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import { animate, style, transition, trigger } from '@angular/animations';
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
@@ -36,14 +35,6 @@ import { BaseInput } from '../base-input/base-input/base-input';
 	selector: 'suricate-file-input',
 	templateUrl: './file-input.html',
 	styleUrls: ['./file-input.scss'],
-	animations: [
-		trigger('animationError', [
-			transition(':enter', [
-				style({ opacity: 0, transform: 'translateY(-100%)' }),
-				animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({ opacity: 1, transform: 'translateY(0%)' }))
-			])
-		])
-	],
 	imports: [MatButton, NgClass, MatIcon, MatError, TranslatePipe]
 })
 export class FileInput extends BaseInput implements OnInit {

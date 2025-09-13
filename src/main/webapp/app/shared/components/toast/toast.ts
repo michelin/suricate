@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { NgClass } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
@@ -39,70 +38,6 @@ import { ToastService } from '../../services/frontend/toast/toast-service';
 	selector: 'suricate-toast-messages',
 	templateUrl: './toast.html',
 	styleUrls: ['./toast.scss'],
-	animations: [
-		trigger('slideInOut', [
-			state(
-				'in',
-				style({
-					'max-height': '500px',
-					'opacity': '1',
-					'visibility': 'visible'
-				})
-			),
-			state(
-				'out',
-				style({
-					'max-height': '0px',
-					'opacity': '0',
-					'visibility': 'hidden'
-				})
-			),
-			transition('in => out', [
-				group([
-					animate(
-						'400ms ease-in-out',
-						style({
-							opacity: '0'
-						})
-					),
-					animate(
-						'600ms ease-in-out',
-						style({
-							'max-height': '0px'
-						})
-					),
-					animate(
-						'700ms ease-in-out',
-						style({
-							visibility: 'hidden'
-						})
-					)
-				])
-			]),
-			transition('out => in', [
-				group([
-					animate(
-						'1ms ease-in-out',
-						style({
-							visibility: 'visible'
-						})
-					),
-					animate(
-						'600ms ease-in-out',
-						style({
-							'max-height': '500px'
-						})
-					),
-					animate(
-						'800ms ease-in-out',
-						style({
-							opacity: '1'
-						})
-					)
-				])
-			])
-		])
-	],
 	imports: [NgClass, MatIcon, MatIconButton, TranslatePipe]
 })
 export class Toast implements OnInit, OnDestroy {

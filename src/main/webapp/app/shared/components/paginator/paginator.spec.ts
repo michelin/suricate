@@ -18,7 +18,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { Paginator } from './paginator';
 
@@ -28,8 +27,7 @@ describe('Paginator', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [Paginator],
-			providers: [provideAnimationsAsync()]
+			imports: [Paginator]
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(Paginator);
