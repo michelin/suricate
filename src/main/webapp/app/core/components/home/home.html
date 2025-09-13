@@ -10,7 +10,7 @@
 			<mat-grid-tile (click)="openCreateDashboardFormSidenav()" class="mat-elevation-z3">
 				<div class="grid-tile-content-wrapper">
 					<div class="grid-tile-body">
-						<mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+						<mat-icon color="primary"> {{ materialIconRecords[icon.ADD] }} </mat-icon>
 					</div>
 					<div class="grid-tile-footer">
 						{{ 'dashboard.create' | translate }}
@@ -36,7 +36,7 @@
 							}
 							@if (!project.screenshotToken) {
 								<mat-icon color="primary">
-									{{ materialIconRecords[iconEnum.DASHBOARD] }}
+									{{ materialIconRecords[icon.DASHBOARD] }}
 								</mat-icon>
 							}
 						</div>

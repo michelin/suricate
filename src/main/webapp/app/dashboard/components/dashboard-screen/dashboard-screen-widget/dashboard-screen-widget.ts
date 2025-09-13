@@ -33,7 +33,7 @@ import { WidgetHtmlDirective } from '../../../../shared/directives/widget-html/w
 import { Icon } from '../../../../shared/enums/icon';
 import { ToastType } from '../../../../shared/enums/toast-type';
 import { WebsocketUpdateType } from '../../../../shared/enums/websocket-update-type';
-import { WidgetStateEnum } from '../../../../shared/enums/widget-sate';
+import { WidgetState } from '../../../../shared/enums/widget-sate';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
@@ -105,7 +105,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	/**
 	 * The enumeration that hold the state of a widget (used in HTML)
 	 */
-	public widgetStateEnum = WidgetStateEnum;
+	public widgetStateEnum = WidgetState;
 
 	/**
 	 * Is the widget loading or not
@@ -120,7 +120,7 @@ export class DashboardScreenWidget implements OnInit, OnDestroy {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = Icon;
+	public icon = Icon;
 
 	/**
 	 * The list of material icons

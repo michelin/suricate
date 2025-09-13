@@ -37,7 +37,7 @@
 				@if (projectWidget.state === widgetStateEnum.STOPPED) {
 					<div class="issue execution-error">
 						<mat-icon class="material-icons">
-							{{ materialIconRecords[iconEnum.ERROR] }}
+							{{ materialIconRecords[icon.ERROR] }}
 						</mat-icon>
 						<span class="text"> {{ 'widget.execution.error' | translate }} </span>
 					</div>
@@ -47,7 +47,7 @@
 					<div class="issue execution-warning">
 						<span>
 							<mat-icon class="material-icons">
-								{{ materialIconRecords[iconEnum.WARNING] }}
+								{{ materialIconRecords[icon.WARNING] }}
 							</mat-icon>
 						</span>
 						<span class="text"> {{ 'widget.connection.server.error' | translate }} </span>
@@ -68,7 +68,7 @@
 					(click)="displayDeleteProjectWidgetDialog()"
 				>
 					<mat-icon class="material-icons">
-						{{ materialIconRecords[iconEnum.DELETE] }}
+						{{ materialIconRecords[icon.DELETE] }}
 					</mat-icon>
 				</button>
 				<button
@@ -79,7 +79,7 @@
 					(click)="displayEditFormSidenav()"
 				>
 					<mat-icon class="material-icons">
-						{{ materialIconRecords[iconEnum.EDIT] }}
+						{{ materialIconRecords[icon.EDIT] }}
 					</mat-icon>
 				</button>
 				<button
@@ -90,7 +90,7 @@
 					(click)="displayLogProjectWidgetDialog()"
 				>
 					<mat-icon class="material-icons">
-						{{ materialIconRecords[iconEnum.TEXT] }}
+						{{ materialIconRecords[icon.TEXT] }}
 					</mat-icon>
 				</button>
 			</span>

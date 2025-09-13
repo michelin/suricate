@@ -154,7 +154,7 @@ export class DashboardScreen implements AfterViewInit, OnChanges, OnDestroy {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = Icon;
+	public icon = Icon;
 
 	/**
 	 * The list of material icons

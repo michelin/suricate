@@ -20,7 +20,7 @@
 /**
  * The list of the different widget states
  */
-export enum WidgetStateEnum {
+export enum WidgetState {
 	/**
 	 * Widget is running normally
 	 */

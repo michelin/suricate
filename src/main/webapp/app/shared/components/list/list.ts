@@ -106,7 +106,7 @@ export abstract class List<TRet, TReq> implements OnInit, OnDestroy {
 	/**
 	 * List of icons
 	 */
-	public iconEnum = Icon;
+	public icon = Icon;
 
 	/**
 	 * List of material icon

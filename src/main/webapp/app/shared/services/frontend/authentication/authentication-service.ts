@@ -144,9 +144,9 @@ export class AuthenticationService {
 		user.mode = decodedToken.mode;
 
 		if (decodedToken.roles) {
-			user.roles = decodedToken.roles.map((roleEnum: RoleName) => {
+			user.roles = decodedToken.roles.map((roleName: RoleName) => {
 				const role = new Role();
-				role.name = roleEnum;
+				role.name = roleName;
 				return role;
 			});
 		}

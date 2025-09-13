@@ -34,7 +34,7 @@
 			@for (websocketClient of websocketClients; track websocketClient) {
 				<div class="connected-screens">
 					<mat-icon class="screen-icon">
-						{{ materialIconRecords[iconEnum.TV] }}
+						{{ materialIconRecords[icon.TV] }}
 					</mat-icon>
 					<span class="screen-code"> {{ 'screen.code' | translate }}: {{ websocketClient.screenCode }} </span>
 					<suricate-buttons

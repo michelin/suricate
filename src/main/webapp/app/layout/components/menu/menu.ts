@@ -85,7 +85,7 @@ export class Menu implements OnInit {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = Icon;
+	public icon = Icon;
 
 	/**
 	 * The list of material icons

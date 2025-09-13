@@ -2,11 +2,11 @@
 <div class="suricate-menu">
 	<mat-menu #userMenu="matMenu" xPosition="before">
 		<button mat-menu-item (click)="openSettings()">
-			<mat-icon> {{ materialIconRecords[iconEnum.PREFERENCES] }} </mat-icon>
+			<mat-icon> {{ materialIconRecords[icon.PREFERENCES] }} </mat-icon>
 			<span> {{ 'preferences' | translate }} </span>
 		</button>
 		<button mat-menu-item (click)="logout()">
-			<mat-icon> {{ materialIconRecords[iconEnum.LOGOUT] }} </mat-icon>
+			<mat-icon> {{ materialIconRecords[icon.LOGOUT] }} </mat-icon>
 			<span> {{ 'logout' | translate }} </span>
 		</button>
 	</mat-menu>
@@ -43,12 +43,12 @@
 						class="home"
 					>
 						<mat-list-item [activated]="rla.isActive">
-							<mat-icon> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
+							<mat-icon> {{ materialIconRecords[icon.HOME] }} </mat-icon>
 						</mat-list-item>
 					</a>
 					<a [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" class="tv" target="_blank">
 						<mat-list-item>
-							<mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
+							<mat-icon> {{ materialIconRecords[icon.TV] }} </mat-icon>
 						</mat-list-item>
 					</a>
 				</mat-nav-list>

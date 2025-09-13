@@ -33,7 +33,7 @@ export class BaseInput {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = Icon;
+	public icon = Icon;
 
 	/**
 	 * The list of material icon codes

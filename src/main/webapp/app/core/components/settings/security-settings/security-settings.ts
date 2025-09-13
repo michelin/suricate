@@ -100,7 +100,7 @@ export class SecuritySettings implements OnInit {
 	/**
 	 * The list of icons
 	 */
-	public iconEnum = Icon;
+	public icon = Icon;
 
 	/**
 	 * The list of material icons

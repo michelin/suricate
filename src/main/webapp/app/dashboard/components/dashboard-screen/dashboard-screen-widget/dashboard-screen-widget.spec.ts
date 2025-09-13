@@ -23,7 +23,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { WidgetStateEnum } from '../../../../shared/enums/widget-sate';
+import { WidgetState } from '../../../../shared/enums/widget-sate';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetPosition } from '../../../../shared/models/backend/project-widget/project-widget-position';
 import { DashboardScreenWidget } from './dashboard-screen-widget';
@@ -74,7 +74,7 @@ describe('DashboardScreenWidget', () => {
 			lastExecutionDate: '',
 			lastSuccessDate: '',
 			globalConfigOverridden: true,
-			state: WidgetStateEnum.RUNNING,
+			state: WidgetState.RUNNING,
 			projectToken: 'Token',
 			widgetId: 1,
 			gridId: 1

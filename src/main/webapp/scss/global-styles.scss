@@ -100,7 +100,7 @@ body {
 }
 
 .animation-enter-toast {
-  animation: fade-in 500ms;
+  animation: fade-in 300ms;
 }
 
 @keyframes fade-in {
@@ -114,7 +114,7 @@ body {
 }
 
 .animation-leave-toast {
-  animation: fade-out 500ms;
+  animation: fade-out 300ms;
 }
 
 @keyframes fade-out {
