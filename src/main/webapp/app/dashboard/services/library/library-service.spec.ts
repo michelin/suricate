@@ -17,33 +17,19 @@
  * under the License.
  */
 
-import { Routes } from '@angular/router';
+import { TestBed } from '@angular/core/testing';
 
-import { authGuard } from '../shared/guards/auth/auth.guard';
-import { Home } from './components/home/home';
-import { Login } from './components/login/login';
-import { Register } from './components/register/register';
-import { Settings } from './components/settings/settings';
+import { LibraryService } from './library-service';
 
-export const coreRoutes: Routes = [
-	{
-		path: 'home',
-		canActivate: [authGuard],
-		canActivateChild: [authGuard],
-		component: Home
-	},
-	{
-		path: 'login',
-		component: Login
-	},
-	{
-		path: 'register',
-		component: Register
-	},
-	{
-		path: 'settings',
-		canActivate: [authGuard],
-		canActivateChild: [authGuard],
-		component: Settings
-	}
-];
+describe('LibraryService', () => {
+	let service: LibraryService;
+
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(LibraryService);
+	});
+
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
+});

@@ -17,33 +17,23 @@
  * under the License.
  */
 
-import { Routes } from '@angular/router';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { authGuard } from '../shared/guards/auth/auth.guard';
-import { Home } from './components/home/home';
-import { Login } from './components/login/login';
-import { Register } from './components/register/register';
-import { Settings } from './components/settings/settings';
+import { DashboardService } from './dashboard-service';
 
-export const coreRoutes: Routes = [
-	{
-		path: 'home',
-		canActivate: [authGuard],
-		canActivateChild: [authGuard],
-		component: Home
-	},
-	{
-		path: 'login',
-		component: Login
-	},
-	{
-		path: 'register',
-		component: Register
-	},
-	{
-		path: 'settings',
-		canActivate: [authGuard],
-		canActivateChild: [authGuard],
-		component: Settings
-	}
-];
+describe('DashboardService', () => {
+	let service: DashboardService;
+
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		});
+		service = TestBed.inject(DashboardService);
+	});
+
+	it('should create', () => {
+		expect(service).toBeTruthy();
+	});
+});

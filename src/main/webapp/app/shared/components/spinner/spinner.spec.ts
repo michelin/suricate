@@ -17,33 +17,25 @@
  * under the License.
  */
 
-import { Routes } from '@angular/router';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { authGuard } from '../shared/guards/auth/auth.guard';
-import { Home } from './components/home/home';
-import { Login } from './components/login/login';
-import { Register } from './components/register/register';
-import { Settings } from './components/settings/settings';
+import { Spinner } from './spinner';
 
-export const coreRoutes: Routes = [
-	{
-		path: 'home',
-		canActivate: [authGuard],
-		canActivateChild: [authGuard],
-		component: Home
-	},
-	{
-		path: 'login',
-		component: Login
-	},
-	{
-		path: 'register',
-		component: Register
-	},
-	{
-		path: 'settings',
-		canActivate: [authGuard],
-		canActivateChild: [authGuard],
-		component: Settings
-	}
-];
+describe('Spinner', () => {
+	let component: Spinner;
+	let fixture: ComponentFixture<Spinner>;
+
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [Spinner]
+		}).compileComponents();
+
+		fixture = TestBed.createComponent(Spinner);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
+});

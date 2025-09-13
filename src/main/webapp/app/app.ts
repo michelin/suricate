@@ -23,12 +23,12 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { SettingsService } from './core/services/settings.service';
-import { SidenavComponent } from './layout/components/sidenav/sidenav.component';
-import { ActionsDialogComponent } from './shared/components/actions-dialog/actions-dialog.component';
-import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
-import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
-import { ToastComponent } from './shared/components/toast/toast.component';
+import { SettingsService } from './core/services/settings-service';
+import { Sidenav } from './layout/components/sidenav/sidenav';
+import { ActionsDialog } from './shared/components/actions-dialog/actions-dialog';
+import { CommunicationDialog } from './shared/components/communication-dialog/communication-dialog';
+import { ConfirmDialog } from './shared/components/confirm-dialog/confirm-dialog';
+import { Toast } from './shared/components/toast/toast';
 import { ActionsDialogConfiguration } from './shared/models/frontend/dialog/actions-dialog-configuration';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
@@ -38,7 +38,7 @@ import { DialogService } from './shared/services/frontend/dialog/dialog.service'
 	selector: 'suricate-root',
 	templateUrl: './app.html',
 	styleUrls: ['./app.scss'],
-	imports: [SidenavComponent, ToastComponent]
+	imports: [Sidenav, Toast]
 })
 export class App implements OnInit, OnDestroy {
 	private readonly matDialog = inject(MatDialog);
@@ -106,7 +106,7 @@ export class App implements OnInit, OnDestroy {
 					autoFocus: false
 				};
 
-				this.matDialog.open(ConfirmDialogComponent, dialogConfig);
+				this.matDialog.open(ConfirmDialog, dialogConfig);
 			});
 	}
 
@@ -126,7 +126,7 @@ export class App implements OnInit, OnDestroy {
 					autoFocus: false
 				};
 
-				this.matDialog.open(CommunicationDialogComponent, dialogConfig);
+				this.matDialog.open(CommunicationDialog, dialogConfig);
 			});
 	}
 
@@ -145,7 +145,7 @@ export class App implements OnInit, OnDestroy {
 					data: actionsDialogConfiguration
 				};
 
-				this.matDialog.open(ActionsDialogComponent, dialogConfig);
+				this.matDialog.open(ActionsDialog, dialogConfig);
 			});
 	}
 }
