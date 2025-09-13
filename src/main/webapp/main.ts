@@ -17,8 +17,9 @@
  * under the License.
  */
 
-import { DatePipe } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import localeFr from '@angular/common/locales/fr';
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -34,6 +35,8 @@ import { environment } from './environments/environment';
 if (environment.production) {
 	enableProdMode();
 }
+
+registerLocaleData(localeFr);
 
 bootstrapApplication(App, {
 	providers: [

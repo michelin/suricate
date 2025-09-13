@@ -111,7 +111,7 @@ export class Repositories extends List<Repository, RepositoryRequest> {
 				repository.createdDate,
 				'd MMMM yyyy HH:mm:ss',
 				undefined,
-				this.translateService.currentLang
+				this.translateService.getCurrentLang()
 			)
 		});
 	}

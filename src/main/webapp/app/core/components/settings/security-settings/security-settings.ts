@@ -80,7 +80,6 @@ import { ToastService } from '../../../../shared/services/frontend/toast/toast-s
 		MatHeaderRow,
 		MatRowDef,
 		MatRow,
-		DatePipe,
 		TranslatePipe
 	]
 })
@@ -91,6 +90,7 @@ export class SecuritySettings implements OnInit {
 	private readonly httpUserService = inject(HttpUserService);
 	private readonly dialogService = inject(DialogService);
 	private readonly clipboard = inject(Clipboard);
+	private readonly datePipe = inject(DatePipe);
 
 	/**
 	 * The columns of the token table
@@ -240,5 +240,14 @@ export class SecuritySettings implements OnInit {
 				});
 			}
 		});
+	}
+
+	/**
+	 * Translate the given date
+	 *
+	 * @param date The date to translate
+	 */
+	translateCreationDate(date: string): string {
+		return this.datePipe.transform(date, 'd MMMM yyyy HH:mm:ss', undefined, this.translateService.getCurrentLang());
 	}
 }

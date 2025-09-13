@@ -17,56 +17,14 @@
  * under the License.
  */
 
-.security-settings-container {
-  padding: 35px 35px 0;
+@use '@angular/material' as mat;
 
-  h2 {
-    margin: 0 0 15px;
-  }
-
-  .save-security-settings-button {
-    margin: auto;
-    text-align: center;
-  }
-
-  .token-created {
-    text-align: center;
-
-    .mat-card-title {
-      align-items: center;
-      font-size: 16px;
-
-      div {
-        align-items: center;
-      }
-    }
-
-    .mat-mdc-card-actions {
-      padding: 16px;
-    }
-
-    .copy-token-button-container {
-      justify-content: center;
-    }
-  }
-
-  .mat-mdc-card-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    padding: 15px 0;
-  }
-}
-
-table {
-  width: 100%;
-
-  .mat-column-revoke {
-    width: 90px;
-  }
-
-  .actions-container {
-    text-align: center;
-  }
+@mixin custom-mat-table-theme($theme) {
+  @include mat.table-overrides((
+    header-headline-font: 'Inter, sans-serif',
+    row-item-label-text-font: 'Inter, sans-serif',
+    footer-supporting-text-font: 'Inter, sans-serif',
+    header-headline-size: 16px,
+    row-item-label-text-size: 16px
+  ));
 }
