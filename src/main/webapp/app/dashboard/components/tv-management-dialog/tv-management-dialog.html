@@ -31,7 +31,7 @@
 
 		<!-- screen codes -->
 		<div id="connected-screen-container">
-			@for (websocketClient of websocketClients; track websocketClient.screenCode) {
+			@for (websocketClient of websocketClients; track websocketClient) {
 				<div class="connected-screens">
 					<mat-icon class="screen-icon">
 						{{ materialIconRecords[icon.TV] }}

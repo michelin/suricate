@@ -18,7 +18,7 @@
 	>
 		<span [innerHTML]="'<style>' + project()?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
 		<span #externalJsLibraries></span>
-		@for (gridItem of currentGrid; track gridItem.id) {
+		@for (gridItem of currentGrid; track getGridItemTrackExpression(gridItem)) {
 			<ktd-grid-item
 				class="mat-elevation-z4"
 				[id]="gridItem.id"
