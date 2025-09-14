@@ -7,7 +7,7 @@
 		labelPosition="bottom"
 		(selectionChange)="onStepChanged($event)"
 	>
-		@for (step of wizardConfiguration?.steps; track step; let index = $index) {
+		@for (step of wizardConfiguration?.steps; track step) {
 			<ng-template [matStepperIcon]="step.icon">
 				<mat-icon> {{ materialIconRecords[step.icon] }} </mat-icon>
 			</ng-template>

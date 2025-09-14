@@ -30,7 +30,12 @@ import {
 	ViewChild
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { KtdGridComponent, KtdGridItemComponent, KtdGridItemPlaceholder } from '@katoid/angular-grid-layout';
+import {
+	KtdGridComponent,
+	KtdGridItemComponent,
+	KtdGridItemPlaceholder,
+	KtdGridLayoutItem
+} from '@katoid/angular-grid-layout';
 import { KtdGridLayout } from '@katoid/angular-grid-layout';
 import { IMessage } from '@stomp/rx-stomp';
 import { Subject } from 'rxjs';
@@ -453,5 +458,15 @@ export class DashboardScreen implements AfterViewInit, OnDestroy {
 	 */
 	public getProjectWidgetById(id: string): ProjectWidget {
 		return this.projectWidgets().find((projectWidget) => projectWidget.id === Number(id));
+	}
+
+	/**
+	 * Get unique expression for tracking grid items.
+	 * Track all properties of the grid item to ensure it will be re-rendered if any property change.
+	 *
+	 * @param gridItem The grid item
+	 */
+	public getGridItemTrackExpression(gridItem: KtdGridLayoutItem): string {
+		return gridItem.id + '-' + gridItem.x + '-' + gridItem.y + '-' + gridItem.w + '-' + gridItem.h;
 	}
 }
