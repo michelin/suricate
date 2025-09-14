@@ -38,6 +38,7 @@ export const MaterialIconRecords: MaterialIcon = {
 	[Icon.DELETE_FOREVER]: 'delete_forever',
 	[Icon.EDIT]: 'edit',
 	[Icon.EMAIL]: 'email',
+	[Icon.ERROR]: 'error',
 	[Icon.GRID]: 'grid_view',
 	[Icon.HEIGHT]: 'height',
 	[Icon.HELP]: 'help',
