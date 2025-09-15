@@ -172,30 +172,26 @@ export class DashboardScreen implements AfterViewInit, OnDestroy {
 	 */
 	constructor() {
 		effect(() => {
-			if (this.project() !== this.previousProject) {
-				if (!this.previousProject) {
-					// Inject this variable in the window scope because some widgets use it to init the js
-					window.page_loaded = true;
-				}
+			this.project();
 
-				if (this.project()) {
-					this.initGridStackOptions();
-
-					// Do not add libs in the DOM at first view init
-					// Let the after view init method handle the first initialization
-					if (this.hasInitialized) {
-						this.addExternalJSLibrariesToTheDOM();
-					}
-
-					if (!this.previousProject) {
-						this.initProjectWebsockets();
-					} else if (this.previousProject.token !== this.project().token) {
-						this.resetProjectWebsockets();
-					}
-				}
-
-				this.previousProject = this.project();
+			if (!window.page_loaded) {
+				window.page_loaded = true;
 			}
+
+			this.initGridStackOptions();
+
+			// Let the AfterViewInit hook to handle the first initialization as the span is not yet created
+			if (this.hasInitialized) {
+				this.addExternalJSLibrariesToTheDOM();
+			}
+
+			if (!this.previousProject) {
+				this.initProjectWebsockets();
+			} else if (this.previousProject.token !== this.project().token) {
+				this.resetProjectWebsockets();
+			}
+
+			this.previousProject = this.project();
 		});
 
 		effect(() => {
@@ -210,7 +206,8 @@ export class DashboardScreen implements AfterViewInit, OnDestroy {
 	}
 
 	/**
-	 * After view init method
+	 * Initialization after the view is loaded.
+	 * Add external JS libraries to the DOM after the externalJsLibraries span child has been created.
 	 */
 	public ngAfterViewInit(): void {
 		this.hasInitialized = true;
@@ -237,10 +234,7 @@ export class DashboardScreen implements AfterViewInit, OnDestroy {
 					const script: HTMLScriptElement = document.createElement('script');
 					script.type = 'text/javascript';
 					script.src = HttpAssetService.getContentUrl(token);
-					script.onload = () =>
-						setTimeout(() => {
-							this.libraryService.markScriptAsLoaded(token);
-						}, 100); // Small delay to ensure the script is fully executed before rendering the widgets
+					script.onload = () => this.libraryService.markScriptAsLoaded(token);
 					script.async = false;
 
 					this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);

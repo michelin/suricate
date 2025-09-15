@@ -46,6 +46,7 @@ export class LibraryService {
 	public init(numberOfExternalLibrariesToLoad: number) {
 		this.loadedExternalLibraries = [];
 		this.numberOfExternalLibrariesToLoad = numberOfExternalLibrariesToLoad;
+		this.allExternalLibrariesLoaded.next(false);
 	}
 
 	/**
