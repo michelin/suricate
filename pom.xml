@@ -381,7 +381,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Create Unit test reports -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -399,21 +398,7 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <phase>prepare-package</phase>
-                    </execution>
-
-                    <execution>
-                        <id>post-unit-test</id>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
                         <phase>test</phase>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <dataFile>target/jacoco.exec</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>target/jacoco-ut</outputDirectory>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
