@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.6</version>
     </parent>
 
     <groupId>com.michelin.suricate</groupId>
@@ -28,14 +28,14 @@
         <commons-lang3.version>3.18.0</commons-lang3.version>
         <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
         <graalvm.version>25.0.0</graalvm.version>
-        <guava.version>33.4.8-jre</guava.version>
+        <guava.version>33.5.0-jre</guava.version>
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
         <jasypt.version>3.0.5</jasypt.version>
         <java.version>21</java.version>
         <jgit.version>7.3.0.202506031305-r</jgit.version>
         <jjwt.version>0.13.0</jjwt.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <lombok.version>1.18.40</lombok.version>
+        <lombok.version>1.18.42</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <mustache.version>0.9.14</mustache.version>
