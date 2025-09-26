@@ -20,8 +20,7 @@
 import { AfterViewInit, Directive, effect, ElementRef, inject, input } from '@angular/core';
 
 @Directive({
-	selector: '[hideAfterInit]',
-	standalone: true
+	selector: '[hideAfterInit]'
 })
 export class HideAfterInitDirective implements AfterViewInit {
 	private readonly elementRef = inject(ElementRef);

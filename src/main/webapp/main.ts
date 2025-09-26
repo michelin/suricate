@@ -17,36 +17,13 @@
  * under the License.
  */
 
-import { DatePipe, registerLocaleData } from '@angular/common';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
-import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
-import { provideTranslateService } from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { App } from './app/app';
-import { appRoutes } from './app/app.routes';
-import { ErrorInterceptor } from './app/shared/interceptors/error-interceptor';
-import { TokenInterceptor } from './app/shared/interceptors/token-interceptor';
-import { environment } from './environments/environment';
-
-if (environment.production) {
-	enableProdMode();
-}
+import { appConfig } from './app/app.config';
 
 registerLocaleData(localeFr);
 
-bootstrapApplication(App, {
-	providers: [
-		{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-		{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-		provideHttpClient(withInterceptorsFromDi()),
-		provideRouter(appRoutes),
-		provideTranslateService({
-			loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
-		}),
-		DatePipe
-	]
-}).catch((err) => console.error(err));
+bootstrapApplication(App, appConfig).catch((err) => console.error(err));
