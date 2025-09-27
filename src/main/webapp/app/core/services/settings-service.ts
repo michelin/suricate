@@ -47,19 +47,24 @@ export class SettingsService {
 	 * Init default settings when any user is connected
 	 */
 	initDefaultSettings() {
-		this.httpSettingService.getAll().subscribe((settings: Setting[]) => {
-			this.currentThemeValue = settings
-				.find((setting) => setting.type === SettingsType.THEME)
-				.allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
+		this.httpSettingService.getAll().subscribe({
+			next: (settings: Setting[]) => {
+				this.currentThemeValue = settings
+					.find((setting) => setting.type === SettingsType.THEME)
+					.allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
 
-			const defaultLanguageCode = settings
-				.find((setting) => setting.type === SettingsType.LANGUAGE)
-				.allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
+				const defaultLanguageCode = settings
+					.find((setting) => setting.type === SettingsType.LANGUAGE)
+					.allowedSettingValues.find((allowedSettingValue) => allowedSettingValue.default).value;
 
-			// This language will be used as a fallback when a translation is not found in the current language
-			this.translateService.setFallbackLang(defaultLanguageCode);
-
-			this.translateService.use(defaultLanguageCode);
+				// This language will be used as a fallback when a translation is not found in the current language
+				this.translateService.setFallbackLang(defaultLanguageCode);
+				this.translateService.use(defaultLanguageCode);
+			},
+			error: () => {
+				this.translateService.setFallbackLang('en');
+				this.translateService.use('en');
+			}
 		});
 	}
 
