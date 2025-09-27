@@ -46,8 +46,7 @@ import { ToastService } from '../../services/frontend/toast/toast-service';
  */
 @Component({
 	template: '',
-	styleUrls: ['./list.scss'],
-	standalone: true
+	styleUrls: ['./list.scss']
 })
 export abstract class List<TRet, TReq> implements OnInit, OnDestroy {
 	private readonly childService = inject<AbstractHttpService<TRet, TReq>>(AbstractHttpService);

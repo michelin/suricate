@@ -97,7 +97,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiErrorDto> handleApiException(ApiException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(exception.getError().getStatus()).body(exception.getError());
     }
@@ -110,7 +110,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiErrorDto> handleBadCredentialsException(BadCredentialsException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.BAD_CREDENTIALS_ERROR.getStatus())
                 .body(new ApiErrorDto(ApiErrorEnum.BAD_CREDENTIALS_ERROR));
@@ -124,7 +124,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentNotValidException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
                 .body(new ApiErrorDto(extractMessage(exception.getBindingResult()), ApiErrorEnum.BAD_REQUEST));
@@ -138,7 +138,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentTypeMismatchException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
                 .body(new ApiErrorDto(ApiErrorEnum.BAD_REQUEST));
@@ -153,7 +153,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<ApiErrorDto> handleRequestException(ConstraintViolationException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
                 .body(new ApiErrorDto(extractMessage(exception.getConstraintViolations()), ApiErrorEnum.BAD_REQUEST));
@@ -168,7 +168,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(HttpRequestMethodNotSupportedException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
                 .body(new ApiErrorDto(exception.getMessage(), ApiErrorEnum.BAD_REQUEST));
@@ -183,7 +183,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<ApiErrorDto> handleRequestException(DataIntegrityViolationException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
                 .body(new ApiErrorDto(
@@ -198,7 +198,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(HttpMediaTypeNotAcceptableException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.BAD_REQUEST.getStatus())
                 .body(new ApiErrorDto(
@@ -213,7 +213,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.FORBIDDEN.getStatus()).body(new ApiErrorDto(ApiErrorEnum.FORBIDDEN));
     }
@@ -226,7 +226,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorDto> handleException(Exception exception) {
-        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(LOG_MESSAGE, exception);
 
         return ResponseEntity.status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
                 .body(new ApiErrorDto(ApiErrorEnum.INTERNAL_SERVER_ERROR));

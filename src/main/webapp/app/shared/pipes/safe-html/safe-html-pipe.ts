@@ -24,8 +24,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
  * Transform a string into a SafeHtml
  */
 @Pipe({
-	name: 'safeHtml',
-	standalone: true
+	name: 'safeHtml'
 })
 export class SafeHtmlPipe implements PipeTransform {
 	private readonly domSanitizer = inject(DomSanitizer);

@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -30,41 +30,31 @@ import { ToastService } from '../services/frontend/toast/toast-service';
 /**
  * Interceptor that manage http errors
  */
-@Injectable({ providedIn: 'root' })
-export class ErrorInterceptor implements HttpInterceptor {
-	private readonly router = inject(Router);
-	private readonly toastService = inject(ToastService);
+export const errorInterceptor: HttpInterceptorFn = (
+	request: HttpRequest<unknown>,
+	next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
+	const router = inject(Router);
+	const toastService = inject(ToastService);
 
-	/**
-	 * Method that intercept the request
-	 * @param request The request
-	 * @param next The next handler
-	 * @return The http request as event
-	 */
-	public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-		return next.handle(request).pipe(
-			tap({
-				error: (httpError: HttpErrorResponse) => {
-					switch (httpError.status) {
-						// Authentication error, token invalid or expired
-						case 401:
-							AuthenticationService.logout();
-							this.router.navigate(['/login']);
-							break;
+	const displayUnknownErrorMessage = () => {
+		toastService.sendMessage('server.unavailable', ToastType.DANGER, 'server.unavailable.explanation');
+	};
 
-						case 0:
-							this.displayUnknownErrorMessage();
-							break;
-					}
+	return next(request).pipe(
+		tap({
+			error: (httpError: HttpErrorResponse) => {
+				switch (httpError.status) {
+					// Authentication error, token invalid or expired
+					case 401:
+						AuthenticationService.logout();
+						router.navigate(['/login']);
+						break;
+					case 0:
+						displayUnknownErrorMessage();
+						break;
 				}
-			})
-		);
-	}
-
-	/**
-	 * Display the message when an unknown error occurred
-	 */
-	private displayUnknownErrorMessage(): void {
-		this.toastService.sendMessage('server.unavailable', ToastType.DANGER, 'server.unavailable.explanation');
-	}
-}
+			}
+		})
+	);
+};
