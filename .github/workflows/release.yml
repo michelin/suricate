@@ -60,7 +60,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: true
           tags: |
-            michelin/suricate:${{ needs.build.outputs.current_version }}
+            michelin/suricate:${{ steps.metadata.outputs.current_version }}
             ${{ steps.metadata.outputs.is_latest_version == 'true' && 'michelin/suricate:latest' || '' }}
         env:
           DOCKER_BUILD_SUMMARY: false
@@ -78,7 +78,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           body: ${{ steps.build_changelog.outputs.changelog }}
-          artifacts: target/suricate.jar
+          artifacts: target/suricate-${{ steps.metadata.outputs.current_version }}.jar
           draft: true
           prerelease: true
           allowUpdates: true
