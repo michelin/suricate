@@ -30,7 +30,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build
-        run: mvn clean package -DskipTests
+        run: mvn clean package -DskipTests -P production
 
       - name: Metadata
         id: metadata
