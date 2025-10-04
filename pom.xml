@@ -10,7 +10,7 @@
 
     <groupId>com.michelin.suricate</groupId>
     <artifactId>suricate</artifactId>
-    <version>2.10.1-SNAPSHOT</version>
+    <version>2.10.0</version>
     <packaging>${packaging.type}</packaging>
     <name>suricate</name>
     <description>Suricate application</description>
