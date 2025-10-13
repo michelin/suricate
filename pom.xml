@@ -29,7 +29,7 @@
         <frontend-maven-plugin.version>1.15.4</frontend-maven-plugin.version>
         <graalvm.version>25.0.0</graalvm.version>
         <guava.version>33.5.0-jre</guava.version>
-        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <jasypt.version>3.0.5</jasypt.version>
         <java.version>21</java.version>
         <jgit.version>7.4.0.202509020913-r</jgit.version>
