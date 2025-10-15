@@ -49,7 +49,7 @@ Suricate uses WebSockets to control and update dashboards on external displays.
 
 ## Download
 
-You can download Suricate as a JAR from the [GitHub releases page](https://github.com/michelin/suricate/release) (requires Java 21).
+You can download Suricate as a JAR from the [GitHub releases page](https://github.com/michelin/suricate/release) (requires Java 25).
 
 Additionally, a Docker image is available on [Docker Hub](https://hub.docker.com/repository/docker/michelin/suricate).
 
