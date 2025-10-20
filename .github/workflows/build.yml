@@ -99,7 +99,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Node.js 24.x
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: '24.x'
 
