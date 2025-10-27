@@ -84,7 +84,7 @@ jobs:
         run: echo current_version=$(echo $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)) >> $GITHUB_OUTPUT
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: suricate
           path: target/suricate-${{ steps.metadata.outputs.current_version }}.jar
