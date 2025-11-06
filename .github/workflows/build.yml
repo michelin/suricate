@@ -115,13 +115,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Metadata
-        id: metadata
-        run: |
-          platform_slug=$(echo ${{ matrix.platform }} | sed 's/\//-/g')
-          echo platform_slug=$platform_slug >> $GITHUB_OUTPUT
-          echo image_name=michelin/suricate:${{ needs.back-end.outputs.current_version }}-$(echo ${{ matrix.platform }} | sed 's/\//-/g') >> $GITHUB_OUTPUT
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -139,6 +132,6 @@ jobs:
           file: .docker/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/master' && 'true' || 'false' }}
-          tags: ${{ steps.metadata.outputs.image_name }}
+          tags: michelin/suricate:${{ needs.back-end.outputs.current_version }}
         env:
           DOCKER_BUILD_SUMMARY: false
