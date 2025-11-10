@@ -96,7 +96,7 @@ jobs:
           npm run test
 
   build-docker:
-    name: Build Docker ${{ matrix.platform }}
+    name: Build Docker
     runs-on: ubuntu-latest
     needs: [ front-end, back-end ]
     if: endsWith(needs.back-end.outputs.current_version, '-SNAPSHOT')
